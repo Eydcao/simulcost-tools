@@ -1,5 +1,5 @@
 import numpy as np
-from base import NewtonOptimizer
+from optimizers.base import NewtonOptimizer
 from scipy.sparse import diags, lil_matrix
 
 

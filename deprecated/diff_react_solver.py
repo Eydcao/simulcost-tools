@@ -1,6 +1,6 @@
 import os
 import numpy as np
-from diff_react import DiffReac
+from deprecated.diff_react import DiffReac
 import h5py
 
 # Grid parameters

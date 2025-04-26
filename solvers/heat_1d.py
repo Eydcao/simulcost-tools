@@ -7,6 +7,7 @@ from base_solver import SIMULATOR
 
 
 class Heat1D(SIMULATOR):
+    """Heat transfer in 1D with Crank-Nicolson scheme, left boundary with convection to T_inf, right boundary dirichlet."""
     def __init__(self, verbose, cfg):
         # Physical parameters from cfg
         self.L = cfg.L  # Wall thickness
@@ -39,7 +40,9 @@ class Heat1D(SIMULATOR):
         """Initialize any additional fields needed"""
         # Initialize temperature field
         self.T = self.T_init * np.ones(self.nx)
-        self.T_history = []
+
+        # LU cache, using dt as key
+        self.LU_pivots_cache = {}
 
     def _calculate_and_factorize_crank_nicolson_matrix(self, dt):
         """Calculate and factorize the Crank-Nicolson matrix."""
@@ -89,7 +92,11 @@ class Heat1D(SIMULATOR):
     def step(self, dt):
         """Perform a single time step"""
         # Calculate system and right hand side
-        LU_pivots = self._calculate_and_factorize_crank_nicolson_matrix(dt)
+        if dt not in self.LU_pivots_cache:
+            LU_pivots = self._calculate_and_factorize_crank_nicolson_matrix(dt)
+            self.LU_pivots_cache[dt] = LU_pivots
+        else:
+            LU_pivots = self.LU_pivots_cache[dt]
         b = self._calculate_right_hand_side(self.T, dt)
 
         # Solve the linear system
