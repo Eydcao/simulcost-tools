@@ -47,6 +47,7 @@ class Heat1D(SIMULATOR):
         max_dt = self.cfl * self.dx**2 / (2 * self.alpha)
         return max_dt
 
+    @torch.no_grad()
     def step(self, dt):
         """Perform a single time step"""
         # explicit form

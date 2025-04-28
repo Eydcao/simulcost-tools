@@ -52,6 +52,8 @@ def create_new_profile(profile_name):
     T_init = round(np.random.uniform(21, 30))
     record_dt = round(np.random.uniform(1, 4)) * 100
 
+    # TODO update a new dump dir to avoid over-write
+
     # TODO save a new copy p2, p3 etc ...
 ```
 

@@ -55,7 +55,7 @@ class SIMULATOR:
         # Calculate how many base timesteps remain until recording
         steps_to_record = time_remaining / dt
 
-        if steps_to_record > 2:
+        if steps_to_record >= 2:
             # No adjustment needed
             return dt, False
         elif steps_to_record > 1:
@@ -72,6 +72,14 @@ class SIMULATOR:
         # TODO implement in override
         pass
 
+    def early_stop(self):
+        """
+        Check if the simulation should stop early.
+        Returns True if the simulation should stop, False otherwise.
+        """
+        # TODO implement in override
+        return False
+
     def run(self):
         self.pre_process()
 
@@ -81,7 +89,7 @@ class SIMULATOR:
         self.record_frame += 1
         self.next_record_time = min(self.current_time + self.record_dt, self.end_time)
 
-        while self.current_time < self.end_time:
+        while self.current_time < self.end_time and not self.early_stop():
             # Calculate base timestep
             base_dt = self.cal_dt()
 
@@ -102,7 +110,6 @@ class SIMULATOR:
                     print(f"Recording at time {self.current_time:.6f} (frame {self.record_frame})")
                     print(f"Number of steps: {self.num_steps}")
                 self.dump()
-                self.call_back()
                 self.record_frame += 1
                 self.next_record_time = min(self.current_time + self.record_dt, self.end_time)
 
