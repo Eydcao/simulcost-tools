@@ -3,6 +3,7 @@ import h5py
 import os
 from .base_solver import SIMULATOR
 import numpy as np
+import matplotlib.pyplot as plt
 
 
 class Heat1D(SIMULATOR):
@@ -61,8 +62,24 @@ class Heat1D(SIMULATOR):
         self.T = T_new
 
     def dump(self):
-        """Save current state"""
-        with h5py.File(os.path.join(self.dump_dir, f"res_{self.record_frame}.h5"), "w") as f:
+        """Save current state including data file and visualization"""
+        # Create filename base
+        file_base = os.path.join(self.dump_dir, f"res_{self.record_frame}")
+
+        # Save HDF5 data file
+        with h5py.File(f"{file_base}.h5", "w") as f:
             f.create_dataset("x", data=self.x.numpy())
             f.create_dataset("T", data=self.T.numpy())
             f.create_dataset("time", data=self.current_time)
+
+        # Create and save plot
+        plt.figure(figsize=(8, 5))
+        plt.plot(self.x.numpy(), self.T.numpy(), "b-", linewidth=2)
+        plt.xlabel("Position (x)")
+        plt.ylabel("Temperature (T)")
+        plt.title(f"Time = {self.current_time:.3f}")
+        plt.grid(True)
+
+        # Save plot with same numbering as data file
+        plt.savefig(f"{file_base}.png")
+        plt.close()
