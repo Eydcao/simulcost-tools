@@ -1,5 +1,5 @@
 import argparse
-from heat1d_utils import run_simulation, compare_results
+from heat1d_wrapper import run_simulation, compare_results
 
 
 def find_convergent_cfl(profile, initial_cfl, initial_n_space, tolerance, max_iter):
