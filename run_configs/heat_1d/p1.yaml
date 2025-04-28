@@ -14,10 +14,10 @@ T_init: 25.0         # Initial temperature [K]
 
 # Numerical parameters
 n_space: 1000          # Number of spatial points
-cfl: 0.5              # CFL number for stability
-record_dt: 100.0        # Time interval between recordings [s]
-end_time: 2400.0        # Simulation end time [s]
+cfl: 1.0              # CFL number for stability
+record_dt: 10.0        # Time interval between recordings [s]
+end_frame: 24        # Simulation end after certain number of frames
 
 # Output configuration
-dump_dir: "output/heat_1d"  # Directory for output files
+dump_dir: "sim_res/heat_1d/p1"  # Directory for output files
 verbose: False          # Enable verbose output

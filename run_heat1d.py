@@ -1,9 +1,13 @@
 import hydra
 from omegaconf import OmegaConf
-from heat_1d import Heat1D
+from solvers import *
+import os
+
+os.environ["OPENBLAS_NUM_THREADS"] = "16"
+os.environ["OMP_NUM_THREADS"] = "16"
 
 
-@hydra.main(version_base=None, config_path="run_configs", config_name="heat_1d")
+@hydra.main(version_base=None, config_path="run_configs/heat_1d", config_name="p1")
 def main(cfg):
     # Print config (for debugging)
     print(OmegaConf.to_yaml(cfg))

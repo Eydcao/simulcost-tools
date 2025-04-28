@@ -7,6 +7,7 @@ class SIMULATOR:
         self.current_time = 0.0
         self.record_dt = cfg.record_dt  # Time interval between recordings
         self.next_record_time = 0.0  # Time of next recording
+        self.end_time = cfg.record_dt * cfg.end_frame  # End time for simulation
 
         # Track frame numbers for output files
         self.record_frame = 0
@@ -83,9 +84,9 @@ class SIMULATOR:
         self.dump()
         self.call_back()
         self.record_frame += 1
-        self.next_record_time = min(self.current_time + self.record_dt, self.cfg.end_time)
+        self.next_record_time = min(self.current_time + self.record_dt, self.end_time)
 
-        while self.current_time < self.cfg.end_time:
+        while self.current_time < self.end_time:
             # Calculate base timestep
             base_dt = self.cal_dt()
 
@@ -106,7 +107,7 @@ class SIMULATOR:
                 self.dump()
                 self.call_back()
                 self.record_frame += 1
-                self.next_record_time = min(self.current_time + self.record_dt, self.cfg.end_time)
+                self.next_record_time = min(self.current_time + self.record_dt, self.end_time)
 
         if self.verbose:
             print(f"Simulation completed at time {self.current_time:.6f}")

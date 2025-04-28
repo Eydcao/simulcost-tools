@@ -3,7 +3,7 @@ import numpy as np
 import h5py
 import matplotlib.pyplot as plt
 
-output_dir = "./output/heat_1d"
+output_dir = "./sim_res/heat_1d/p1_cfl_0.5_nx_1280/"
 
 # Get all result files and sort by frame number
 result_files = sorted(
