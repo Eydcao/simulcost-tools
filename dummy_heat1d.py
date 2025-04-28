@@ -1,10 +1,11 @@
 import argparse
-from heat1d_utils import run_simulation, get_simulation_results, compare_results
+from heat1d_utils import run_simulation, compare_results
 
 
 def find_convergent_cfl(profile, initial_cfl, initial_n_space, tolerance, max_iter):
     """Iteratively reduce CFL number until convergence is achieved."""
     cfl_history = []
+    cost_history = []
 
     # Fix the n_space for the CFL searching
     n_space = initial_n_space
@@ -17,7 +18,8 @@ def find_convergent_cfl(profile, initial_cfl, initial_n_space, tolerance, max_it
         print(f"\nRunning simulation with CFL = {current_cfl}")
 
         # Run simulation and load results
-        run_simulation(profile, current_cfl, n_space)
+        cost_i = run_simulation(profile, current_cfl, n_space)
+        cost_history.append(cost_i)
         cfl_history.append(current_cfl)
 
         # If we have previous results to compare with
@@ -56,12 +58,15 @@ def find_convergent_cfl(profile, initial_cfl, initial_n_space, tolerance, max_it
         else:
             best_cfl = None
 
-    return best_cfl
+    print(f"Cost history: {cost_history}, total cost: {sum(cost_history)}")
+
+    return best_cfl, sum(cost_history)
 
 
 def find_convergent_n_space(profile, initial_n_space, cfl, tolerance, max_iter):
     """Iteratively increase n_space number until convergence is achieved."""
     n_space_history = []
+    cost_history = []
 
     # Fix the CFL for the n_space searching
     current_cfl = cfl
@@ -74,7 +79,8 @@ def find_convergent_n_space(profile, initial_n_space, cfl, tolerance, max_iter):
         print(f"\nRunning simulation with n_space = {current_n_space}")
 
         # Run simulation and load results
-        run_simulation(profile, current_cfl, current_n_space)
+        cost_i = run_simulation(profile, current_cfl, current_n_space)
+        cost_history.append(cost_i)
         n_space_history.append(current_n_space)
 
         # If we have previous results to compare with
@@ -117,7 +123,9 @@ def find_convergent_n_space(profile, initial_n_space, cfl, tolerance, max_iter):
         else:
             best_n_space = None
 
-    return best_n_space
+    print(f"Cost history: {cost_history}, total cost: {sum(cost_history)}")
+
+    return best_n_space, sum(cost_history)
 
 
 if __name__ == "__main__":
@@ -147,7 +155,7 @@ if __name__ == "__main__":
 
     if args.task == "cfl":
         print("\n=== Starting CFL convergence search ===")
-        best_param = find_convergent_cfl(
+        best_param, total_cost = find_convergent_cfl(
             profile=args.profile,
             initial_cfl=args.initial_cfl,
             initial_n_space=args.initial_n_space,
@@ -157,7 +165,7 @@ if __name__ == "__main__":
         param_name = "CFL"
     else:
         print("\n=== Starting n_space convergence search ===")
-        best_param = find_convergent_n_space(
+        best_param, total_cost = find_convergent_n_space(
             profile=args.profile,
             initial_n_space=args.initial_n_space,
             cfl=args.initial_cfl,
@@ -167,6 +175,6 @@ if __name__ == "__main__":
         param_name = "n_space"
 
     if best_param is not None:
-        print(f"\nRecommended {param_name}: {best_param}")
+        print(f"\nRecommended {param_name}: {best_param}, the total cost is {total_cost}")
     else:
-        print(f"\nNo convergent {param_name} found within the given iterations")
+        print(f"\nNo convergent {param_name} found within the given iterations, the total cost is {total_cost}")

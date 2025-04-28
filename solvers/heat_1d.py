@@ -35,13 +35,11 @@ class Heat1D(SIMULATOR):
         self.nx = self.n_space + 1
         self.x = torch.linspace(0, self.L, self.nx)
 
-        # Base initialization
-        super().__init__(verbose, cfg)
-
-    def init_fields(self):
-        """Initialize any additional fields needed"""
         # Initialize temperature field
         self.T = self.T_init * torch.ones(self.nx)
+
+        # Base initialization
+        super().__init__(verbose, cfg)
 
     def cal_dt(self):
         """Calculate base timestep using CFL condition"""
@@ -83,3 +81,10 @@ class Heat1D(SIMULATOR):
         # Save plot with same numbering as data file
         plt.savefig(f"{file_base}.png")
         plt.close()
+
+    def post_process(self):
+        # Save the cost estimation in a json file in dump dir
+        cost = self.num_steps * self.nx
+        with open(os.path.join(self.dump_dir, "meta.json"), "w") as f:
+            f.write(f'{{"cost": {cost}}}')
+        print(f"Total cost: {cost}")

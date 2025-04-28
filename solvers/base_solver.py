@@ -1,5 +1,6 @@
 class SIMULATOR:
     def __init__(self, verbose, cfg):
+        # Additional initialization can be added in the derived classes
         self.verbose = verbose
         self.cfg = cfg
 
@@ -11,13 +12,7 @@ class SIMULATOR:
 
         # Track frame numbers for output files
         self.record_frame = 0
-
-        # Init additional fields
-        self.init_fields()
-
-    def init_fields(self):
-        # TODO implement in override
-        pass
+        self.num_steps = 0
 
     def pre_process(self):
         # TODO implement in override
@@ -99,16 +94,18 @@ class SIMULATOR:
             # Perform simulation step
             self.step(dt)
             self.current_time += dt
+            self.num_steps += 1
 
             # Handle recording if we've reached a recording time
             if should_record:
                 if self.verbose:
                     print(f"Recording at time {self.current_time:.6f} (frame {self.record_frame})")
+                    print(f"Number of steps: {self.num_steps}")
                 self.dump()
                 self.call_back()
                 self.record_frame += 1
                 self.next_record_time = min(self.current_time + self.record_dt, self.end_time)
 
         if self.verbose:
-            print(f"Simulation completed at time {self.current_time:.6f}")
+            print(f"Simulation completed at time {self.current_time:.6f}, total steps: {self.num_steps}")
         self.post_process()

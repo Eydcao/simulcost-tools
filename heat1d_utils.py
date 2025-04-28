@@ -2,13 +2,22 @@ import os
 import subprocess
 import h5py
 import numpy as np
-from scipy.interpolate import interp1d
+import json
 
 
 def run_simulation(profile, cfl, n_space):
     """Run the heat1d simulation with the given CFL number."""
     cmd = f"python run_heat1d.py  --config-name={profile} cfl={cfl} n_space={n_space}"
     subprocess.run(cmd, shell=True, check=True)
+
+    dir_path = f"sim_res/heat_1d/{profile}_cfl_{cfl}_nx_{n_space}/"
+
+    # get cost from the meta.json
+    with open(os.path.join(dir_path, "meta.json"), "r") as f:
+        meta = json.load(f)
+        cost = meta["cost"]
+
+    return cost
 
 
 def get_simulation_results(profile, cfl, n_space):

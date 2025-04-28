@@ -17,4 +17,5 @@ useless/*
 **/*.h5
 **/*.mp4
 **/*.zip
+**/*.json
 **/output*/*
