@@ -9,6 +9,7 @@ defaults:
 dx: 0.01          # Number of spatial points
 relax: 1.0        # Relaxation factor
 error_threshold: 1e-6    # Error threshold for convergence
+T_init: 0.0         # Initial temperature
 
 # Simulator statics
 record_dt: 100        # Time interval between recordings [s]

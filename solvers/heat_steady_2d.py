@@ -22,9 +22,12 @@ class SteadyHeat2D(SIMULATOR):
         self.ny = int(self.Ly / self.dx + 1)  # Grid points in y
         self.relax = cfg.relax  # SOR relaxation parameter (1 < relax < 2)
         self.error_threshold = cfg.error_threshold  # Convergence threshold
+        self.T_init = cfg.T_init  # Initial temperature field
 
         # Create output directory
-        self.dump_dir = cfg.dump_dir + f"_dx{self.dx}_relax_{self.relax}/"
+        self.dump_dir = (
+            cfg.dump_dir + f"_dx{self.dx}_relax_{self.relax}_Tinit_{self.T_init}_error_{self.error_threshold}/"
+        )
         if not os.path.exists(self.dump_dir):
             os.makedirs(self.dump_dir)
 
@@ -33,12 +36,15 @@ class SteadyHeat2D(SIMULATOR):
         self.y = torch.linspace(0, self.Ly, self.ny)
 
         # Initialize temperature field (including boundaries)
-        self.T = torch.zeros((self.nx, self.ny))
-        self.T_old = torch.zeros((self.nx, self.ny))
+        self.T = torch.ones((self.nx, self.ny)) * self.T_init  # Default to initial temperature
+        # Set a clone
+        self.T_old = self.T.clone()
 
         # Set boundary conditions
         self.T[:, -1] = self.T_top  # Top boundary
-        # Other boundaries remain 0 (default initialization)
+        self.T[:, 0] = self.T_other  # Bottom boundary
+        self.T[0, :] = self.T_other  # Left boundary
+        self.T[-1, :] = self.T_other  # Right boundary
 
         # Base initialization
         super().__init__(verbose, cfg)
