@@ -140,16 +140,18 @@ if __name__ == "__main__":
         help="Choose which parameter to search: 'cfl' or 'n_space'",
     )
 
-    # Common parameters
+    # Profile choice
     parser.add_argument("--profile", type=str, default="p1", help="Name of the simulation profile configuration")
-    parser.add_argument("--tolerance", type=float, default=1e-4, help="Tolerance for convergence checking")
-    parser.add_argument("--max_iter", type=int, default=20, help="Maximum number of iterations to try")
 
     # CFL search parameters
     parser.add_argument(
         "--initial_cfl", type=float, default=1.0, help="Initial CFL number to start testing (for CFL search)"
     )
     parser.add_argument("--initial_n_space", type=int, default=100, help="Fixed grid number for CFL search")
+
+    # Fixed parameters
+    parser.add_argument("--tolerance", type=float, default=1e-4, help="Tolerance for convergence checking")
+    parser.add_argument("--max_iter", type=int, default=20, help="Maximum number of iterations to try")
 
     args = parser.parse_args()
 

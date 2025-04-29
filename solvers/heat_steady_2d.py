@@ -71,9 +71,7 @@ class SteadyHeat2D(SIMULATOR):
         if diff < self.error_threshold:
             # make a final dump
             self.dump()
-            print(
-                f"Converged with error {diff:.6f} at step {self.num_steps}, stopping simulation."
-            )
+            print(f"Converged with error {diff:.6f} at step {self.num_steps}, stopping simulation.")
             return True
         return False
 

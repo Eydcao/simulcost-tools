@@ -1,60 +1,78 @@
 # Dummy Solution for Heat1D
 
-Solve 1D heat conduction problems and find proper simulation parameters: CFL and grid number. This document contains the script for dummy-search of these parameters
+This doc concerns solving 1D heat conduction problems and identifies optimal simulation parameters: CFL number and grid resolution.
 
-## Find Convergent CFL
+## Finding Convergent CFL Number
 
-To find the maximum stable CFL number for a given profile while maintaining accuracy:
+**Notes:**
+The CFL (Courant-Friedrichs-Lewy) condition establishes a relationship between temporal and spatial discretization. For heat transfer problems:
+```
+dt = CFL * α / dx²
+```
+where:
+- α = thermal diffusivity (k*ρ/cₚ)
+- k = thermal conductivity
+- ρ = density
+- cₚ = specific heat capacity
 
+To determine the maximum stable CFL number for a given grid size, progressively reduce the CFL until convergence is achieved. The dummy solution implements a menthod halving CFL each iteration.
+
+**Example Command:**
 ```bash
-python dummy_heat1d.py --task cfl --initial_cfl 1.0 --initial_n_space 100 --tolerance 1e-4
+python dummy_heat1d.py --task cfl --profile p1 --initial_cfl 1.0 --initial_n_space 100
+```
+
+## Finding Convergent Grid Resolution
+
+**Notes:**
+Grid resolution determines spatial discretization (dx = L/n_space). Higher resolution provides finer solutions but increases computational cost. Note that dt automatically adjusts according to the CFL condition.
+
+For a fixed CFL number, double the grid resolution until the solution converges.
+
+**Example Command:**
+```bash
+python dummy_heat1d.py --task n_space --profile p1 --initial_cfl 1.0 --initial_n_space 10
 ```
 
 **Parameters:**
-- `--initial_cfl`: Starting CFL number (will be halved each iteration)
-- `--initial_n_space`: Fixed grid resolution for CFL testing
-- `--tolerance`: Maximum allowed difference between successive refinements
+| Parameter        | Description                                                                 |
+|------------------|-----------------------------------------------------------------------------|
+| `--task`         | Task type (`cfl` or `n_space`)                                              |
+| `--profile`      | Physics/numerical profile                                              |
+| `--initial_cfl`  | Starting CFL number (halved each iteration for CFL task)                    |
+| `--initial_n_space` | Starting grid resolution (doubled each iteration for grid task)          |
 
-## Find Convergent Grid Resolution
+## Creating New Test Profiles
 
-To find the coarsest sufficient grid resolution for a given profile:
-
-```bash
-python dummy_heat1d.py --task n_space --initial_cfl 1.0 --initial_n_space 10 --tolerance 1e-4
-```
-
-**Parameters:**
-- `--initial_cfl`: Fixed CFL number to use for grid testing
-- `--initial_n_space`: Starting grid resolution (will be doubled each iteration)
-- `--tolerance`: Maximum allowed difference between successive refinements
-
-## Perturb a New Profile
-
-To create new test profiles with randomized material properties:
+To generate new test cases with randomized material properties:
 
 ```python
 import numpy as np
 import yaml
 
 def create_new_profile(profile_name):
-    # TODO read from the existing p1
-
-    # Randomly generate material properties
+    # TODO: Read base configuration from existing p1
+    
+    # Generate randomized material properties
     log_h_min = np.log10(0.1)
     log_h_max = np.log10(100)
     log_h = np.random.uniform(log_h_min, log_h_max)
-    h = round(10**log_h, 2)
-    L = round(np.random.uniform(0.1, 0.2), 3)
-    k = round(np.random.uniform(0.5, 1), 2)
-    rho = round(np.random.uniform(1000, 2000))
-    cp = round(np.random.uniform(800, 1000))
-    T_inf = round(np.random.uniform(4, 20))
-    T_init = round(np.random.uniform(21, 30))
-    record_dt = round(np.random.uniform(1, 4)) * 100
-
-    # TODO update a new dump dir to avoid over-write
-
-    # TODO save a new copy p2, p3 etc ...
+    
+    properties = {
+        'h': round(10**log_h, 2),          # Heat transfer coefficient [W/m²-K]
+        'L': round(np.random.uniform(0.1, 0.2), 3),  # Rod length [m]
+        'k': round(np.random.uniform(0.5, 1), 2),    # Thermal conductivity [W/m-K]
+        'rho': round(np.random.uniform(1000, 2000)),  # Density [kg/m³]
+        'cp': round(np.random.uniform(800, 1000)),    # Specific heat [J/kg-K]
+        'T_inf': round(np.random.uniform(4, 20)),     # Ambient temp [°C]
+        'T_init': round(np.random.uniform(21, 30)),   # Initial temp [°C]
+        'record_dt': round(np.random.uniform(1, 4)) * 100  # Recording interval [s]
+    }
+    
+    # TODO: change the dump dir to avoid overwrite
+    # dump_dir: "sim_res/heat_steady_2d/p1" -> dump_dir: "sim_res/heat_steady_2d/p2" etc
+    # TODO: Implement profile saving logic
+    # TODO: Save as p2, p3, etc.
 ```
 
 **Property Ranges:**
