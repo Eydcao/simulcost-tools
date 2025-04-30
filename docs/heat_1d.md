@@ -2,7 +2,7 @@
 
 This doc concerns solving 1D heat conduction problems, where the left tip is convected to air, and right tip is adiabatic, and identifies optimal simulation parameters: CFL number and grid resolution. The metric for convergence check is the heat flux into the air (ie, gradient at the left tip) at the final time step.
 
-## Finding Convergent CFL Number
+## Finding Convergent CFL Number (0-shot and iterative)
 
 **Notes:**
 The CFL (Courant-Friedrichs-Lewy) condition establishes a relationship between temporal and spatial discretization. For heat transfer problems:
@@ -22,7 +22,7 @@ To determine the maximum stable CFL number for a given grid size, progressively 
 python dummy_sols/heat1d.py --task cfl --profile p1 --initial_cfl 1.0 --initial_n_space 100
 ```
 
-## Finding Convergent Grid Resolution
+## Finding Convergent Grid Resolution (0-shot and iterative)
 
 **Notes:**
 Grid resolution determines spatial discretization (dx = L/n_space). Higher resolution provides finer solutions but increases computational cost. Note that dt automatically adjusts according to the CFL condition.
