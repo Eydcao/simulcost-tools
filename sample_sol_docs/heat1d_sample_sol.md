@@ -1,6 +1,6 @@
 # Dummy Solution for Heat1D
 
-This doc concerns solving 1D heat conduction problems and identifies optimal simulation parameters: CFL number and grid resolution.
+This doc concerns solving 1D heat conduction problems, where the left tip is convected to air, and right tip is adiabatic, and identifies optimal simulation parameters: CFL number and grid resolution. The metric for convergence check is the heat flux into the air (ie, gradient at the left tip) at the final time step.
 
 ## Finding Convergent CFL Number
 
@@ -19,7 +19,7 @@ To determine the maximum stable CFL number for a given grid size, progressively 
 
 **Example Command:**
 ```bash
-python dummy_heat1d.py --task cfl --profile p1 --initial_cfl 1.0 --initial_n_space 100
+python dummy_sols/heat1d.py --task cfl --profile p1 --initial_cfl 1.0 --initial_n_space 100
 ```
 
 ## Finding Convergent Grid Resolution
@@ -31,7 +31,7 @@ For a fixed CFL number, double the grid resolution until the solution converges.
 
 **Example Command:**
 ```bash
-python dummy_heat1d.py --task n_space --profile p1 --initial_cfl 1.0 --initial_n_space 10
+python dummy_sols/heat1d.py --task n_space --profile p1 --initial_cfl 1.0 --initial_n_space 10
 ```
 
 **Parameters:**

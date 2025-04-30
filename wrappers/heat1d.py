@@ -7,7 +7,7 @@ import json
 
 def run_simulation(profile, cfl, n_space):
     """Run the heat1d simulation with the given CFL number."""
-    cmd = f"python run_heat1d.py  --config-name={profile} cfl={cfl} n_space={n_space}"
+    cmd = f"python runners/heat_1d.py  --config-name={profile} cfl={cfl} n_space={n_space}"
     subprocess.run(cmd, shell=True, check=True)
 
     dir_path = f"sim_res/heat_1d/{profile}_cfl_{cfl}_nx_{n_space}/"
@@ -53,14 +53,14 @@ def compare_results(profile1, cfl1, n_space1, profile2, cfl2, n_space2, toleranc
     return left_grad_diff < tolerance
 
 
-def interpolate_to_finer_grid(coarse_data, fine_data, coarse_x, fine_x):
-    """Interpolate data from coarse grid to fine grid using linear interpolation."""
-    interpolated_data = np.zeros_like(fine_data)
+# def interpolate_to_finer_grid(coarse_data, fine_data, coarse_x, fine_x):
+#     """Interpolate data from coarse grid to fine grid using linear interpolation."""
+#     interpolated_data = np.zeros_like(fine_data)
 
-    for t in range(coarse_data.shape[0]):
-        interpolated_data[t] = np.interp(fine_x, coarse_x, coarse_data[t])
+#     for t in range(coarse_data.shape[0]):
+#         interpolated_data[t] = np.interp(fine_x, coarse_x, coarse_data[t])
 
-    return interpolated_data
+#     return interpolated_data
 
 
 if __name__ == "__main__":
