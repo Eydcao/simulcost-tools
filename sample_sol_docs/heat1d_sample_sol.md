@@ -46,35 +46,6 @@ python dummy_sols/heat1d.py --task n_space --profile p1 --initial_cfl 1.0 --init
 
 To generate new test cases with randomized material properties:
 
-```python
-import numpy as np
-import yaml
-
-def create_new_profile(profile_name):
-    # TODO: Read base configuration from existing p1
-    
-    # Generate randomized material properties
-    log_h_min = np.log10(0.1)
-    log_h_max = np.log10(100)
-    log_h = np.random.uniform(log_h_min, log_h_max)
-    
-    properties = {
-        'h': round(10**log_h, 2),          # Heat transfer coefficient [W/m²-K]
-        'L': round(np.random.uniform(0.1, 0.2), 3),  # Rod length [m]
-        'k': round(np.random.uniform(0.5, 1), 2),    # Thermal conductivity [W/m-K]
-        'rho': round(np.random.uniform(1000, 2000)),  # Density [kg/m³]
-        'cp': round(np.random.uniform(800, 1000)),    # Specific heat [J/kg-K]
-        'T_inf': round(np.random.uniform(4, 20)),     # Ambient temp [°C]
-        'T_init': round(np.random.uniform(21, 30)),   # Initial temp [°C]
-        'record_dt': round(np.random.uniform(1, 4)) * 100  # Recording interval [s]
-    }
-    
-    # TODO: change the dump dir to avoid overwrite
-    # dump_dir: "sim_res/heat_steady_2d/p1" -> dump_dir: "sim_res/heat_steady_2d/p2" etc
-    # TODO: Implement profile saving logic
-    # TODO: Save as p2, p3, etc.
-```
-
 **Property Ranges:**
 - Heat transfer coefficient (h): 0.1 to 100 (log-uniform)
 - Rod length (L): 0.1 to 0.2 m
@@ -83,4 +54,9 @@ def create_new_profile(profile_name):
 - Specific heat (cp): 800 to 1000 J/kg-K
 - Ambient temp (T_inf): 4 to 20°C
 - Initial temp (T_init): 21 to 30°C
-- Recording interval (record_dt): 100 to 400s
+- Recording interval (record_dt): 10 to 80s
+
+See code for ref:
+```bash
+python gen_cfgs/heat_1d.py
+```
