@@ -1,5 +1,5 @@
 import argparse
-from wrappers.heat1d import run_simulation, compare_results
+from wrappers.heat_1d import run_sim_heat_1d, compare_res_heat_1d
 
 
 def find_convergent_cfl(profile, initial_cfl, initial_n_space, tolerance, max_iter):
@@ -18,7 +18,7 @@ def find_convergent_cfl(profile, initial_cfl, initial_n_space, tolerance, max_it
         print(f"\nRunning simulation with CFL = {current_cfl}")
 
         # Run simulation and load results
-        cost_i = run_simulation(profile, current_cfl, n_space)
+        cost_i = run_sim_heat_1d(profile, current_cfl, n_space)
         cost_history.append(cost_i)
         cfl_history.append(current_cfl)
 
@@ -27,7 +27,7 @@ def find_convergent_cfl(profile, initial_cfl, initial_n_space, tolerance, max_it
             prev_cfl = cfl_history[-2]
 
             # Compare with previous results
-            is_converged = compare_results(profile, prev_cfl, n_space, profile, current_cfl, n_space, tolerance)
+            is_converged = compare_res_heat_1d(profile, prev_cfl, n_space, profile, current_cfl, n_space, tolerance)
 
             if is_converged:
                 print(f"Convergence achieved between CFL {prev_cfl} and {current_cfl}")
@@ -43,7 +43,7 @@ def find_convergent_cfl(profile, initial_cfl, initial_n_space, tolerance, max_it
 
     if not converged and len(cfl_history) > 1:
         # Check if last two simulations converged
-        is_converged = compare_results(profile, cfl_history[-2], n_space, profile, cfl_history[-1], n_space, tolerance)
+        is_converged = compare_res_heat_1d(profile, cfl_history[-2], n_space, profile, cfl_history[-1], n_space, tolerance)
         if is_converged:
             best_cfl = cfl_history[-2]
             converged = True
@@ -79,7 +79,7 @@ def find_convergent_n_space(profile, initial_n_space, cfl, tolerance, max_iter):
         print(f"\nRunning simulation with n_space = {current_n_space}")
 
         # Run simulation and load results
-        cost_i = run_simulation(profile, current_cfl, current_n_space)
+        cost_i = run_sim_heat_1d(profile, current_cfl, current_n_space)
         cost_history.append(cost_i)
         n_space_history.append(current_n_space)
 
@@ -88,7 +88,7 @@ def find_convergent_n_space(profile, initial_n_space, cfl, tolerance, max_iter):
             prev_n_space = n_space_history[-2]
 
             # Compare with previous results (with interpolation if needed)
-            is_converged = compare_results(
+            is_converged = compare_res_heat_1d(
                 profile, current_cfl, prev_n_space, profile, current_cfl, current_n_space, tolerance
             )
 
@@ -106,7 +106,7 @@ def find_convergent_n_space(profile, initial_n_space, cfl, tolerance, max_iter):
 
     if not converged and len(n_space_history) > 1:
         # Check if last two simulations converged
-        is_converged = compare_results(
+        is_converged = compare_res_heat_1d(
             profile, current_cfl, n_space_history[-2], profile, current_cfl, n_space_history[-1], tolerance
         )
         if is_converged:

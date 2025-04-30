@@ -5,7 +5,7 @@ import numpy as np
 import json
 
 
-def run_simulation(profile, cfl, n_space):
+def run_sim_heat_1d(profile, cfl, n_space):
     """Run the heat1d simulation with the given CFL number."""
     cmd = f"python runners/heat_1d.py  --config-name={profile} cfl={cfl} n_space={n_space}"
     subprocess.run(cmd, shell=True, check=True)
@@ -20,7 +20,7 @@ def run_simulation(profile, cfl, n_space):
     return cost
 
 
-def get_simulation_results(profile, cfl, n_space):
+def get_res_heat_1d(profile, cfl, n_space):
     """Load all time frames for a given CFL number."""
     dir_path = f"sim_res/heat_1d/{profile}_cfl_{cfl}_nx_{n_space}/"
     results = []
@@ -34,10 +34,10 @@ def get_simulation_results(profile, cfl, n_space):
     return np.array(results), X
 
 
-def compare_results(profile1, cfl1, n_space1, profile2, cfl2, n_space2, tolerance):
+def compare_res_heat_1d(profile1, cfl1, n_space1, profile2, cfl2, n_space2, tolerance):
     """Compare two sets of results with potential grid size mismatch."""
-    res1, x1 = get_simulation_results(profile1, cfl1, n_space1)
-    res2, x2 = get_simulation_results(profile2, cfl2, n_space2)
+    res1, x1 = get_res_heat_1d(profile1, cfl1, n_space1)
+    res2, x2 = get_res_heat_1d(profile2, cfl2, n_space2)
 
     left_temp_grad1 = (res1[-1, 1] - res1[-1, 0]) / (x1[1] - x1[0])
     left_grad_grad2 = (res2[-1, 1] - res2[-1, 0]) / (x2[1] - x2[0])
@@ -75,8 +75,8 @@ if __name__ == "__main__":
 
     tolerance = 1e-5
 
-    res1, x1 = get_simulation_results(profile1, cfl1, n_space1)
-    res2, x2 = get_simulation_results(profile2, cfl2, n_space2)
+    res1, x1 = get_res_heat_1d(profile1, cfl1, n_space1)
+    res2, x2 = get_res_heat_1d(profile2, cfl2, n_space2)
 
     # upsample res1 to match res2
     res1_interp = interpolate_to_finer_grid(res1, res2, x1, x2)
