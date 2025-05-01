@@ -1,5 +1,12 @@
 import argparse
-from wrappers.heat_1d import run_sim_heat_1d, compare_res_heat_1d
+
+
+# Append abs path
+import sys
+import os
+
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from wrappers import *
 
 
 def find_convergent_cfl(profile, initial_cfl, initial_n_space, tolerance, max_iter):
@@ -43,7 +50,9 @@ def find_convergent_cfl(profile, initial_cfl, initial_n_space, tolerance, max_it
 
     if not converged and len(cfl_history) > 1:
         # Check if last two simulations converged
-        is_converged = compare_res_heat_1d(profile, cfl_history[-2], n_space, profile, cfl_history[-1], n_space, tolerance)
+        is_converged = compare_res_heat_1d(
+            profile, cfl_history[-2], n_space, profile, cfl_history[-1], n_space, tolerance
+        )
         if is_converged:
             best_cfl = cfl_history[-2]
             converged = True

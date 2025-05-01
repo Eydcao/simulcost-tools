@@ -7,12 +7,12 @@ defaults:
 
 # Numerical parameters
 dx: 0.01          # Number of spatial points
-relax: 1.0        # Relaxation factor
-error_threshold: 1e-6    # Error threshold for convergence
+relax: 0.5        # Relaxation factor
+error_threshold: 1e-8    # Error threshold for convergence
 T_init: 0.0         # Initial temperature
 
 # Simulator statics
-record_dt: 100        # Time interval between recordings [s]
+record_dt: 10000        # Time interval between recordings [s]
 end_frame: 100000     # Simulation end after certain number of frames
 
 # Output configuration
