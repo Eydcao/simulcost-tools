@@ -181,14 +181,14 @@ if __name__ == "__main__":
     parser.add_argument("--profile", type=str, default="p1", help="Name of the simulation profile")
 
     # Parameter values
-    parser.add_argument("--dx", type=float, default=0.01, help="Grid spacing")
+    parser.add_argument("--dx", type=float, default=0.005, help="Grid spacing")
     parser.add_argument("--relax", type=float, default=1.0, help="Relaxation factor")
     parser.add_argument("--T_init", type=float, default=0.25, help="Initial temperature")
 
     # Fixed parameters
     parser.add_argument("--max_iter", type=int, default=20, help="Maximum number of iterations")
     parser.add_argument("--error_threshold", type=float, default=1e-7, help="Tolerance for inner convergence checking")
-    parser.add_argument("--tolerance", type=float, default=1e-3, help="Tolerance for outter convergence check")
+    parser.add_argument("--tolerance", type=float, default=1e-6, help="Tolerance for outter convergence check")
 
     args = parser.parse_args()
 

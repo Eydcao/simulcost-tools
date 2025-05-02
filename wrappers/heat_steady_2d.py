@@ -44,42 +44,53 @@ def compare_res_heat_steady_2d(
     profile1, dx1, relax1, error_threshold1, t_init1, profile2, dx2, relax2, error_threshold2, t_init2, tolerance
 ):
     """
-    Compare two sets of results using heat flux at top boundary (excluding corners) as metric.
-    Heat flux is proportional to temperature gradient in y-direction.
+    Compare two sets of results using the RMSE of the temperature distribution on the middle vertical line (x=0.5).
     """
     res1, x1, y1, _ = get_res_heat_steady_2d(profile1, dx1, relax1, error_threshold1, t_init1)
     res2, x2, y2, _ = get_res_heat_steady_2d(profile2, dx2, relax2, error_threshold2, t_init2)
 
-    # Calculate gradient at top boundary: (T_top - T_second) / dy
-    # Exclude the corners (first and last columns)
-    grad1 = (res1[1:-1, -1] - res1[1:-1, -2]) / dx1
-    sum_grad1 = np.mean(grad1)
+    # Find the index of x=0.5 in both datasets
+    idx1 = np.argmin(np.abs(x1 - 0.5))
+    idx2 = np.argmin(np.abs(x2 - 0.5))
 
-    # For res2: Extract second-to-top row to calculate gradient with top boundary
-    grad2 = (res2[1:-1, -1] - res2[1:-1, -2]) / dx2
-    sum_grad2 = np.mean(grad2)
+    # Extract temperature values along the middle vertical line (x=0.5)
+    T_line1 = res1[:, idx1]
+    T_line2 = res2[:, idx2]
 
-    # Calculate relative difference
-    avg_sum_grad = (sum_grad1 + sum_grad2) / 2 + 1e-10
-    rel_diff = np.abs(sum_grad1 - sum_grad2) / avg_sum_grad
+    # # save to fig plot for debugging
+    # import matplotlib.pyplot as plt
 
-    print(f"Sum of gradients for dx={dx1}: {sum_grad1:.6f}")
-    print(f"Sum of gradients for dx={dx2}: {sum_grad2:.6f}")
-    print(f"Relative heat flux difference: {rel_diff:.6f}")
+    # plt.plot(y1, T_line1, label=f"dx={dx1}")
+    # plt.plot(y2, T_line2, label=f"dx={dx2}")
+    # plt.xlabel("y")
+    # plt.ylabel("Temperature")
+    # plt.title("Temperature Distribution at x=0.5")
+    # plt.legend()
+    # plt.savefig(f"temp_dist_x_0.5_dx_{dx1}_{dx2}.png")
+    # plt.close()
+
+    # Interpolate T_line2 to match the y-coordinates of T_line1
+    interpolator = RegularGridInterpolator((y2,), T_line2)
+    T_line2_interp = interpolator(y1)
+
+    # Calculate RMSE
+    rmse = np.sqrt(np.mean((T_line1 - T_line2_interp) ** 2))
+
+    print(f"RMSE of temperature distribution on x=0.5: {rmse:.6f}")
     print(f"Tolerance: {tolerance:.6f}")
 
-    return rel_diff < tolerance
+    return rmse < tolerance
 
 
 if __name__ == "__main__":
     # Example usage: compare dx  0.01 and 0.005
     profile = "p1"
-    dx = 0.0025
+    dx = 0.01
     relax = 1.0
     error_threshold = 1e-7
     t_init = 0.25
 
-    tolerance = 1e-3
+    tolerance = 1e-6
 
     # Compare results
     is_converged = compare_res_heat_steady_2d(

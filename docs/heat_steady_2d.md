@@ -18,7 +18,7 @@ The equation is iteratively solved using the Jacobi method with point SOR.
 
 ### Finding Optimal Grid Resolution (dx)
 
-The grid resolution determines the spatial discretization accuracy. A finer grid (smaller dx) provides more accurate solutions but increases computational cost. In dummy method, we start with an initial dx value and halve it until convergence is achieved between consecutive refinements. The convergent metric is the heat flux at the top wall.
+The grid resolution determines the spatial discretization accuracy. A finer grid (smaller dx) provides more accurate solutions but increases computational cost. In dummy method, we start with an initial dx value and halve it until convergence is achieved between consecutive refinements. The convergence metric is the temperature distribution at the middle (vertical) line
 
 ```bash
 python dummy_sols/heat_steady_2d.py --task dx --profile p1 --initial_dx 0.01
@@ -42,7 +42,7 @@ python dummy_sols/heat_steady_2d.py --task t_init --profile p1
 
 ### Finding Optimal Error Threshold
 
-The error threshold determines when to stop the Jacobi iteration process.  The convergent metric is the heat flux at the top wall. The dummy method start with a loose threshold and decrease it by factors of 10 until the solution no longer changes significantly.
+The error threshold determines when to stop the Jacobi iteration process.  The convergence metric is the temperature distribution at the middle (vertical) line The dummy method start with a loose threshold and decrease it by factors of 10 until the solution no longer changes significantly.
 
 ```bash
 python dummy_sols/heat_steady_2d.py --task error_threshold --profile p1 --error_threshold 1e-5
