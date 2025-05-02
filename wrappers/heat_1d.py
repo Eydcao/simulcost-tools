@@ -4,11 +4,14 @@ import h5py
 import numpy as np
 import json
 
+env = os.environ.copy()
+env["PYTHONPATH"] = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
+
 
 def run_sim_heat_1d(profile, cfl, n_space):
     """Run the heat1d simulation with the given CFL number."""
-    cmd = f"python runners/heat_1d.py  --config-name={profile} cfl={cfl} n_space={n_space}"
-    subprocess.run(cmd, shell=True, check=True)
+    cmd = f"python costsci_tools/runners/heat_1d.py  --config-name={profile} cfl={cfl} n_space={n_space}"
+    subprocess.run(cmd, shell=True, check=True, env=env)
 
     dir_path = f"sim_res/heat_1d/{profile}_cfl_{cfl}_nx_{n_space}/"
 
@@ -63,25 +66,25 @@ def compare_res_heat_1d(profile1, cfl1, n_space1, profile2, cfl2, n_space2, tole
 #     return interpolated_data
 
 
-if __name__ == "__main__":
-    # Example usage
-    profile1 = "p1"
-    cfl1 = 0.5
-    n_space1 = 320
+# if __name__ == "__main__":
+#     # Example usage
+#     profile1 = "p1"
+#     cfl1 = 0.5
+#     n_space1 = 320
 
-    profile2 = "p1"
-    cfl2 = 0.5
-    n_space2 = 640
+#     profile2 = "p1"
+#     cfl2 = 0.5
+#     n_space2 = 640
 
-    tolerance = 1e-5
+#     tolerance = 1e-5
 
-    res1, x1 = get_res_heat_1d(profile1, cfl1, n_space1)
-    res2, x2 = get_res_heat_1d(profile2, cfl2, n_space2)
+#     res1, x1 = get_res_heat_1d(profile1, cfl1, n_space1)
+#     res2, x2 = get_res_heat_1d(profile2, cfl2, n_space2)
 
-    # upsample res1 to match res2
-    res1_interp = interpolate_to_finer_grid(res1, res2, x1, x2)
-    # for each time step, compare the results
-    for t in range(res1.shape[0]):
-        diff = np.abs(res1_interp[t] - res2[t])
-        mean_diff = np.mean(diff)
-        print(f"Mean difference at time step {t}: {mean_diff}")
+#     # upsample res1 to match res2
+#     res1_interp = interpolate_to_finer_grid(res1, res2, x1, x2)
+#     # for each time step, compare the results
+#     for t in range(res1.shape[0]):
+#         diff = np.abs(res1_interp[t] - res2[t])
+#         mean_diff = np.mean(diff)
+#         print(f"Mean difference at time step {t}: {mean_diff}")

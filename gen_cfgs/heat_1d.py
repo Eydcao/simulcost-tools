@@ -5,7 +5,6 @@ from pathlib import Path
 # fix np random seed
 np.random.seed(42)
 
-
 def create_heat1d_profiles(num_profiles, base_profile_path):
     """
     Create multiple random Heat1D profiles based on the p1 base profile.

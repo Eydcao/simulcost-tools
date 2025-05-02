@@ -1,6 +1,6 @@
 import hydra
 from omegaconf import OmegaConf
-from solvers import *
+from costsci_tools.solvers import *
 import os
 
 
