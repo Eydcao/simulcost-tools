@@ -6,7 +6,7 @@ from pathlib import Path
 np.random.seed(42)
 
 
-def create_heat1d_profiles(num_profiles, base_profile_path):
+def create_heat1d_profiles(num_profiles, base_profile_path, solver_name):
     """
     Create multiple random Heat1D profiles based on the p1 base profile.
     Preserves comments and formatting from the base profile.
@@ -52,7 +52,7 @@ def create_heat1d_profiles(num_profiles, base_profile_path):
         }
 
         # Add dump_dir with new profile name
-        random_params["dump_dir"] = f"sim_res/heat_1d/{profile_name}"
+        random_params["dump_dir"] = f"sim_res/{solver_name}/{profile_name}"
 
         # Modify the lines to update parameters while preserving comments and format
         new_lines = []
@@ -103,4 +103,6 @@ if __name__ == "__main__":
     # Example usage:
 
     # 1. Create multiple random profiles
-    random_profiles = create_heat1d_profiles(num_profiles=9, base_profile_path="./run_configs/heat_1d/p1.yaml")
+    random_profiles = create_heat1d_profiles(
+        num_profiles=9, base_profile_path="./run_configs/heat_1d/p1.yaml", solver_name="heat_1d"
+    )
