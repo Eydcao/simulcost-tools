@@ -13,8 +13,10 @@ class SteadyHeat2D(SIMULATOR):
         # Physical parameters
         self.Lx = 1.0  # Domain size in x
         self.Ly = 1.0  # Domain size in y
-        self.T_top = 1.0  # Fixed top boundary temperature
-        self.T_other = 0.0  # Fixed other boundaries temperature
+        self.T_top = cfg.T_top  # Fixed top boundary temperature
+        self.T_bottom = cfg.T_bottom  # Fixed bottom boundary temperature
+        self.T_left = cfg.T_left  # Fixed left boundary temperature
+        self.T_right = cfg.T_right  # Fixed right boundary temperature
 
         # Numerical parameters
         self.dx = cfg.dx  # Grid spacing in x
@@ -37,14 +39,21 @@ class SteadyHeat2D(SIMULATOR):
 
         # Initialize temperature field (including boundaries)
         self.T = torch.ones((self.nx, self.ny)) * self.T_init  # Default to initial temperature
-        # Set a clone
-        self.T_old = self.T.clone()
 
         # Set boundary conditions
         self.T[:, -1] = self.T_top  # Top boundary
-        self.T[:, 0] = self.T_other  # Bottom boundary
-        self.T[0, :] = self.T_other  # Left boundary
-        self.T[-1, :] = self.T_other  # Right boundary
+        self.T[:, 0] = self.T_bottom  # Bottom boundary
+        self.T[0, :] = self.T_left  # Left boundary
+        self.T[-1, :] = self.T_right  # Right boundary
+
+        # Set corner temperatures as the average of adjacent walls
+        self.T[0, -1] = 0.5 * (self.T_top + self.T_left)  # Top-left corner
+        self.T[-1, -1] = 0.5 * (self.T_top + self.T_right)  # Top-right corner
+        self.T[0, 0] = 0.5 * (self.T_bottom + self.T_left)  # Bottom-left corner
+        self.T[-1, 0] = 0.5 * (self.T_bottom + self.T_right)  # Bottom-right corner
+
+        # Set a clone for T old
+        self.T_old = self.T.clone()
 
         # Base initialization
         super().__init__(verbose, cfg)
