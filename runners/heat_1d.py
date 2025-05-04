@@ -1,7 +1,6 @@
 import hydra
 from omegaconf import OmegaConf
 
-# Append abs path
 import sys
 import os
 

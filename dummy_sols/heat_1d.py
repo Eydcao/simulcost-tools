@@ -1,3 +1,7 @@
+import sys
+import os
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+
 import argparse
 
 
@@ -7,7 +11,6 @@ import os
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from wrappers import *
-
 
 def find_convergent_cfl(profile, initial_cfl, initial_n_space, tolerance, max_iter):
     """Iteratively reduce CFL number until convergence is achieved."""
@@ -69,7 +72,7 @@ def find_convergent_cfl(profile, initial_cfl, initial_n_space, tolerance, max_it
 
     print(f"Cost history: {cost_history}, total cost: {sum(cost_history)}")
 
-    return best_cfl, sum(cost_history)
+    return bool(is_converged), best_cfl, cost_history, cfl_history
 
 
 def find_convergent_n_space(profile, initial_n_space, cfl, tolerance, max_iter):
@@ -134,7 +137,7 @@ def find_convergent_n_space(profile, initial_n_space, cfl, tolerance, max_iter):
 
     print(f"Cost history: {cost_history}, total cost: {sum(cost_history)}")
 
-    return best_n_space, sum(cost_history)
+    return bool(is_converged), best_n_space, cost_history, n_space_history
 
 
 if __name__ == "__main__":
