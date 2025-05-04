@@ -89,7 +89,7 @@ class SIMULATOR:
         self.record_frame += 1
         self.next_record_time = min(self.current_time + self.record_dt, self.end_time)
 
-        while self.current_time < self.end_time and not self.early_stop():
+        while self.current_time < self.end_time:
             # Calculate base timestep
             base_dt = self.cal_dt()
 
@@ -112,6 +112,11 @@ class SIMULATOR:
                 self.dump()
                 self.record_frame += 1
                 self.next_record_time = min(self.current_time + self.record_dt, self.end_time)
+
+            if self.early_stop():
+                if self.verbose:
+                    print(f"Early stopping at time {self.current_time:.6f}")
+                break
 
         if self.verbose:
             print(f"Simulation completed at time {self.current_time:.6f}, total steps: {self.num_steps}")

@@ -1,7 +1,13 @@
 import hydra
 from omegaconf import OmegaConf
-from solvers import *
+
+# Append abs path
+import sys
 import os
+
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+from solvers import *
 
 
 @hydra.main(version_base=None, config_path="../run_configs/heat_steady_2d", config_name="p1")
