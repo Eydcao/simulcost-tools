@@ -5,16 +5,24 @@ import numpy as np
 import json
 from scipy.interpolate import RegularGridInterpolator
 
-
 def run_sim_heat_steady_2d(profile, dx, relax, error_threshold, t_init):
     """Run the heat_steady_2d simulation with the given parameters."""
+    dir_path = f"sim_res/heat_steady_2d/{profile}_dx{dx}_relax_{relax}_Tinit_{t_init}_error_{error_threshold}/"
+    meta_file_path = os.path.join(dir_path, "meta.json")
+
+    # Check if the directory and meta.json file with the cost key exist
+    if os.path.exists(meta_file_path):
+        with open(meta_file_path, "r") as f:
+            meta = json.load(f)
+            if "cost" in meta:
+                return meta["cost"]
+
+    # Run the simulation if the directory or meta.json file does not exist
     cmd = f"python runners/heat_steady_2d.py --config-name={profile} dx={dx} relax={relax} error_threshold={error_threshold} T_init={t_init}"
     subprocess.run(cmd, shell=True, check=True)
 
-    dir_path = f"sim_res/heat_steady_2d/{profile}_dx{dx}_relax_{relax}_Tinit_{t_init}_error_{error_threshold}/"
-
-    # get cost from the meta.json
-    with open(os.path.join(dir_path, "meta.json"), "r") as f:
+    # Load the cost from the meta.json file
+    with open(meta_file_path, "r") as f:
         meta = json.load(f)
         cost = meta["cost"]
 
