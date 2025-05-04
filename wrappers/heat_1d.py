@@ -9,14 +9,23 @@ env["PYTHONPATH"] = os.path.abspath(os.path.join(os.path.dirname(__file__), "../
 
 
 def run_sim_heat_1d(profile, cfl, n_space):
-    """Run the heat1d simulation with the given CFL number."""
+    """Run the heat1d simulation with the given CFL number if not already simulated."""
+    dir_path = f"sim_res/heat_1d/{profile}_cfl_{cfl}_nx_{n_space}/"
+    meta_path = os.path.join(dir_path, "meta.json")
+
+    # Check if the simulation has already been run
+    if os.path.exists(meta_path):
+        with open(meta_path, "r") as f:
+            meta = json.load(f)
+            if "cost" in meta:
+                return meta["cost"]
+
+    # Run the simulation if not already done
     cmd = f"python costsci_tools/runners/heat_1d.py  --config-name={profile} cfl={cfl} n_space={n_space}"
     subprocess.run(cmd, shell=True, check=True, env=env)
 
-    dir_path = f"sim_res/heat_1d/{profile}_cfl_{cfl}_nx_{n_space}/"
-
-    # get cost from the meta.json
-    with open(os.path.join(dir_path, "meta.json"), "r") as f:
+    # Load the cost from the meta.json file
+    with open(meta_path, "r") as f:
         meta = json.load(f)
         cost = meta["cost"]
 
