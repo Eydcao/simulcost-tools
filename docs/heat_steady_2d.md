@@ -53,6 +53,15 @@ python dummy_sols/heat_steady_2d.py --task error_threshold --profile p1 --error_
 | Parameter | Description |
 |-----------|-------------|
 | dx | Grid spacing (determines resolution) |
-| relax | Relaxation factor for SOR method (1.0 < relax < 2.0) |
+| relax | Relaxation factor for SOR method (0.05 <= relax <= 1.95) |
 | error_threshold | Convergence criterion (RMSE between iterations) |
 | T_init | Initial temperature field value |
+
+## Creating New Test Profiles
+
+To generate new test cases with randomized boundary conditions properties: each of the four walls have a uniform randomized temperature between 0 and 1.
+
+See code for ref:
+```bash
+python gen_cfgs/heat_steady_2d.py
+```
