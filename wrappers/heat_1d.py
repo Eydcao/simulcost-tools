@@ -62,7 +62,7 @@ def compare_res_heat_1d(profile1, cfl1, n_space1, profile2, cfl2, n_space2, tole
     print(f"Left boundary temperature gradient 2: {left_grad_grad2}")
     print(f"Relative left boundary gradient difference: {left_grad_diff}")
 
-    return left_grad_diff < tolerance
+    return left_grad_diff < tolerance, left_grad_diff
 
 
 # def interpolate_to_finer_grid(coarse_data, fine_data, coarse_x, fine_x):
