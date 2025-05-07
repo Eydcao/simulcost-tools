@@ -69,7 +69,7 @@ def find_optimal_dx(profile, initial_dx, relax, error_threshold, T_init, toleran
 
     print(f"Cost history: {cost_history}, total cost: {sum(cost_history)}")
 
-    return best_dx, sum(cost_history)
+    return bool(is_converged), best_dx, cost_history, dx_history
 
 
 def grid_search_relax(profile, dx, relax_values, error_threshold, T_init, max_iter):
@@ -89,8 +89,8 @@ def grid_search_relax(profile, dx, relax_values, error_threshold, T_init, max_it
     print(f"\nOptimal relaxation factor: {best_relax} with cost {min_cost}")
     print(f"All costs: {relax_costs}")
 
-    return best_relax, sum(relax_costs.values())
-
+    return True, best_relax, relax_costs, relax_values
+    # return best_relax, sum(relax_costs.values())
 
 def grid_search_T_init(profile, dx, relax, error_threshold, T_init_values, max_iter):
     """Perform grid search for optimal initial temperature."""
@@ -109,7 +109,8 @@ def grid_search_T_init(profile, dx, relax, error_threshold, T_init_values, max_i
     print(f"\nOptimal initial temperature: {best_T_init} with cost {min_cost}")
     print(f"All costs: {T_init_costs}")
 
-    return best_T_init, sum(T_init_costs.values())
+    return True, best_T_init, T_init_costs, T_init_values
+    # return best_T_init, sum(T_init_costs.values())
 
 
 def find_optimal_error_threshold(profile, dx, relax, T_init, initial_error, tolerance, max_iter):
@@ -162,7 +163,8 @@ def find_optimal_error_threshold(profile, dx, relax, T_init, initial_error, tole
 
     print(f"Cost history: {cost_history}, total cost: {sum(cost_history)}")
 
-    return best_error, sum(cost_history)
+    return bool(is_converged), best_error, cost_history, error_history
+    # return best_error, sum(cost_history)
 
 
 if __name__ == "__main__":
