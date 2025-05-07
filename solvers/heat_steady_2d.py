@@ -4,6 +4,7 @@ import os
 from .base_solver import SIMULATOR
 import numpy as np
 import matplotlib.pyplot as plt
+import json
 
 
 class SteadyHeat2D(SIMULATOR):
@@ -54,6 +55,7 @@ class SteadyHeat2D(SIMULATOR):
 
         # Set a clone for T old
         self.T_old = self.T.clone()
+        self.converged = False
 
         # Base initialization
         super().__init__(verbose, cfg)
@@ -87,6 +89,7 @@ class SteadyHeat2D(SIMULATOR):
             # make a final dump
             self.dump()
             print(f"Converged with error {diff:.6f} at step {self.num_steps}, stopping simulation.")
+            self.converged = True
             return True
         return False
 
@@ -116,5 +119,7 @@ class SteadyHeat2D(SIMULATOR):
         """Calculate and save computational cost"""
         cost = (self.nx * self.ny) * self.num_steps
         with open(os.path.join(self.dump_dir, "meta.json"), "w") as f:
-            f.write(f'{{"cost": {cost}}}')
+            # save both cost and converged in meta.json
+            meta = {"cost": cost, "converged": int(self.converged)}
+            json.dump(meta, f, indent=4)
         print(f"Total cost: {cost}")

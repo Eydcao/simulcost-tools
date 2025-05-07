@@ -1,6 +1,7 @@
 import sys
 import os
-sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+
+sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 
 import argparse
 
@@ -11,6 +12,7 @@ import os
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from wrappers import *
+
 
 def find_convergent_cfl(profile, initial_cfl, initial_n_space, tolerance, max_iter):
     """Iteratively reduce CFL number until convergence is achieved."""
@@ -55,7 +57,9 @@ def find_convergent_cfl(profile, initial_cfl, initial_n_space, tolerance, max_it
 
     if not converged and len(cfl_history) > 1:
         # Check if last two simulations converged
-        is_converged, _ = compare_res_heat_1d(profile, cfl_history[-2], n_space, profile, cfl_history[-1], n_space, tolerance)
+        is_converged, _ = compare_res_heat_1d(
+            profile, cfl_history[-2], n_space, profile, cfl_history[-1], n_space, tolerance
+        )
         if is_converged:
             best_cfl = cfl_history[-2]
             converged = True
@@ -140,6 +144,7 @@ def find_convergent_n_space(profile, initial_n_space, cfl, tolerance, max_iter):
     print(f"Cost history: {cost_history}, total cost: {sum(cost_history)}")
 
     return bool(is_converged), best_n_space, cost_history, param_history
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Find convergent parameters for heat1d simulation")

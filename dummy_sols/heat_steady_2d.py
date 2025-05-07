@@ -92,6 +92,7 @@ def grid_search_relax(profile, dx, relax_values, error_threshold, T_init, max_it
     return True, best_relax, relax_costs, relax_values
     # return best_relax, sum(relax_costs.values())
 
+
 def grid_search_T_init(profile, dx, relax, error_threshold, T_init_values, max_iter):
     """Perform grid search for optimal initial temperature."""
     T_init_costs = {}

@@ -5,6 +5,7 @@ import numpy as np
 import json
 from scipy.interpolate import RegularGridInterpolator
 
+
 def run_sim_heat_steady_2d(profile, dx, relax, error_threshold, t_init):
     """Run the heat_steady_2d simulation with the given parameters."""
     dir_path = f"sim_res/heat_steady_2d/{profile}_dx{dx}_relax_{relax}_Tinit_{t_init}_error_{error_threshold}/"

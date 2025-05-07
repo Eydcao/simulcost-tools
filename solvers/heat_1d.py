@@ -4,6 +4,7 @@ import os
 from .base_solver import SIMULATOR
 import numpy as np
 import matplotlib.pyplot as plt
+import json
 
 
 class Heat1D(SIMULATOR):
@@ -87,5 +88,6 @@ class Heat1D(SIMULATOR):
         # Save the cost estimation in a json file in dump dir
         cost = self.num_steps * self.nx
         with open(os.path.join(self.dump_dir, "meta.json"), "w") as f:
-            f.write(f'{{"cost": {cost}}}')
+            meta = {"cost": cost}
+            json.dump(meta, f, indent=4)
         print(f"Total cost: {cost}")
