@@ -101,7 +101,7 @@ def compare_res_heat_steady_2d(
     print(f"RMSE of temperature distribution on x=0.5: {rmse:.6f}")
     print(f"Tolerance: {tolerance:.6f}")
 
-    return rmse < tolerance
+    return rmse < tolerance, rmse
 
 
 if __name__ == "__main__":
