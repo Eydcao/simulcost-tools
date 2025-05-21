@@ -22,7 +22,7 @@ def find_optimal_dx(profile, initial_dx, relax, error_threshold, T_init, toleran
         print(f"\nRunning simulation with dx = {current_dx}")
 
         # Run simulation and track cost
-        cost_i = run_sim_heat_steady_2d(profile, current_dx, relax, error_threshold, T_init)
+        cost_i, num_steps = run_sim_heat_steady_2d(profile, current_dx, relax, error_threshold, T_init)
         cost_history.append(cost_i)
         param_history.append({
             "dx": current_dx,
@@ -83,7 +83,7 @@ def grid_search_relax(profile, dx, relax_values, error_threshold, T_init, max_it
 
     for relax in relax_values:
         print(f"\nTesting relaxation factor: {relax}")
-        cost = run_sim_heat_steady_2d(profile, dx, relax, error_threshold, T_init)
+        cost, num_steps = run_sim_heat_steady_2d(profile, dx, relax, error_threshold, T_init)
         relax_costs[relax] = cost
         param_history.append({
             "dx": dx,
@@ -110,7 +110,7 @@ def grid_search_T_init(profile, dx, relax, error_threshold, T_init_values, max_i
 
     for T_init in T_init_values:
         print(f"\nTesting initial temperature: {T_init}")
-        cost = run_sim_heat_steady_2d(profile, dx, relax, error_threshold, T_init)
+        cost, num_steps = run_sim_heat_steady_2d(profile, dx, relax, error_threshold, T_init)
         T_init_costs[T_init] = cost
         param_history.append({
             "dx": dx,
@@ -142,7 +142,7 @@ def find_optimal_error_threshold(profile, dx, relax, T_init, initial_error, tole
         print(f"\nRunning simulation with error threshold = {current_error}")
 
         # Run simulation and track cost
-        cost_i = run_sim_heat_steady_2d(profile, dx, relax, current_error, T_init)
+        cost_i, num_steps = run_sim_heat_steady_2d(profile, dx, relax, current_error, T_init)
         cost_history.append(cost_i)
         param_history.append({
             "dx": dx,

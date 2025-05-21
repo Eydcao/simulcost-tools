@@ -11,12 +11,12 @@ def run_sim_heat_steady_2d(profile, dx, relax, error_threshold, t_init):
     dir_path = f"sim_res/heat_steady_2d/{profile}_dx{dx}_relax_{relax}_Tinit_{t_init}_error_{error_threshold}/"
     meta_file_path = os.path.join(dir_path, "meta.json")
 
-    # Check if the directory and meta.json file with the cost key exist
+    # Check if the directory and meta.json file with the key of cost and num_steps exist
     if os.path.exists(meta_file_path):
         with open(meta_file_path, "r") as f:
             meta = json.load(f)
-            if "cost" in meta:
-                return meta["cost"]
+            if "cost" in meta and "num_steps" in meta:
+                return meta["cost"], meta["num_steps"]
 
     # Run the simulation if the directory or meta.json file does not exist
     cmd = f"python costsci_tools/runners/heat_steady_2d.py --config-name={profile} dx={dx} relax={relax} error_threshold={error_threshold} T_init={t_init}"
@@ -25,9 +25,8 @@ def run_sim_heat_steady_2d(profile, dx, relax, error_threshold, t_init):
     # Load the cost from the meta.json file
     with open(meta_file_path, "r") as f:
         meta = json.load(f)
-        cost = meta["cost"]
 
-    return cost
+    return meta["cost"], meta["num_steps"]
 
 
 def get_res_heat_steady_2d(profile, dx, relax, error_threshold, t_init):

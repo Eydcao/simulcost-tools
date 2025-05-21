@@ -118,8 +118,12 @@ class SteadyHeat2D(SIMULATOR):
     def post_process(self):
         """Calculate and save computational cost"""
         cost = (self.nx * self.ny) * self.num_steps
+        meta = {
+            "cost": cost,
+            "num_steps": self.num_steps,          # ➜ 新增
+            "converged": int(self.converged)
+        }
         with open(os.path.join(self.dump_dir, "meta.json"), "w") as f:
-            # save both cost and converged in meta.json
-            meta = {"cost": cost, "converged": int(self.converged)}
             json.dump(meta, f, indent=4)
-        print(f"Total cost: {cost}")
+
+        print(f"Total cost: {cost}, num_steps: {self.num_steps}")
