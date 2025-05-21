@@ -5,28 +5,28 @@ import numpy as np
 import json
 from scipy.interpolate import RegularGridInterpolator
 
+
 def run_sim_heat_steady_2d(profile, dx, relax, error_threshold, t_init):
     """Run the heat_steady_2d simulation with the given parameters."""
     dir_path = f"sim_res/heat_steady_2d/{profile}_dx{dx}_relax_{relax}_Tinit_{t_init}_error_{error_threshold}/"
     meta_file_path = os.path.join(dir_path, "meta.json")
 
-    # Check if the directory and meta.json file with the cost key exist
+    # Check if the directory and meta.json file with the key of cost and num_steps exist
     if os.path.exists(meta_file_path):
         with open(meta_file_path, "r") as f:
             meta = json.load(f)
-            if "cost" in meta:
-                return meta["cost"]
+            if "cost" in meta and "num_steps" in meta:
+                return meta["cost"], meta["num_steps"]
 
     # Run the simulation if the directory or meta.json file does not exist
-    cmd = f"python runners/heat_steady_2d.py --config-name={profile} dx={dx} relax={relax} error_threshold={error_threshold} T_init={t_init}"
+    cmd = f"python costsci_tools/runners/heat_steady_2d.py --config-name={profile} dx={dx} relax={relax} error_threshold={error_threshold} T_init={t_init}"
     subprocess.run(cmd, shell=True, check=True)
 
     # Load the cost from the meta.json file
     with open(meta_file_path, "r") as f:
         meta = json.load(f)
-        cost = meta["cost"]
 
-    return cost
+    return meta["cost"], meta["num_steps"]
 
 
 def get_res_heat_steady_2d(profile, dx, relax, error_threshold, t_init):
@@ -62,8 +62,8 @@ def compare_res_heat_steady_2d(
     idx2 = np.argmin(np.abs(x2 - 0.5))
 
     # Extract temperature values along the middle vertical line (x=0.5)
-    T_line1 = res1[:, idx1]
-    T_line2 = res2[:, idx2]
+    T_line1 = res1[idx1, :]
+    T_line2 = res2[idx2, :]
 
     # # save to fig plot for debugging
     # import matplotlib.pyplot as plt
@@ -84,10 +84,23 @@ def compare_res_heat_steady_2d(
     # Calculate RMSE
     rmse = np.sqrt(np.mean((T_line1 - T_line2_interp) ** 2))
 
+    # plot this 2 lines of T_line1 and T_line2_interp
+    # import matplotlib.pyplot as plt
+
+    # # plt.plot(y1, T_line1, label=f"dx={dx1}")
+    # # plt.plot(y1, T_line2_interp, label=f"dx={dx2}")
+    # # plot difference between T_line1 and T_line2_interp
+    # plt.plot(y1, (T_line1 - T_line2_interp), label=f"dx={dx2}")
+    # plt.xlabel("y")
+    # plt.ylabel("Temperature")
+    # plt.legend()
+    # plt.savefig(f"temp_dist_x_0.5_dx_{dx1}_{dx2}.png")
+    # plt.close()
+
     print(f"RMSE of temperature distribution on x=0.5: {rmse:.6f}")
     print(f"Tolerance: {tolerance:.6f}")
 
-    return rmse < tolerance
+    return rmse < tolerance, rmse
 
 
 if __name__ == "__main__":

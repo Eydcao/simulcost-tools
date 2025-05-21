@@ -17,7 +17,7 @@ T_init: 0.0         # Initial temperature
 
 # Simulator statics
 record_dt: 10000        # Time interval between recordings [s]
-end_frame: 100000     # Simulation end after certain number of frames
+end_frame: 10     # Simulation end after certain number of frames
 
 # Output configuration
 dump_dir: "sim_res/heat_steady_2d/p4"  # Directory for output files
