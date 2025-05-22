@@ -3,15 +3,16 @@ defaults:
   - override hydra/hydra_logging: none
   - override hydra/job_logging: none
 
-# Numerical parameters
-n_space: 100          # Number of spatial points (resolution)
-cfl: 0.5              # CFL number for stability
-w: 1.0                # Limiter parameter (controls minmod limiter behavior)
-k: -1.0               # Method parameter (affects reconstruction)
+# Physical parameters
+L: 2.0                # Domain length
 
-# Simulator settings
-record_dt: 0.1        # Time interval between recordings
-end_frame: 50         # Simulation end after certain number of frames
+# Numerical parameters
+n_space: 200          # Number of grid points
+cfl: 0.2              # CFL number for stability
+
+# Simulator statics
+record_dt: 0.1       # Time interval between recordings
+end_frame: 10         # Simulation end after certain number of frames
 
 # Output configuration
 dump_dir: "sim_res/burgers_1d/p1"  # Directory for output files
