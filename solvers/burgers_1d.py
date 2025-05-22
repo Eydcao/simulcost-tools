@@ -19,7 +19,11 @@ class BurgersRoe2(SIMULATOR):
         # Numerical parameters
         self.n_space = cfg.n_space  # Number of grid points
         self.dx = self.domain_length / self.n_space
+
+        # controllable parameters
         self.cfl = cfg.cfl  # CFL number
+        self.w = cfg.w  # the one parameter for the minmod limiter
+        self.k = cfg.k  # the blending parameter between the central (1) and upwind (-1) fluxes
 
         # Create spatial grid (without endpoint for periodic domain)
         self.x = np.linspace(0, self.domain_length, self.n_space, endpoint=False)
@@ -29,7 +33,7 @@ class BurgersRoe2(SIMULATOR):
         self.u = np.sin(2 * np.pi * self.x / self.domain_length) + 0.5
 
         # Output directory
-        self.dump_dir = cfg.dump_dir + f"_nx_{self.n_space}_cfl_{self.cfl}"
+        self.dump_dir = cfg.dump_dir + f"_cfl_{self.cfl}_k_{self.k}_w_{self.w}"
         if not os.path.exists(self.dump_dir):
             os.makedirs(self.dump_dir)
 
@@ -79,22 +83,38 @@ class BurgersRoe2(SIMULATOR):
         N = len(self.u)
 
         # Vectorized slope calculation using minmod limiter
-        forward_diff = ug[2:-2] - ug[1:-3]  # u[i] - u[i-1]
-        backward_diff = ug[3:-1] - ug[2:-2]  # u[i+1] - u[i]
+        left_diff = ug[2:-2] - ug[1:-3]  # u[i] - u[i-1]
+        right_diff = ug[3:-1] - ug[2:-2]  # u[i+1] - u[i]
 
         # Apply minmod limiter to all interior cells at once
-        slopes = np.zeros(N + 4)
-        slopes[2:-2] = self.minmod(forward_diff, backward_diff)
-        # apply periodic bc to slopes
-        slopes[1] = slopes[-3]
-        slopes[0] = slopes[-4]
-        slopes[-2] = slopes[2]
-        slopes[-1] = slopes[3]
+        slopes_left = np.zeros(N + 4)
+        slopes_right = np.zeros(N + 4)
+
+        # Compute slopes with weighting factor self.w
+        slopes_left[2:-2] = self.minmod(self.w * left_diff, right_diff)
+        slopes_right[2:-2] = self.minmod(left_diff, self.w * right_diff)
+
+        # Apply periodic boundary conditions to slopes
+        slopes_left[1] = slopes_left[-3]
+        slopes_left[0] = slopes_left[-4]
+        slopes_left[-2] = slopes_left[2]
+        slopes_left[-1] = slopes_left[3]
+
+        slopes_right[1] = slopes_right[-3]
+        slopes_right[0] = slopes_right[-4]
+        slopes_right[-2] = slopes_right[2]
+        slopes_right[-1] = slopes_right[3]
 
         # Reconstruct left and right states in vectorized form
         # Indexing explained: u_left[i] corresponds to left state at i-1/2 interface
-        u_left = ug[1:-3] + 0.5 * slopes[1:-3]
-        u_right = ug[2:-2] - 0.5 * slopes[2:-2]
+        u_left = ug[1:-3] + 0.25 * (1 + self.k) * slopes_left[1:-3] + 0.25 * (1 - self.k) * slopes_right[0:-4]
+        u_right = ug[2:-2] - 0.25 * (1 + self.k) * slopes_right[2:-2] - 0.25 * (1 - self.k) * slopes_left[3:-1]
+
+        # u_left = ug[1:-3] + 0.5 * slopes_left[1:-3]
+        # u_right = ug[2:-2] - 0.5 * slopes_right[2:-2]
+
+        # u_left = ug[1:-3] + 0.5 * slopes_right[0:-4]
+        # u_right = ug[2:-2] - 0.5 * slopes_left[3:-1]
 
         # Compute Roe fluxes at all interfaces simultaneously
         f_left = 0.5 * u_left**2  # Flux function for Burgers: f(u) = 0.5*u^2

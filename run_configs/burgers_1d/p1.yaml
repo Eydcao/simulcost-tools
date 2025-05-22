@@ -7,10 +7,12 @@ defaults:
 L: 2.0                # Domain length
 
 # Numerical parameters
-n_space: 200          # Number of grid points
-cfl: 0.2              # CFL number for stability
+cfl: 0.25              # CFL number for stability
+w: 1                # Weight for flux limiter
+k: 1                # the blending parameter between the central (1) and upwind (-1) fluxes
 
 # Simulator statics
+n_space: 512          # Number of grid points
 record_dt: 0.1       # Time interval between recordings
 end_frame: 10         # Simulation end after certain number of frames
 
