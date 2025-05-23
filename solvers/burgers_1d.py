@@ -139,8 +139,8 @@ class BurgersRoe2(SIMULATOR):
         slopes_right = np.zeros(N + 4)
 
         # Compute slopes with weighting factor self.w
-        slopes_left[2:-2] = self.minmod(self.w * left_diff, right_diff)
-        slopes_right[2:-2] = self.minmod(left_diff, self.w * right_diff)
+        slopes_left[2:-2] = self.minmod(self.w * left_diff, right_diff) # j+1/2, -
+        slopes_right[2:-2] = self.minmod(left_diff, self.w * right_diff) # j-1/2, +
 
         # Apply periodic boundary conditions to slopes
         slopes_left[1] = slopes_left[-3]
@@ -155,8 +155,8 @@ class BurgersRoe2(SIMULATOR):
 
         # Reconstruct left and right states in vectorized form
         # Indexing explained: u_left[i] corresponds to left state at i-1/2 interface
-        u_left = ug[1:-3] + 0.25 * (1 + self.k) * slopes_left[1:-3] + 0.25 * (1 - self.k) * slopes_right[0:-4]
-        u_right = ug[2:-2] - 0.25 * (1 + self.k) * slopes_right[2:-2] - 0.25 * (1 - self.k) * slopes_left[3:-1]
+        u_left = ug[1:-3] + 0.25 * (1 - self.k) * slopes_right[1:-3] + 0.25 * (1 + self.k) * slopes_left[1:-3]
+        u_right = ug[2:-2] - 0.25 * (1 + self.k) * slopes_right[2:-2] - 0.25 * (1 - self.k) * slopes_left[2:-2]
 
         # u_left = ug[1:-3] + 0.5 * slopes_left[1:-3]
         # u_right = ug[2:-2] - 0.5 * slopes_right[2:-2]
