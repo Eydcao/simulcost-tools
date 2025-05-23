@@ -29,8 +29,8 @@ class BurgersRoe2(SIMULATOR):
         self.x = np.linspace(0, self.domain_length, self.n_space, endpoint=False)
 
         # Initialize solution with the given initial condition
-        # Default: u(x,0) = sin(2π*x/L) + 0.5
-        self.u = np.sin(2 * np.pi * self.x / self.domain_length) + 0.5
+        self.case = cfg.case
+        self.u = self.initialize_condition(self.case)
 
         # Output directory
         self.dump_dir = cfg.dump_dir + f"_cfl_{self.cfl}_k_{self.k}_w_{self.w}"
@@ -39,6 +39,54 @@ class BurgersRoe2(SIMULATOR):
 
         # Base initialization
         super().__init__(verbose, cfg)
+
+    def initialize_condition(self, case):
+        """Initialize with various common initial conditions for Burgers equation"""
+        if case == "sin":
+            # Default: u(x,0) = sin(2π*x/L) + 0.5
+            return np.sin(2 * np.pi * self.x / self.domain_length) + 0.5
+
+        elif case == "rarefaction":
+            # Moving rarefaction wave
+            u = np.ones_like(self.x)
+            middle = self.domain_length / 2
+            u[self.x < middle] = -0.1  # Lower value on left
+            u[self.x >= middle] = 0.5  # Higher value on right
+            return u
+
+        elif case == "sod":
+            # Sod shock tube problem modified for Burgers equation
+            u = np.ones_like(self.x)
+            middle = self.domain_length / 2
+            u[self.x < middle] = 1.0
+            u[self.x >= middle] = 0.1
+            return u
+
+        elif case == "double_shock":
+            # Two interacting shock waves
+            u = np.ones_like(self.x) * 0.5
+            left_third = self.domain_length / 3
+            right_third = 2 * self.domain_length / 3
+            u[self.x < left_third] = 1.0
+            u[(self.x >= left_third) & (self.x < right_third)] = 0.5
+            u[self.x >= right_third] = 0.1
+            return u
+
+        elif case == "blast":
+            # Interacting blast waves
+            u = np.zeros_like(self.x)
+            # Create two blast wave centers
+            center1 = self.domain_length * 0.25
+            center2 = self.domain_length * 0.75
+            # Set blast wave profiles (Gaussian)
+            sigma = self.domain_length / 20
+            u += 1.0 * np.exp(-((self.x - center1) ** 2) / (2 * sigma**2))
+            u += 0.8 * np.exp(-((self.x - center2) ** 2) / (2 * sigma**2))
+            return u
+
+        else:
+            print(f"Warning: Unknown case '{case}'. Using default sine wave.")
+            return np.sin(2 * np.pi * self.x / self.domain_length) + 0.5
 
     def cal_dt(self):
         """
