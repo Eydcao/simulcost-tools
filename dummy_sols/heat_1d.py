@@ -1,12 +1,4 @@
-import sys
-import os
-
-sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
-
 import argparse
-
-
-# Append abs path
 import sys
 import os
 

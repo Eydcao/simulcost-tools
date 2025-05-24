@@ -24,12 +24,7 @@ def find_optimal_dx(profile, initial_dx, relax, error_threshold, T_init, toleran
         # Run simulation and track cost
         cost_i, num_steps = run_sim_heat_steady_2d(profile, current_dx, relax, error_threshold, T_init)
         cost_history.append(cost_i)
-        param_history.append({
-            "dx": current_dx,
-            "relax": relax,
-            "T_init": T_init,
-            "error_threshold": error_threshold
-        })
+        param_history.append({"dx": current_dx, "relax": relax, "T_init": T_init, "error_threshold": error_threshold})
 
         # If we have previous results to compare with
         if len(param_history) > 1:
@@ -76,6 +71,7 @@ def find_optimal_dx(profile, initial_dx, relax, error_threshold, T_init, toleran
 
     return bool(is_converged), best_dx, cost_history, param_history
 
+
 def grid_search_relax(profile, dx, relax_values, error_threshold, T_init, max_iter):
     """Perform grid search for optimal relaxation factor."""
     relax_costs = {}
@@ -85,13 +81,7 @@ def grid_search_relax(profile, dx, relax_values, error_threshold, T_init, max_it
         print(f"\nTesting relaxation factor: {relax}")
         cost, num_steps = run_sim_heat_steady_2d(profile, dx, relax, error_threshold, T_init)
         relax_costs[relax] = cost
-        param_history.append({
-            "dx": dx,
-            "relax": relax,
-            "T_init": T_init,
-            "error_threshold": error_threshold
-
-        })
+        param_history.append({"dx": dx, "relax": relax, "T_init": T_init, "error_threshold": error_threshold})
         print(f"Cost for relax={relax}: {cost}")
 
     # Find relaxation factor with minimum cost
@@ -103,6 +93,7 @@ def grid_search_relax(profile, dx, relax_values, error_threshold, T_init, max_it
 
     return True, best_relax, relax_costs, param_history
 
+
 def grid_search_T_init(profile, dx, relax, error_threshold, T_init_values, max_iter):
     """Perform grid search for optimal initial temperature."""
     T_init_costs = {}
@@ -112,12 +103,7 @@ def grid_search_T_init(profile, dx, relax, error_threshold, T_init_values, max_i
         print(f"\nTesting initial temperature: {T_init}")
         cost, num_steps = run_sim_heat_steady_2d(profile, dx, relax, error_threshold, T_init)
         T_init_costs[T_init] = cost
-        param_history.append({
-            "dx": dx,
-            "relax": relax,
-            "T_init": T_init,
-            "error_threshold": error_threshold
-        })
+        param_history.append({"dx": dx, "relax": relax, "T_init": T_init, "error_threshold": error_threshold})
         print(f"Cost for T_init={T_init}: {cost}")
 
     # Find initial temperature with minimum cost
@@ -128,6 +114,7 @@ def grid_search_T_init(profile, dx, relax, error_threshold, T_init_values, max_i
     print(f"All costs: {T_init_costs}")
 
     return True, best_T_init, T_init_costs, param_history
+
 
 def find_optimal_error_threshold(profile, dx, relax, T_init, initial_error, tolerance, max_iter):
     """Decrease error threshold by factors of 10 until convergence."""
@@ -144,12 +131,7 @@ def find_optimal_error_threshold(profile, dx, relax, T_init, initial_error, tole
         # Run simulation and track cost
         cost_i, num_steps = run_sim_heat_steady_2d(profile, dx, relax, current_error, T_init)
         cost_history.append(cost_i)
-        param_history.append({
-            "dx": dx,
-            "relax": relax,
-            "T_init": T_init,
-            "error_threshold": current_error
-        })
+        param_history.append({"dx": dx, "relax": relax, "T_init": T_init, "error_threshold": current_error})
 
         # If we have previous results to compare with
         if len(param_history) > 1:
@@ -157,8 +139,7 @@ def find_optimal_error_threshold(profile, dx, relax, T_init, initial_error, tole
 
             # Compare with previous results
             is_converged, _ = compare_res_heat_steady_2d(
-                profile, dx, relax, prev_error, T_init,
-                profile, dx, relax, current_error, T_init, tolerance
+                profile, dx, relax, prev_error, T_init, profile, dx, relax, current_error, T_init, tolerance
             )
 
             if is_converged:
@@ -186,6 +167,7 @@ def find_optimal_error_threshold(profile, dx, relax, T_init, initial_error, tole
     print(f"Cost history: {cost_history}, total cost: {sum(cost_history)}")
 
     return bool(is_converged), best_error, cost_history, param_history
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Find optimal parameters for heat_steady_2d simulation")

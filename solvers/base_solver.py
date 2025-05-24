@@ -89,7 +89,7 @@ class SIMULATOR:
         self.record_frame += 1
         self.next_record_time = min(self.current_time + self.record_dt, self.end_time)
 
-        while self.current_time < self.end_time:
+        while self.current_time < self.end_time - 1e-10:
             # Calculate base timestep
             base_dt = self.cal_dt()
 

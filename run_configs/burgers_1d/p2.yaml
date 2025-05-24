@@ -1,0 +1,22 @@
+defaults:
+  - _self_
+  - override hydra/hydra_logging: none
+  - override hydra/job_logging: none
+
+# Physical parameters
+L: 2.0                # Domain length
+case: "rarefaction"        # Initial condition name
+
+# Numerical parameters
+cfl: 0.25              # CFL number for stability
+w: 1                # Weight for flux limiter
+k: 1                # the blending parameter between the central (1) and upwind (-1) fluxes
+
+# Simulator statics
+n_space: 2048          # Number of grid points
+record_dt: 0.1       # Time interval between recordings
+end_frame: 10         # Simulation end after certain number of frames
+
+# Output configuration
+dump_dir: "sim_res/burgers_1d/p2"  # Directory for output files
+verbose: False        # Enable verbose output
