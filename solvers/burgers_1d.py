@@ -180,161 +180,33 @@ class BurgersRoe2(SIMULATOR):
         # Update solution in vectorized form
         self.u = self.u - (dt / self.dx) * (F[1:] - F[:-1])
 
-    def find_wave_regions(self, u):
-        """
-        Detect shock and rarefaction wave regions in the solution.
-
-        Args:
-            u: 1D array of solution values
-
-        Returns:
-            shocks: List of tuples (start_idx, end_idx) for shock regions
-            rarefactions: List of tuples (start_idx, end_idx) for rarefaction regions
-        """
-        # Parameters
-        shock_threshold = 0.5  # Minimum gradient magnitude to consider a shock
-        # smooth_threshold = 0.1  # Maximum gradient for smooth regions
-        min_wave_width = 3  # Minimum points to consider a wave
-
-        # Compute first and second derivatives
-        du = np.gradient(u, self.dx)
-        # d2u = np.gradient(du, self.dx)
-
-        # Initialize wave regions
-        shocks = []
-        # rarefactions = []
-
-        # First pass: Identify candidate regions based on gradient magnitude
-        in_shock = False
-        # in_rarefaction = False
-        start_idx = 0
-
-        for i in range(1, len(u) - 1):
-            # Shock detection (large gradient + compression)
-            if abs(du[i]) > shock_threshold:
-                # Check for compression (du/dx negative for Burgers shocks)
-                if du[i] < 0 and not in_shock:
-                    in_shock = True
-                    start_idx = i
-                elif du[i] >= 0 and in_shock:
-                    in_shock = False
-                    if i - start_idx > min_wave_width:
-                        shocks.append((start_idx, i))
-
-            # # Rarefaction detection (smooth, monotonic)
-            # elif abs(du[i]) < smooth_threshold and not in_shock:
-            #     # Check for consistent sign in first and second derivatives
-            #     if (du[i] * du[i + 1] > 0) and (d2u[i] * du[i] > -0.1):  # Mild curvature
-            #         if not in_rarefaction:
-            #             in_rarefaction = True
-            #             start_idx = i
-            #     elif in_rarefaction:
-            #         in_rarefaction = False
-            #         if i - start_idx > min_wave_width:
-            #             rarefactions.append((start_idx, i))
-
-        # # Add any final regions # TODO make cyclic
-        # if in_shock and len(u) - 1 - start_idx > min_wave_width:
-        #     shocks.append((start_idx, len(u) - 1))
-        # if in_rarefaction and len(u) - 1 - start_idx > min_wave_width:
-        #     rarefactions.append((start_idx, len(u) - 1))
-
-        # Second pass: Refine boundaries using characteristics
-        refined_shocks = []
-        for start, end in shocks:
-            # Find peak gradient location
-            peak_idx = start + np.argmax(np.abs(du[start : end + 1]))
-            # Expand to include full transition
-            left = max(0, peak_idx - 2)
-            right = min(len(u) - 1, peak_idx + 2)
-            refined_shocks.append((left, right))
-
-        # refined_rarefactions = []
-        # for start, end in rarefactions:
-        #     # Find consistent expansion region
-        #     u_start = u[start]
-        #     u_end = u[end]
-        #     if u_end > u_start:  # Increasing rarefaction
-        #         left = start
-        #         while left > 0 and u[left - 1] <= u[left] and du[left] > 0:
-        #             left -= 1
-        #         right = end
-        #         while right < len(u) - 1 and u[right + 1] >= u[right] and du[right] > 0:
-        #             right += 1
-        #     else:  # Decreasing rarefaction
-        #         left = start
-        #         while left > 0 and u[left - 1] >= u[left] and du[left] < 0:
-        #             left -= 1
-        #         right = end
-        #         while right < len(u) - 1 and u[right + 1] <= u[right] and du[right] < 0:
-        #             right += 1
-        #     refined_rarefactions.append((left, right))
-
-        # return refined_shocks, refined_rarefactions
-        return refined_shocks, []
-
-    def measure_wave_width(self, u, regions):
-        """Measure width of wave regions (works for both shocks and rarefactions)"""
-        widths = []
-        for start, end in regions:
-            u_start = u[start]
-            u_end = u[end]
-            transition = (u[start : end + 1] - u_end) / (u_start - u_end + 1e-10)
-            left_idx = np.argmax(transition >= 0.1)
-            right_idx = len(transition) - np.argmax(transition[::-1] <= 0.9) - 1
-            widths.append(right_idx - left_idx)
-        return widths
-
     def dump(self):
-        """Save current state with wave detection"""
-        # Detect both wave types
-        shocks, rarefactions = self.find_wave_regions(self.u)
-        shock_widths = self.measure_wave_width(self.u, shocks)
-        rare_widths = self.measure_wave_width(self.u, rarefactions)
-
-        # Prepare JSON data with type conversion
-        wave_data = {
-            "shocks": {"regions": [(int(s[0]), int(s[1])) for s in shocks], "widths": [int(w) for w in shock_widths]},
-            "rarefactions": {
-                "regions": [(int(r[0]), int(r[1])) for r in rarefactions],
-                "widths": [int(w) for w in rare_widths],
-            },
-            "time": float(self.current_time),
-        }
-
-        # Save to JSON
+        """Save current state including data file and visualization"""
+        # Create filename base
         file_base = os.path.join(self.dump_dir, f"res_{self.record_frame}")
-        with open(f"{file_base}_waves.json", "w") as f:
-            json.dump(wave_data, f, indent=2)
 
-        # Visualization
-        plt.figure(figsize=(12, 6))
-        plt.plot(self.x, self.u, "b-", linewidth=2, label="Solution")
-
-        # Highlight shocks (red) and rarefactions (blue)
-        for (start, end), width in zip(shocks, shock_widths):
-            plt.axvspan(self.x[start], self.x[end], color="red", alpha=0.2)
-            mid_x = (self.x[start] + self.x[end]) / 2
-            plt.text(mid_x, np.max(self.u) * 0.9, f"Shock\n{width}c", ha="center", va="top", color="red")
-
-        for (start, end), width in zip(rarefactions, rare_widths):
-            plt.axvspan(self.x[start], self.x[end], color="blue", alpha=0.2)
-            mid_x = (self.x[start] + self.x[end]) / 2
-            plt.text(mid_x, np.min(self.u) * 0.9, f"Rarefaction\n{width}c", ha="center", va="bottom", color="blue")
-
-        plt.xlabel("Position (x)")
-        plt.ylabel("Solution (u)")
-        plt.title(f"Burgers Equation (t={self.current_time:.3f})")
-        plt.grid(True)
-        plt.legend()
-        plt.savefig(f"{file_base}.png")
-        plt.close()
-
-        # Original HDF5 output
+        # Save HDF5 data file
         with h5py.File(f"{file_base}.h5", "w") as f:
             f.create_dataset("x", data=self.x)
             f.create_dataset("u", data=self.u)
             f.create_dataset("time", data=self.current_time)
+
+        # Create and save plot
+        plt.figure(figsize=(10, 6))
+        plt.plot(self.x, self.u, "b-", linewidth=2)
+        plt.xlabel("Position (x)")
+        plt.ylabel("Solution (u)")
+        plt.title(f"Burgers Equation - Time = {self.current_time:.3f}")
+        plt.grid(True)
+
+        # # Add shockwave formation annotation if appropriate
+        # if np.min(np.diff(self.u)) < -0.5:  # Simple heuristic to detect shocks
+        #     plt.text(
+        #         0.5, 0.1, "Shock wave forming", transform=plt.gca().transAxes, ha="center", fontsize=14, color="red"
+        #     )
+
+        plt.savefig(f"{file_base}.png")
+        plt.close()
 
     def post_process(self):
         # Save the cost estimation in a json file in dump dir
@@ -346,4 +218,4 @@ class BurgersRoe2(SIMULATOR):
                 "total_steps": int(self.num_steps),
             }
             json.dump(meta, f, indent=4)
-        print(f"Run cost: {cost}")
+        print(f"Total cost: {cost}")
