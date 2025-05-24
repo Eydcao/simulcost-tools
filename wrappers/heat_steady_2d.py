@@ -35,6 +35,13 @@ def get_res_heat_steady_2d(profile, dx, relax, error_threshold, t_init):
 
     # Find the latest result file in the directory
     files = [f for f in os.listdir(dir_path) if f.startswith("res_") and f.endswith(".h5")]
+    if not files:
+        # Trigger a simulation run if no result files are found
+        run_sim_heat_steady_2d(profile, dx, relax, error_threshold, t_init)
+        files = [f for f in os.listdir(dir_path) if f.startswith("res_") and f.endswith(".h5")]
+        if not files:
+            raise FileNotFoundError(f"No result files found in {dir_path} after triggering a simulation run.")
+
     files.sort(key=lambda x: int(x.split("_")[1].split(".")[0]))
     latest_file = files[-1]
 

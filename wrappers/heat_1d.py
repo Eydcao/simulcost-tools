@@ -33,12 +33,21 @@ def run_sim_heat_1d(profile, cfl, n_space):
 
 
 def get_res_heat_1d(profile, cfl, n_space):
-    """Load all time frames for a given CFL number."""
+    """Load all time frames for a given CFL number, triggering a run if files are missing."""
     dir_path = f"sim_res/heat_1d/{profile}_cfl_{cfl}_nx_{n_space}/"
     results = []
 
-    for t in range(25):
-        file_path = os.path.join(dir_path, f"res_{t}.h5")
+    # Check if the first result file exists, trigger a run if not
+    file_path = os.path.join(dir_path, "res_0.h5")
+    if not os.path.exists(file_path):
+        run_sim_heat_1d(profile, cfl, n_space)
+
+    # Sort files by time frame
+    files = [f for f in os.listdir(dir_path) if f.startswith("res_") and f.endswith(".h5")]
+    files.sort(key=lambda x: int(x.split("_")[1].split(".")[0]))
+
+    for file_name in files:
+        file_path = os.path.join(dir_path, file_name)
         with h5py.File(file_path, "r") as f:
             results.append(np.array(f["T"]))
             X = np.array(f["x"])

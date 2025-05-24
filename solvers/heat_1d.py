@@ -90,4 +90,4 @@ class Heat1D(SIMULATOR):
         with open(os.path.join(self.dump_dir, "meta.json"), "w") as f:
             meta = {"cost": cost}
             json.dump(meta, f, indent=4)
-        print(f"Total cost: {cost}")
+        print(f"Run cost: {cost}")

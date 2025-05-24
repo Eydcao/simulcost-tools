@@ -29,7 +29,9 @@ def find_convergent_cfl(profile, cfl, k, w, tolerance):
             prev_cfl = cfl_history[-2]
 
             # Compare with previous results
-            is_converged, error = compare_res_burgers_1d(profile, prev_cfl, k, w, profile, current_cfl, k, w, tolerance)
+            is_converged, metrics1, metrics2, linf_norm, rmse = compare_res_burgers_1d(
+                profile, prev_cfl, k, w, profile, current_cfl, k, w, tolerance
+            )
 
             if is_converged:
                 print(f"Convergence achieved between CFL {prev_cfl} and {current_cfl}")

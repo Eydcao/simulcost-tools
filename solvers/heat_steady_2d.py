@@ -122,4 +122,4 @@ class SteadyHeat2D(SIMULATOR):
         with open(os.path.join(self.dump_dir, "meta.json"), "w") as f:
             json.dump(meta, f, indent=4)
 
-        print(f"Total cost: {cost}, num_steps: {self.num_steps}")
+        print(f"Run cost: {cost}, num_steps: {self.num_steps}")
