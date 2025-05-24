@@ -65,13 +65,9 @@ def compute_metrics(u):
         u: np.ndarray with shape [nt, nx] (time steps, spatial points)
     Returns:
         Dictionary containing:
-        - mass: mean value at each time step (shape [nt])
         - mass_conserved: bool array if mass is conserved (shape [nt-1])
-        - energy: mean squared value at each time step (shape [nt])
         - energy_non_increasing: bool array if energy doesn't increase (shape [nt-1])
-        - TV: total variation at each time step (shape [nt])
         - TV_non_increasing: bool array if TV doesn't increase (shape [nt-1])
-        - max_principle_violation: max violation at each step (shape [nt])
         - max_principle_satisfied: bool array if satisfied (shape [nt])
     """
 
@@ -147,44 +143,55 @@ def compare_res_burgers_1d(profile1, cfl1, k1, w1, profile2, cfl2, k2, w2, linf_
     print_metrics("Case 1", metrics1)
     print_metrics("Case 2", metrics2)
 
+    print(f"Linf Norm: {linf_norm}")
+    print(f"RMSE: {rmse}")
+
     return converged, metrics1, metrics2, linf_norm, rmse
 
 
 if __name__ == "__main__":
     # Example usage
-    k = -1
-    w = 1
-    profiles = ["p1", "p2", "p3", "p4", "p5"]
-    linf_tolerance = 0.05
-    rmse_tolerance = 0.005
+    k = 0
+    w = 0.9
+    profiles = ["p1"]
+    # profiles = ["p1", "p2", "p3", "p4", "p5"]
+    linf_tolerance = 0.02
+    rmse_tolerance = 0.001
 
-    for profile in profiles:
-        cfl_values = [1]
-        linf_norms = []
-        l2_norms = []
-        converged = False
+    # for profile in profiles:
+    #     cfl_values = [1]
+    #     linf_norms = []
+    #     l2_norms = []
+    #     converged = False
 
-        while not converged:
-            cfl1 = cfl_values[-1]
-            cfl2 = cfl1 / 2
-            cfl_values.append(cfl2)
+    #     while not converged:
+    #         cfl1 = cfl_values[-1]
+    #         cfl2 = cfl1 / 2
+    #         cfl_values.append(cfl2)
 
-            converged, metrics1, metrics2, linf_norm, rmse = compare_res_burgers_1d(
-                profile, cfl1, k, w, profile, cfl2, k, w, linf_tolerance, rmse_tolerance
-            )
-            linf_norms.append(linf_norm)
-            l2_norms.append(rmse)
+    #         converged, metrics1, metrics2, linf_norm, rmse = compare_res_burgers_1d(
+    #             profile, cfl1, k, w, profile, cfl2, k, w, linf_tolerance, rmse_tolerance
+    #         )
+    #         linf_norms.append(linf_norm)
+    #         l2_norms.append(rmse)
 
-        # Plotting for each profile
-        plt.figure(figsize=(8, 6))
-        plt.plot(cfl_values[1:], linf_norms, marker="o", label="Linf Norm")
-        plt.plot(cfl_values[1:], l2_norms, marker="s", label="RMSE")
-        plt.xscale("log")
-        plt.yscale("log")
-        plt.xlabel("CFL")
-        plt.ylabel("Norm")
-        plt.title(f"Trajectory of Norms vs CFL for {profile}")
-        plt.grid(True, which="both", linestyle="--", linewidth=0.5)
-        plt.legend()
-        plt.savefig(f"norms_vs_cfl_{profile}.png")
-        plt.close()
+    #     # Plotting for each profile
+    #     plt.figure(figsize=(8, 6))
+    #     plt.plot(cfl_values[:-1], linf_norms, marker="o", label="Linf Norm")
+    #     plt.plot(cfl_values[:-1], l2_norms, marker="s", label="RMSE")
+    #     plt.xscale("log")
+    #     plt.yscale("log")
+    #     plt.xlabel("CFL")
+    #     plt.ylabel("Norm")
+    #     plt.title(f"Trajectory of Norms vs CFL for {profile}")
+    #     plt.grid(True, which="both", linestyle="--", linewidth=0.5)
+    #     plt.legend()
+    #     plt.savefig(f"norms_vs_cfl_{profile}.png")
+    #     plt.close()
+
+    _, _, _, linf_norm, rmse = compare_res_burgers_1d(
+        "p1", 0.5, k, 1, "p1", 0.125, k, 1, linf_tolerance, rmse_tolerance
+    )
+
+    print(f"Difference in RMSE between 2nd CFL and converged CFL: {rmse}")
+    print(f"Difference in Linf Norm between 2nd CFL and converged CFL: {linf_norm}")

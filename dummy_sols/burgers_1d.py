@@ -3,7 +3,7 @@ import numpy as np
 from wrappers.burgers_1d import run_sim_burgers_1d, compare_res_burgers_1d
 
 
-def find_convergent_cfl(profile, cfl, k, w, tolerance):
+def find_convergent_cfl(profile, cfl, k, w, tolerance_infity, tolerance_2):
     """Iteratively reduce CFL number until convergence is achieved."""
     cfl_history = []
     cost_history = []
@@ -30,7 +30,7 @@ def find_convergent_cfl(profile, cfl, k, w, tolerance):
 
             # Compare with previous results
             is_converged, metrics1, metrics2, linf_norm, rmse = compare_res_burgers_1d(
-                profile, prev_cfl, k, w, profile, current_cfl, k, w, tolerance
+                profile, prev_cfl, k, w, profile, current_cfl, k, w, tolerance_infity, tolerance_2
             )
 
             if is_converged:
@@ -60,36 +60,31 @@ def find_convergent_cfl(profile, cfl, k, w, tolerance):
     return best_cfl, sum(cost_history), cost_history, param_history
 
 
-def find_optimal_k(profile, w, tolerance):
+def find_optimal_k(profile, w, tolerance_infity, tolerance_2):
     """Grid search for optimal k parameter with fixed w=1."""
     k_values = np.linspace(-1.0, 1.0, 21)  # Fixed 21 values from -1 to 1 with step 0.1
     k_results = []
-    # total_cost_history = []
-    # all_cost_histories = []
-    # all_param_histories = []
 
     # Test each k value
     for k in k_values:
         k = round(k, 1)  # Round to avoid floating point issues
         print(f"\n=== Testing k = {k} ===")
-        best_cfl, _, cost_history, param_history = find_convergent_cfl(profile, 1.0, k, w, tolerance)
-        best_cost = cost_history[-1]
+        best_cfl, total_cost, cost_history, param_history = find_convergent_cfl(
+            profile, 1.0, k, w, tolerance_infity, tolerance_2
+        )
 
         if best_cfl:
-            k_results.append({"k": k, "best_cfl": best_cfl, "best_cost": best_cost})
-            # total_cost_history.append(best_cost)
-            # all_cost_histories.append(cost_history)
-            # all_param_histories.append(param_history)
-            print(f"k = {k}: Best CFL = {best_cfl}, Best Cost = {best_cost}")
+            k_results.append({"k": k, "best_cfl": best_cfl, "total_cost": total_cost})
+            print(f"k = {k}: Best CFL = {best_cfl}, Total Cost = {total_cost}")
         else:
             print(f"k = {k}: No convergent CFL found")
 
     # Find k with minimum cost
     if k_results:
-        min_cost_idx = np.argmin([r["best_cost"] for r in k_results])
+        min_cost_idx = np.argmin([r["total_cost"] for r in k_results])
         optimal_k = k_results[min_cost_idx]["k"]
         optimal_cfl = k_results[min_cost_idx]["best_cfl"]
-        optimal_cost = k_results[min_cost_idx]["best_cost"]
+        optimal_cost = k_results[min_cost_idx]["total_cost"]
         print(f"\nOptimal k found: {optimal_k} with CFL = {optimal_cfl}")
         print(f"Optimal cost: {optimal_cost}")
     else:
@@ -100,28 +95,66 @@ def find_optimal_k(profile, w, tolerance):
     return optimal_k, optimal_cfl, optimal_cost, k_results
 
 
+def find_optimal_w(profile, k, tolerance_infity, tolerance_2):
+    """Grid search for optimal w parameter with fixed k."""
+    w_values = np.linspace(0.0, 2.0, 21)  # Fixed 21 values from 0 to 2 with step 0.1
+    w_results = []
+
+    # Test each w value
+    for w in w_values:
+        w = round(w, 1)  # Round to avoid floating point issues
+        print(f"\n=== Testing w = {w} ===")
+        best_cfl, total_cost, cost_history, param_history = find_convergent_cfl(
+            profile, 1.0, k, w, tolerance_infity, tolerance_2
+        )
+
+        if best_cfl:
+            w_results.append({"w": w, "best_cfl": best_cfl, "total_cost": total_cost})
+            print(f"w = {w}: Best CFL = {best_cfl}, Total Cost = {total_cost}")
+        else:
+            print(f"w = {w}: No convergent CFL found")
+
+    # Find w with minimum cost
+    if w_results:
+        min_cost_idx = np.argmin([r["total_cost"] for r in w_results])
+        optimal_w = w_results[min_cost_idx]["w"]
+        optimal_cfl = w_results[min_cost_idx]["best_cfl"]
+        optimal_cost = w_results[min_cost_idx]["total_cost"]
+        print(f"\nOptimal w found: {optimal_w} with CFL = {optimal_cfl}")
+        print(f"Optimal cost: {optimal_cost}")
+    else:
+        optimal_w = None
+        optimal_cfl = None
+        print("\nNo optimal w found")
+
+    return optimal_w, optimal_cfl, optimal_cost, w_results
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Find optimal parameters for Burgers 1D simulation")
 
     # Search mode selection
     parser.add_argument(
-        "--task", type=str, choices=["cfl", "k"], required=True, help="Choose which parameter to search: 'cfl' or 'k'"
+        "--task",
+        type=str,
+        choices=["cfl", "k", "w"],
+        required=True,
+        help="Choose which parameter to search: 'cfl', 'k', or 'w'",
     )
 
     # Profile choice
     parser.add_argument("--profile", type=str, default="p1", help="Name of the simulation profile configuration")
 
-    # CFL search parameter
+    # Controllable parameter
     parser.add_argument("--cfl", type=float, default=1.0, help="Initial CFL number to start testing")
     parser.add_argument(
         "--k", type=float, default=0, help="The blending parameters between central (1) and upwind (-1) scheme"
     )
-
-    # w parameter
     parser.add_argument("--w", type=float, default=1.0, help="w parameter for minmod limiter")
 
     # Tolerance parameter
-    parser.add_argument("--tolerance", type=float, default=1e-4, help="Tolerance for convergence checking")
+    parser.add_argument("--tolerance_infity", type=float, default=5e-2, help="Tolerance for convergence checking")
+    parser.add_argument("--tolerance_2", type=float, default=5e-3, help="Tolerance for convergence checking")
 
     args = parser.parse_args()
 
@@ -132,7 +165,8 @@ if __name__ == "__main__":
             cfl=args.cfl,
             k=args.k,
             w=args.w,
-            tolerance=args.tolerance,
+            tolerance_infity=args.tolerance_infity,
+            tolerance_2=args.tolerance_2,
         )
 
         if best_cfl is not None:
@@ -143,7 +177,10 @@ if __name__ == "__main__":
     elif args.task == "k":
         print("\n=== Starting k parameter search ===")
         optimal_k, optimal_cfl, optimal_cost, k_results = find_optimal_k(
-            profile=args.profile, w=args.w, tolerance=args.tolerance
+            profile=args.profile,
+            w=args.w,
+            tolerance_infity=args.tolerance_infity,
+            tolerance_2=args.tolerance_2,
         )
 
         if optimal_k is not None:
@@ -154,3 +191,21 @@ if __name__ == "__main__":
                 print(k_log)
         else:
             print("\nNo optimal k found")
+
+    elif args.task == "w":
+        print("\n=== Starting w parameter search ===")
+        optimal_w, optimal_cfl, optimal_cost, w_results = find_optimal_w(
+            profile=args.profile,
+            k=args.k,
+            tolerance_infity=args.tolerance_infity,
+            tolerance_2=args.tolerance_2,
+        )
+
+        if optimal_w is not None:
+            print(f"\nRecommended w: {optimal_w} with CFL: {optimal_cfl}")
+            print(f"Total cost across all w tests: {optimal_cost}")
+            print(f"Print log for each w")
+            for w_log in w_results:
+                print(w_log)
+        else:
+            print("\nNo optimal w found")

@@ -218,4 +218,4 @@ class BurgersRoe2(SIMULATOR):
                 "total_steps": int(self.num_steps),
             }
             json.dump(meta, f, indent=4)
-        print(f"Total cost: {cost}")
+        print(f"Run cost: {cost}")
