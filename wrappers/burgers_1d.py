@@ -21,7 +21,7 @@ def run_sim_burgers_1d(profile, cfl, k, w):
 
     # Run the simulation if not already done
     print(f"Running new simulation with parameters: cfl={cfl}, k={k}, w={w}")
-    cmd = f"python runners/burgers_1d.py --config-name={profile} cfl={cfl} k={k} w={w}"
+    cmd = f"python costsci_tools/runners/burgers_1d.py --config-name={profile} cfl={cfl} k={k} w={w}"
     subprocess.run(cmd, shell=True, check=True)
 
     # Load the cost from the meta.json file
