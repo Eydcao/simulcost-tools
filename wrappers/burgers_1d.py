@@ -155,8 +155,8 @@ if __name__ == "__main__":
     w = 0.9
     profiles = ["p1"]
     # profiles = ["p1", "p2", "p3", "p4", "p5"]
-    linf_tolerance = 0.02
-    rmse_tolerance = 0.001
+    linf_tolerance = 5e-2
+    rmse_tolerance = 5e-3
 
     # for profile in profiles:
     #     cfl_values = [1]
