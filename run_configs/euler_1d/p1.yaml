@@ -1,0 +1,23 @@
+defaults:
+  - _self_
+  - override hydra/hydra_logging: none
+  - override hydra/job_logging: none
+
+# Physical parameters
+L: 1.0                # Domain length
+gamma: 1.4            # Ratio of specific heats
+case: "sod"           # Initial condition name (sod, lax, 123)
+
+# Numerical parameters
+cfl: 0.5              # CFL number for stability
+beta: 1.0             # Limiter parameter (1.0=minmod, 2.0=superbee)
+k: 1                  # Blending parameter (1=central, -1=upwind, 0=mixed)
+
+# Simulator statics
+n_space: 1024          # Number of grid cells
+record_dt: 0.02       # Time interval between recordings
+end_frame: 10         # Simulation end after certain number of frames
+
+# Output configuration
+dump_dir: "sim_res/euler_1d/p1"  # Directory for output files
+verbose: False        # Enable verbose output
