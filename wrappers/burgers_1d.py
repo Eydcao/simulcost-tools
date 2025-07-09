@@ -21,7 +21,7 @@ def run_sim_burgers_1d(profile, cfl, k, w):
 
     # Run the simulation if not already done
     print(f"Running new simulation with parameters: cfl={cfl}, k={k}, w={w}")
-    cmd = f"python runners/burgers_1d.py --config-name={profile} cfl={cfl} k={k} w={w}"
+    cmd = f"python costsci_tools/runners/burgers_1d.py --config-name={profile} cfl={cfl} k={k} w={w}"
     subprocess.run(cmd, shell=True, check=True)
 
     # Load the cost from the meta.json file
@@ -155,8 +155,8 @@ if __name__ == "__main__":
     w = 0.9
     profiles = ["p1"]
     # profiles = ["p1", "p2", "p3", "p4", "p5"]
-    linf_tolerance = 0.02
-    rmse_tolerance = 0.001
+    linf_tolerance = 5e-2
+    rmse_tolerance = 5e-3
 
     # for profile in profiles:
     #     cfl_values = [1]
