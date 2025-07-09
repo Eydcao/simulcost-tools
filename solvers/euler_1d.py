@@ -20,15 +20,18 @@ class Euler1D(SIMULATOR):
         # Numerical parameters
         self.n_space = cfg.n_space  # Number of cells
         self.dx = self.L / self.n_space
-        self.nx = self.n_space + 1  # Number of points
+        self.nx = self.n_space  # Number of cell centers
 
         # Controllable parameters
         self.cfl = cfg.cfl  # CFL number
         self.beta = cfg.beta  # Limiter parameter for generalized superbee
         self.k = cfg.k  # Blending parameter between central (k=1) and upwind (k=-1)
 
-        # Create spatial grid
-        self.x = np.linspace(self.dx / 2.0, self.L, self.nx)
+        # Create spatial grid (cell centers)
+        self.x = np.linspace(self.dx / 2.0, self.L - self.dx / 2.0, self.nx)
+        # print(self.dx)
+        # print(self.x[1]-self.x[0])
+        # print(self.x[-1])
 
         # Initialize solution with the given initial condition
         self.case = cfg.case
@@ -175,36 +178,34 @@ class Euler1D(SIMULATOR):
 
         return 0.5 * (flux_L + flux_R) - 0.5 * A_dw
 
+    def _get_ghost_cells(self, q):
+        """Add ghost cells with fixed boundary conditions for shock tube problems"""
+        N = q.shape[1]
+        qg = np.zeros((3, N + 4))
+        qg[:, 2:-2] = q
+
+        # Left boundary: fixed/extrapolation
+        qg[:, 0] = q[:, 0]  # Copy boundary value
+        qg[:, 1] = q[:, 0]  # Copy boundary value
+
+        # Right boundary: fixed/extrapolation
+        qg[:, -2] = q[:, -1]  # Copy boundary value
+        qg[:, -1] = q[:, -1]  # Copy boundary value
+
+        return qg
+
     def _flux_muscl(self):
-        """MUSCL reconstruction with Roe flux"""
-        # Compute and limit slopes
-        slope_left = np.zeros((3, self.nx - 1))
-        slope_right = np.zeros((3, self.nx - 1))
-        q_left = np.zeros((3, self.nx - 1))
-        q_right = np.zeros((3, self.nx - 1))
+        """MUSCL reconstruction with Roe flux using ghost cells"""
+        # Add ghost cells
+        qg = self._get_ghost_cells(self.q)
+        N = self.q.shape[1]
 
-        # Vectorized slope computation for all variables and cells
-        # Left reconstruction slopes (for j = 1 to nx-3)
-        diff_left = self.q[:, 1:-3] - self.q[:, 0:-4]  # q[i,j] - q[i,j-1]
-        diff_right = self.q[:, 2:-2] - self.q[:, 1:-3]  # q[i,j+1] - q[i,j]
+        # Compute slopes for all cells using ghost cells
+        slopes = np.zeros((3, N + 4))
 
-        # Handle small denominators with vectorized conditionals
-        small_num = np.abs(diff_left) < 1e-8
-        small_den = np.abs(diff_right) < 1e-8
-
-        # Apply conditional logic vectorized
-        diff_left = np.where(small_num, 0.0, diff_left)
-        diff_right = np.where(small_num, 1.0, diff_right)
-        diff_left = np.where(~small_num & (diff_left > 1e-8) & small_den, 1.0, diff_left)
-        diff_right = np.where(~small_num & (diff_left > 1e-8) & small_den, 1.0, diff_right)
-        diff_left = np.where(~small_num & (diff_left < -1e-8) & small_den, -1.0, diff_left)
-        diff_right = np.where(~small_num & (diff_left < -1e-8) & small_den, 1.0, diff_right)
-
-        slope_left[:, 1:-2] = self._slope_limiter(diff_left / diff_right)
-
-        # Right reconstruction slopes (for j = 1 to nx-3)
-        diff_left = self.q[:, 2:-2] - self.q[:, 1:-3]  # q[i,j+1] - q[i,j]
-        diff_right = self.q[:, 3:-1] - self.q[:, 2:-2]  # q[i,j+2] - q[i,j+1]
+        # Vectorized slope computation for all cells (including boundaries)
+        diff_left = qg[:, 2:-2] - qg[:, 1:-3]  # q[i,j] - q[i,j-1]
+        diff_right = qg[:, 3:-1] - qg[:, 2:-2]  # q[i,j+1] - q[i,j]
 
         # Handle small denominators with vectorized conditionals
         small_num = np.abs(diff_left) < 1e-8
@@ -218,32 +219,38 @@ class Euler1D(SIMULATOR):
         diff_left = np.where(~small_num & (diff_left < -1e-8) & small_den, -1.0, diff_left)
         diff_right = np.where(~small_num & (diff_left < -1e-8) & small_den, 1.0, diff_right)
 
-        slope_right[:, 1:-2] = self._slope_limiter(diff_left / diff_right)
+        slopes[:, 2:-2] = self._slope_limiter(diff_left / diff_right)
 
-        # Vectorized Left and Right extrapolated q-values at the boundary j+1/2
-        # For nx=401, we want j from 1 to nx-3 = 397, so q_left shape is (3, 399)
-        # q[:, 1:-2] has shape (3, 398), q[:, 2:-1] has shape (3, 399) - mismatch!
-        # Correct indexing:
-        indices = slice(1, self.nx - 2)  # j = 1 to nx-3
-        q_left[:, indices] = self.q[:, indices] + 0.5 * slope_left[:, indices] * (
-            self.q[:, indices.start + 1 : indices.stop + 1] - self.q[:, indices]
-        )
-        q_right[:, indices] = self.q[:, indices.start + 1 : indices.stop + 1] - 0.5 * slope_right[:, indices] * (
-            self.q[:, indices.start + 2 : indices.stop + 2] - self.q[:, indices.start + 1 : indices.stop + 1]
-        )
+        # Set boundary slopes to zero (no extrapolation at boundaries)
+        slopes[:, 0:2] = 0.0
+        slopes[:, -2:] = 0.0
 
-        # Boundary conditions
-        q_right[:, 0] = self.q[:, 1] - 0.5 * slope_right[:, 1] * (self.q[:, 3] - self.q[:, 2])
-        q_left[:, 0] = q_right[:, 0]
-        q_left[:, self.nx - 2] = self.q[:, self.nx - 2] + 0.5 * slope_left[:, self.nx - 2] * (
-            self.q[:, self.nx - 1] - self.q[:, self.nx - 2]
+        # Vectorized Left and Right extrapolated q-values (left and right) at j+1/2
+        q_left = np.zeros((3, N - 1))
+        q_right = np.zeros((3, N - 1))
+
+        # Reconstruction for all interfaces - fully vectorized
+        # Interface i+1/2 connects cells i and i+1 (in original indexing)
+        # In ghost cell indexing: cells i+2 and i+3
+        indices = np.arange(N - 1)
+        q_left[:, indices] = (
+            qg[:, indices + 2]
+            + 0.25 * (1 + self.k) * slopes[:, indices + 3] * (qg[:, indices + 4] - qg[:, indices + 3])
+            + 0.25 * (1 - self.k) * slopes[:, indices + 2] * (qg[:, indices + 3] - qg[:, indices + 2])
         )
-        q_right[:, self.nx - 2] = q_left[:, self.nx - 2]
+        q_right[:, indices] = (
+            qg[:, indices + 3]
+            - 0.25 * (1 + self.k) * slopes[:, indices + 3] * (qg[:, indices + 4] - qg[:, indices + 3])
+            - 0.25 * (1 - self.k) * slopes[:, indices + 4] * (qg[:, indices + 5] - qg[:, indices + 4])
+        )
 
         # Vectorized Roe flux computation for all interfaces
         flux = self._flux_roe(q_left, q_right)
 
-        dF = flux[:, 1:-1] - flux[:, 0:-2]
+        # Compute flux differences for interior cells only
+        # flux has shape (3, N-1) for N-1 interfaces
+        # We need dF for interior cells: q[:, 1:-1] which has shape (3, N-2)
+        dF = flux[:, 1:] - flux[:, :-1]
         return dF
 
     def cal_dt(self):
@@ -263,7 +270,8 @@ class Euler1D(SIMULATOR):
         dF = self._flux_muscl()
 
         # Update interior cells
-        self.q[:, 1:-2] = q0[:, 1:-2] - dt / self.dx * dF
+        # dF has shape (3, N-2) for interior cells
+        self.q[:, 1:-1] = q0[:, 1:-1] - dt / self.dx * dF
 
         # Boundary conditions (keep fixed)
         self.q[:, 0] = q0[:, 0]
