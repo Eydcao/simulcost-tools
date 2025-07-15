@@ -3,6 +3,7 @@ import numpy as np
 
 import sys
 import os
+
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from wrappers.burgers_1d import run_sim_burgers_1d, compare_res_burgers_1d
@@ -57,7 +58,7 @@ def find_convergent_cfl(profile, cfl, k, w, tolerance_infity, tolerance_2):
         if len(cfl_history) > 1:
             best_cfl = cfl_history[-1]
             print(f"Smallest tested CFL: {best_cfl}")
-        else:   
+        else:
             best_cfl = None
 
     print(f"Cost history: {cost_history}, total cost: {sum(cost_history)}")
@@ -68,7 +69,7 @@ def find_convergent_cfl(profile, cfl, k, w, tolerance_infity, tolerance_2):
 def find_optimal_k(profile, w, tolerance_infity, tolerance_2):
     """
     在 k ∈ [-1, 1] (步长 0.1) 上网格搜索，并记录每个 k 对应的全部 CFL 试探序列。
-    
+
     Returns
     -------
     is_converged_optimal : bool
@@ -81,13 +82,13 @@ def find_optimal_k(profile, w, tolerance_infity, tolerance_2):
     param_history : list
     """
     k_values = np.linspace(-1.0, 1.0, 21)
-    param_history = []            # 保存 (k, cfl_history)
-    k_results = []                # 保存每个 k 的关键信息（收敛时）
+    param_history = []  # 保存 (k, cfl_history)
+    k_results = []  # 保存每个 k 的关键信息（收敛时）
 
     for k in k_values:
         k = round(float(k), 1)
         print(f"\n=== Testing k = {k} ===")
-        
+
         is_converged, best_cfl, cost_history, one_param_history = find_convergent_cfl(
             profile, 1.0, k, w, tolerance_infity, tolerance_2
         )
@@ -97,14 +98,16 @@ def find_optimal_k(profile, w, tolerance_infity, tolerance_2):
 
         # 若找到收敛 CFL，就存入结果池
         if best_cfl is not None:
-            total_cost = sum(cost_history[:-1])      # 计算总代价
-            k_results.append({
-                "k": k,
-                "best_cfl": best_cfl,
-                "total_cost": total_cost,
-                "is_converged": is_converged,
-                "cost_history": cost_history,        # ★ 关键：保存完整 cost_history
-            })
+            total_cost = sum(cost_history[:-1])  # 计算总代价
+            k_results.append(
+                {
+                    "k": k,
+                    "best_cfl": best_cfl,
+                    "total_cost": total_cost,
+                    "is_converged": is_converged,
+                    "cost_history": cost_history,  # ★ 关键：保存完整 cost_history
+                }
+            )
             print(f"k = {k}: Best CFL = {best_cfl}, Total Cost = {total_cost}")
         else:
             print(f"k = {k}: No convergent CFL found")
@@ -114,10 +117,10 @@ def find_optimal_k(profile, w, tolerance_infity, tolerance_2):
         min_cost_idx = int(np.argmin([r["total_cost"] for r in k_results]))
         opt_rec = k_results[min_cost_idx]
 
-        optimal_k              = opt_rec["k"]
-        optimal_cfl            = opt_rec["best_cfl"]
-        optimal_cost_history   = opt_rec["cost_history"]
-        is_converged_optimal   = opt_rec["is_converged"]
+        optimal_k = opt_rec["k"]
+        optimal_cfl = opt_rec["best_cfl"]
+        optimal_cost_history = opt_rec["cost_history"]
+        is_converged_optimal = opt_rec["is_converged"]
 
         print(f"\nOptimal k found: {optimal_k} with CFL = {optimal_cfl}")
         print(f"Optimal cost history length: {len(optimal_cost_history)}")
@@ -136,10 +139,11 @@ def find_optimal_k(profile, w, tolerance_infity, tolerance_2):
         param_history,
     )
 
+
 def find_optimal_w(profile, k, tolerance_infity, tolerance_2):
     """
     在 w ∈ [0, 2] (步长 0.1)上网格搜索，并记录每个 w 的全部 CFL 试探序列。
-    
+
     Returns
     -------
     is_converged_optimal : bool
@@ -153,7 +157,7 @@ def find_optimal_w(profile, k, tolerance_infity, tolerance_2):
     """
     w_values = np.linspace(0.0, 2.0, 21)
     param_history = []
-    w_results = []                # 保存每个 w 收敛时的关键信息
+    w_results = []  # 保存每个 w 收敛时的关键信息
 
     for w in w_values:
         w = round(float(w), 1)
@@ -168,14 +172,16 @@ def find_optimal_w(profile, k, tolerance_infity, tolerance_2):
 
         # 若找到收敛 CFL，则收集结果
         if best_cfl is not None:
-            total_cost = sum(cost_history[:-1])      # 计算总代价
-            w_results.append({
-                "w": w,
-                "best_cfl": best_cfl,
-                "total_cost": total_cost,
-                "is_converged": is_converged,
-                "cost_history": cost_history,
-            })
+            total_cost = sum(cost_history[:-1])  # 计算总代价
+            w_results.append(
+                {
+                    "w": w,
+                    "best_cfl": best_cfl,
+                    "total_cost": total_cost,
+                    "is_converged": is_converged,
+                    "cost_history": cost_history,
+                }
+            )
             print(f"w = {w}: Best CFL = {best_cfl}, Total Cost = {total_cost}")
         else:
             print(f"w = {w}: No convergent CFL found")
@@ -185,10 +191,10 @@ def find_optimal_w(profile, k, tolerance_infity, tolerance_2):
         min_cost_idx = int(np.argmin([r["total_cost"] for r in w_results]))
         opt_rec = w_results[min_cost_idx]
 
-        optimal_w              = opt_rec["w"]
-        optimal_cfl            = opt_rec["best_cfl"]
-        optimal_cost_history   = opt_rec["cost_history"]
-        is_converged_optimal   = opt_rec["is_converged"]
+        optimal_w = opt_rec["w"]
+        optimal_cfl = opt_rec["best_cfl"]
+        optimal_cost_history = opt_rec["cost_history"]
+        is_converged_optimal = opt_rec["is_converged"]
 
         print(f"\nOptimal w found: {optimal_w} with CFL = {optimal_cfl}")
         print(f"Optimal cost history length: {len(optimal_cost_history)}")
@@ -206,6 +212,7 @@ def find_optimal_w(profile, k, tolerance_infity, tolerance_2):
         optimal_cost_history,
         param_history,
     )
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Find optimal parameters for Burgers 1D simulation")
