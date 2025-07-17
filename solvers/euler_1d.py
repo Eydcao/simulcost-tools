@@ -235,7 +235,7 @@ class Euler1D(SIMULATOR):
         indices = np.arange(N - 1)
         q_left[:, indices] = (
             qg[:, indices + 2]
-            + 0.25 * (1 + self.k) * slopes[:, indices + 3] * (qg[:, indices + 4] - qg[:, indices + 3])
+            + 0.25 * (1 + self.k) * slopes[:, indices + 2] * (qg[:, indices + 3] - qg[:, indices + 2])
             + 0.25 * (1 - self.k) * slopes[:, indices + 2] * (qg[:, indices + 3] - qg[:, indices + 2])
         )
         q_right[:, indices] = (
