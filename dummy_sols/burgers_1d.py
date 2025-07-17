@@ -41,7 +41,7 @@ def find_convergent_cfl(profile, cfl, k, w, tolerance_infity, tolerance_2):
 
             if is_converged:
                 print(f"Convergence achieved between CFL {prev_cfl} and {current_cfl}")
-                best_cfl = prev_cfl  # The larger of the two CFLs that converged
+                best_cfl = cfl_history[-1]  # The larger of the two CFLs that converged
                 converged = True
                 break
             else:

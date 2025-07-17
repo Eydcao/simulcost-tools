@@ -47,7 +47,7 @@ def find_optimal_dx(profile, initial_dx, relax, error_threshold, T_init, toleran
 
             if is_converged:
                 print(f"Convergence achieved between dx {prev_dx} and {current_dx}")
-                best_dx = prev_dx  # The coarser of the two grids that converged
+                best_dx = param_history[-1]["dx"]  # The coarser of the two grids that converged
                 converged = True
                 break
             else:
@@ -144,7 +144,7 @@ def find_optimal_error_threshold(profile, dx, relax, T_init, initial_error, tole
 
             if is_converged:
                 print(f"Convergence achieved between error {prev_error} and {current_error}")
-                best_error = prev_error  # The looser error threshold that still converged
+                best_error = param_history[-1]["error_threshold"]  # The looser error threshold that still converged
                 converged = True
                 break
             else:

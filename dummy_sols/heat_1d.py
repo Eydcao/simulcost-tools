@@ -37,7 +37,7 @@ def find_convergent_cfl(profile, initial_cfl, initial_n_space, tolerance, max_it
 
             if is_converged:
                 print(f"Convergence achieved between CFL {prev_cfl} and {current_cfl}")
-                best_cfl = prev_cfl  # The larger of the two CFLs that converged
+                best_cfl = cfl_history[-1]  # The larger of the two CFLs that converged
                 converged = True
                 break
             else:
@@ -104,7 +104,7 @@ def find_convergent_n_space(profile, initial_n_space, cfl, tolerance, max_iter):
 
             if is_converged:
                 print(f"Convergence achieved between n_space {prev_n_space} and {current_n_space}")
-                best_n_space = prev_n_space  # The coarser of the two that converged
+                best_n_space = n_space_history[-1]  # The coarser of the two that converged
                 converged = True
                 break
             else:
