@@ -192,7 +192,7 @@ if __name__ == "__main__":
 
     # Fixed parameters
     parser.add_argument("--max_iter", type=int, default=20, help="Maximum number of iterations")
-    parser.add_argument("--tolerance", type=float, default=1e-5, help="Tolerance for outter convergence check")
+    parser.add_argument("--tolerance", type=float, default=1e-3, help="Tolerance for outter convergence check")
 
     args = parser.parse_args()
 
