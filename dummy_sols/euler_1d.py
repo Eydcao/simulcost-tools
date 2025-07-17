@@ -68,7 +68,7 @@ def find_convergent_cfl(profile, cfl, beta, k, tolerance_linf, tolerance_rmse):
 
 def find_optimal_beta(profile, k, tolerance_linf, tolerance_rmse):
     """
-    Grid search over beta ∈ [0.5, 2.0] (step 0.1) for optimal limiter parameter.
+    Grid search over beta ∈ [1.0, 2.0] (step 0.1) for optimal limiter parameter.
 
     Returns
     -------
@@ -82,7 +82,7 @@ def find_optimal_beta(profile, k, tolerance_linf, tolerance_rmse):
     param_history : list
         Full parameter exploration history.
     """
-    beta_values = np.linspace(0.5, 2.0, 16)  # [0.5, 0.6, ..., 2.0]
+    beta_values = np.linspace(1.0, 2.0, 11)  # [1.0, 1.1, ..., 2.0]
     param_history = []  # Save (beta, cfl_history)
     beta_results = []  # Save key info for each beta (when converged)
 

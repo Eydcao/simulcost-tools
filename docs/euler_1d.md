@@ -23,9 +23,9 @@ where $\gamma$ is the ratio of specific heats.
 
 The spatial discretization uses MUSCL reconstruction with blending parameter $k$:
 
-$$\mathbf{U}^L_{j+\frac{1}{2}} = \mathbf{U}_j + \frac{1+k}{4} \psi(r_{j+\frac{1}{2}}) (\mathbf{U}_{j+2} - \mathbf{U}_{j+1}) + \frac{1-k}{4} \psi(r_{j-\frac{1}{2}}) (\mathbf{U}_{j+1} - \mathbf{U}_{j})$$
+$$\mathbf{U}^L_{j+\frac{1}{2}} = \mathbf{U}_j + \frac{1+k}{4} \psi(r_{j}) (\mathbf{U}_{j+1} - \mathbf{U}_{j})$$
 
-$$\mathbf{U}^R_{j+\frac{1}{2}} = \mathbf{U}_{j+1} - \frac{1+k}{4} \psi(r_{j+\frac{1}{2}}) (\mathbf{U}_{j+2} - \mathbf{U}_{j+1}) - \frac{1-k}{4} \psi(r_{j+\frac{3}{2}}) (\mathbf{U}_{j+3} - \mathbf{U}_{j+2})$$
+$$\mathbf{U}^R_{j+\frac{1}{2}} = \mathbf{U}_{j+1} - \frac{1+k}{4} \psi(r_{j+1}) (\mathbf{U}_{j+2} - \mathbf{U}_{j+1})$$
 
 where $k$ is a blending coefficient between central ($k=1$) and upwind ($k=-1$) scheme, and $\psi(r)$ is the slope limiter function.
 
@@ -35,15 +35,13 @@ The slope limiter uses a generalized superbee limiter:
 
 $$\psi(r) = \max\left[0, \max\left[\min(\beta r, 1), \min(r, \beta)\right]\right]$$
 
-where $\beta$ is the limiter parameter controlling dissipation:
-- $\beta = 1$: minmod limiter (most dissipative)
-- $\beta = 2$: superbee limiter (least dissipative)
+where $\beta$ is the limiter parameter controlling dissipation.
 
-The slope ratio $r$ at interface $j+\frac{1}{2}$ is defined as:
+The slope ratio $r$ at interface $j$ is defined as:
 
-$$r_{j+\frac{1}{2}} = \frac{\mathbf{U}_{j+1} - \mathbf{U}_{j}}{\mathbf{U}_{j+2} - \mathbf{U}_{j+1}}$$
+$$r_{j} = \frac{\mathbf{U}_{j+1} - \mathbf{U}_{j}}{\mathbf{U}_{j+2} - \mathbf{U}_{j+1}}$$
 
-This ratio compares the upwind slope to the local slope to detect smooth vs. discontinuous regions.
+This ratio indicates the local non-smoothness, which will be the input into the slope limiter to achieve the TVD condition.
 
 ## Flux Computation
 
@@ -121,15 +119,21 @@ python dummy_sols/euler_1d.py --profile p1 --task k --beta 1
 python dummy_sols/euler_1d.py --profile p1 --task k --beta 2
 ```
 
-## Summarized parameter table for developer
+## Summarized parameter table for developer only (Not LLM)
 
 ### Controllable
 
 | Parameter | Description | Range |
 |-----------|-------------|-------|
 | cfl | Courant-Friedrichs-Lewy number for stability | 0 < cfl ≤ 1 |
-| beta | Limiter parameter for generalized superbee | 0.5 ≤ beta ≤ 2 |
+| beta | Limiter parameter for generalized superbee | 1 ≤ beta ≤ 2 |
 | k | Blending parameter between central (k=1) and upwind (k=-1) fluxes | -1 ≤ k ≤ 1 |
+
+More Notes:
+- $\beta = 1$: minmod limiter (most dissipative)
+- $\beta = 2$: superbee limiter (least dissipative)
+- $\beta$ must not be smaller than 1 otherwise symmetry will be broken
+- When $k = -1$, $\beta$ no longer affects the solution
 
 ### Other
 
