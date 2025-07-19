@@ -81,7 +81,7 @@ python dummy_sols/ns_channel_2d.py --task res_iter_v_threshold --profile p1
 ## Output
 
 All results are saved to the specified `dump_dir`, including:
-- `u.npy`, `v.npy`, `p.npy`: final field results
+- `{filebase}.h5` (`u.npy`, `v.npy`, `p.npy`): final field results
 - `meta.json`: convergence metadata (e.g. mass conservation status, number of iterations, runtime, etc.)
 
 ---
@@ -100,10 +100,7 @@ This will output new YAML config files in `configs/ns_channel_2d/` folder for va
 
 ## Available Profiles:
 - `p1` (default used in experiments)
-- `channel_flow`
-- `back_stair_flow`
-- `expansion_channel`
-- `cube_driven_flow`
+- `p2/p3/p4/p5`
 
 Each profile applies different geometry and flow constraints. Ensure correct `boundary_condition` is used in the config.
 
