@@ -1,0 +1,25 @@
+defaults:
+  - _self_
+  - override hydra/hydra_logging: none
+  - override hydra/job_logging: none
+
+# Static parameters
+L: 0.174                # Wall thickness [m]
+k: 0.85                # Thermal conductivity [W/m-K]
+h: 42.87               # Convection coefficient [W/m²-K]
+rho: 1702           # Density [kg/m³]
+cp: 872            # Specific heat [J/kg-K]
+T_inf: 9          # Ambient temperature [K]
+T_init: 28         # Initial temperature [K]
+
+# Tunable parameters
+n_space: 1000          # Number of spatial points
+cfl: 1.0              # CFL number for stability
+
+# Simulator statics
+record_dt: 70        # Time interval between recordings [s]
+end_frame: 24        # Simulation end after certain number of frames
+
+# Output configuration
+dump_dir: "sim_res/heat_1d/p35"  # Directory for output files
+verbose: False          # Enable verbose output
