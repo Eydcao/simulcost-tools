@@ -25,10 +25,26 @@ def create_ns_channel_profiles(num_profiles, base_profile_path, solver_name):
             "breadth": round(np.random.uniform(0.5, 2.0), 2),
             "mu": round(np.random.uniform(0.005, 0.05), 5),
             "rho": round(np.random.uniform(0.8, 5.0), 2),
-            # "boundary_condition": f"\"{np.random.choice(['channel_flow', 'back_stair_flow', 'expansion_channel', 'cube_driven_flow'])}\"",
-            "boundary_condition": f"\"channel_flow\"",
+            "boundary_condition": f"\"{np.random.choice(['channel_flow', 'back_stair_flow', 'expansion_channel', 'cube_driven_flow'])}\"",
+            # "boundary_condition": f"\"channel_flow\"",
             "dump_dir": f"\"sim_res/{solver_name}/{profile_name}\""
         }
+        
+        if random_params["boundary_condition"] != "\"channel_flow\"":
+            # Add cfg.other_params for non-channel flow conditions
+            # First append the other_params line
+            random_params["other_params"] = "\n"
+            if random_params["boundary_condition"] == "\"expansion_channel\"":
+                random_params["other_params"] += f"  wall_height: {int(round(np.random.uniform(10, 20)))}\n"
+                random_params["other_params"] += f"  wall_width: {int(round(np.random.uniform(30, 100)))}\n"
+            elif random_params["boundary_condition"] == "\"cube_driven_flow\"":
+                random_params["other_params"] += f"  wall_height: {int(round(np.random.uniform(5, 15)))}\n"
+                random_params["other_params"] += f"  wall_width: {int(round(np.random.uniform(5, 15)))}\n"
+                random_params["other_params"] += f"  wall_start_height: {int(round(np.random.uniform(10, 30)))}\n"
+                random_params["other_params"] += f"  wall_start_width: {int(round(np.random.uniform(70, 90)))}\n"
+            elif random_params["boundary_condition"] == "\"back_stair_flow\"":
+                random_params["other_params"] += f"  wall_height: {int(round(np.random.uniform(5, 15)))}\n"
+                random_params["other_params"] += f"  wall_width: {int(round(np.random.uniform(5, 15)))}\n"
 
         new_lines = []
         for line in lines:
@@ -49,6 +65,10 @@ def create_ns_channel_profiles(num_profiles, base_profile_path, solver_name):
                     new_lines.append(line)
             else:
                 new_lines.append(line)
+        
+        # Append other_params if boundary_condition is not "channel_flow"
+        if random_params["boundary_condition"] != "\"channel_flow\"" and "other_params" in random_params:
+            new_lines.append(f"\nother_params: {random_params['other_params']}\n")
 
         output_path = base_path.parent / f"{profile_name}.yaml"
         with open(output_path, "w") as f:
@@ -61,5 +81,4 @@ def create_ns_channel_profiles(num_profiles, base_profile_path, solver_name):
 
 # Example usage:
 if __name__ == "__main__":
-    create_ns_channel_profiles(num_profiles=3, base_profile_path="../run_configs/ns_channel_2d/p1.yaml", solver_name="ns_channel_2d")
-    
+    create_ns_channel_profiles(num_profiles=20, base_profile_path="../run_configs/ns_channel_2d/p1.yaml", solver_name="ns_channel_2d")

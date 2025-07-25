@@ -6,9 +6,9 @@ import json
 from scipy.interpolate import RegularGridInterpolator
 
 
-def run_sim_ns_channel_2d(profile, mesh_x, mesh_y, omega_u, omega_v, omega_p, diff_u_threshold, diff_v_threshold, res_iter_v_threshold):
+def run_sim_ns_channel_2d(profile, boundary_type, mesh_x, mesh_y, omega_u, omega_v, omega_p, diff_u_threshold, diff_v_threshold, res_iter_v_threshold):
     """Run the ns_channel_2d simulation with the given parameters."""
-    dir_path = f"sim_res/ns_channel_2d/{profile}_mesh_{mesh_x}_{mesh_y}_relax_{omega_u}_{omega_v}_{omega_p}_error_{diff_u_threshold}_{diff_v_threshold}_itererror_{res_iter_v_threshold}/"
+    dir_path = f"sim_res/ns_channel_2d/{profile}_{boundary_type}_mesh_{mesh_x}_{mesh_y}_relax_{omega_u}_{omega_v}_{omega_p}_error_{diff_u_threshold}_{diff_v_threshold}_itererror_{res_iter_v_threshold}/"
     meta_file_path = os.path.join(dir_path, "meta.json")
 
     # Check if the directory and meta.json file with the key of cost and num_steps exist
@@ -29,9 +29,9 @@ def run_sim_ns_channel_2d(profile, mesh_x, mesh_y, omega_u, omega_v, omega_p, di
     return meta["cost"], meta["num_steps"]
 
 
-def get_res_ns_channel_2d(profile, mesh_x, mesh_y, omega_u, omega_v, omega_p, diff_u_threshold, diff_v_threshold, res_iter_v_threshold):
+def get_res_ns_channel_2d(profile, boundary_type, mesh_x, mesh_y, omega_u, omega_v, omega_p, diff_u_threshold, diff_v_threshold, res_iter_v_threshold):
     """Load final velocity and pressure fields for given parameters."""
-    dir_path = f"sim_res/ns_channel_2d/{profile}_mesh_{mesh_x}_{mesh_y}_relax_{omega_u}_{omega_v}_{omega_p}_error_{diff_u_threshold}_{diff_v_threshold}_itererror_{res_iter_v_threshold}/"
+    dir_path = f"sim_res/ns_channel_2d/{profile}_{boundary_type}_mesh_{mesh_x}_{mesh_y}_relax_{omega_u}_{omega_v}_{omega_p}_error_{diff_u_threshold}_{diff_v_threshold}_itererror_{res_iter_v_threshold}/"
 
     if not os.path.exists(dir_path):
         os.makedirs(dir_path)
@@ -39,7 +39,7 @@ def get_res_ns_channel_2d(profile, mesh_x, mesh_y, omega_u, omega_v, omega_p, di
     files = [f for f in os.listdir(dir_path) if f.startswith("res_") and f.endswith(".h5")]
     if not files:
         # Trigger a simulation run if no result files are found
-        run_sim_ns_channel_2d(profile, mesh_x, mesh_y, omega_u, omega_v, omega_p, diff_u_threshold, diff_v_threshold, res_iter_v_threshold)
+        run_sim_ns_channel_2d(profile, boundary_type, mesh_x, mesh_y, omega_u, omega_v, omega_p, diff_u_threshold, diff_v_threshold, res_iter_v_threshold)
         files = [f for f in os.listdir(dir_path) if f.startswith("res_") and f.endswith(".h5")]
         if not files:
             raise FileNotFoundError(f"No result files found in {dir_path} after triggering a simulation run.")
@@ -96,16 +96,16 @@ def interpolate_field(field_src, src_shape, tgt_shape, axis_offsets=(0, 0)):
 
 
 def compare_res_ns_channel_2d(
-    profile1, mesh_x1, mesh_y1, omega_u1, omega_v1, omega_p1, diff_u_threshold1, diff_v_threshold1, res_iter_v_threshold1,
-    profile2, mesh_x2, mesh_y2, omega_u2, omega_v2, omega_p2, diff_u_threshold2, diff_v_threshold2, res_iter_v_threshold2,
+    profile1, boundary_type1, mesh_x1, mesh_y1, omega_u1, omega_v1, omega_p1, diff_u_threshold1, diff_v_threshold1, res_iter_v_threshold1,
+    profile2, boundary_type2, mesh_x2, mesh_y2, omega_u2, omega_v2, omega_p2, diff_u_threshold2, diff_v_threshold2, res_iter_v_threshold2,
     length, breadth,
     mass_tolerance, u_rmse_tolerance, v_rmse_tolerance, p_rmse_tolerance
 ):
     """
     Compare two sets of results.
     """
-    u1, v1, p1 = get_res_ns_channel_2d(profile1, mesh_x1, mesh_y1, omega_u1, omega_v1, omega_p1, diff_u_threshold1, diff_v_threshold1, res_iter_v_threshold1)
-    u2, v2, p2 = get_res_ns_channel_2d(profile2, mesh_x2, mesh_y2, omega_u2, omega_v2, omega_p2, diff_u_threshold2, diff_v_threshold2, res_iter_v_threshold2)
+    u1, v1, p1 = get_res_ns_channel_2d(profile1, boundary_type1, mesh_x1, mesh_y1, omega_u1, omega_v1, omega_p1, diff_u_threshold1, diff_v_threshold1, res_iter_v_threshold1)
+    u2, v2, p2 = get_res_ns_channel_2d(profile2, boundary_type2, mesh_x2, mesh_y2, omega_u2, omega_v2, omega_p2, diff_u_threshold2, diff_v_threshold2, res_iter_v_threshold2)
 
     # Compute RMSE for velocity and pressure
     u2_interp = interpolate_field(u2, u2.shape, u1.shape, axis_offsets=(0.0, 0.5))
@@ -135,7 +135,8 @@ def compare_res_ns_channel_2d(
 
 if  __name__ == "__main__":
     # Example usage: compare mesh_x=100, mesh_y=50 with mesh_x=200, mesh_y=50
-    profile = "p1"
+    profile = "p7"
+    boundary_type = "back_stair_flow"
     mesh_x1 = 100
     mesh_y1 = 50
     mesh_x2 = 200
@@ -156,8 +157,8 @@ if  __name__ == "__main__":
 
     # Compare results
     is_converged, _, _, _, _, _ = compare_res_ns_channel_2d(
-        profile, mesh_x1, mesh_y1, omega_u, omega_v, omega_p, diff_u_threshold, diff_v_threshold, res_iter_v_threshold,
-        profile, mesh_x2, mesh_y2, omega_u, omega_v, omega_p, diff_u_threshold, diff_v_threshold, res_iter_v_threshold,
+        profile, boundary_type, mesh_x1, mesh_y1, omega_u, omega_v, omega_p, diff_u_threshold, diff_v_threshold, res_iter_v_threshold,
+        profile, boundary_type, mesh_x2, mesh_y2, omega_u, omega_v, omega_p, diff_u_threshold, diff_v_threshold, res_iter_v_threshold,
         length, breadth,
         mass_tolerance, u_rmse_tolerance, v_rmse_tolerance, p_rmse_tolerance
     )

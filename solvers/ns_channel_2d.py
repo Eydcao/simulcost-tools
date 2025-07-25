@@ -43,6 +43,7 @@ class NSChannel2D():
         self.diff_v_threshold = cfg.diff_v_threshold
         self.mass_conservation_threshold = cfg.mass_conservation_threshold if "mass_conservation_threshold" in cfg else 1e-8
         self.boundary_condition = cfg.boundary_condition
+        self.other_params = cfg.other_params if "other_params" in cfg else {}
         # Coordinates
         self.X = np.linspace(0, self.length, self.mesh_x + 1)
         self.Y = np.linspace(0, self.breadth, self.mesh_y + 1)
@@ -53,7 +54,7 @@ class NSChannel2D():
         # Fields
         self.reset_fields()
         self.dump_dir = (
-            cfg.dump_dir + f"_mesh_{self.mesh_x}_{self.mesh_y}_relax_{self.omega_u}_{self.omega_v}_{self.omega_p}_error_{self.diff_u_threshold}_{self.diff_v_threshold}_itererror_{self.res_iter_v_threshold_name}"
+            cfg.dump_dir + f"_{self.boundary_condition}_mesh_{self.mesh_x}_{self.mesh_y}_relax_{self.omega_u}_{self.omega_v}_{self.omega_p}_error_{self.diff_u_threshold}_{self.diff_v_threshold}_itererror_{self.res_iter_v_threshold_name}"
         )
         if not os.path.exists(self.dump_dir):
             os.makedirs(self.dump_dir)
@@ -163,15 +164,17 @@ class NSChannel2D():
                         self.pressure[i, j] = 0.0
         
         elif self.boundary_condition == "back_stair_flow":
+            wall_height = self.other_params.get("wall_height", 20)
+            wall_width = self.other_params.get("wall_width", 50)
             # Inlet (left boundary)
-            self.node_type[20:, 0] = "inlet"
+            self.node_type[wall_height:, 0] = "inlet"
             # Outlet (right boundary)
             self.node_type[:, -1] = "outlet"
             # Top wall
             self.node_type[-1, :] = "top-wall"
             # Bottom wall
             self.node_type[0, :] = "bottom-wall"
-            self.node_type[:20, :50] = "bottom-wall"
+            self.node_type[:wall_height, :wall_width] = "bottom-wall"
             
             # Apply boundary conditions for u
             for i in range(my + 2):
@@ -182,8 +185,8 @@ class NSChannel2D():
                     if left_type == "inlet":
                         if i >= 1 and i < self.u.shape[0]-1:
                             # Parabolic profile centered on the height of range 20: only
-                            y = (i - 20 + 0.5) * self.dy
-                            height = (my + 2 - 20) * self.dy
+                            y = (i - wall_height + 0.5) * self.dy
+                            height = (my + 2 - wall_height) * self.dy
                             self.u[i, 0] = 4 * 1.0 * y * (height - y) / (height ** 2)
                     elif right_type == "outlet":
                         self.u[i, j] = 0.0
@@ -197,16 +200,19 @@ class NSChannel2D():
                         self.pressure[i, j] = 0.0
             
         elif self.boundary_condition == "expansion_channel":
+            wall_height = self.other_params.get("wall_height", 15)
+            wall_width = self.other_params.get("wall_width", 50)
+            print(f"Applying expansion channel boundary conditions with wall_height={wall_height}, wall_width={wall_width}")
             # Inlet (left boundary)
-            self.node_type[15:-15, 0] = "inlet"
+            self.node_type[wall_height:-wall_height, 0] = "inlet"
             # Outlet (right boundary)
             self.node_type[:, -1] = "outlet"
             # Top wall
             self.node_type[-1, :] = "top-wall"
-            self.node_type[-15:, :50] = "top-wall"
+            self.node_type[-wall_height:, :50] = "top-wall"
             # Bottom wall
             self.node_type[0, :] = "bottom-wall"
-            self.node_type[:15, :50] = "bottom-wall"
+            self.node_type[:wall_height, :50] = "bottom-wall"
             
             # Apply boundary conditions for u
             for i in range(my + 2):
@@ -217,8 +223,8 @@ class NSChannel2D():
                     if left_type == "inlet":
                         if i >= 1 and i < self.u.shape[0]-1:
                             # Parabolic profile centered in the range 15:-15
-                            y = (i - 15 + 0.5) * self.dy
-                            height = (my + 2 - 30) * self.dy
+                            y = (i - wall_height + 0.5) * self.dy
+                            height = (my + 2 - wall_height*2) * self.dy
                             self.u[i, 0] = 4 * 1.0 * y * (height - y) / (height ** 2)
                     elif right_type == "outlet":
                         self.u[i, j] = 0.0
@@ -232,6 +238,10 @@ class NSChannel2D():
                         self.pressure[i, j] = 0.0
         
         elif self.boundary_condition == "cube_driven_flow":
+            wall_height = self.other_params.get("wall_height", 10)
+            wall_width = self.other_params.get("wall_width", 10)
+            wall_start_height = self.other_params.get("wall_start_height", 20)
+            wall_start_width = self.other_params.get("wall_start_width", 80)
             # Inlet (left boundary)
             self.node_type[:, 0] = "inlet"
             # Outlet (right boundary)
@@ -242,7 +252,7 @@ class NSChannel2D():
             self.node_type[0, :] = "bottom-wall"
             
             # cube block inside
-            self.node_type[20:30, 80:90] = "bottom-wall"
+            self.node_type[wall_start_height:wall_start_height + wall_height, wall_start_width:wall_start_width + wall_width] = "bottom-wall"
             
             # Apply boundary conditions for u
             for i in range(my + 2):
