@@ -39,8 +39,8 @@ We solve the incompressible, steady-state Navier-Stokes equations in 2D using Fi
 Finer mesh improves accuracy but increases computational cost. Dummy method starts with coarse grid and refines until centerline velocity profile converges.
 
 ```bash
-python dummy_sols/ns_channel_2d.py --task mesh_x --profile p1 --initial_mesh_x 50 --initial_mesh_y 10
-python dummy_sols/ns_channel_2d.py --task mesh_y --profile p1 --initial_mesh_x 50 --initial_mesh_y 10
+python dummy_sols/ns_channel_2d.py --task mesh_x --profile p1 --mesh_x 50 --mesh_y 10
+python dummy_sols/ns_channel_2d.py --task mesh_y --profile p1 --mesh_x 50 --mesh_y 10
 ```
 
 ---
@@ -62,8 +62,8 @@ python dummy_sols/ns_channel_2d.py --task omega_p --profile p1
 These affect convergence criteria. Dummy method decays `diff_u_threshold` and `diff_v_threshold` iteratively and observes stability and runtime.
 
 ```bash
-python dummy_sols/ns_channel_2d.py --task diff_u_threshold --profile p1 --initial_threshold 1e-3
-python dummy_sols/ns_channel_2d.py --task diff_v_threshold --profile p1 --initial_threshold 1e-3
+python dummy_sols/ns_channel_2d.py --task diff_u_threshold --profile p1 --diff_u_threshold 1e-3
+python dummy_sols/ns_channel_2d.py --task diff_v_threshold --profile p1 --diff_v_threshold 1e-3
 ```
 
 ---

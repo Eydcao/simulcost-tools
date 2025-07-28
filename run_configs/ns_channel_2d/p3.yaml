@@ -4,10 +4,10 @@ defaults:
   - override hydra/job_logging: none
 
 # -------- Environment Dependents --------
-length: 19.18
-breadth: 1.0
-mu: 0.01143
-rho: 3.53
+length: 13.12
+breadth: 0.73
+mu: 0.00761
+rho: 4.44
 boundary_condition: "channel_flow"  # Options: "channel_flow", "back_stair_flow", "expansion_channel", "cube_driven_flow"
 
 # -------- Criteria --------
