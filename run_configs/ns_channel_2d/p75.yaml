@@ -1,0 +1,33 @@
+defaults:
+  - _self_
+  - override hydra/hydra_logging: none
+  - override hydra/job_logging: none
+
+# -------- Environment Dependents --------
+length: 25.01
+breadth: 1.71
+mu: 0.04957
+rho: 2.53
+boundary_condition: "expansion_channel"  # Options: "channel_flow", "back_stair_flow", "expansion_channel", "cube_driven_flow"
+
+# -------- Criteria --------
+mass_conservation_threshold: 1e-8
+
+# -------- Tunable Parameters --------
+mesh_x: 250
+mesh_y: 50
+omega_u: 0.7
+omega_v: 0.7
+omega_p: 0.3
+diff_u_threshold: 1e-7
+diff_v_threshold: 1e-7
+
+res_iter_v_threshold: "exp_decay"
+
+# -------- Output --------
+dump_dir: "sim_res/ns_channel_2d/p75"
+verbose: False
+other_params: 
+  wall_height: 14
+  wall_width: 84
+

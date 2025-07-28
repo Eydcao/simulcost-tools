@@ -4,11 +4,11 @@ defaults:
   - override hydra/job_logging: none
 
 # -------- Environment Dependents --------
-length: 23.68
-breadth: 1.16
-mu: 0.01049
-rho: 2.88
-boundary_condition: "back_stair_flow"  # Options: "channel_flow", "back_stair_flow", "expansion_channel", "cube_driven_flow"
+length: 11.3
+breadth: 1.92
+mu: 0.04845
+rho: 4.2
+boundary_condition: "channel_flow"  # Options: "channel_flow", "back_stair_flow", "expansion_channel", "cube_driven_flow"
 
 # -------- Criteria --------
 mass_conservation_threshold: 1e-8
@@ -27,7 +27,3 @@ res_iter_v_threshold: "exp_decay"
 # -------- Output --------
 dump_dir: "sim_res/ns_channel_2d/p10"
 verbose: False
-other_params: 
-  wall_height: 5
-  wall_width: 14
-

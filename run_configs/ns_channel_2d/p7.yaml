@@ -8,7 +8,7 @@ length: 22.24
 breadth: 0.71
 mu: 0.01815
 rho: 2.34
-boundary_condition: "back_stair_flow"  # Options: "channel_flow", "back_stair_flow", "expansion_channel", "cube_driven_flow"
+boundary_condition: "channel_flow"  # Options: "channel_flow", "back_stair_flow", "expansion_channel", "cube_driven_flow"
 
 # -------- Criteria --------
 mass_conservation_threshold: 1e-8
@@ -27,7 +27,3 @@ res_iter_v_threshold: "exp_decay"
 # -------- Output --------
 dump_dir: "sim_res/ns_channel_2d/p7"
 verbose: False
-other_params: 
-  wall_height: 10
-  wall_width: 13
-
