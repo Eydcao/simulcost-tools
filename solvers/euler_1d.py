@@ -62,31 +62,55 @@ class Euler1D(SIMULATOR):
             r0[halfcells:] = 0.125
 
         elif case == "lax":
-            # Lax problem
-            p0[:halfcells] = 3.528
-            p0[halfcells:] = 0.571
-            u0[:halfcells] = 0.698
-            u0[halfcells:] = 0.0
+            # Lax tube problem from reference C++ code (testcase 1)
+            # Left: rho=0.445, u=0.69748, p=3.52875 (from total energy 8.9284)
+            # Right: rho=0.5, u=0, p=1.425 (ambient)
             r0[:halfcells] = 0.445
             r0[halfcells:] = 0.5
-
-        elif case == "123":
-            # Test problem 123
-            p0[:halfcells] = 1000.0
-            p0[halfcells:] = 0.01
-            u0[:halfcells] = 0.0
+            u0[:halfcells] = 0.31061 / 0.445  # momentum/density = 0.69748
             u0[halfcells:] = 0.0
-            r0[:halfcells] = 1.0
+            # Calculate pressure from total energy: E = p/(gamma-1) + 0.5*rho*u^2
+            # For left: 8.9284/0.445 = p/0.4 + 0.5*(0.31061/0.445)^2
+            p0[:halfcells] = 3.52875
+            p0[halfcells:] = 1.425
+
+        elif case == "mach_3":
+            # Mach 3 problem from reference C++ code (testcase 3)
+            # Left: rho=3.857, u=0.92, p=10.333 (from total energy 27.46478)
+            # Right: rho=1.0, u=2.55, p=1.0 (ambient)
+            r0[:halfcells] = 3.857
             r0[halfcells:] = 1.0
+            u0[:halfcells] = 3.54844 / 3.857  # momentum/density
+            u0[halfcells:] = 3.55  # ambient velocity
+            # Calculate pressure from total energy
+            p0[:halfcells] = 10.333
+            p0[halfcells:] = 2.2003125  # calculated from 8.80125/1.0 = p/0.4 + 0.5*3.55^2
+
+        elif case == "blast_interaction":
+            # Interacting blast shock problem from reference C++ code (testcase 5)
+            # Left 10%: rho=1.0, u=0, p=1000.0 (from total energy 2500)
+            # Middle 80%: rho=1.0, u=0, p=0.01 (from total energy 0.025)
+            # Right 10%: rho=1.0, u=0, p=100.0 (from total energy 250)
+            left_10_cells = int(0.1 * self.n_space)
+            right_10_cells = int(0.9 * self.n_space)
+            
+            r0[:] = 1.0
+            u0[:] = 0.0
+            p0[:] = 0.01  # ambient (middle region)
+            p0[:left_10_cells] = 1000.0  # left blast
+            p0[right_10_cells:] = 100.0  # right blast
+
+        elif case == "symmetric_rarefaction":
+            # Symmetric rarefaction waves from reference C++ code (testcase 6)
+            # Left half: rho=1.0, u=-2.0, p=1.0 (from total energy 3.0)
+            # Right half: rho=1.0, u=2.0, p=1.0 (from total energy 3.0)
+            r0[:] = 1.0
+            u0[:halfcells] = -2.0
+            u0[halfcells:] = 2.0
+            p0[:] = 1.0
 
         else:
-            print(f"Warning: Unknown case '{case}'. Using default Sod problem.")
-            p0[:halfcells] = 1.0
-            p0[halfcells:] = 0.1
-            u0[:halfcells] = 0.0
-            u0[halfcells:] = 0.0
-            r0[:halfcells] = 1.0
-            r0[halfcells:] = 0.125
+            raise ValueError(f"Unknown case '{case}' in Euler1D.initialize_condition")
 
         # Convert to conservative variables
         q = self._prim2cons(r0, u0, p0)

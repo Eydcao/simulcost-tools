@@ -21,14 +21,14 @@ For solvers with established **benchmark problems where parameters should not be
 
 ```
 # eg, for euler 1d, if the targetted parameter is CFL or n_space, 
-# assume 7 profiles
+# assume 5 profiles (sod, lax, mach_3, blast_interaction, symmetric_rarefaction)
 # we can have 9 combos of non-target combinations: (3 choices of k × 3 choices of beta) 
 # if the targetted parameter is k (or beta), 
 # we can have fixed CFL and n_space, and 3 choices of beta (or k).
-# - **CFL + n_space** (iterative): 7 profiles × 9 non-target combos × 2 target params = 126 tasks
-# - **k + beta** (0-shot): 7 profiles × 3 non-target combos × 2 target params = 42 tasks
-# - **Total per precision**: 168 tasks
-# - **Total tasks**: 504 tasks
+# - **CFL + n_space** (iterative): 5 profiles × 9 non-target combos × 2 target params = 90 tasks
+# - **k + beta** (0-shot): 5 profiles × 3 non-target combos × 2 target params = 30 tasks
+# - **Total per precision**: 120 tasks
+# - **Total tasks**: 360 tasks
 ```
 
 ### Option B: Flexible Parameter Solvers  

@@ -8,21 +8,21 @@ solver_info:
 
 task_distribution:
   strategy: "benchmark"
-  total_individuals: TODO calculate
-  description: "TODO [calculation breakdown]"
+  total_individuals: 360
+  description: "5 profiles × (90 iterative + 30 0-shot) tasks × 3 precision levels = 360 total tasks"
 
 precision_levels:
-  high:
+  low:
     tolerance_rmse: 0.01
   medium:
     tolerance_rmse: 0.005
-  low:
+  high:
     tolerance_rmse: 0.0025
 
 profiles:
-  num_profiles: 7
-  # For dummy generation script - currently using only p1, expand to p2-p7 later
-  active_profiles: ["p1"]  # TODO: expand to ["p1", "p2", "p3", "p4", "p5", "p6", "p7"]
+  num_profiles: 5
+  # Available profiles: p1 (sod), p2 (lax), p3 (mach_3), p4 (blast_interaction), p5 (symmetric_rarefaction)
+  active_profiles: ["p1", "p2", "p3", "p4", "p5"]
 
 # Parameter configurations for each target parameter
 target_parameters:
