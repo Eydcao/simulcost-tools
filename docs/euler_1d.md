@@ -70,53 +70,51 @@ The simulated results are considered correct if both norms $L^2 \leq 0.02$ and $
 
 ## Parameter Tuning Tasks
 
+**Principle**: When searching one parameter, all others must be fixed.
+
 ### Tasks
 
 1. **CFL Convergence Search (0-shot and iterative)**
    - CFL (Courant-Friedrichs-Lewy) number is defined as: $CFL = \frac{(|u| + c) \Delta t}{\Delta x}$ where $c = \sqrt{\gamma p/\rho}$ is the speed of sound
    - For dummy solution, this means halve CFL each round until convergence (self checking criteria is $L^2 \leq 0.02$ and $L^{\infty} \leq 0.2$)
-   - **Note**: This task spans different k selection (k=1,0,-1), plus β selections (β=0.5,1,2), representing different spatial schemes (ie, 9 CFL tasks)
+   - **All other parameters (β, k, n_space) must be specified and remain fixed**
 
 ```bash
-# For example, for profile 1, the 9 tasks are:
-# β=0.5, 3 different ks
-python dummy_sols/euler_1d.py --profile p1 --task cfl --k 1 --beta 0.5
-python dummy_sols/euler_1d.py --profile p1 --task cfl --k 0 --beta 0.5
-python dummy_sols/euler_1d.py --profile p1 --task cfl --k -1 --beta 0.5
-# β=1, 3 different ks
-# ...
-# β=2, 3 different ks
-# ...
+# Example: CFL search with fixed β=1.0, k=1.0, n_space=256
+python dummy_sols/euler_1d.py --profile p1 --task cfl --cfl 1.0 --beta 1.0 --k 1.0 --n_space 256
 ```
 
-2. **β-Parameter (Composite: ie, 0-shot select β, then iteratively search CFL)**
-   - Composite means the selection of β is 0-shot, but we still need to pay the cost for iteratively finding the convergent results
-   - For dummy solution, this means:
-     - For each β
-     - Conduct a CFL search, and record the search cost
-     - Record the β corresponding to the minimum search cost
-   - **Note**: This task spans different k selection (k=-1,0,1), representing different spatial schemes (ie, 3 β tasks)
+2. **n_space Convergence Search (0-shot and iterative)**
+   - n_space determines spatial resolution: $\Delta x = L / n\_space$, where $L$ is domain length
+   - This is a spatial convergence study: increase n_space (refine grid) until spatial convergence is achieved
+   - For dummy solution, this means doubling n_space each iteration until convergence (self-checking criteria is $L^2 \leq 0.02$ and $L^{\infty} \leq 0.2$)
+   - **All other parameters (CFL, β, k) must be specified and remain fixed**
 
 ```bash
-# For example, for profile 1, the 3 tasks are:
-python dummy_sols/euler_1d.py --profile p1 --task beta --k -1
-python dummy_sols/euler_1d.py --profile p1 --task beta --k 0
-python dummy_sols/euler_1d.py --profile p1 --task beta --k 1
+# Example: n_space search with fixed CFL=0.25, β=1.0, k=1.0
+python dummy_sols/euler_1d.py --profile p1 --task n_space --cfl 0.25 --beta 1.0 --k 1.0 --n_space 64
 ```
 
-3. **k-Parameter (Composite: ie, 0-shot select k, then iteratively search CFL)**
-   - Similar to the β-Parameter task, this is a composite task where k selection is 0-shot, followed by iterative CFL search
-   - For dummy solution, this means:
-     - For each k
-     - Conduct a CFL search, and record the search cost
-     - Record the k corresponding to the minimum search cost
-   - **Note**: This task spans different β selection (β=0.5,1,2), representing different limiters (ie, 3 k tasks)
+3. **β-Parameter Optimization (0-shot selection)**
+   - Grid search over β ∈ [1.0, 2.0] to find the optimal limiter parameter
+   - For each β value, iterate n_space until spatial convergence is achieved with **fixed CFL and k**
+   - Select the β that achieves convergence with minimum computational cost
+   - **CFL and k must be specified and remain fixed**
 
 ```bash
-# For example, for profile 1, the 3 tasks are:
-python dummy_sols/euler_1d.py --profile p1 --task k --beta 0.5
-python dummy_sols/euler_1d.py --profile p1 --task k --beta 1
-python dummy_sols/euler_1d.py --profile p1 --task k --beta 2
+# Example: β optimization with fixed CFL=0.25, k=1.0
+python dummy_sols/euler_1d.py --profile p1 --task beta --cfl 0.25 --k 1.0 --n_space 64
+```
+
+4. **k-Parameter Optimization (0-shot selection)**
+   - Grid search over k ∈ [-1, 1] to find the optimal blending parameter
+   - For each k value, iterate n_space until spatial convergence is achieved with **fixed CFL and β**
+   - Select the k that achieves convergence with minimum computational cost
+   - **CFL and β must be specified and remain fixed**
+
+```bash
+# Example: k optimization with fixed CFL=0.25, β=1.0  
+python dummy_sols/euler_1d.py --profile p1 --task k --cfl 0.25 --beta 1.0 --n_space 64
 ```
 
 ## Summarized parameter table for developer only (Not LLM)
@@ -128,12 +126,14 @@ python dummy_sols/euler_1d.py --profile p1 --task k --beta 2
 | cfl | Courant-Friedrichs-Lewy number for stability | 0 < cfl ≤ 1 |
 | beta | Limiter parameter for generalized superbee | 1 ≤ beta ≤ 2 |
 | k | Blending parameter between central (k=1) and upwind (k=-1) fluxes | -1 ≤ k ≤ 1 |
+| n_space | Number of grid cells for spatial discretization | 64 ≤ n_space ≤ 2048 |
 
 More Notes:
 - $\beta = 1$: minmod limiter (most dissipative)
 - $\beta = 2$: superbee limiter (least dissipative)
 - $\beta$ must not be smaller than 1 otherwise symmetry will be broken
 - When $k = -1$, $\beta$ no longer affects the solution
+- $n\_space$ determines spatial resolution: $\Delta x = L / n\_space$ (smaller $\Delta x$ = finer grid = higher accuracy but higher cost)
 
 ### Other
 
@@ -142,7 +142,6 @@ More Notes:
 | L | Domain length | 1.0 |
 | gamma | Ratio of specific heats | 1.4 |
 | case | Initial condition type | "sod" |
-| n_space | Number of grid cells | 1024 |
 | record_dt | Time interval between recordings | 0.02 |
 | end_frame | Simulation end after certain number of frames | 10 |
 | dump_dir | Directory for output files | "sim_res/euler_1d/p1" |

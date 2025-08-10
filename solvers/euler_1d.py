@@ -38,7 +38,7 @@ class Euler1D(SIMULATOR):
         self.q = self.initialize_condition(self.case)  # Conservative variables [rho, rho*u, rho*E]
 
         # Output directory
-        self.dump_dir = cfg.dump_dir + f"_cfl_{self.cfl}_beta_{self.beta}_k_{self.k}"
+        self.dump_dir = cfg.dump_dir + f"_cfl_{self.cfl}_beta_{self.beta}_k_{self.k}_n_{self.n_space}"
         if not os.path.exists(self.dump_dir):
             os.makedirs(self.dump_dir)
 
@@ -339,6 +339,8 @@ class Euler1D(SIMULATOR):
                 "cfl": float(self.cfl),
                 "beta": float(self.beta),
                 "k": float(self.k),
+                "n_space": int(self.n_space),
+                "dx": float(self.dx),
                 "total_steps": int(self.num_steps),
                 "gamma": float(self.gamma),
             }

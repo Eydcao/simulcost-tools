@@ -6,9 +6,10 @@ import json
 import matplotlib.pyplot as plt
 
 
-def run_sim_euler_1d(profile, cfl, beta, k):
+def run_sim_euler_1d(profile, cfl, beta, k, n_space=None):
     """Run the euler_1d simulation with the given parameters if not already simulated."""
-    dir_path = f"sim_res/euler_1d/{profile}_cfl_{cfl}_beta_{beta}_k_{k}/"
+    n_space_str = f"_n_{n_space}" if n_space is not None else ""
+    dir_path = f"sim_res/euler_1d/{profile}_cfl_{cfl}_beta_{beta}_k_{k}{n_space_str}/"
     meta_path = os.path.join(dir_path, "meta.json")
 
     # Check if the simulation has already been run
@@ -20,8 +21,9 @@ def run_sim_euler_1d(profile, cfl, beta, k):
                 return meta["cost"]
 
     # Run the simulation if not already done
-    print(f"Running new simulation with parameters: cfl={cfl}, beta={beta}, k={k}")
-    cmd = f"python costsci_tools/runners/euler_1d.py --config-name={profile} cfl={cfl} beta={beta} k={k}"
+    n_space_param = f" n_space={n_space}" if n_space is not None else ""
+    print(f"Running new simulation with parameters: cfl={cfl}, beta={beta}, k={k}, n_space={n_space}")
+    cmd = f"python runners/euler_1d.py --config-name={profile} cfl={cfl} beta={beta} k={k}{n_space_param}"
     subprocess.run(cmd, shell=True, check=True)
 
     # Load the cost from the meta.json file
@@ -32,9 +34,10 @@ def run_sim_euler_1d(profile, cfl, beta, k):
     return cost
 
 
-def get_res_euler_1d(profile, cfl, beta, k):
+def get_res_euler_1d(profile, cfl, beta, k, n_space=None):
     """Load all time frames for a given parameter set, triggering a simulation if results are missing."""
-    dir_path = f"sim_res/euler_1d/{profile}_cfl_{cfl}_beta_{beta}_k_{k}/"
+    n_space_str = f"_n_{n_space}" if n_space is not None else ""
+    dir_path = f"sim_res/euler_1d/{profile}_cfl_{cfl}_beta_{beta}_k_{k}{n_space_str}/"
     results = {}
     X = None
 
@@ -42,8 +45,10 @@ def get_res_euler_1d(profile, cfl, beta, k):
     if not os.path.exists(dir_path) or not any(
         fname.startswith("res_") and fname.endswith(".h5") for fname in os.listdir(dir_path)
     ):
-        print(f"No results found for parameters: cfl={cfl}, beta={beta}, k={k}. Triggering simulation.")
-        run_sim_euler_1d(profile, cfl, beta, k)
+        print(
+            f"No results found for parameters: cfl={cfl}, beta={beta}, k={k}, n_space={n_space}. Triggering simulation."
+        )
+        run_sim_euler_1d(profile, cfl, beta, k, n_space)
 
     # Sort files by time frame
     files = [f for f in os.listdir(dir_path) if f.startswith("res_") and f.endswith(".h5")]
@@ -130,7 +135,9 @@ def print_euler_metrics(name, metrics):
     print(f"Shock speed consistent at all steps: {np.all(metrics['shock_speed_consistent'])}")
 
 
-def compare_res_euler_1d(profile1, cfl1, beta1, k1, profile2, cfl2, beta2, k2, linf_tolerance, rmse_tolerance):
+def compare_res_euler_1d(
+    profile1, cfl1, beta1, k1, profile2, cfl2, beta2, k2, linf_tolerance, rmse_tolerance, n_space1=None, n_space2=None
+):
     """Compare two sets of results using error norms and physical metrics.
     Returns:
         converged (bool): True if Linf and RMSE tolerances are met.
@@ -139,23 +146,47 @@ def compare_res_euler_1d(profile1, cfl1, beta1, k1, profile2, cfl2, beta2, k2, l
         linf_norm (float): Linfinity norm of difference.
         rmse (float): RMSE of difference.
     """
-    res1, x1 = get_res_euler_1d(profile1, cfl1, beta1, k1)
-    res2, x2 = get_res_euler_1d(profile2, cfl2, beta2, k2)
+    res1, x1 = get_res_euler_1d(profile1, cfl1, beta1, k1, n_space1)
+    res2, x2 = get_res_euler_1d(profile2, cfl2, beta2, k2, n_space2)
 
-    # Ensure same grid
-    if not np.allclose(x1, x2):
-        raise ValueError("Grid mismatch between simulations")
+    # Handle different grids by downsampling to the coarser grid
+    if len(x1) != len(x2) or not np.allclose(x1, x2):
+        if len(x1) > len(x2):
+            # x1 is finer, downsample x1 to x2's coarser grid
+            from scipy.interpolate import interp1d
 
-    # Extract final time results for comparison
+            final1_interp = {}
+            final1 = res1[sorted(res1.keys())[-1]]
+            for var in ["rho", "u", "p"]:
+                f_interp = interp1d(x1, final1[var], kind="linear", bounds_error=False, fill_value="extrapolate")
+                final1_interp[var] = f_interp(x2)
+            final1 = final1_interp
+            final2 = res2[sorted(res2.keys())[-1]]
+            x_common = x2
+        else:
+            # x2 is finer, downsample x2 to x1's coarser grid
+            from scipy.interpolate import interp1d
+
+            final2_interp = {}
+            final2 = res2[sorted(res2.keys())[-1]]
+            for var in ["rho", "u", "p"]:
+                f_interp = interp1d(x2, final2[var], kind="linear", bounds_error=False, fill_value="extrapolate")
+                final2_interp[var] = f_interp(x1)
+            final2 = final2_interp
+            final1 = res1[sorted(res1.keys())[-1]]
+            x_common = x1
+    else:
+        # Same grid
+        final1 = res1[sorted(res1.keys())[-1]]
+        final2 = res2[sorted(res2.keys())[-1]]
+        x_common = x1
+
+    # Check if we have simulation results
     frames1 = sorted(res1.keys())
     frames2 = sorted(res2.keys())
 
     if len(frames1) == 0 or len(frames2) == 0:
         raise ValueError("No simulation results found")
-
-    # Compare final states
-    final1 = res1[frames1[-1]]
-    final2 = res2[frames2[-1]]
 
     # Compute error norms for all primitive variables
     rho_diff = np.abs(final1["rho"] - final2["rho"])
