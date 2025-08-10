@@ -4,26 +4,31 @@ This document provides guidelines for solver developers to prepare their solvers
 
 ## Overview
 
-Each solver should provide approximately **100 individual tasks** distributed across:
+Each solver should provide approximately **100~1000 individual tasks** distributed across:
 
-- **Variable profiles** (solver-dependent)
+- **Different profiles** (solver-dependent)
 - **3 precision levels** (always required)
 - **Non-target parameter combinations** (solver-dependent)
 
 ## Task Distribution Strategy
 
-### Case A: Solvers with Famous Benchmarks
+### Option A: Solvers with Famous Benchmarks
 
 For solvers with established **benchmark problems where parameters should not be easily changed**:
 
 - **Few profiles** (fixed benchmark setups)
-- **More non-target combinations** to reach 100 individuals
+- **More non-target combinations**, combined with profile number * 3 precision levels, to reach 100~1000 individuals
 
 ```
 # eg, for euler 1d, if the targetted parameter is CFL or n_space, 
-# we have 9 combos of non-target combinations: (3 choices of k × 3 choices of beta) 
-# For 4 target parameters: CFL, n_space (iterative) + k, beta (0-shot)
-168 individuals per precision = 1 profile × [(2 iterative × 9 combos) + (2 0-shot × 3 combos)] × 4 target params
+# assume 7 profiles
+# we can have 9 combos of non-target combinations: (3 choices of k × 3 choices of beta) 
+# if the targetted parameter is k (or beta), 
+# we can have fixed CFL and n_space, and 3 choices of beta (or k).
+# - **CFL + n_space** (iterative): 7 profiles × 9 non-target combos × 2 target params = 126 tasks
+# - **k + beta** (0-shot): 7 profiles × 3 non-target combos × 2 target params = 42 tasks
+# - **Total per precision**: 168 tasks
+# - **Total tasks**: 504 tasks
 ```
 
 ### Option B: Flexible Parameter Solvers  
@@ -31,7 +36,7 @@ For solvers with established **benchmark problems where parameters should not be
 For solvers without strict benchmark constraints:
 
 - **More profiles** (can randomize parameters)
-- **Fewer non-target combinations** (typically just 1 default)
+- **Fewer non-target combinations** (typically just 1 fixed default value)
 
 ```
 # eg, for heat 1d, there is not much settings for numerical solver, 
@@ -109,9 +114,8 @@ Centralized configuration containing all parameters:
 ```yaml
 solver_info:
   name: "[Solver Name]"
-  physics: "[Physics description]"
-  reference: "[Literature or standard benchmarks]"
   numerical_method: "[Method description]"
+  reference: "[Literature or standard benchmarks]"
 
 task_distribution:
   strategy: "[benchmark/randomized]"
@@ -122,19 +126,33 @@ precision_levels:
   high:
     tolerance_linf: [value]
     tolerance_rmse: [value]
-    description: "Most stringent convergence criteria"
   # medium and low levels...
 
 profiles:
-  strategy: "[benchmark/randomized]"
-  active_profiles: ["p1", "p2", ...]
-  # profile definitions...
+  num_profiles: 1
+  active_profiles: ["p1"]  # ... add more if needed
 
 target_parameters:
-  [param_name]:
-    description: "[parameter description]"
-    search_type: "[iterative+0-shot/0-shot]"
-    # parameter-specific configuration...
+  # Template for iterative+0-shot parameters (e.g., CFL, n_space)
+  [iterative_param_name]:
+    description: "[parameter description - what it controls]"
+    search_type: "iterative+0-shot"
+    initial_value: [starting_value]  # Starting point for iterative search
+    multiplication_factor: [factor]  # Factor to multiply/divide parameter (e.g., 0.5 for CFL, 2.0 for n_space)
+    max_iteration_num: [max_iter]    # Maximum iterations before giving up
+    non_target_parameters:
+      [fixed_param]: [value]         # Fixed parameter values
+      [varying_param]: [value1, value2, value3]  # Arrays for parameter combinations
+
+  # Template for 0-shot parameters (e.g., k, beta)
+  [zeroshot_param_name]:
+    description: "[parameter description - what it controls]"
+    search_type: "0-shot"
+    search_range: [min_value, max_value]  # Range for grid search
+    search_range_slice_num: [num_slices]  # Number of values to test in range
+    non_target_parameters:
+      [fixed_param]: [value]         # Fixed parameter values
+      [varying_param]: [value1, value2, value3]  # Arrays for parameter combinations
 ```
 
 ### 2. Checkout Document: `[solver_name]_checkout.md`
@@ -142,34 +160,31 @@ target_parameters:
 ```markdown
 # [Solver Name] Checkout Document
 
-> **Configuration Source**: All parameter settings are centralized in `[solver_name]_config.yaml`. Please refer to that file for the complete and up-to-date configuration details.
+## Summary
 
-## Quick Reference
-
-**Configuration file**: `[solver_name]_config.yaml`  
-**Dummy generation script**: `[solver_name]_dummy_generation.py`
-
-## Summary from Configuration
-
-- **Solver**: [Brief description]
-- **Method**: [Numerical method]
-- **Benchmark**: [Reference problem]
-- **Strategy**: [approach with X profiles]
-- **Target Parameters**: [number] ([list names])
-- **Precision Levels**: [number] ([status])
-- **Self-checking**: [list criteria]
+- **Solver**: [Physics description (e.g., 1D Euler equations for compressible inviscid flow)]
+- **Method**: [Numerical method description]
+- **Strategy**: [Approach - benchmark/randomized with X profiles]
+- **Benchmark**: [Reference problems (e.g., Sod shock tube problem)]
+- **Target Parameters**: [number] ([parameter names])
+- **Precision Levels**: [number] ([status - which are defined])
 
 ## Task Distribution
 
 Current configuration generates:
-- **[param types]** (iterative): [calculation]
-- **[param types]** (0-shot): [calculation] 
-- **Total per precision**: [number] tasks
-- **Current active**: [current status]
+
+- **[iterative params]** (iterative): [X profiles] × [Y non-target combos] × [Z target params] = [total] tasks
+- **[0-shot params]** (0-shot): [X profiles] × [Y non-target combos] × [Z target params] = [total] tasks
+- **Total per precision**: [total] tasks
+- **Total tasks**: 3*[total] tasks
+
+## Configuration file
+
+Refer to the **Configuration file**: `[solver_name]_config.yaml`
 
 ## Dummy Solution Generation
 
-Refer to the LLM developer script: `[solver_name]_dummy_generation.py`
+Refer to the script: `checkouts/[solver_name]_dummy_generation.py`
 ```
 
 ### 3. Generation Script: `[solver_name]_dummy_generation.py`
@@ -178,14 +193,7 @@ Python script that reads the YAML configuration and generates all dummy solution
 
 ## Deliverables
 
-1. **`[solver_name]_config.yaml`** - Centralized configuration file with all parameters
-2. **`[solver_name]_checkout.md`** - Checkout document referencing the YAML config
+1. **`[solver_name]_checkout.md`** - Checkout document referencing the YAML config and dummy script
+2. **`[solver_name]_config.yaml`** - Centralized configuration file with all parameters
 3. **`[solver_name]_dummy_generation.py`** - Python script that reads YAML and generates all dummy solutions
 4. **Cached dummy solution results** - Run the generation scripts and zip result files; then send to Yadi or Leo
-
-## Implementation Notes
-
-- Use simple parameter names with arrays for multiple choices (e.g., `beta: [1.0, 1.5, 2.0]`)
-- Maintain consistency between YAML configuration and generation script logic
-- Test YAML loading with `load_config()` and `build_target_configs()` functions
-- Verify task count calculations match expected totals

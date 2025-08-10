@@ -9,19 +9,19 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from wrappers.euler_1d import run_sim_euler_1d, compare_res_euler_1d
 
 
-def find_convergent_cfl(profile, cfl, beta, k, n_space, tolerance_linf, tolerance_rmse):
+def find_convergent_cfl(
+    profile, cfl, beta, k, n_space, tolerance_linf, tolerance_rmse, multiplication_factor=0.5, max_iteration_num=7
+):
     """Iteratively reduce CFL number until convergence is achieved."""
     cfl_history = []
     cost_history = []
     param_history = []
 
-    max_iter = 7  # Fixed maximum iterations
-
     current_cfl = cfl
     converged = False
     best_cfl = None
 
-    for i in range(max_iter):
+    for i in range(max_iteration_num):
         print(f"\nRunning simulation with CFL = {current_cfl}, beta = {beta}, k = {k}, n_space = {n_space}")
 
         # Run simulation and load results
@@ -58,8 +58,8 @@ def find_convergent_cfl(profile, cfl, beta, k, n_space, tolerance_linf, toleranc
             else:
                 print(f"No convergence between CFL {prev_cfl} and {current_cfl}")
 
-        # Prepare next CFL (half of current)
-        next_cfl = current_cfl / 2
+        # Prepare next CFL using multiplication factor
+        next_cfl = current_cfl * multiplication_factor
         current_cfl = next_cfl
 
     if converged:
@@ -77,9 +77,21 @@ def find_convergent_cfl(profile, cfl, beta, k, n_space, tolerance_linf, toleranc
     return bool(converged), best_cfl, cost_history, param_history
 
 
-def find_optimal_beta(profile, cfl, k, n_space, tolerance_linf, tolerance_rmse):
+def find_optimal_beta(
+    profile,
+    cfl,
+    k,
+    n_space,
+    tolerance_linf,
+    tolerance_rmse,
+    search_range_min=1.0,
+    search_range_max=2.0,
+    search_range_slice_num=6,
+    multiplication_factor=2.0,
+    max_iteration_num=6,
+):
     """
-    Grid search over beta ∈ [1.0, 2.0] (step 0.1) for optimal limiter parameter.
+    Grid search over beta ∈ [search_range_min, search_range_max] for optimal limiter parameter.
     For each beta, iterate n_space until spatial convergence is achieved.
 
     Returns
@@ -94,7 +106,7 @@ def find_optimal_beta(profile, cfl, k, n_space, tolerance_linf, tolerance_rmse):
     param_history : list
         Full parameter exploration history.
     """
-    beta_values = np.linspace(1.0, 2.0, 6)  # [1.0, 1.2, ..., 2.0]
+    beta_values = np.linspace(search_range_min, search_range_max, search_range_slice_num)
     param_history = []
     beta_results = []  # Save key info for each beta (when converged)
 
@@ -103,7 +115,7 @@ def find_optimal_beta(profile, cfl, k, n_space, tolerance_linf, tolerance_rmse):
         print(f"\n=== Testing beta = {beta} ===")
 
         is_converged, best_n_space, cost_history, one_param_history = find_convergent_n_space(
-            profile, cfl, n_space, beta, k, tolerance_linf, tolerance_rmse
+            profile, cfl, n_space, beta, k, tolerance_linf, tolerance_rmse, multiplication_factor, max_iteration_num
         )
 
         # Record n_space exploration trajectory for each beta
@@ -153,9 +165,21 @@ def find_optimal_beta(profile, cfl, k, n_space, tolerance_linf, tolerance_rmse):
     )
 
 
-def find_optimal_k(profile, cfl, beta, n_space, tolerance_linf, tolerance_rmse):
+def find_optimal_k(
+    profile,
+    cfl,
+    beta,
+    n_space,
+    tolerance_linf,
+    tolerance_rmse,
+    search_range_min=-1.0,
+    search_range_max=1.0,
+    search_range_slice_num=11,
+    multiplication_factor=2.0,
+    max_iteration_num=6,
+):
     """
-    Grid search over k ∈ [-1, 1] (step 0.1) for optimal blending parameter.
+    Grid search over k ∈ [search_range_min, search_range_max] for optimal blending parameter.
     For each k, iterate n_space until spatial convergence is achieved.
 
     Returns
@@ -170,7 +194,7 @@ def find_optimal_k(profile, cfl, beta, n_space, tolerance_linf, tolerance_rmse):
     param_history : list
         Full parameter exploration history.
     """
-    k_values = np.linspace(-1.0, 1.0, 11)  # [-1.0, -0.8, ..., 1.0]
+    k_values = np.linspace(search_range_min, search_range_max, search_range_slice_num)
     param_history = []
     k_results = []  # Save key info for each k (when converged)
 
@@ -179,7 +203,7 @@ def find_optimal_k(profile, cfl, beta, n_space, tolerance_linf, tolerance_rmse):
         print(f"\n=== Testing k = {k} ===")
 
         is_converged, best_n_space, cost_history, one_param_history = find_convergent_n_space(
-            profile, cfl, n_space, beta, k, tolerance_linf, tolerance_rmse
+            profile, cfl, n_space, beta, k, tolerance_linf, tolerance_rmse, multiplication_factor, max_iteration_num
         )
 
         # Record n_space exploration trajectory for each k
@@ -229,19 +253,19 @@ def find_optimal_k(profile, cfl, beta, n_space, tolerance_linf, tolerance_rmse):
     )
 
 
-def find_convergent_n_space(profile, cfl, n_space, beta, k, tolerance_linf, tolerance_rmse):
+def find_convergent_n_space(
+    profile, cfl, n_space, beta, k, tolerance_linf, tolerance_rmse, multiplication_factor=2.0, max_iteration_num=6
+):
     """Iteratively increase n_space (decrease dx) until convergence is achieved with fixed CFL."""
     n_space_history = []
     cost_history = []
     param_history = []
 
-    max_iter = 6  # Fixed maximum iterations (n_space can grow quickly)
-
     current_n_space = n_space
     converged = False
     best_n_space = None
 
-    for i in range(max_iter):
+    for i in range(max_iteration_num):
         print(f"\nRunning simulation with n_space = {current_n_space}, CFL = {cfl}, beta = {beta}, k = {k}")
 
         # Run simulation with fixed CFL
@@ -278,8 +302,8 @@ def find_convergent_n_space(profile, cfl, n_space, beta, k, tolerance_linf, tole
             else:
                 print(f"No convergence between n_space {prev_n_space} and {current_n_space}")
 
-        # Prepare next n_space (double current for geometric progression)
-        next_n_space = current_n_space * 2
+        # Prepare next n_space using multiplication factor
+        next_n_space = int(current_n_space * multiplication_factor)
         current_n_space = next_n_space
 
     if converged:
@@ -326,6 +350,17 @@ if __name__ == "__main__":
     parser.add_argument("--tolerance_linf", type=float, default=0.2, help="Linf tolerance for convergence checking")
     parser.add_argument("--tolerance_rmse", type=float, default=0.02, help="RMSE tolerance for convergence checking")
 
+    # Search parameters for iterative tasks
+    parser.add_argument(
+        "--multiplication_factor", type=float, help="Factor to multiply/divide parameter values in iterative search"
+    )
+    parser.add_argument("--max_iteration_num", type=int, help="Maximum number of iterations for iterative search")
+
+    # Search parameters for 0-shot tasks
+    parser.add_argument("--search_range_min", type=float, help="Minimum value for 0-shot parameter search range")
+    parser.add_argument("--search_range_max", type=float, help="Maximum value for 0-shot parameter search range")
+    parser.add_argument("--search_range_slice_num", type=int, help="Number of slices for 0-shot parameter search range")
+
     args = parser.parse_args()
 
     if args.task == "cfl":
@@ -338,6 +373,8 @@ if __name__ == "__main__":
             n_space=args.n_space,
             tolerance_linf=args.tolerance_linf,
             tolerance_rmse=args.tolerance_rmse,
+            multiplication_factor=args.multiplication_factor or 0.5,
+            max_iteration_num=args.max_iteration_num or 7,
         )
 
         if best_cfl is not None:
@@ -354,6 +391,11 @@ if __name__ == "__main__":
             n_space=args.n_space,
             tolerance_linf=args.tolerance_linf,
             tolerance_rmse=args.tolerance_rmse,
+            search_range_min=args.search_range_min or 1.0,
+            search_range_max=args.search_range_max or 2.0,
+            search_range_slice_num=args.search_range_slice_num or 6,
+            multiplication_factor=args.multiplication_factor or 2.0,
+            max_iteration_num=args.max_iteration_num or 6,
         )
 
         optimal_beta, optimal_n_space = optimal_param
@@ -372,6 +414,11 @@ if __name__ == "__main__":
             n_space=args.n_space,
             tolerance_linf=args.tolerance_linf,
             tolerance_rmse=args.tolerance_rmse,
+            search_range_min=args.search_range_min or -1.0,
+            search_range_max=args.search_range_max or 1.0,
+            search_range_slice_num=args.search_range_slice_num or 11,
+            multiplication_factor=args.multiplication_factor or 2.0,
+            max_iteration_num=args.max_iteration_num or 6,
         )
 
         optimal_k, optimal_n_space = optimal_param
@@ -391,6 +438,8 @@ if __name__ == "__main__":
             k=args.k,
             tolerance_linf=args.tolerance_linf,
             tolerance_rmse=args.tolerance_rmse,
+            multiplication_factor=args.multiplication_factor or 2.0,
+            max_iteration_num=args.max_iteration_num or 6,
         )
 
         if best_n_space is not None:

@@ -4,11 +4,12 @@
 solver_info:
   name: "Euler 1D"
   numerical_method: "2nd order MUSCL scheme with Roe flux and generalized superbee limiter"
+  reference: "[Literature or standard benchmarks]"
 
 task_distribution:
   strategy: "benchmark"
   total_individuals: TODO calculate
-  description: "TODO calculate correctly"
+  description: "TODO [calculation breakdown]"
 
 precision_levels:
   high:

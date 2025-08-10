@@ -35,6 +35,20 @@ def build_target_configs(config):
             "search_type": param_info["search_type"],
             "initial_value": param_info.get("initial_value"),
             "non_target_parameters": {},
+            # Search parameters
+            "multiplication_factor": param_info.get("multiplication_factor"),
+            "max_iteration_num": param_info.get("max_iteration_num"),
+            "search_range_min": (
+                param_info.get("search_range", [None, None])[0]
+                if isinstance(param_info.get("search_range"), list)
+                else None
+            ),
+            "search_range_max": (
+                param_info.get("search_range", [None, None])[1]
+                if isinstance(param_info.get("search_range"), list)
+                else None
+            ),
+            "search_range_slice_num": param_info.get("search_range_slice_num"),
         }
 
         # Normalize all non-target parameters to lists for consistent iteration
@@ -126,6 +140,18 @@ def main():
                     # Add all non-target parameters
                     for param_name, param_value in zip(param_names, combination):
                         cmd_parts.extend([f"--{param_name}", str(param_value)])
+
+                    # Add search parameters for the target parameter
+                    if target_config["multiplication_factor"] is not None:
+                        cmd_parts.extend(["--multiplication_factor", str(target_config["multiplication_factor"])])
+                    if target_config["max_iteration_num"] is not None:
+                        cmd_parts.extend(["--max_iteration_num", str(target_config["max_iteration_num"])])
+                    if target_config["search_range_min"] is not None:
+                        cmd_parts.extend(["--search_range_min", str(target_config["search_range_min"])])
+                    if target_config["search_range_max"] is not None:
+                        cmd_parts.extend(["--search_range_max", str(target_config["search_range_max"])])
+                    if target_config["search_range_slice_num"] is not None:
+                        cmd_parts.extend(["--search_range_slice_num", str(target_config["search_range_slice_num"])])
 
                     # Execute command
                     print(f"      Running: {' '.join(cmd_parts)}")

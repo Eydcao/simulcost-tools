@@ -13,9 +13,10 @@
 
 Current configuration generates:
 
-- **CFL + n_space** (iterative): 7 profiles × 9 non-target combos × 2 params = 126 tasks
-- **k + beta** (0-shot): 7 profiles × 3 non-target combos × 2 params = 42 tasks
+- **CFL + n_space** (iterative): 7 profiles × 9 non-target combos × 2 target params = 126 tasks
+- **k + beta** (0-shot): 7 profiles × 3 non-target combos × 2 target params = 42 tasks
 - **Total per precision**: 168 tasks
+- **Total tasks**: 504 tasks
 
 ## Configuration file
 
