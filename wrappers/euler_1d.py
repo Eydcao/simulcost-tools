@@ -6,7 +6,7 @@ import json
 import matplotlib.pyplot as plt
 
 
-def run_sim_euler_1d(profile, cfl, beta, k, n_space=None):
+def run_sim_euler_1d(profile, cfl, beta, k, n_space):
     """Run the euler_1d simulation with the given parameters if not already simulated."""
     n_space_str = f"_n_{n_space}" if n_space is not None else ""
     dir_path = f"sim_res/euler_1d/{profile}_cfl_{cfl}_beta_{beta}_k_{k}{n_space_str}/"
@@ -34,7 +34,7 @@ def run_sim_euler_1d(profile, cfl, beta, k, n_space=None):
     return cost
 
 
-def get_res_euler_1d(profile, cfl, beta, k, n_space=None):
+def get_res_euler_1d(profile, cfl, beta, k, n_space):
     """Load all time frames for a given parameter set, triggering a simulation if results are missing."""
     n_space_str = f"_n_{n_space}" if n_space is not None else ""
     dir_path = f"sim_res/euler_1d/{profile}_cfl_{cfl}_beta_{beta}_k_{k}{n_space_str}/"
@@ -136,15 +136,15 @@ def print_euler_metrics(name, metrics):
 
 
 def compare_res_euler_1d(
-    profile1, cfl1, beta1, k1, profile2, cfl2, beta2, k2, linf_tolerance, rmse_tolerance, n_space1=None, n_space2=None
+    profile1, cfl1, beta1, k1, profile2, cfl2, beta2, k2, linf_tolerance, rmse_tolerance, n_space1, n_space2
 ):
-    """Compare two sets of results using error norms and physical metrics.
+    """Compare two sets of results using relative error norms and physical metrics.
     Returns:
         converged (bool): True if Linf and RMSE tolerances are met.
         metrics1 (dict): Metrics for case 1.
         metrics2 (dict): Metrics for case 2.
-        linf_norm (float): Linfinity norm of difference.
-        rmse (float): RMSE of difference.
+        linf_norm (float): Linfinity norm of relative difference.
+        rmse (float): RMSE of relative difference.
     """
     res1, x1 = get_res_euler_1d(profile1, cfl1, beta1, k1, n_space1)
     res2, x2 = get_res_euler_1d(profile2, cfl2, beta2, k2, n_space2)
@@ -188,13 +188,21 @@ def compare_res_euler_1d(
     if len(frames1) == 0 or len(frames2) == 0:
         raise ValueError("No simulation results found")
 
-    # Compute error norms for all primitive variables
-    rho_diff = np.abs(final1["rho"] - final2["rho"])
-    u_diff = np.abs(final1["u"] - final2["u"])
-    p_diff = np.abs(final1["p"] - final2["p"])
+    # Compute relative error norms for all primitive variables
+    eps = 1e-12  # To avoid division by zero
 
-    # Combined error norm (weighted)
-    combined_diff = rho_diff + u_diff + p_diff
+    def denom(a, b):
+        # Use average of abs(std) of both arrays plus eps
+        std_a = np.std(a)
+        std_b = np.std(b)
+        return 0.5 * (np.abs(std_a) + np.abs(std_b)) + eps
+
+    rho_diff = np.abs(final1["rho"] - final2["rho"]) / denom(final1["rho"], final2["rho"])
+    u_diff = np.abs(final1["u"] - final2["u"]) / denom(final1["u"], final2["u"])
+    p_diff = np.abs(final1["p"] - final2["p"]) / denom(final1["p"], final2["p"])
+
+    # Combined relative error norm (weighted)
+    combined_diff = (rho_diff + u_diff + p_diff) / 3.0
     linf_norm = np.max(combined_diff)
     rmse = np.sqrt(np.mean(combined_diff**2))
 
@@ -220,8 +228,8 @@ def compare_res_euler_1d(
     print_euler_metrics("Case 1", metrics1)
     print_euler_metrics("Case 2", metrics2)
 
-    print(f"Linf Norm: {linf_norm}")
-    print(f"RMSE: {rmse}")
+    print(f"Linf Norm (relative): {linf_norm}")
+    print(f"RMSE (relative): {rmse}")
 
     return converged, metrics1, metrics2, linf_norm, rmse
 
@@ -235,7 +243,7 @@ if __name__ == "__main__":
     rmse_tolerance = 1e-2
 
     _, _, _, linf_norm, rmse = compare_res_euler_1d(
-        "p1", 0.5, beta, k, "p1", 0.25, beta, k, linf_tolerance, rmse_tolerance
+        "p1", 0.5, beta, k, "p1", 0.25, beta, k, linf_tolerance, rmse_tolerance, 512, 256
     )
 
     print(f"Difference in RMSE between CFL 0.5 and CFL 0.25: {rmse}")

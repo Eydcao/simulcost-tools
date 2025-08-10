@@ -9,9 +9,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from wrappers.euler_1d import run_sim_euler_1d, compare_res_euler_1d
 
 
-def find_convergent_cfl(
-    profile, cfl, beta, k, n_space, tolerance_linf, tolerance_rmse, multiplication_factor=0.5, max_iteration_num=7
-):
+def find_convergent_cfl(profile, cfl, beta, k, n_space, tolerance_rmse, multiplication_factor, max_iteration_num):
     """Iteratively reduce CFL number until convergence is achieved."""
     cfl_history = []
     cost_history = []
@@ -44,7 +42,7 @@ def find_convergent_cfl(
                 current_cfl,
                 beta,
                 k,
-                tolerance_linf,
+                float('inf'),  # linf_tolerance (effectively disabled)
                 tolerance_rmse,
                 n_space,
                 n_space,
@@ -82,13 +80,12 @@ def find_optimal_beta(
     cfl,
     k,
     n_space,
-    tolerance_linf,
     tolerance_rmse,
-    search_range_min=1.0,
-    search_range_max=2.0,
-    search_range_slice_num=6,
-    multiplication_factor=2.0,
-    max_iteration_num=6,
+    search_range_min,
+    search_range_max,
+    search_range_slice_num,
+    multiplication_factor,
+    max_iteration_num,
 ):
     """
     Grid search over beta ∈ [search_range_min, search_range_max] for optimal limiter parameter.
@@ -115,7 +112,7 @@ def find_optimal_beta(
         print(f"\n=== Testing beta = {beta} ===")
 
         is_converged, best_n_space, cost_history, one_param_history = find_convergent_n_space(
-            profile, cfl, n_space, beta, k, tolerance_linf, tolerance_rmse, multiplication_factor, max_iteration_num
+            profile, cfl, n_space, beta, k, tolerance_rmse, multiplication_factor, max_iteration_num
         )
 
         # Record n_space exploration trajectory for each beta
@@ -170,13 +167,12 @@ def find_optimal_k(
     cfl,
     beta,
     n_space,
-    tolerance_linf,
     tolerance_rmse,
-    search_range_min=-1.0,
-    search_range_max=1.0,
-    search_range_slice_num=11,
-    multiplication_factor=2.0,
-    max_iteration_num=6,
+    search_range_min,
+    search_range_max,
+    search_range_slice_num,
+    multiplication_factor,
+    max_iteration_num,
 ):
     """
     Grid search over k ∈ [search_range_min, search_range_max] for optimal blending parameter.
@@ -203,7 +199,7 @@ def find_optimal_k(
         print(f"\n=== Testing k = {k} ===")
 
         is_converged, best_n_space, cost_history, one_param_history = find_convergent_n_space(
-            profile, cfl, n_space, beta, k, tolerance_linf, tolerance_rmse, multiplication_factor, max_iteration_num
+            profile, cfl, n_space, beta, k, tolerance_rmse, multiplication_factor, max_iteration_num
         )
 
         # Record n_space exploration trajectory for each k
@@ -253,9 +249,7 @@ def find_optimal_k(
     )
 
 
-def find_convergent_n_space(
-    profile, cfl, n_space, beta, k, tolerance_linf, tolerance_rmse, multiplication_factor=2.0, max_iteration_num=6
-):
+def find_convergent_n_space(profile, cfl, n_space, beta, k, tolerance_rmse, multiplication_factor, max_iteration_num):
     """Iteratively increase n_space (decrease dx) until convergence is achieved with fixed CFL."""
     n_space_history = []
     cost_history = []
@@ -288,7 +282,7 @@ def find_convergent_n_space(
                 cfl,
                 beta,
                 k,
-                tolerance_linf,
+                float('inf'),  # linf_tolerance (effectively disabled)
                 tolerance_rmse,
                 prev_n_space,
                 current_n_space,
@@ -347,19 +341,29 @@ if __name__ == "__main__":
     )
 
     # Tolerance parameters
-    parser.add_argument("--tolerance_linf", type=float, default=0.2, help="Linf tolerance for convergence checking")
     parser.add_argument("--tolerance_rmse", type=float, default=0.02, help="RMSE tolerance for convergence checking")
 
     # Search parameters for iterative tasks
     parser.add_argument(
-        "--multiplication_factor", type=float, help="Factor to multiply/divide parameter values in iterative search"
+        "--multiplication_factor",
+        type=float,
+        default=0.5,
+        help="Factor to multiply/divide parameter values in iterative search",
     )
-    parser.add_argument("--max_iteration_num", type=int, help="Maximum number of iterations for iterative search")
+    parser.add_argument(
+        "--max_iteration_num", type=int, default=7, help="Maximum number of iterations for iterative search"
+    )
 
     # Search parameters for 0-shot tasks
-    parser.add_argument("--search_range_min", type=float, help="Minimum value for 0-shot parameter search range")
-    parser.add_argument("--search_range_max", type=float, help="Maximum value for 0-shot parameter search range")
-    parser.add_argument("--search_range_slice_num", type=int, help="Number of slices for 0-shot parameter search range")
+    parser.add_argument(
+        "--search_range_min", type=float, default=-1.0, help="Minimum value for 0-shot parameter search range"
+    )
+    parser.add_argument(
+        "--search_range_max", type=float, default=1.0, help="Maximum value for 0-shot parameter search range"
+    )
+    parser.add_argument(
+        "--search_range_slice_num", type=int, default=11, help="Number of slices for 0-shot parameter search range"
+    )
 
     args = parser.parse_args()
 
@@ -371,10 +375,9 @@ if __name__ == "__main__":
             beta=args.beta,
             k=args.k,
             n_space=args.n_space,
-            tolerance_linf=args.tolerance_linf,
             tolerance_rmse=args.tolerance_rmse,
-            multiplication_factor=args.multiplication_factor or 0.5,
-            max_iteration_num=args.max_iteration_num or 7,
+            multiplication_factor=args.multiplication_factor,
+            max_iteration_num=args.max_iteration_num,
         )
 
         if best_cfl is not None:
@@ -389,13 +392,12 @@ if __name__ == "__main__":
             cfl=args.cfl,
             k=args.k,
             n_space=args.n_space,
-            tolerance_linf=args.tolerance_linf,
             tolerance_rmse=args.tolerance_rmse,
-            search_range_min=args.search_range_min or 1.0,
-            search_range_max=args.search_range_max or 2.0,
-            search_range_slice_num=args.search_range_slice_num or 6,
-            multiplication_factor=args.multiplication_factor or 2.0,
-            max_iteration_num=args.max_iteration_num or 6,
+            search_range_min=args.search_range_min,
+            search_range_max=args.search_range_max,
+            search_range_slice_num=args.search_range_slice_num,
+            multiplication_factor=args.multiplication_factor,
+            max_iteration_num=args.max_iteration_num,
         )
 
         optimal_beta, optimal_n_space = optimal_param
@@ -412,13 +414,12 @@ if __name__ == "__main__":
             cfl=args.cfl,
             beta=args.beta,
             n_space=args.n_space,
-            tolerance_linf=args.tolerance_linf,
             tolerance_rmse=args.tolerance_rmse,
-            search_range_min=args.search_range_min or -1.0,
-            search_range_max=args.search_range_max or 1.0,
-            search_range_slice_num=args.search_range_slice_num or 11,
-            multiplication_factor=args.multiplication_factor or 2.0,
-            max_iteration_num=args.max_iteration_num or 6,
+            search_range_min=args.search_range_min,
+            search_range_max=args.search_range_max,
+            search_range_slice_num=args.search_range_slice_num,
+            multiplication_factor=args.multiplication_factor,
+            max_iteration_num=args.max_iteration_num,
         )
 
         optimal_k, optimal_n_space = optimal_param
@@ -436,13 +437,15 @@ if __name__ == "__main__":
             n_space=args.n_space,
             beta=args.beta,
             k=args.k,
-            tolerance_linf=args.tolerance_linf,
             tolerance_rmse=args.tolerance_rmse,
-            multiplication_factor=args.multiplication_factor or 2.0,
-            max_iteration_num=args.max_iteration_num or 6,
+            multiplication_factor=args.multiplication_factor,
+            max_iteration_num=args.max_iteration_num,
         )
 
         if best_n_space is not None:
             print(f"\nRecommended n_space: {best_n_space}, total cost: {sum(cost_history)}")
         else:
             print(f"\nNo convergent n_space found, total cost: {sum(cost_history)}")
+
+    else:
+        print(f"\nTask type '{args.task}' is not supported.")

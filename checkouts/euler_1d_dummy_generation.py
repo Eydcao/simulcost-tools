@@ -79,9 +79,8 @@ def main():
     precision_configs = {}
     for name, info in config["precision_levels"].items():
         # Only process precision levels with numeric values (skip placeholders)
-        if isinstance(info["tolerance_linf"], (int, float)):
+        if isinstance(info["tolerance_rmse"], (int, float)):
             precision_configs[name] = {
-                "tolerance_linf": info["tolerance_linf"],
                 "tolerance_rmse": info["tolerance_rmse"],
             }
 
@@ -127,8 +126,6 @@ def main():
                         profile,
                         f"--task",
                         target_param,
-                        f"--tolerance_linf",
-                        str(precision_vals["tolerance_linf"]),
                         f"--tolerance_rmse",
                         str(precision_vals["tolerance_rmse"]),
                     ]

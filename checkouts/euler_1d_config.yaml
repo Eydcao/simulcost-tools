@@ -13,14 +13,11 @@ task_distribution:
 
 precision_levels:
   high:
-    tolerance_linf: 0.2
-    tolerance_rmse: 0.02
-  # medium:
-  #   tolerance_linf: "[placeholder]"
-  #   tolerance_rmse: "[placeholder]"  
-  # low:
-  #   tolerance_linf: "[placeholder]"
-  #   tolerance_rmse: "[placeholder]"
+    tolerance_rmse: 0.01
+  medium:
+    tolerance_rmse: 0.005
+  low:
+    tolerance_rmse: 0.0025
 
 profiles:
   num_profiles: 7
@@ -45,7 +42,7 @@ target_parameters:
     search_type: "iterative+0-shot"
     initial_value: 256
     multiplication_factor: 2
-    max_iteration_num: 6
+    max_iteration_num: 7
     non_target_parameters:
       cfl: 0.25  # Fixed stable CFL for most parameter combinations
       beta: [1.0, 1.5, 2.0]  # minmod, balanced, superbee
