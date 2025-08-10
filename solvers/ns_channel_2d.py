@@ -391,7 +391,7 @@ class NSChannel2D():
     
     def post_process(self):
         cost = (self.mesh_x * self.mesh_y) * self.num_steps
-        meta = {"cost": cost, "num_steps": self.num_steps, "converged": int(self.converged)}  # ➜ 新增
+        meta = {"cost": cost, "num_steps": self.num_steps, "converged": int(self.converged)}  # ➜ Added
         with open(os.path.join(self.dump_dir, "meta.json"), "w") as f:
             json.dump(meta, f, indent=4)
 
