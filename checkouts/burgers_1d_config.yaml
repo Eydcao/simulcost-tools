@@ -1,0 +1,86 @@
+solver_info:
+  name: "Burgers 1D"
+  numerical_method: "2nd Order Roe Method with Minmod Limiter"
+  reference: "Inviscid Burgers equation - simplified compressible flow model"
+
+task_distribution:
+  strategy: "benchmark"
+  total_individuals: 360
+  description: "5 profiles × 4 target parameters × 3 precision levels = 360 tasks (120 per precision level)"
+
+precision_levels:
+  high:
+    tolerance_rmse: 0.001
+    tolerance_linf: 0.01
+    description: "Most stringent convergence criteria"
+  medium:
+    tolerance_rmse: 0.005
+    tolerance_linf: 0.025
+    description: "Moderate convergence criteria"
+  low:
+    tolerance_rmse: 0.01
+    tolerance_linf: 0.05
+    description: "Relaxed convergence criteria"
+
+profiles:
+  num_profiles: 5
+  active_profiles: ["p1", "p2", "p3", "p4", "p5"]
+  p1:
+    case: "sin"
+    description: "Sinusoidal wave initial condition"
+  p2:
+    case: "rarefaction"
+    description: "Rarefaction wave initial condition"
+  p3:
+    case: "sod"
+    description: "Modified Sod shock tube for Burgers"
+  p4:
+    case: "double_shock"
+    description: "Two interacting shock waves"
+  p5:
+    case: "blast"
+    description: "Interacting blast waves with Gaussian profiles"
+
+target_parameters:
+  cfl:
+    description: "Determine the CFL number for temporal stability - controls time step size relative to grid spacing"
+    search_type: "iterative+0-shot"
+    initial_value: 1.0
+    multiplication_factor: 0.5
+    max_iteration_num: 7
+    non_target_parameters:
+      k: [-1.0, 0.0, 1.0]      # Array for multiple choices of blending parameter
+      w: [1.0, 1.5, 2.0]       # Array for multiple choices of limiter parameter
+
+  n_space:
+    description: "Number of spatial grid points - determines spatial resolution"
+    search_type: "iterative+0-shot"
+    initial_value: 256
+    multiplication_factor: 2
+    max_iteration_num: 7
+    non_target_parameters:
+      cfl: 0.25                # Fixed stable CFL for spatial convergence studies
+      k: [-1.0, 0.0, 1.0]      # Array for multiple choices
+      w: [1.0, 1.5, 2.0]       # Array for multiple choices
+
+  k:
+    description: "Spatial scheme blending parameter (1.0=central, -1.0=upwind, 0.0=mixed)"
+    search_type: "0-shot"
+    search_range: [-1.0, 1.0]
+    search_range_slice_num: 21
+    max_iteration_num: 7       # For subsequent CFL search after finding optimal k
+    multiplication_factor: 0.5 # For CFL search
+    non_target_parameters:
+      cfl: 1.0                 # Starting CFL for composite search
+      w: [1.0, 1.5, 2.0]       # Array for multiple choices
+
+  w:
+    description: "Minmod limiter strength parameter - controls dissipation (w>=1, higher=less dissipative)"
+    search_type: "0-shot"
+    search_range: [1.0, 2.0]
+    search_range_slice_num: 11
+    max_iteration_num: 7       # For subsequent CFL search after finding optimal w
+    multiplication_factor: 0.5 # For CFL search
+    non_target_parameters:
+      cfl: 1.0                 # Starting CFL for composite search
+      k: [-1.0, 0.0, 1.0]      # Array for multiple choices
