@@ -53,16 +53,13 @@ Solver developers must define **3 precision levels** for convergence tolerances:
 ```yaml
 precision_levels:
   high:
-    tolerance_linf: 0.2
-    tolerance_rmse: 0.02
+    tolerance_rmse: 0.0025
     description: "Most stringent convergence criteria"
   medium:
-    tolerance_linf: [placeholder]
-    tolerance_rmse: [placeholder]  
+    tolerance_rmse: 0.005  
     description: "Moderate convergence criteria"
   low:
-    tolerance_linf: [placeholder]
-    tolerance_rmse: [placeholder]
+    tolerance_rmse: 0.01
     description: "Relaxed convergence criteria"
 ```
 
@@ -124,7 +121,6 @@ task_distribution:
 
 precision_levels:
   high:
-    tolerance_linf: [value]
     tolerance_rmse: [value]
   # medium and low levels...
 

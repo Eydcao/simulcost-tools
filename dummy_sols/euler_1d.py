@@ -33,7 +33,7 @@ def find_convergent_cfl(profile, cfl, beta, k, n_space, tolerance_rmse, multipli
             prev_cfl = cfl_history[-2]
 
             # Compare with previous results
-            is_converged, metrics1, metrics2, linf_norm, rmse = compare_res_euler_1d(
+            is_converged, metrics1, metrics2, rmse = compare_res_euler_1d(
                 profile,
                 prev_cfl,
                 beta,
@@ -42,7 +42,6 @@ def find_convergent_cfl(profile, cfl, beta, k, n_space, tolerance_rmse, multipli
                 current_cfl,
                 beta,
                 k,
-                float('inf'),  # linf_tolerance (effectively disabled)
                 tolerance_rmse,
                 n_space,
                 n_space,
@@ -273,7 +272,7 @@ def find_convergent_n_space(profile, cfl, n_space, beta, k, tolerance_rmse, mult
             prev_n_space = n_space_history[-2]
 
             # Compare with previous results
-            is_converged, metrics1, metrics2, linf_norm, rmse = compare_res_euler_1d(
+            is_converged, metrics1, metrics2, rmse = compare_res_euler_1d(
                 profile,
                 cfl,
                 beta,
@@ -282,7 +281,6 @@ def find_convergent_n_space(profile, cfl, n_space, beta, k, tolerance_rmse, mult
                 cfl,
                 beta,
                 k,
-                float('inf'),  # linf_tolerance (effectively disabled)
                 tolerance_rmse,
                 prev_n_space,
                 current_n_space,

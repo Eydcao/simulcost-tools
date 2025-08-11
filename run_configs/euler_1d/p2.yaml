@@ -15,7 +15,7 @@ k: 1                  # Blending parameter (1=central, -1=upwind, 0=mixed)
 n_space: 1024         # Number of grid cells
 
 # Simulator statics
-record_dt: 0.016       # Time interval between recordings
+record_dt: 0.012       # Time interval between recordings
 end_frame: 10         # Simulation end after certain number of frames
 
 # Output configuration

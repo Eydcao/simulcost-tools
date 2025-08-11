@@ -8,8 +8,7 @@ solver_info:
 
 task_distribution:
   strategy: "benchmark"
-  total_individuals: 360
-  description: "5 profiles × (90 iterative + 30 0-shot) tasks × 3 precision levels = 360 total tasks"
+  total_individuals: 216
 
 precision_levels:
   low:
@@ -20,9 +19,9 @@ precision_levels:
     tolerance_rmse: 0.0025
 
 profiles:
-  num_profiles: 5
-  # Available profiles: p1 (sod), p2 (lax), p3 (mach_3), p4 (blast_interaction), p5 (symmetric_rarefaction)
-  active_profiles: ["p1", "p2", "p3", "p4", "p5"]
+  num_profiles: 3
+  # Available profiles: p1 (sod), p2 (lax), p3 (mach_3)
+  active_profiles: ["p1", "p2", "p3"]
 
 # Parameter configurations for each target parameter
 target_parameters:

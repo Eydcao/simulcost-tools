@@ -93,12 +93,11 @@ def create_euler1d_profiles(case_configs, base_profile_path):
 
 
 if __name__ == "__main__":
-    # Create Euler 1D profiles based on C++ reference cases (scaled timing)
+    # Create Euler 1D profiles based on C++ reference cases (1/10 of C++ frame_dt)
+    # After 10 frames, total time matches C++ reference exactly
     case_configs = [
-        {"case": "lax", "record_dt": 0.016},  # p2
-        {"case": "mach_3", "record_dt": 0.012},  # p3
-        {"case": "blast_interaction", "record_dt": 0.005},  # p4
-        {"case": "symmetric_rarefaction", "record_dt": 0.02},  # p5
+        {"case": "lax", "record_dt": 0.012},  # p2: C++ 0.12 / 10 = 0.012
+        {"case": "mach_3", "record_dt": 0.009},  # p3: C++ 0.09 / 10 = 0.009
     ]
 
     profiles = create_euler1d_profiles(case_configs=case_configs, base_profile_path="./run_configs/euler_1d/p1.yaml")
