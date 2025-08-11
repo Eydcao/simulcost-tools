@@ -52,6 +52,8 @@ target_parameters:
     search_type: "0-shot"
     search_range: [-1.0, 1.0]
     search_range_slice_num: 11
+    multiplication_factor: 2  # For internal n_space search
+    max_iteration_num: 7       # For internal n_space search
     non_target_parameters:
       cfl: 0.25      # Fixed stable CFL for most parameter combinations
       beta: [1.0, 1.5, 2.0]  # minmod, balanced, superbee
@@ -62,6 +64,8 @@ target_parameters:
     search_type: "0-shot"
     search_range: [1.0, 2.0]
     search_range_slice_num: 6
+    multiplication_factor: 2  # For internal n_space search
+    max_iteration_num: 7       # For internal n_space search
     non_target_parameters:
       cfl: 0.25       # Fixed stable CFL for most parameter combinations
       k: [-1.0, 0.0, 1.0]  # upwind, mixed, central
