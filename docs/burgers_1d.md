@@ -77,19 +77,19 @@ The simulated results are considered correct if the relative RMSE and L∞ norms
 
 1. **CFL Convergence Search (iterative+0-shot)**
    - For dummy solution, this means halve CFL each round (multiplication factor: 0.5) starting from 1.0 until convergence
-   - **Non-target parameters**: combinations of k∈{-1.0, 0.0, 1.0} and w∈{1.0, 1.5, 2.0}
+   - **Non-target parameters**: n_space=2048, with w∈{1.0, 1.5, 2.0} and k∈{-1.0, 0.0, 1.0} combinations
 
 2. **n_space Convergence Search (iterative+0-shot)**
    - For dummy solution, this means doubling n_space each iteration (multiplication factor: 2) starting from 256 until convergence
-   - **Non-target parameters**: CFL=0.25, with combinations of k∈{-1.0, 0.0, 1.0} and w∈{1.0, 1.5, 2.0}
+   - **Non-target parameters**: CFL=0.25, with w∈{1.0, 1.5, 2.0} and k∈{-1.0, 0.0, 1.0} combinations
 
 3. **k-Parameter Optimization (0-shot)**
-   - For dummy solution, grid search the k that achieves convergence with minimum computational cost after CFL refinement
-   - **Non-target parameters**: starting CFL=1.0, with w∈{1.0, 1.5, 2.0} combinations
+   - For dummy solution, grid search the k that achieves convergence with minimum computational cost
+   - **Non-target parameters**: CFL=0.25, with w∈{1.0, 1.5, 2.0} combinations, n_space=2048 (starting)
 
 4. **w-Parameter Optimization (0-shot)**
-   - For dummy solution, grid search the w that achieves convergence with minimum computational cost after CFL refinement
-   - **Non-target parameters**: starting CFL=1.0, with k∈{-1.0, 0.0, 1.0} combinations
+   - For dummy solution, grid search the w that achieves convergence with minimum computational cost
+   - **Non-target parameters**: CFL=0.25, with k∈{-1.0, 0.0, 1.0} combinations, n_space=2048 (starting)
 
 ## Summarized parameter table for developer only (Not LLM)
 

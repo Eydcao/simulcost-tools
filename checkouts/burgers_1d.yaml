@@ -6,7 +6,7 @@ solver_info:
 task_distribution:
   strategy: "benchmark"
   total_individuals: 360
-  description: "5 profiles × 4 target parameters × 3 precision levels = 360 tasks (120 per precision level)"
+  description: "5 profiles × 4 target parameters × 3 precision levels × 9 non-target combos = 540 tasks (180 per precision level for CFL/n_space, reduced for k/w)"
 
 precision_levels:
   high:
@@ -67,7 +67,7 @@ target_parameters:
     description: "Spatial scheme blending parameter (1.0=central, -1.0=upwind, 0.0=mixed)"
     search_type: "0-shot"
     search_range: [-1.0, 1.0]
-    search_range_slice_num: 21
+    search_range_slice_num: 11
     max_iteration_num: 7       # For subsequent CFL search after finding optimal k
     multiplication_factor: 0.5 # For CFL search
     non_target_parameters:
@@ -78,7 +78,7 @@ target_parameters:
     description: "Minmod limiter strength parameter - controls dissipation (w>=1, higher=less dissipative)"
     search_type: "0-shot"
     search_range: [1.0, 2.0]
-    search_range_slice_num: 11
+    search_range_slice_num: 6
     max_iteration_num: 7       # For subsequent CFL search after finding optimal w
     multiplication_factor: 0.5 # For CFL search
     non_target_parameters:

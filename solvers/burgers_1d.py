@@ -33,7 +33,7 @@ class BurgersRoe2(SIMULATOR):
         self.u = self.initialize_condition(self.case)
 
         # Output directory
-        self.dump_dir = cfg.dump_dir + f"_cfl_{self.cfl}_k_{self.k}_w_{self.w}"
+        self.dump_dir = cfg.dump_dir + f"_cfl_{self.cfl}_k_{self.k}_w_{self.w}_n_{self.n_space}"
         if not os.path.exists(self.dump_dir):
             os.makedirs(self.dump_dir)
 

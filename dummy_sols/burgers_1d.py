@@ -9,8 +9,6 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from wrappers.burgers_1d import (
     run_sim_burgers_1d,
     compare_res_burgers_1d,
-    run_sim_burgers_1d_with_n_space,
-    compare_res_burgers_1d_with_n_space,
 )
 
 
@@ -29,8 +27,8 @@ def find_convergent_cfl(profile, cfl, k, w, tolerance_infity, tolerance_2):
     for i in range(max_iter):
         print(f"\nRunning simulation with CFL = {current_cfl}, k = {k}, w = {w}")
 
-        # Run simulation and load results
-        cost_i = run_sim_burgers_1d(profile, current_cfl, k, w)
+        # Run simulation and load results (use default n_space from config)
+        cost_i = run_sim_burgers_1d(profile, current_cfl, k, w, 2048)
         cost_history.append(cost_i)
         cfl_history.append(current_cfl)
         param_history.append({"cfl": current_cfl, "k": k, "w": w})
@@ -41,7 +39,7 @@ def find_convergent_cfl(profile, cfl, k, w, tolerance_infity, tolerance_2):
 
             # Compare with previous results
             is_converged, metrics1, metrics2, linf_norm, rmse = compare_res_burgers_1d(
-                profile, prev_cfl, k, w, profile, current_cfl, k, w, tolerance_infity, tolerance_2
+                profile, prev_cfl, k, w, profile, current_cfl, k, w, tolerance_infity, tolerance_2, 2048, 2048
             )
 
             if is_converged:
@@ -235,9 +233,8 @@ def find_convergent_n_space(profile, n_space, cfl, k, w, tolerance_infity, toler
     for i in range(max_iter):
         print(f"\nRunning simulation with n_space = {current_n_space}, cfl = {cfl}, k = {k}, w = {w}")
 
-        # Temporarily modify the run_sim function to accept n_space parameter
-        # For now, we need to adapt the wrapper to handle n_space changes
-        cost_i = run_sim_burgers_1d_with_n_space(profile, current_n_space, cfl, k, w)
+        # Run simulation with n_space parameter
+        cost_i = run_sim_burgers_1d(profile, cfl, k, w, current_n_space)
         cost_history.append(cost_i)
         n_space_history.append(current_n_space)
         param_history.append({"n_space": current_n_space, "cfl": cfl, "k": k, "w": w})
@@ -247,8 +244,8 @@ def find_convergent_n_space(profile, n_space, cfl, k, w, tolerance_infity, toler
             prev_n_space = n_space_history[-2]
 
             # Compare with previous results
-            is_converged, metrics1, metrics2, linf_norm, rmse = compare_res_burgers_1d_with_n_space(
-                profile, prev_n_space, cfl, k, w, profile, current_n_space, cfl, k, w, tolerance_infity, tolerance_2
+            is_converged, metrics1, metrics2, linf_norm, rmse = compare_res_burgers_1d(
+                profile, cfl, k, w, profile, cfl, k, w, tolerance_infity, tolerance_2, prev_n_space, current_n_space
             )
 
             if is_converged:
