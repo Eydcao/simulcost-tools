@@ -12,11 +12,11 @@ task_distribution:
 
 precision_levels:
   low:
-    tolerance_rmse: 0.01
+    tolerance_rmse: 0.08
   medium:
-    tolerance_rmse: 0.005
+    tolerance_rmse: 0.02
   high:
-    tolerance_rmse: 0.0025
+    tolerance_rmse: 0.01
 
 profiles:
   num_profiles: 3

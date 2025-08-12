@@ -58,19 +58,54 @@ def plot_statistics(statistics, output_dir):
     for i, rate in enumerate(target_rates):
         ax.text(i, rate + 2, f"{rate:.1f}%", ha="center", va="bottom")
 
-    # Plot 3: Optimal parameter frequency (for 0-shot tasks)
+    # Plot 3: Optimal parameter frequency (for all tasks)
     ax = axes[1, 0]
+    colors = ["skyblue", "lightgreen", "lightcoral", "gold"]
+    color_idx = 0
+
+    if statistics["optimal_cfl_values"]:
+        cfl_values, cfl_counts = np.unique(list(statistics["optimal_cfl_values"]), return_counts=True)
+        ax.bar(
+            [f"{c:.4f}" for c in cfl_values],
+            cfl_counts,
+            alpha=0.7,
+            label="CFL parameter",
+            color=colors[color_idx % len(colors)],
+        )
+        color_idx += 1
+
+    if statistics["optimal_n_space_values"]:
+        n_space_values, n_space_counts = np.unique(list(statistics["optimal_n_space_values"]), return_counts=True)
+        ax.bar(
+            [str(n) for n in n_space_values],
+            n_space_counts,
+            alpha=0.7,
+            label="n_space parameter",
+            color=colors[color_idx % len(colors)],
+        )
+        color_idx += 1
+
     if statistics["optimal_k_values"]:
         k_values, k_counts = np.unique(list(statistics["optimal_k_values"]), return_counts=True)
-        ax.bar([str(k) for k in k_values], k_counts, alpha=0.7, label="k parameter")
+        ax.bar(
+            [str(k) for k in k_values], k_counts, alpha=0.7, label="k parameter", color=colors[color_idx % len(colors)]
+        )
+        color_idx += 1
 
     if statistics["optimal_beta_values"]:
         beta_values, beta_counts = np.unique(list(statistics["optimal_beta_values"]), return_counts=True)
-        ax.bar([str(b) for b in beta_values], beta_counts, alpha=0.7, label="beta parameter")
+        ax.bar(
+            [str(b) for b in beta_values],
+            beta_counts,
+            alpha=0.7,
+            label="beta parameter",
+            color=colors[color_idx % len(colors)],
+        )
 
     ax.set_ylabel("Frequency")
-    ax.set_title("Optimal Parameter Values (0-shot tasks)")
+    ax.set_title("Optimal Parameter Values (All Tasks)")
     ax.legend()
+    ax.tick_params(axis="x", rotation=45)
 
     # Plot 4: Cost distribution
     ax = axes[1, 1]
@@ -114,16 +149,34 @@ def plot_statistics(statistics, output_dir):
             f.write(f"   {param}: {data['converged']}/{data['total']} ({rate:.2f}%), avg cost: {avg_cost:.0f}\n")
         f.write("\n")
 
-        f.write("4. Optimal Parameter Frequencies (0-shot tasks):\n")
+        f.write("4. Convergence by Profile:\n")
+        for profile, data in statistics["convergence_by_profile"].items():
+            rate = (data["converged"] / data["total"] * 100) if data["total"] > 0 else 0
+            f.write(f"   {profile}: {data['converged']}/{data['total']} ({rate:.2f}%)\n")
+        f.write("\n")
+
+        f.write("5. Optimal Parameter Frequencies (All Tasks):\n")
+        if statistics["optimal_cfl_values"]:
+            cfl_values, cfl_counts = np.unique(list(statistics["optimal_cfl_values"]), return_counts=True)
+            f.write("   CFL parameter (iterative):\n")
+            for cfl, count in zip(cfl_values, cfl_counts):
+                f.write(f"     CFL={cfl:.4f}: {count} times\n")
+
+        if statistics["optimal_n_space_values"]:
+            n_space_values, n_space_counts = np.unique(list(statistics["optimal_n_space_values"]), return_counts=True)
+            f.write("   n_space parameter (iterative):\n")
+            for n_space, count in zip(n_space_values, n_space_counts):
+                f.write(f"     n_space={n_space}: {count} times\n")
+
         if statistics["optimal_k_values"]:
             k_values, k_counts = np.unique(list(statistics["optimal_k_values"]), return_counts=True)
-            f.write("   k parameter:\n")
+            f.write("   k parameter (0-shot):\n")
             for k, count in zip(k_values, k_counts):
                 f.write(f"     k={k}: {count} times\n")
 
         if statistics["optimal_beta_values"]:
             beta_values, beta_counts = np.unique(list(statistics["optimal_beta_values"]), return_counts=True)
-            f.write("   beta parameter:\n")
+            f.write("   beta parameter (0-shot):\n")
             for b, count in zip(beta_values, beta_counts):
                 f.write(f"     beta={b}: {count} times\n")
 
@@ -165,6 +218,9 @@ def main():
         "total_converged": 0,
         "convergence_by_precision": defaultdict(lambda: {"total": 0, "converged": 0}),
         "convergence_by_target": defaultdict(lambda: {"total": 0, "converged": 0, "costs": []}),
+        "convergence_by_profile": defaultdict(lambda: {"total": 0, "converged": 0}),
+        "optimal_cfl_values": [],
+        "optimal_n_space_values": [],
         "optimal_k_values": [],
         "optimal_beta_values": [],
     }
@@ -202,6 +258,8 @@ def main():
                             multiplication_factor=target_config["multiplication_factor"],
                             max_iteration_num=target_config["max_iteration_num"],
                         )
+                        if best_param is not None:
+                            statistics["optimal_cfl_values"].append(best_param)
 
                     elif target_param == "n_space":
                         is_converged, best_param, cost_history, param_history = find_convergent_n_space(
@@ -214,6 +272,8 @@ def main():
                             multiplication_factor=target_config["multiplication_factor"],
                             max_iteration_num=target_config["max_iteration_num"],
                         )
+                        if best_param is not None:
+                            statistics["optimal_n_space_values"].append(best_param)
 
                     elif target_param == "beta":
                         is_converged, optimal_param, cost_history, param_history = find_optimal_beta(
@@ -254,12 +314,14 @@ def main():
                     statistics["total_tasks"] += 1
                     statistics["convergence_by_precision"][precision_name]["total"] += 1
                     statistics["convergence_by_target"][target_param]["total"] += 1
+                    statistics["convergence_by_profile"][profile]["total"] += 1
                     statistics["convergence_by_target"][target_param]["costs"].append(total_cost)
 
                     if is_converged:
                         statistics["total_converged"] += 1
                         statistics["convergence_by_precision"][precision_name]["converged"] += 1
                         statistics["convergence_by_target"][target_param]["converged"] += 1
+                        statistics["convergence_by_profile"][profile]["converged"] += 1
                         print(f"      ✅ SUCCESS: Found {target_param}={best_param}, cost={total_cost}")
                     else:
                         print(f"      ❌ FAILED: No convergence, cost={total_cost}")
