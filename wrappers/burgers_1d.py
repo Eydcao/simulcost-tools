@@ -32,6 +32,32 @@ def run_sim_burgers_1d(profile, cfl, k, w):
     return cost
 
 
+def run_sim_burgers_1d_with_n_space(profile, n_space, cfl, k, w):
+    """Run the burgers_1d simulation with n_space parameter included."""
+    dir_path = f"sim_res/burgers_1d/{profile}_cfl_{cfl}_k_{k}_w_{w}_n_{n_space}/"
+    meta_path = os.path.join(dir_path, "meta.json")
+
+    # Check if the simulation has already been run
+    if os.path.exists(meta_path):
+        with open(meta_path, "r") as f:
+            meta = json.load(f)
+            if "cost" in meta:
+                print(f"Using existing simulation results from {dir_path}")
+                return meta["cost"]
+
+    # Run the simulation if not already done
+    print(f"Running new simulation with parameters: n_space={n_space}, cfl={cfl}, k={k}, w={w}")
+    cmd = f"python costsci_tools/runners/burgers_1d.py --config-name={profile} n_space={n_space} cfl={cfl} k={k} w={w}"
+    subprocess.run(cmd, shell=True, check=True)
+
+    # Load the cost from the meta.json file
+    with open(meta_path, "r") as f:
+        meta = json.load(f)
+        cost = meta["cost"]
+
+    return cost
+
+
 def get_res_burgers_1d(profile, cfl, k, w):
     """Load all time frames for a given parameter set, triggering a simulation if results are missing."""
     dir_path = f"sim_res/burgers_1d/{profile}_cfl_{cfl}_k_{k}_w_{w}/"
@@ -44,6 +70,33 @@ def get_res_burgers_1d(profile, cfl, k, w):
     ):
         print(f"No results found for parameters: cfl={cfl}, k={k}, w={w}. Triggering simulation.")
         run_sim_burgers_1d(profile, cfl, k, w)
+
+    # Sort files by time frame
+    files = [f for f in os.listdir(dir_path) if f.startswith("res_") and f.endswith(".h5")]
+    files.sort(key=lambda x: int(x.split("_")[1].split(".")[0]))
+
+    for file_name in files:
+        file_path = os.path.join(dir_path, file_name)
+        with h5py.File(file_path, "r") as f:
+            results.append(np.array(f["u"]))
+            if X is None:
+                X = np.array(f["x"])
+
+    return np.array(results), X
+
+
+def get_res_burgers_1d_with_n_space(profile, n_space, cfl, k, w):
+    """Load all time frames for a given parameter set with n_space, triggering a simulation if results are missing."""
+    dir_path = f"sim_res/burgers_1d/{profile}_cfl_{cfl}_k_{k}_w_{w}_n_{n_space}/"
+    results = []
+    X = None
+
+    # Check if at least one result file exists, otherwise trigger a simulation
+    if not os.path.exists(dir_path) or not any(
+        fname.startswith("res_") and fname.endswith(".h5") for fname in os.listdir(dir_path)
+    ):
+        print(f"No results found for parameters: n_space={n_space}, cfl={cfl}, k={k}, w={w}. Triggering simulation.")
+        run_sim_burgers_1d_with_n_space(profile, n_space, cfl, k, w)
 
     # Sort files by time frame
     files = [f for f in os.listdir(dir_path) if f.startswith("res_") and f.endswith(".h5")]
@@ -117,6 +170,60 @@ def compare_res_burgers_1d(profile1, cfl1, k1, w1, profile2, cfl2, k2, w2, linf_
     """
     res1, x1 = get_res_burgers_1d(profile1, cfl1, k1, w1)
     res2, x2 = get_res_burgers_1d(profile2, cfl2, k2, w2)
+
+    # Error norms
+    diff = np.abs(res1 - res2)
+    linf_norm = np.max(diff)
+    rmse = np.sqrt(np.mean(diff**2))
+
+    # Conservation metrics
+    metrics1 = compute_metrics(res1)
+    metrics2 = compute_metrics(res2)
+
+    converged = (
+        linf_norm < linf_tolerance
+        and rmse < rmse_tolerance
+        and np.all(metrics1["mass_conserved"])
+        and np.all(metrics2["mass_conserved"])
+        and np.all(metrics1["energy_non_increasing"])
+        and np.all(metrics2["energy_non_increasing"])
+        and np.all(metrics1["TV_non_increasing"])
+        and np.all(metrics2["TV_non_increasing"])
+        and np.all(metrics1["max_principle_satisfied"])
+        and np.all(metrics2["max_principle_satisfied"])
+    )
+
+    print_metrics("Case 1", metrics1)
+    print_metrics("Case 2", metrics2)
+
+    print(f"Linf Norm: {linf_norm}")
+    print(f"RMSE: {rmse}")
+
+    return converged, metrics1, metrics2, linf_norm, rmse
+
+
+def compare_res_burgers_1d_with_n_space(
+    profile1, n_space1, cfl1, k1, w1, profile2, n_space2, cfl2, k2, w2, linf_tolerance, rmse_tolerance
+):
+    """Compare two sets of results with n_space parameter using error norms and physical metrics."""
+    res1, x1 = get_res_burgers_1d_with_n_space(profile1, n_space1, cfl1, k1, w1)
+    res2, x2 = get_res_burgers_1d_with_n_space(profile2, n_space2, cfl2, k2, w2)
+
+    # For different n_space values, we need to interpolate to the same grid
+    if len(x1) != len(x2):
+        # Interpolate to the finer grid
+        if len(x2) > len(x1):
+            # Interpolate res1 to x2
+            res1_interp = []
+            for i in range(res1.shape[0]):
+                res1_interp.append(np.interp(x2, x1, res1[i]))
+            res1 = np.array(res1_interp)
+        else:
+            # Interpolate res2 to x1
+            res2_interp = []
+            for i in range(res2.shape[0]):
+                res2_interp.append(np.interp(x1, x2, res2[i]))
+            res2 = np.array(res2_interp)
 
     # Error norms
     diff = np.abs(res1 - res2)

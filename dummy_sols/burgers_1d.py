@@ -6,7 +6,12 @@ import os
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from wrappers.burgers_1d import run_sim_burgers_1d, compare_res_burgers_1d, run_sim_burgers_1d_with_n_space, compare_res_burgers_1d_with_n_space
+from wrappers.burgers_1d import (
+    run_sim_burgers_1d,
+    compare_res_burgers_1d,
+    run_sim_burgers_1d_with_n_space,
+    compare_res_burgers_1d_with_n_space,
+)
 
 
 def find_convergent_cfl(profile, cfl, k, w, tolerance_infity, tolerance_2):
@@ -294,7 +299,9 @@ if __name__ == "__main__":
         "--k", type=float, default=0, help="The blending parameters between central (1) and upwind (-1) scheme"
     )
     parser.add_argument("--w", type=float, default=1.0, help="w parameter for minmod limiter")
-    parser.add_argument("--n_space", type=int, default=256, help="Initial n_space (spatial resolution) to start testing")
+    parser.add_argument(
+        "--n_space", type=int, default=256, help="Initial n_space (spatial resolution) to start testing"
+    )
 
     # Tolerance parameter
     parser.add_argument("--tolerance_infity", type=float, default=5e-2, help="Tolerance for convergence checking")
