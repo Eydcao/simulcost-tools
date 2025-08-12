@@ -164,5 +164,5 @@ Current configuration generates:
 
 ### Dummy Solution Cache
 
-Config for dummy solution cache: `checkouts/euler_1d_config.yaml`
-Cache script: `checkouts/euler_1d_dummy_generation.py`
+Config for dummy solution cache: `checkouts/euler_1d.yaml`
+Cache script: `checkouts/euler_1d.py`

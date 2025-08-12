@@ -101,8 +101,8 @@ target_parameters:
 ## Deliverables
 
 1. **Updated `docs/[solver_name].md`** - Main documentation with integrated checkout section
-2. **`checkouts/[solver_name]_config.yaml`** - Centralized configuration file with all parameters  
-3. **`checkouts/[solver_name]_dummy_generation.py`** - Python script that reads YAML and generates all dummy solutions
+2. **`checkouts/[solver_name].yaml`** - Centralized configuration file with all parameters  
+3. **`checkouts/[solver_name].py`** - Python script that reads YAML and generates all dummy solutions
 4. **Cached dummy solution results** - Run the generation scripts and zip result files; then send to Yadi or Leo
 
 ## Template
@@ -110,5 +110,5 @@ target_parameters:
 Please use Euler 1D as an example:
 
 1. `docs/euler_1d.md`
-2. `checkouts/euler_1d_config.yaml`
-3. `checkouts/euler_1d_dummy_generation.py`
+2. `checkouts/euler_1d.yaml`
+3. `checkouts/euler_1d.py`

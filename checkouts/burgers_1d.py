@@ -21,6 +21,44 @@ from checkouts.config_utils import load_config, build_target_configs
 from dummy_sols.burgers_1d import find_convergent_cfl, find_convergent_n_space, find_optimal_k, find_optimal_w
 
 
+def save_datasets(successful_tasks, failed_tasks, output_dir):
+    """Save successful and failed tasks as separate JSON datasets in subfolders"""
+    # Create subfolders for successful and failed tasks
+    success_dir = os.path.join(output_dir, "burgers_1d", "successful")
+    failed_dir = os.path.join(output_dir, "burgers_1d", "failed")
+    os.makedirs(success_dir, exist_ok=True)
+    os.makedirs(failed_dir, exist_ok=True)
+    
+    # Save successful tasks (overwrite existing file)
+    success_file = os.path.join(success_dir, "tasks.json")
+    with open(success_file, "w") as f:  # "w" mode overwrites existing file
+        json.dump({
+            "metadata": {
+                "solver": "burgers_1d",
+                "description": "Successfully converged parameter optimization tasks",
+                "total_tasks": len(successful_tasks)
+            },
+            "tasks": successful_tasks
+        }, f, indent=2)
+    
+    # Save failed tasks (overwrite existing file)
+    failed_file = os.path.join(failed_dir, "tasks.json")
+    with open(failed_file, "w") as f:  # "w" mode overwrites existing file
+        json.dump({
+            "metadata": {
+                "solver": "burgers_1d", 
+                "description": "Failed to converge parameter optimization tasks",
+                "total_tasks": len(failed_tasks)
+            },
+            "tasks": failed_tasks
+        }, f, indent=2)
+    
+    print(f"✅ Saved {len(successful_tasks)} successful tasks to {success_file}")
+    print(f"❌ Saved {len(failed_tasks)} failed tasks to {failed_file}")
+    
+    return success_file, failed_file
+
+
 def run_single_task(target_param, param_config, profile, precision_level, precision_config):
     """Run a single parameter optimization task."""
     print(f"\n{'='*60}")
@@ -330,7 +368,7 @@ def main():
     print("=" * 60)
 
     # Load configuration
-    config_path = os.path.join(os.path.dirname(__file__), "burgers_1d_config.yaml")
+    config_path = os.path.join(os.path.dirname(__file__), "burgers_1d.yaml")
     config = load_config(config_path)
 
     # Build target configurations
@@ -343,8 +381,10 @@ def main():
     print(f"Profiles: {config['profiles']['active_profiles']}")
     print(f"Precision levels: {list(config['precision_levels'].keys())}")
 
-    # Execute all tasks
+    # Execute all tasks and collect datasets
     all_results = []
+    successful_tasks = []
+    failed_tasks = []
 
     for target_param, (profiles, precision_levels) in target_configs.items():
         param_config = config["target_parameters"][target_param]
@@ -355,12 +395,66 @@ def main():
                 precision_config = config["precision_levels"][precision_level]
 
                 result = run_single_task(target_param, param_config, profile, precision_level, precision_config)
+                
+                # Process each task result and create dataset records
+                for task_result in result:
+                    task_record = {
+                        "solver": "burgers_1d",
+                        "target_parameter": target_param,
+                        "profile": profile,
+                        "precision_config": {
+                            "tolerance_linf": precision_config["tolerance_linf"],
+                            "tolerance_rmse": precision_config["tolerance_rmse"]
+                        },
+                        "target_config": {
+                            "initial_value": param_config.get("initial_value"),
+                            "multiplication_factor": param_config.get("multiplication_factor"),
+                            "max_iteration_num": param_config.get("max_iteration_num"),
+                            "search_range": param_config.get("search_range"),
+                            "search_range_slice_num": param_config.get("search_range_slice_num")
+                        },
+                        "non_target_parameters": {k: v for k, v in task_result.items() 
+                                                  if k not in ['converged', 'best_param', 'total_cost', 'optimal_cfl', 'error']},
+                        "results": {
+                            "converged": task_result.get("converged", False),
+                            "optimal_parameter_value": task_result.get("best_param"),
+                            "optimal_cfl": task_result.get("optimal_cfl"),  # For composite tasks
+                            "total_computational_cost": task_result.get("total_cost", 0),
+                            "error_message": task_result.get("error")
+                        }
+                    }
+
+                    # Add task to appropriate dataset
+                    if task_result.get("converged", False):
+                        successful_tasks.append(task_record)
+                    else:
+                        failed_tasks.append(task_record)
+
                 task_results.extend(result)
 
         all_results.append({"target_param": target_param, "results": task_results, "total_tasks": len(task_results)})
 
     # Generate statistics and plots
     plot_statistics(all_results)
+
+    # Save datasets
+    repo_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    dataset_dir = os.path.join(repo_root, "dataset")
+    success_file, failed_file = save_datasets(successful_tasks, failed_tasks, dataset_dir)
+    print(f"💾 Dataset files saved to: {dataset_dir}")
+    print(f"   ✅ Successful tasks: {len(successful_tasks)} tasks")
+    print(f"   ❌ Failed tasks: {len(failed_tasks)} tasks")
+    
+    # Display dataset summary
+    if len(successful_tasks) > 0:
+        print(f"\n📈 Successful Task Examples:")
+        for i, task in enumerate(successful_tasks[:3]):  # Show first 3 successful tasks
+            print(f"   {i+1}. {task['profile']} profile, {task['target_parameter']} optimization -> {task['results']['optimal_parameter_value']}")
+    
+    if len(failed_tasks) > 0:
+        print(f"\n📉 Failed Task Examples:")
+        for i, task in enumerate(failed_tasks[:3]):  # Show first 3 failed tasks
+            print(f"   {i+1}. {task['profile']} profile, {task['target_parameter']} optimization (cost: {task['results']['total_computational_cost']})")
 
     print(f"\n{'='*60}")
     print("Dummy solution generation completed!")

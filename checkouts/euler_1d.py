@@ -1,6 +1,8 @@
 import itertools
 import os
 import sys
+import json
+import time
 import matplotlib.pyplot as plt
 import numpy as np
 from collections import defaultdict
@@ -9,6 +11,44 @@ from collections import defaultdict
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from dummy_sols.euler_1d import find_convergent_cfl, find_convergent_n_space, find_optimal_beta, find_optimal_k
 from checkouts.config_utils import load_config, build_target_configs
+
+
+def save_datasets(successful_tasks, failed_tasks, output_dir):
+    """Save successful and failed tasks as separate JSON datasets in subfolders"""
+    # Create subfolders for successful and failed tasks
+    success_dir = os.path.join(output_dir, "euler_1d", "successful")
+    failed_dir = os.path.join(output_dir, "euler_1d", "failed")
+    os.makedirs(success_dir, exist_ok=True)
+    os.makedirs(failed_dir, exist_ok=True)
+    
+    # Save successful tasks (overwrite existing file)
+    success_file = os.path.join(success_dir, "tasks.json")
+    with open(success_file, "w") as f:  # "w" mode overwrites existing file
+        json.dump({
+            "metadata": {
+                "solver": "euler_1d",
+                "description": "Successfully converged parameter optimization tasks",
+                "total_tasks": len(successful_tasks)
+            },
+            "tasks": successful_tasks
+        }, f, indent=2)
+    
+    # Save failed tasks (overwrite existing file)
+    failed_file = os.path.join(failed_dir, "tasks.json")
+    with open(failed_file, "w") as f:  # "w" mode overwrites existing file
+        json.dump({
+            "metadata": {
+                "solver": "euler_1d", 
+                "description": "Failed to converge parameter optimization tasks",
+                "total_tasks": len(failed_tasks)
+            },
+            "tasks": failed_tasks
+        }, f, indent=2)
+    
+    print(f"✅ Saved {len(successful_tasks)} successful tasks to {success_file}")
+    print(f"❌ Saved {len(failed_tasks)} failed tasks to {failed_file}")
+    
+    return success_file, failed_file
 
 
 def plot_statistics(statistics, output_dir):
@@ -183,10 +223,10 @@ def plot_statistics(statistics, output_dir):
 
 def main():
     print("=== Euler 1D Dummy Solution Generation ===")
-    print("Loading configuration from euler_1d_config.yaml...")
+    print("Loading configuration from euler_1d.yaml...")
 
     # Load configuration from YAML
-    config_path = os.path.join(os.path.dirname(__file__), "euler_1d_config.yaml")
+    config_path = os.path.join(os.path.dirname(__file__), "euler_1d.yaml")
     config = load_config(config_path)
     print("✅ Configuration loaded successfully")
 
@@ -224,6 +264,10 @@ def main():
         "optimal_k_values": [],
         "optimal_beta_values": [],
     }
+
+    # Initialize task collection for datasets
+    successful_tasks = []
+    failed_tasks = []
 
     # Generate all task combinations
     for precision_name, precision_vals in precision_configs.items():
@@ -309,6 +353,38 @@ def main():
                         if best_param is not None:
                             statistics["optimal_k_values"].append(best_param)
 
+                    # Create task record for dataset
+                    task_record = {
+                        "solver": "euler_1d",
+                        "target_parameter": target_param,
+                        "profile": profile,
+                        "precision_config": {
+                            "tolerance_rmse": precision_vals["tolerance_rmse"]
+                        },
+                        "target_config": {
+                            "initial_value": target_config.get("initial_value"),
+                            "multiplication_factor": target_config.get("multiplication_factor"),
+                            "max_iteration_num": target_config.get("max_iteration_num"),
+                            "search_range_min": target_config.get("search_range_min"),
+                            "search_range_max": target_config.get("search_range_max"),
+                            "search_range_slice_num": target_config.get("search_range_slice_num")
+                        },
+                        "non_target_parameters": task_params.copy(),
+                        "results": {
+                            "converged": is_converged,
+                            "optimal_parameter_value": best_param,
+                            "total_computational_cost": sum(cost_history) if cost_history else 0,
+                            "cost_history": cost_history if cost_history else [],
+                            "parameter_history": param_history if param_history else []
+                        }
+                    }
+
+                    # Add task to appropriate dataset
+                    if is_converged:
+                        successful_tasks.append(task_record)
+                    else:
+                        failed_tasks.append(task_record)
+
                     # Update statistics
                     total_cost = sum(cost_history) if cost_history else 0
                     statistics["total_tasks"] += 1
@@ -335,6 +411,24 @@ def main():
     output_dir = os.path.join(repo_root, "outputs", "statistics")
     plot_statistics(statistics, output_dir)
     print(f"📊 Statistics plots saved to: {output_dir}")
+
+    # Save datasets
+    dataset_dir = os.path.join(repo_root, "dataset")
+    success_file, failed_file = save_datasets(successful_tasks, failed_tasks, dataset_dir)
+    print(f"💾 Dataset files saved to: {dataset_dir}")
+    print(f"   ✅ Successful tasks: {len(successful_tasks)} tasks")
+    print(f"   ❌ Failed tasks: {len(failed_tasks)} tasks")
+    
+    # Display dataset summary
+    if len(successful_tasks) > 0:
+        print(f"\n📈 Successful Task Examples:")
+        for i, task in enumerate(successful_tasks[:3]):  # Show first 3 successful tasks
+            print(f"   {i+1}. {task['profile']} profile, {task['target_parameter']} optimization -> {task['results']['optimal_parameter_value']}")
+    
+    if len(failed_tasks) > 0:
+        print(f"\n📉 Failed Task Examples:")
+        for i, task in enumerate(failed_tasks[:3]):  # Show first 3 failed tasks
+            print(f"   {i+1}. {task['profile']} profile, {task['target_parameter']} optimization (cost: {task['results']['total_computational_cost']})")
 
     # Expected task calculation for verification
     expected_total = 0
