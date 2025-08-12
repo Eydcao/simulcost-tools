@@ -149,7 +149,7 @@ More Notes:
   - **p2**: Lax problem (moderate shock strength)
   - **p3**: Mach 3 problem (high-speed flow)
 - **Target Parameters**: 4 (CFL, n_space, k, beta)
-- **Precision Levels**: 3 (low: 0.01, medium: 0.005, high: 0.0025)
+- **Precision Levels**: 3 (low: 0.08, medium: 0.02, high: 0.01)
 
 ### Task Distribution
 
