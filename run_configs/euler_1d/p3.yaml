@@ -6,7 +6,7 @@ defaults:
 # Physical parameters
 L: 1.0                # Domain length
 gamma: 1.4            # Ratio of specific heats
-case: "sod"           # Initial condition name
+case: "mach_3"           # Initial condition name
 
 # Numerical parameters
 cfl: 0.5              # CFL number for stability
@@ -15,9 +15,9 @@ k: 1                  # Blending parameter (1=central, -1=upwind, 0=mixed)
 n_space: 1024         # Number of grid cells
 
 # Simulator statics
-record_dt: 0.02       # Time interval between recordings
+record_dt: 0.009       # Time interval between recordings
 end_frame: 10         # Simulation end after certain number of frames
 
 # Output configuration
-dump_dir: "sim_res/euler_1d/p1"  # Directory for output files
+dump_dir: "sim_res/euler_1d/p3"  # Directory for output files
 verbose: False        # Enable verbose output

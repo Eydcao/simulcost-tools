@@ -1,0 +1,72 @@
+# Euler 1D Solver Checkout Configuration
+# This file centralizes all parameter settings for both documentation and dummy solution generation
+
+solver_info:
+  name: "Euler 1D"
+  numerical_method: "2nd order MUSCL scheme with Roe flux and generalized superbee limiter"
+  reference: "[Literature or standard benchmarks]"
+
+task_distribution:
+  strategy: "benchmark"
+  total_individuals: 216
+
+precision_levels:
+  low:
+    tolerance_rmse: 0.08
+  medium:
+    tolerance_rmse: 0.02
+  high:
+    tolerance_rmse: 0.01
+
+profiles:
+  num_profiles: 3
+  # Available profiles: p1 (sod), p2 (lax), p3 (mach_3)
+  active_profiles: ["p1", "p2", "p3"]
+
+# Parameter configurations for each target parameter
+target_parameters:
+  cfl:
+    description: "Determine the CFL number for temporal stability - controls time step size relative to grid spacing"
+    search_type: "iterative+0-shot"
+    initial_value: 1.0
+    multiplication_factor: 0.5
+    max_iteration_num: 7
+    non_target_parameters:
+      n_space: 256  # Fixed moderate resolution for efficiency
+      beta: [1.0, 1.5, 2.0]  # minmod, balanced, superbee
+      k: [-1.0, 0.0, 1.0]    # upwind, mixed, central
+
+  n_space:
+    description: "Number of grid cells for spatial discretization - determines spatial resolution"
+    search_type: "iterative+0-shot"
+    initial_value: 256
+    multiplication_factor: 2
+    max_iteration_num: 7
+    non_target_parameters:
+      cfl: 0.25  # Fixed stable CFL for most parameter combinations
+      beta: [1.0, 1.5, 2.0]  # minmod, balanced, superbee
+      k: [-1.0, 0.0, 1.0]    # upwind, mixed, central
+
+  k:
+    description: "Spatial scheme blending parameter (1.0=central, -1.0=upwind, 0.0=mixed)"
+    search_type: "0-shot"
+    search_range: [-1.0, 1.0]
+    search_range_slice_num: 11
+    multiplication_factor: 2  # For internal n_space search
+    max_iteration_num: 7       # For internal n_space search
+    non_target_parameters:
+      cfl: 0.25      # Fixed stable CFL for most parameter combinations
+      beta: [1.0, 1.5, 2.0]  # minmod, balanced, superbee
+      n_space: 256   # Fixed moderate resolution for efficiency
+
+  beta:
+    description: "Limiter parameter for generalized superbee limiter (1.0=minmod, 2.0=superbee)"
+    search_type: "0-shot"
+    search_range: [1.0, 2.0]
+    search_range_slice_num: 6
+    multiplication_factor: 2  # For internal n_space search
+    max_iteration_num: 7       # For internal n_space search
+    non_target_parameters:
+      cfl: 0.25       # Fixed stable CFL for most parameter combinations
+      k: [-1.0, 0.0, 1.0]  # upwind, mixed, central
+      n_space: 256    # Fixed moderate resolution for efficiency

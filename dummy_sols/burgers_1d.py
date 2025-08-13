@@ -6,7 +6,10 @@ import os
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from wrappers.burgers_1d import run_sim_burgers_1d, compare_res_burgers_1d
+from wrappers.burgers_1d import (
+    run_sim_burgers_1d,
+    compare_res_burgers_1d,
+)
 
 
 def find_convergent_cfl(profile, cfl, k, w, tolerance_infity, tolerance_2):
@@ -24,8 +27,8 @@ def find_convergent_cfl(profile, cfl, k, w, tolerance_infity, tolerance_2):
     for i in range(max_iter):
         print(f"\nRunning simulation with CFL = {current_cfl}, k = {k}, w = {w}")
 
-        # Run simulation and load results
-        cost_i = run_sim_burgers_1d(profile, current_cfl, k, w)
+        # Run simulation and load results (use default n_space from config)
+        cost_i = run_sim_burgers_1d(profile, current_cfl, k, w, 2048)
         cost_history.append(cost_i)
         cfl_history.append(current_cfl)
         param_history.append({"cfl": current_cfl, "k": k, "w": w})
@@ -36,7 +39,7 @@ def find_convergent_cfl(profile, cfl, k, w, tolerance_infity, tolerance_2):
 
             # Compare with previous results
             is_converged, metrics1, metrics2, linf_norm, rmse = compare_res_burgers_1d(
-                profile, prev_cfl, k, w, profile, current_cfl, k, w, tolerance_infity, tolerance_2
+                profile, prev_cfl, k, w, profile, current_cfl, k, w, tolerance_infity, tolerance_2, 2048, 2048
             )
 
             if is_converged:
@@ -214,6 +217,64 @@ def find_optimal_w(profile, k, tolerance_infity, tolerance_2):
     )
 
 
+def find_convergent_n_space(profile, n_space, cfl, k, w, tolerance_infity, tolerance_2):
+    """Iteratively increase n_space (spatial resolution) until convergence is achieved."""
+    n_space_history = []
+    cost_history = []
+    param_history = []
+
+    max_iter = 7  # Maximum iterations
+    multiplication_factor = 2  # Double n_space each iteration
+
+    current_n_space = n_space
+    converged = False
+    best_n_space = None
+
+    for i in range(max_iter):
+        print(f"\nRunning simulation with n_space = {current_n_space}, cfl = {cfl}, k = {k}, w = {w}")
+
+        # Run simulation with n_space parameter
+        cost_i = run_sim_burgers_1d(profile, cfl, k, w, current_n_space)
+        cost_history.append(cost_i)
+        n_space_history.append(current_n_space)
+        param_history.append({"n_space": current_n_space, "cfl": cfl, "k": k, "w": w})
+
+        # If we have previous results to compare with
+        if len(n_space_history) > 1:
+            prev_n_space = n_space_history[-2]
+
+            # Compare with previous results
+            is_converged, metrics1, metrics2, linf_norm, rmse = compare_res_burgers_1d(
+                profile, cfl, k, w, profile, cfl, k, w, tolerance_infity, tolerance_2, prev_n_space, current_n_space
+            )
+
+            if is_converged:
+                print(f"Convergence achieved between n_space {prev_n_space} and {current_n_space}")
+                best_n_space = n_space_history[-1]  # The finer resolution that converged
+                converged = True
+                break
+            else:
+                print(f"No convergence between n_space {prev_n_space} and {current_n_space}")
+
+        # Prepare next n_space (double current)
+        next_n_space = current_n_space * multiplication_factor
+        current_n_space = next_n_space
+
+    if converged:
+        print(f"\nConvergent n_space found: {best_n_space}")
+    else:
+        print("\nMaximum iterations reached without convergence")
+        if len(n_space_history) > 1:
+            best_n_space = n_space_history[-1]
+            print(f"Finest tested n_space: {best_n_space}")
+        else:
+            best_n_space = None
+
+    print(f"Cost history: {cost_history}, total cost: {sum(cost_history)}")
+
+    return bool(converged), best_n_space, cost_history, param_history
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Find optimal parameters for Burgers 1D simulation")
 
@@ -221,9 +282,9 @@ if __name__ == "__main__":
     parser.add_argument(
         "--task",
         type=str,
-        choices=["cfl", "k", "w"],
+        choices=["cfl", "k", "w", "n_space"],
         required=True,
-        help="Choose which parameter to search: 'cfl', 'k', or 'w'",
+        help="Choose which parameter to search: 'cfl', 'k', 'w', or 'n_space'",
     )
 
     # Profile choice
@@ -235,6 +296,9 @@ if __name__ == "__main__":
         "--k", type=float, default=0, help="The blending parameters between central (1) and upwind (-1) scheme"
     )
     parser.add_argument("--w", type=float, default=1.0, help="w parameter for minmod limiter")
+    parser.add_argument(
+        "--n_space", type=int, default=256, help="Initial n_space (spatial resolution) to start testing"
+    )
 
     # Tolerance parameter
     parser.add_argument("--tolerance_infity", type=float, default=5e-2, help="Tolerance for convergence checking")
@@ -293,3 +357,20 @@ if __name__ == "__main__":
                 print(w_log)
         else:
             print("\nNo optimal w found")
+
+    elif args.task == "n_space":
+        print("\n=== Starting n_space convergence search ===")
+        is_converged, best_n_space, cost_history, param_history = find_convergent_n_space(
+            profile=args.profile,
+            n_space=args.n_space,
+            cfl=args.cfl,
+            k=args.k,
+            w=args.w,
+            tolerance_infity=args.tolerance_infity,
+            tolerance_2=args.tolerance_2,
+        )
+
+        if best_n_space is not None:
+            print(f"\nRecommended n_space: {best_n_space}, total cost: {sum(cost_history)}")
+        else:
+            print(f"\nNo convergent n_space found, total cost: {sum(cost_history) if cost_history else 0}")

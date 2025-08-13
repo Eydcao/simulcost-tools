@@ -6,9 +6,10 @@ import json
 import matplotlib.pyplot as plt
 
 
-def run_sim_burgers_1d(profile, cfl, k, w):
+def run_sim_burgers_1d(profile, cfl, k, w, n_space=None):
     """Run the burgers_1d simulation with the given parameters if not already simulated."""
-    dir_path = f"sim_res/burgers_1d/{profile}_cfl_{cfl}_k_{k}_w_{w}/"
+    n_space_str = f"_n_{n_space}" if n_space is not None else ""
+    dir_path = f"sim_res/burgers_1d/{profile}_cfl_{cfl}_k_{k}_w_{w}{n_space_str}/"
     meta_path = os.path.join(dir_path, "meta.json")
 
     # Check if the simulation has already been run
@@ -20,8 +21,9 @@ def run_sim_burgers_1d(profile, cfl, k, w):
                 return meta["cost"]
 
     # Run the simulation if not already done
-    print(f"Running new simulation with parameters: cfl={cfl}, k={k}, w={w}")
-    cmd = f"python costsci_tools/runners/burgers_1d.py --config-name={profile} cfl={cfl} k={k} w={w}"
+    n_space_param = f" n_space={n_space}" if n_space is not None else ""
+    print(f"Running new simulation with parameters: cfl={cfl}, k={k}, w={w}, n_space={n_space}")
+    cmd = f"python runners/burgers_1d.py --config-name={profile} cfl={cfl} k={k} w={w}{n_space_param}"
     subprocess.run(cmd, shell=True, check=True)
 
     # Load the cost from the meta.json file
@@ -32,18 +34,19 @@ def run_sim_burgers_1d(profile, cfl, k, w):
     return cost
 
 
-def get_res_burgers_1d(profile, cfl, k, w):
+def get_res_burgers_1d(profile, cfl, k, w, n_space=None):
     """Load all time frames for a given parameter set, triggering a simulation if results are missing."""
-    dir_path = f"sim_res/burgers_1d/{profile}_cfl_{cfl}_k_{k}_w_{w}/"
-    results = []
+    n_space_str = f"_n_{n_space}" if n_space is not None else ""
+    dir_path = f"sim_res/burgers_1d/{profile}_cfl_{cfl}_k_{k}_w_{w}{n_space_str}/"
+    results = {}
     X = None
 
     # Check if at least one result file exists, otherwise trigger a simulation
     if not os.path.exists(dir_path) or not any(
         fname.startswith("res_") and fname.endswith(".h5") for fname in os.listdir(dir_path)
     ):
-        print(f"No results found for parameters: cfl={cfl}, k={k}, w={w}. Triggering simulation.")
-        run_sim_burgers_1d(profile, cfl, k, w)
+        print(f"No results found for parameters: cfl={cfl}, k={k}, w={w}, n_space={n_space}. Triggering simulation.")
+        run_sim_burgers_1d(profile, cfl, k, w, n_space)
 
     # Sort files by time frame
     files = [f for f in os.listdir(dir_path) if f.startswith("res_") and f.endswith(".h5")]
@@ -51,12 +54,15 @@ def get_res_burgers_1d(profile, cfl, k, w):
 
     for file_name in files:
         file_path = os.path.join(dir_path, file_name)
+        frame_number = int(file_name.split("_")[1].split(".")[0])
         with h5py.File(file_path, "r") as f:
-            results.append(np.array(f["u"]))
+            results[frame_number] = np.array(f["u"])
             if X is None:
                 X = np.array(f["x"])
 
-    return np.array(results), X
+    return results, X
+
+
 
 
 def compute_metrics(u):
@@ -106,7 +112,7 @@ def print_metrics(name, metrics):
     print(f"Max principle satisfied at all steps: {np.all(metrics['max_principle_satisfied'])}")
 
 
-def compare_res_burgers_1d(profile1, cfl1, k1, w1, profile2, cfl2, k2, w2, linf_tolerance, rmse_tolerance):
+def compare_res_burgers_1d(profile1, cfl1, k1, w1, profile2, cfl2, k2, w2, linf_tolerance, rmse_tolerance, n_space1=None, n_space2=None):
     """Compare two sets of results using error norms and physical metrics.
     Returns:
         converged (bool): True if Linf and RMSE tolerances are met.
@@ -115,8 +121,30 @@ def compare_res_burgers_1d(profile1, cfl1, k1, w1, profile2, cfl2, k2, w2, linf_
         linf_norm (float): Linfinity norm of difference.
         rmse (float): RMSE of difference.
     """
-    res1, x1 = get_res_burgers_1d(profile1, cfl1, k1, w1)
-    res2, x2 = get_res_burgers_1d(profile2, cfl2, k2, w2)
+    res1_dict, x1 = get_res_burgers_1d(profile1, cfl1, k1, w1, n_space1)
+    res2_dict, x2 = get_res_burgers_1d(profile2, cfl2, k2, w2, n_space2)
+
+    # Convert dictionary results to arrays for comparison
+    frames1 = sorted(res1_dict.keys())
+    frames2 = sorted(res2_dict.keys())
+    res1 = np.array([res1_dict[frame] for frame in frames1])
+    res2 = np.array([res2_dict[frame] for frame in frames2])
+
+    # For different n_space values, we need to interpolate to the same grid
+    if len(x1) != len(x2):
+        # Interpolate to the finer grid
+        if len(x2) > len(x1):
+            # Interpolate res1 to x2
+            res1_interp = []
+            for i in range(res1.shape[0]):
+                res1_interp.append(np.interp(x2, x1, res1[i]))
+            res1 = np.array(res1_interp)
+        else:
+            # Interpolate res2 to x1
+            res2_interp = []
+            for i in range(res2.shape[0]):
+                res2_interp.append(np.interp(x1, x2, res2[i]))
+            res2 = np.array(res2_interp)
 
     # Error norms
     diff = np.abs(res1 - res2)
@@ -149,49 +177,3 @@ def compare_res_burgers_1d(profile1, cfl1, k1, w1, profile2, cfl2, k2, w2, linf_
     return converged, metrics1, metrics2, linf_norm, rmse
 
 
-if __name__ == "__main__":
-    # Example usage
-    k = 0
-    w = 0.9
-    profiles = ["p1"]
-    # profiles = ["p1", "p2", "p3", "p4", "p5"]
-    linf_tolerance = 5e-2
-    rmse_tolerance = 5e-3
-
-    # for profile in profiles:
-    #     cfl_values = [1]
-    #     linf_norms = []
-    #     l2_norms = []
-    #     converged = False
-
-    #     while not converged:
-    #         cfl1 = cfl_values[-1]
-    #         cfl2 = cfl1 / 2
-    #         cfl_values.append(cfl2)
-
-    #         converged, metrics1, metrics2, linf_norm, rmse = compare_res_burgers_1d(
-    #             profile, cfl1, k, w, profile, cfl2, k, w, linf_tolerance, rmse_tolerance
-    #         )
-    #         linf_norms.append(linf_norm)
-    #         l2_norms.append(rmse)
-
-    #     # Plotting for each profile
-    #     plt.figure(figsize=(8, 6))
-    #     plt.plot(cfl_values[:-1], linf_norms, marker="o", label="Linf Norm")
-    #     plt.plot(cfl_values[:-1], l2_norms, marker="s", label="RMSE")
-    #     plt.xscale("log")
-    #     plt.yscale("log")
-    #     plt.xlabel("CFL")
-    #     plt.ylabel("Norm")
-    #     plt.title(f"Trajectory of Norms vs CFL for {profile}")
-    #     plt.grid(True, which="both", linestyle="--", linewidth=0.5)
-    #     plt.legend()
-    #     plt.savefig(f"norms_vs_cfl_{profile}.png")
-    #     plt.close()
-
-    _, _, _, linf_norm, rmse = compare_res_burgers_1d(
-        "p1", 0.5, k, 1, "p1", 0.125, k, 1, linf_tolerance, rmse_tolerance
-    )
-
-    print(f"Difference in RMSE between 2nd CFL and converged CFL: {rmse}")
-    print(f"Difference in Linf Norm between 2nd CFL and converged CFL: {linf_norm}")

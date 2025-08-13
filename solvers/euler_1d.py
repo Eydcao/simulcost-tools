@@ -38,7 +38,7 @@ class Euler1D(SIMULATOR):
         self.q = self.initialize_condition(self.case)  # Conservative variables [rho, rho*u, rho*E]
 
         # Output directory
-        self.dump_dir = cfg.dump_dir + f"_cfl_{self.cfl}_beta_{self.beta}_k_{self.k}"
+        self.dump_dir = cfg.dump_dir + f"_cfl_{self.cfl}_beta_{self.beta}_k_{self.k}_n_{self.n_space}"
         if not os.path.exists(self.dump_dir):
             os.makedirs(self.dump_dir)
 
@@ -62,31 +62,51 @@ class Euler1D(SIMULATOR):
             r0[halfcells:] = 0.125
 
         elif case == "lax":
-            # Lax problem
-            p0[:halfcells] = 3.528
-            p0[halfcells:] = 0.571
-            u0[:halfcells] = 0.698
-            u0[halfcells:] = 0.0
-            r0[:halfcells] = 0.445
-            r0[halfcells:] = 0.5
+            # Lax tube problem from reference C++ code (testcase 1)
+            # Use exact C++ conservative variables: [rho, rho*u, rho*E]
+            # Left: q_high << 0.445, 8.9284, 0.31061
+            # Right (ambient): q_amb << 0.5, 1.425, 0.0
 
-        elif case == "123":
-            # Test problem 123
-            p0[:halfcells] = 1000.0
-            p0[halfcells:] = 0.01
-            u0[:halfcells] = 0.0
-            u0[halfcells:] = 0.0
-            r0[:halfcells] = 1.0
-            r0[halfcells:] = 1.0
+            # Left state conservative variables (C++ [rho, E_total, momentum] → Python [rho, momentum, E_total])
+            q_left = np.array([0.445, 0.31061, 8.9284])  # [rho, rho*u, rho*E]
+            rho_left, u_left, p_left = self._cons2prim(q_left)
+
+            # Right state conservative variables
+            q_right = np.array([0.5, 0.0, 1.425])  # [rho, rho*u, rho*E]
+            rho_right, u_right, p_right = self._cons2prim(q_right)
+
+            # Set initial conditions
+            r0[:halfcells] = rho_left
+            r0[halfcells:] = rho_right
+            u0[:halfcells] = u_left
+            u0[halfcells:] = u_right
+            p0[:halfcells] = p_left
+            p0[halfcells:] = p_right
+
+        elif case == "mach_3":
+            # Mach 3 problem from reference C++ code (testcase 3)
+            # Use exact C++ conservative variables: [rho, rho*u, rho*E]
+            # Left: q_high << 3.857, 27.46478, 3.54844
+            # Right (ambient): q_amb << 1.0, 8.80125, 3.55
+
+            # Left state conservative variables (C++ [rho, E_total, momentum] → Python [rho, momentum, E_total])
+            q_left = np.array([3.857, 3.54844, 27.46478])  # [rho, rho*u, rho*E]
+            rho_left, u_left, p_left = self._cons2prim(q_left)
+
+            # Right state conservative variables
+            q_right = np.array([1.0, 3.55, 8.80125])  # [rho, rho*u, rho*E]
+            rho_right, u_right, p_right = self._cons2prim(q_right)
+
+            # Set initial conditions
+            r0[:halfcells] = rho_left
+            r0[halfcells:] = rho_right
+            u0[:halfcells] = u_left
+            u0[halfcells:] = u_right
+            p0[:halfcells] = p_left
+            p0[halfcells:] = p_right
 
         else:
-            print(f"Warning: Unknown case '{case}'. Using default Sod problem.")
-            p0[:halfcells] = 1.0
-            p0[halfcells:] = 0.1
-            u0[:halfcells] = 0.0
-            u0[halfcells:] = 0.0
-            r0[:halfcells] = 1.0
-            r0[halfcells:] = 0.125
+            raise ValueError(f"Unknown case '{case}' in Euler1D.initialize_condition")
 
         # Convert to conservative variables
         q = self._prim2cons(r0, u0, p0)
@@ -106,7 +126,7 @@ class Euler1D(SIMULATOR):
         q = np.array([r, r * u, r * E])
         return q
 
-    def _prim2flux(self, q):
+    def _conserve2flux(self, q):
         """Compute flux vector for Euler equations"""
         r, u, p = self._cons2prim(q)
 
@@ -173,8 +193,8 @@ class Euler1D(SIMULATOR):
         )
 
         # Compute final flux (vectorized)
-        flux_L = self._prim2flux(q_left)
-        flux_R = self._prim2flux(q_right)
+        flux_L = self._conserve2flux(q_left)
+        flux_R = self._conserve2flux(q_right)
 
         return 0.5 * (flux_L + flux_R) - 0.5 * A_dw
 
@@ -339,6 +359,8 @@ class Euler1D(SIMULATOR):
                 "cfl": float(self.cfl),
                 "beta": float(self.beta),
                 "k": float(self.k),
+                "n_space": int(self.n_space),
+                "dx": float(self.dx),
                 "total_steps": int(self.num_steps),
                 "gamma": float(self.gamma),
             }
