@@ -1,0 +1,24 @@
+defaults:
+  - _self_
+  - override hydra/hydra_logging: none
+  - override hydra/job_logging: none
+
+# Static parameters
+T_top: 0.77       # Fixed top boundary temperature
+T_bottom: 0.22      # Fixed bottom boundary temperature
+T_left: 0.62       # Fixed left boundary temperature
+T_right: 0.09      # Fixed right boundary temperature
+
+# Tunable parameters
+dx: 0.01          # Number of spatial points
+relax: 0.5        # Relaxation factor
+error_threshold: 1e-8    # Error threshold for convergence
+T_init: 0.0         # Initial temperature
+
+# Simulator statics
+record_dt: 10000        # Time interval between recordings [s]
+end_frame: 10     # Simulation end after certain number of frames
+
+# Output configuration
+dump_dir: "sim_res/heat_steady_2d/p76"  # Directory for output files
+verbose: False          # Enable verbose output

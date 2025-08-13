@@ -41,7 +41,7 @@ def find_convergent_cfl(profile, cfl, k, w, tolerance_infity, tolerance_2):
 
             if is_converged:
                 print(f"Convergence achieved between CFL {prev_cfl} and {current_cfl}")
-                best_cfl = prev_cfl  # The larger of the two CFLs that converged
+                best_cfl = cfl_history[-1]  # The larger of the two CFLs that converged
                 converged = True
                 break
             else:
@@ -68,22 +68,22 @@ def find_convergent_cfl(profile, cfl, k, w, tolerance_infity, tolerance_2):
 
 def find_optimal_k(profile, w, tolerance_infity, tolerance_2):
     """
-    在 k ∈ [-1, 1] (步长 0.1) 上网格搜索，并记录每个 k 对应的全部 CFL 试探序列。
+    Grid search on k ∈ [-1, 1] (step size 0.1) and record all CFL exploration sequences for each k.
 
     Returns
     -------
     is_converged_optimal : bool
-        optimal_k + optimal_cfl 那次模拟最终是否收敛。
+        Whether the simulation with optimal_k + optimal_cfl finally converged.
     optimal_param : (float | None, float | None)
-        (optimal_k, optimal_cfl)。若无收敛解均为 None。
+        (optimal_k, optimal_cfl). Both are None if no convergent solution exists.
     optimal_cost_history : list[float] | None
-        optimal_k 对应、且最终收敛的那条 CFL → cost 演化序列 (cost_history)。
-        若无收敛解为 None。
+        The CFL → cost evolution sequence (cost_history) corresponding to optimal_k and finally converged.
+        None if no convergent solution exists.
     param_history : list
     """
     k_values = np.linspace(-1.0, 1.0, 21)
-    param_history = []  # 保存 (k, cfl_history)
-    k_results = []  # 保存每个 k 的关键信息（收敛时）
+    param_history = []  # Store (k, cfl_history)
+    k_results = []  # Store key information for each k (when converged)
 
     for k in k_values:
         k = round(float(k), 1)
@@ -93,26 +93,26 @@ def find_optimal_k(profile, w, tolerance_infity, tolerance_2):
             profile, 1.0, k, w, tolerance_infity, tolerance_2
         )
 
-        # 记录每个 k 的 CFL 探索轨迹
+        # Record CFL exploration trajectory for each k
         param_history.append(one_param_history)
 
-        # 若找到收敛 CFL，就存入结果池
+        # If convergent CFL is found, store in result pool
         if best_cfl is not None:
-            total_cost = sum(cost_history[:-1])  # 计算总代价
+            total_cost = sum(cost_history[:-1])  # Calculate total cost
             k_results.append(
                 {
                     "k": k,
                     "best_cfl": best_cfl,
                     "total_cost": total_cost,
                     "is_converged": is_converged,
-                    "cost_history": cost_history,  # ★ 关键：保存完整 cost_history
+                    "cost_history": cost_history,  # ★ Key: save complete cost_history
                 }
             )
             print(f"k = {k}: Best CFL = {best_cfl}, Total Cost = {total_cost}")
         else:
             print(f"k = {k}: No convergent CFL found")
 
-    # 选出总代价最小的收敛解
+    # Select convergent solution with minimum total cost
     if k_results:
         min_cost_idx = int(np.argmin([r["total_cost"] for r in k_results]))
         opt_rec = k_results[min_cost_idx]
@@ -142,22 +142,22 @@ def find_optimal_k(profile, w, tolerance_infity, tolerance_2):
 
 def find_optimal_w(profile, k, tolerance_infity, tolerance_2):
     """
-    在 w ∈ [0, 2] (步长 0.1)上网格搜索，并记录每个 w 的全部 CFL 试探序列。
+    Grid search on w ∈ [0, 2] (step size 0.1) and record all CFL exploration sequences for each w.
 
     Returns
     -------
     is_converged_optimal : bool
-        optimal_w + optimal_cfl 那次模拟最终是否收敛。
+        Whether the simulation with optimal_w + optimal_cfl finally converged.
     optimal_param : (float | None, float | None)
-        (optimal_w, optimal_cfl)。若无收敛解均为 None。
+        (optimal_w, optimal_cfl). Both are None if no convergent solution exists.
     optimal_cost_history : list[float] | None
-        optimal_w 对应、且最终收敛的那条 CFL → cost 演化序列 (cost_history)。
-        若无收敛解为 None。
+        The CFL → cost evolution sequence (cost_history) corresponding to optimal_w and finally converged.
+        None if no convergent solution exists.
     param_history : list
     """
     w_values = np.linspace(0.0, 2.0, 21)
     param_history = []
-    w_results = []  # 保存每个 w 收敛时的关键信息
+    w_results = []  # Store key information for each w when converged
 
     for w in w_values:
         w = round(float(w), 1)
@@ -167,12 +167,12 @@ def find_optimal_w(profile, k, tolerance_infity, tolerance_2):
             profile, 1.0, k, w, tolerance_infity, tolerance_2
         )
 
-        # 记录每个 w 的 CFL 探索轨迹
+        # Record CFL exploration trajectory for each w
         param_history.append(one_param_history)
 
-        # 若找到收敛 CFL，则收集结果
+        # If convergent CFL is found, collect results
         if best_cfl is not None:
-            total_cost = sum(cost_history[:-1])  # 计算总代价
+            total_cost = sum(cost_history[:-1])  # Calculate total cost
             w_results.append(
                 {
                     "w": w,
@@ -186,7 +186,7 @@ def find_optimal_w(profile, k, tolerance_infity, tolerance_2):
         else:
             print(f"w = {w}: No convergent CFL found")
 
-    # 选出总代价最小的收敛解
+    # Select convergent solution with minimum total cost
     if w_results:
         min_cost_idx = int(np.argmin([r["total_cost"] for r in w_results]))
         opt_rec = w_results[min_cost_idx]

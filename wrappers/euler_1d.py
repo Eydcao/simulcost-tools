@@ -21,7 +21,7 @@ def run_sim_euler_1d(profile, cfl, beta, k):
 
     # Run the simulation if not already done
     print(f"Running new simulation with parameters: cfl={cfl}, beta={beta}, k={k}")
-    cmd = f"python runners/euler_1d.py --config-name={profile} cfl={cfl} beta={beta} k={k}"
+    cmd = f"python costsci_tools/runners/euler_1d.py --config-name={profile} cfl={cfl} beta={beta} k={k}"
     subprocess.run(cmd, shell=True, check=True)
 
     # Load the cost from the meta.json file

@@ -28,7 +28,7 @@ The case key in the config file solver sets different kinds of initial condition
 4. **double_shock** - Two interacting shock waves: $u(x,0) = 1.0 \text{ for } x < L/3, u(x,0) = 0.5 \text{ for } L/3 \leq x < 2L/3, u(x,0) = 0.1 \text{ for } x \geq 2L/3$
 5. **blast** - Interacting blast waves with Gaussian profiles: $u(x,0) = \exp\left(-\frac{(x-L/4)^2}{2\sigma^2}\right) + 0.8\cdot\exp\left(-\frac{(x-3L/4)^2}{2\sigma^2}\right)$, where $\sigma = L/20$
 
-The simulated results is considered to be correct if both the norms $L^2 \leq 12.5e-3$ and $L^{\infty} \leq 12.5e-2$ compared to reference solution, and the solution satisfy the below convergence criteria:
+The simulated results is considered to be correct if both the norms $L^2 \leq 5e-3$ and $L^{\infty} \leq 5e-2$ compared to reference solution, and the solution satisfy the below convergence criteria:
 
 1. Mass conservation: the total integral of the solution remains constant over time
 2. Energy non-increasing: the total energy $\int u^2 dx$ should not increase between consecutive time steps

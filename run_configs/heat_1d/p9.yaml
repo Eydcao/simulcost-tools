@@ -3,7 +3,7 @@ defaults:
   - override hydra/hydra_logging: none
   - override hydra/job_logging: none
 
-# Physical parameters
+# Static parameters
 L: 0.12                # Wall thickness [m]
 k: 0.52                # Thermal conductivity [W/m-K]
 h: 0.18               # Convection coefficient [W/m²-K]
@@ -12,7 +12,7 @@ cp: 878            # Specific heat [J/kg-K]
 T_inf: 8          # Ambient temperature [K]
 T_init: 28         # Initial temperature [K]
 
-# Numerical parameters
+# Tunable parameters
 n_space: 1000          # Number of spatial points
 cfl: 1.0              # CFL number for stability
 
