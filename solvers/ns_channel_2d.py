@@ -6,6 +6,7 @@ from scipy.sparse.linalg import spsolve
 import os
 import json
 import h5py
+import warnings
 
 OUTER_ITERATIONS = 10000
 EPS = 1e-12
@@ -209,10 +210,10 @@ class NSChannel2D():
             self.node_type[:, -1] = "outlet"
             # Top wall
             self.node_type[-1, :] = "top-wall"
-            self.node_type[-wall_height:, :50] = "top-wall"
+            self.node_type[-wall_height:, :wall_width] = "top-wall"
             # Bottom wall
             self.node_type[0, :] = "bottom-wall"
-            self.node_type[:wall_height, :50] = "bottom-wall"
+            self.node_type[:wall_height, :wall_width] = "bottom-wall"
             
             # Apply boundary conditions for u
             for i in range(my + 2):
@@ -390,7 +391,7 @@ class NSChannel2D():
     
     def post_process(self):
         cost = (self.mesh_x * self.mesh_y) * self.num_steps
-        meta = {"cost": cost, "num_steps": self.num_steps, "converged": int(self.converged)}  # ➜ 新增
+        meta = {"cost": cost, "num_steps": self.num_steps, "converged": int(self.converged)}  # ➜ Added
         with open(os.path.join(self.dump_dir, "meta.json"), "w") as f:
             json.dump(meta, f, indent=4)
 
@@ -423,14 +424,28 @@ class NSChannel2D():
             self.u_diag_coeff[self.node_type == "bottom-wall"] = 1e30
             self.u_diag_coeff = np.maximum(self.u_diag_coeff, self.eps) / self.omega_u
             for _ in range(self.iter_v):
-                self.u[i_range, j_range] = (1 - self.omega_u) * self.u_old[i_range, j_range] + (1 / self.u_diag_coeff[i_range, j_range]) * (
-                    self.east_coeff[i_range, j_range] * self.u[i_range, j_range.start+1:j_range.stop+1] +
-                    self.west_coeff[i_range, j_range] * self.u[i_range, j_range.start-1:j_range.stop-1] +
-                    self.north_coeff[i_range, j_range] * self.u[i_range.start+1:i_range.stop+1, j_range] +
-                    self.south_coeff[i_range, j_range] * self.u[i_range.start-1:i_range.stop-1, j_range] +
-                    self.dy * (self.pressure[i_range, j_range] - self.pressure[i_range, j_range.start+1:j_range.stop+1])
-                )
-                self.u[:, -1] = self.u[:, -2]
+                try:
+                    # Turn NumPy floating warnings into exceptions for this block
+                    with np.errstate(over='raise', divide='raise', invalid='raise', under='ignore'):
+                        self.u[i_range, j_range] = (1 - self.omega_u) * self.u_old[i_range, j_range] + (1 / self.u_diag_coeff[i_range, j_range]) * (
+                            self.east_coeff[i_range, j_range] * self.u[i_range, j_range.start+1:j_range.stop+1] +
+                            self.west_coeff[i_range, j_range] * self.u[i_range, j_range.start-1:j_range.stop-1] +
+                            self.north_coeff[i_range, j_range] * self.u[i_range.start+1:i_range.stop+1, j_range] +
+                            self.south_coeff[i_range, j_range] * self.u[i_range.start-1:i_range.stop-1, j_range] +
+                            self.dy * (self.pressure[i_range, j_range] - self.pressure[i_range, j_range.start+1:j_range.stop+1])
+                        )
+                        self.u[:, -1] = self.u[:, -2]
+                except FloatingPointError as e:
+                    print(f"[Overflow caught] U-iteration failed at outer iter {k}: {e}")
+                    # Minimal diagnostics to help debugging:
+                    try:
+                        ec = self.east_coeff[i_range, j_range]
+                        block_u = self.u[i_range, j_range]
+                        print(f"max|east_coeff|={np.nanmax(np.abs(ec)):.3e}, max|u|={np.nanmax(np.abs(block_u)):.3e}")
+                    except Exception:
+                        pass
+                    # Stop early; caller can lower omega_u or check BCs.
+                    return False
             # V-momentum coefficients
             i_range_v = slice(1, my)
             j_range_v = slice(1, mx + 1)
@@ -446,17 +461,29 @@ class NSChannel2D():
             self.v_diag_coeff[self.node_type == "bottom-wall"] = 1e30
             self.v_diag_coeff = np.maximum(self.v_diag_coeff, self.eps) / self.omega_v
             for _ in range(self.iter_v):
-                v_new = self.v.copy()
-                self.v[i_range_v, j_range_v] = (1 - self.omega_v) * self.v_old[i_range_v, j_range_v] + (1 / self.v_diag_coeff[i_range_v, j_range_v]) * (
-                    self.east_coeff[i_range_v, j_range_v] * self.v[i_range_v, j_range_v.start+1:j_range_v.stop+1] +
-                    self.west_coeff[i_range_v, j_range_v] * self.v[i_range_v, j_range_v.start-1:j_range_v.stop-1] +
-                    self.north_coeff[i_range_v, j_range_v] * self.v[i_range_v.start+1:i_range_v.stop+1, j_range_v] +
-                    self.south_coeff[i_range_v, j_range_v] * self.v[i_range_v.start-1:i_range_v.stop-1, j_range_v] +
-                    self.dx * (self.pressure[i_range_v, j_range_v] - self.pressure[i_range_v.start+1:i_range_v.stop+1, j_range_v])
-                )
-                res_v_inner = np.linalg.norm(self.v - v_new) / (np.linalg.norm(v_new) + 1e-12)
-                if res_v_inner < self.res_iter_v_threshold(k):
-                    break
+                try:
+                    with np.errstate(over='raise', divide='raise', invalid='raise', under='ignore'):
+                        v_new = self.v.copy()
+                        self.v[i_range_v, j_range_v] = (1 - self.omega_v) * self.v_old[i_range_v, j_range_v] + (1 / self.v_diag_coeff[i_range_v, j_range_v]) * (
+                            self.east_coeff[i_range_v, j_range_v] * self.v[i_range_v, j_range_v.start+1:j_range_v.stop+1] +
+                            self.west_coeff[i_range_v, j_range_v] * self.v[i_range_v, j_range_v.start-1:j_range_v.stop-1] +
+                            self.north_coeff[i_range_v, j_range_v] * self.v[i_range_v.start+1:i_range_v.stop+1, j_range_v] +
+                            self.south_coeff[i_range_v, j_range_v] * self.v[i_range_v.start-1:i_range_v.stop-1, j_range_v] +
+                            self.dx * (self.pressure[i_range_v, j_range_v] - self.pressure[i_range_v.start+1:i_range_v.stop+1, j_range_v])
+                        )
+                    res_v_inner = np.linalg.norm(self.v - v_new) / (np.linalg.norm(v_new) + 1e-12)
+                    if res_v_inner < self.res_iter_v_threshold(k):
+                        break
+                except FloatingPointError as e:
+                    print(f"[Overflow caught] V-iteration failed at outer iter {k}: {e}")
+                    # Diagnostics for V-sweep
+                    try:
+                        ec = self.east_coeff[i_range_v, j_range_v]
+                        block_v = self.v[i_range_v, j_range_v]
+                        print(f"max|east_coeff|={np.nanmax(np.abs(ec)):.3e}, max|v|={np.nanmax(np.abs(block_v)):.3e}")
+                    except Exception:
+                        pass
+                    return False
             # Pressure correction coefficients
             i_range_p = slice(1, my + 1)
             j_range_p = slice(1, mx + 1)
@@ -516,3 +543,5 @@ class NSChannel2D():
         if self.verbose:
             print(f"Total runtime: {end_time - start_time:.2f} seconds")
         self.post_process()
+        
+        return True

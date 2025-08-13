@@ -20,13 +20,34 @@ def run_sim_ns_channel_2d(profile, boundary_type, mesh_x, mesh_y, omega_u, omega
 
     # Run the simulation if the directory or meta.json file does not exist
     cmd = f"python costsci_tools/runners/ns_channel_2d.py --config-name={profile} mesh_x={mesh_x} mesh_y={mesh_y} omega_u={omega_u} omega_v={omega_v} omega_p={omega_p} diff_u_threshold={diff_u_threshold} diff_v_threshold={diff_v_threshold} res_iter_v_threshold={res_iter_v_threshold} boundary_condition={boundary_type}"
-    subprocess.run(cmd, shell=True, check=True)
+    result = subprocess.run(cmd, shell=True, capture_output=True, text=True)
+    
+    # Check if simulation failed
+    if result.returncode != 0:
+        print(f"Simulation failed with return code {result.returncode}")
+        print(f"Error output: {result.stderr}")
+        # Return a high cost to indicate failure
+        return float('inf'), 0
+
+    # Check if meta.json file was created after simulation
+    if not os.path.exists(meta_file_path):
+        print(f"Warning: meta.json not found at {meta_file_path} after simulation")
+        # Return a high cost to indicate failure
+        return float('inf'), 0
 
     # Load the cost from the meta.json file
-    with open(meta_file_path, "r") as f:
-        meta = json.load(f)
-
-    return meta["cost"], meta["num_steps"]
+    try:
+        with open(meta_file_path, "r") as f:
+            meta = json.load(f)
+        
+        if "cost" not in meta or "num_steps" not in meta:
+            print(f"Warning: meta.json missing required keys at {meta_file_path}")
+            return float('inf'), 0
+            
+        return meta["cost"], meta["num_steps"]
+    except (json.JSONDecodeError, IOError) as e:
+        print(f"Error reading meta.json at {meta_file_path}: {e}")
+        return float('inf'), 0
 
 
 def get_res_ns_channel_2d(profile, boundary_type, mesh_x, mesh_y, omega_u, omega_v, omega_p, diff_u_threshold, diff_v_threshold, res_iter_v_threshold):
@@ -39,21 +60,28 @@ def get_res_ns_channel_2d(profile, boundary_type, mesh_x, mesh_y, omega_u, omega
     files = [f for f in os.listdir(dir_path) if f.startswith("res_") and f.endswith(".h5")]
     if not files:
         # Trigger a simulation run if no result files are found
-        run_sim_ns_channel_2d(profile, boundary_type, mesh_x, mesh_y, omega_u, omega_v, omega_p, diff_u_threshold, diff_v_threshold, res_iter_v_threshold)
+        cost, num_steps = run_sim_ns_channel_2d(profile, boundary_type, mesh_x, mesh_y, omega_u, omega_v, omega_p, diff_u_threshold, diff_v_threshold, res_iter_v_threshold)
+        if cost == float('inf'):
+            # Simulation failed, return None to indicate failure
+            return None, None, None
         files = [f for f in os.listdir(dir_path) if f.startswith("res_") and f.endswith(".h5")]
         if not files:
-            raise FileNotFoundError(f"No result files found in {dir_path} after triggering a simulation run.")
+            print(f"Warning: No result files found in {dir_path} after triggering a simulation run.")
+            return None, None, None
 
     files.sort(key=lambda x: int(x.split("_")[1].split(".")[0]))
     latest_file = files[-1]
 
     file_path = os.path.join(dir_path, latest_file)
-    with h5py.File(file_path, "r") as f:
-        U = np.array(f["u"])
-        V = np.array(f["v"])
-        P = np.array(f["p"])
-
-    return U, V, P
+    try:
+        with h5py.File(file_path, "r") as f:
+            U = np.array(f["u"])
+            V = np.array(f["v"])
+            P = np.array(f["p"])
+        return U, V, P
+    except Exception as e:
+        print(f"Error reading result file {file_path}: {e}")
+        return None, None, None
 
 def compute_metrics(u, v, p, length, breadth, mass_tolerance):
     """Compute physical metrics for NS solution."""
@@ -106,6 +134,11 @@ def compare_res_ns_channel_2d(
     """
     u1, v1, p1 = get_res_ns_channel_2d(profile1, boundary_type1, mesh_x1, mesh_y1, omega_u1, omega_v1, omega_p1, diff_u_threshold1, diff_v_threshold1, res_iter_v_threshold1)
     u2, v2, p2 = get_res_ns_channel_2d(profile2, boundary_type2, mesh_x2, mesh_y2, omega_u2, omega_v2, omega_p2, diff_u_threshold2, diff_v_threshold2, res_iter_v_threshold2)
+    
+    # Check if either simulation failed
+    if u1 is None or u2 is None:
+        print("One or both simulations failed, cannot compare results")
+        return False, float('inf'), float('inf'), float('inf'), False, False
 
     # Compute RMSE for velocity and pressure
     u2_interp = interpolate_field(u2, u2.shape, u1.shape, axis_offsets=(0.0, 0.5))

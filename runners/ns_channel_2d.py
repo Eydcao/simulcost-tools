@@ -19,8 +19,10 @@ def main(cfg):
         cfg=cfg,
         verbose=cfg.verbose
     )
-    solver.run()
-
+    status = solver.run()
+    if not status:
+        print("Simulation failed! See logs for details.")
+        return
     print("Simulation completed successfully!")
 
 
