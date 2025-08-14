@@ -23,7 +23,7 @@ def find_convergent_cfl(profile, cfl, beta, k, n_space, tolerance_rmse, multipli
         print(f"\nRunning simulation with CFL = {current_cfl}, beta = {beta}, k = {k}, n_space = {n_space}")
 
         # Run simulation and load results
-        cost_i = run_sim_euler_1d(profile, current_cfl, beta, k, n_space)
+        cost_i = run_sim_euler_1d(profile=profile, cfl=current_cfl, beta=beta, k=k, n_space=n_space)
         cost_history.append(cost_i)
         cfl_history.append(current_cfl)
         param_history.append({"cfl": current_cfl, "beta": beta, "k": k, "n_space": n_space})
@@ -34,17 +34,17 @@ def find_convergent_cfl(profile, cfl, beta, k, n_space, tolerance_rmse, multipli
 
             # Compare with previous results
             is_converged, metrics1, metrics2, rmse = compare_res_euler_1d(
-                profile,
-                prev_cfl,
-                beta,
-                k,
-                profile,
-                current_cfl,
-                beta,
-                k,
-                tolerance_rmse,
-                n_space,
-                n_space,
+                profile1=profile,
+                cfl1=prev_cfl,
+                beta1=beta,
+                k1=k,
+                profile2=profile,
+                cfl2=current_cfl,
+                beta2=beta,
+                k2=k,
+                rmse_tolerance=tolerance_rmse,
+                n_space1=n_space,
+                n_space2=n_space
             )
 
             if is_converged:
@@ -262,7 +262,7 @@ def find_convergent_n_space(profile, cfl, n_space, beta, k, tolerance_rmse, mult
         print(f"\nRunning simulation with n_space = {current_n_space}, CFL = {cfl}, beta = {beta}, k = {k}")
 
         # Run simulation with fixed CFL
-        cost_i = run_sim_euler_1d(profile, cfl, beta, k, current_n_space)
+        cost_i = run_sim_euler_1d(profile=profile, cfl=cfl, beta=beta, k=k, n_space=current_n_space)
         cost_history.append(cost_i)
         n_space_history.append(current_n_space)
         param_history.append({"n_space": current_n_space, "cfl": cfl, "beta": beta, "k": k})
@@ -273,17 +273,17 @@ def find_convergent_n_space(profile, cfl, n_space, beta, k, tolerance_rmse, mult
 
             # Compare with previous results
             is_converged, metrics1, metrics2, rmse = compare_res_euler_1d(
-                profile,
-                cfl,
-                beta,
-                k,
-                profile,
-                cfl,
-                beta,
-                k,
-                tolerance_rmse,
-                prev_n_space,
-                current_n_space,
+                profile1=profile,
+                cfl1=cfl,
+                beta1=beta,
+                k1=k,
+                profile2=profile,
+                cfl2=cfl,
+                beta2=beta,
+                k2=k,
+                rmse_tolerance=tolerance_rmse,
+                n_space1=prev_n_space,
+                n_space2=current_n_space
             )
 
             if is_converged:
