@@ -325,9 +325,6 @@ def grid_search_diff_v_threshold(profile, boundary_condition, mesh_x, mesh_y, om
         best_diff_v_threshold = param_history[-1]["diff_v_threshold"]
     return bool(converged), best_diff_v_threshold, cost_history, param_history
 
-<<<<<<< HEAD
-def grid_search_res_iter_v_threshold(profile, mesh_x, mesh_y, omega_u, omega_v, omega_p, diff_u_threshold, diff_v_threshold, res_iter_v_values, length, breadth, mass_tolerance, u_rmse_tolerance, v_rmse_tolerance, p_rmse_tolerance):
-=======
 
 # def find_optimal_res_iter_v_threshold(profile, mesh_x, mesh_y, omega_u, omega_v, omega_p, diff_u_threshold, diff_v_threshold, initial_res_iter_v_threshold, length, breadth, mass_tolerance, u_rmse_tolerance, v_rmse_tolerance, p_rmse_tolerance, max_iter):
 #     """Decrease res_iter_v_threshold by factors of 10 until convergence."""
@@ -380,7 +377,6 @@ def grid_search_res_iter_v_threshold(profile, mesh_x, mesh_y, omega_u, omega_v, 
 
 
 def grid_search_res_iter_v_threshold(profile, boundary_condition, mesh_x, mesh_y, omega_u, omega_v, omega_p, diff_u_threshold, diff_v_threshold, res_iter_v_values, length, breadth, mass_tolerance, u_rmse_tolerance, v_rmse_tolerance, p_rmse_tolerance):
->>>>>>> bba370b (WIP: ns_channel_2d changes)
     param_history = []
     cost_history = []
     converged = False
