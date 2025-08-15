@@ -19,6 +19,7 @@ def run_sim_ns_channel_2d(profile, boundary_type, mesh_x, mesh_y, omega_u, omega
                 return meta["cost"], meta["num_steps"]
 
     # Run the simulation if the directory or meta.json file does not exist
+<<<<<<< HEAD
     cmd = f"python costsci_tools/runners/ns_channel_2d.py --config-name={profile} mesh_x={mesh_x} mesh_y={mesh_y} omega_u={omega_u} omega_v={omega_v} omega_p={omega_p} diff_u_threshold={diff_u_threshold} diff_v_threshold={diff_v_threshold} res_iter_v_threshold={res_iter_v_threshold} boundary_condition={boundary_type}"
     result = subprocess.run(cmd, shell=True, capture_output=True, text=True)
     
@@ -34,6 +35,10 @@ def run_sim_ns_channel_2d(profile, boundary_type, mesh_x, mesh_y, omega_u, omega
         print(f"Warning: meta.json not found at {meta_file_path} after simulation")
         # Return a high cost to indicate failure
         return float('inf'), 0
+=======
+    cmd = f"python runners/ns_channel_2d.py --config-name={profile} mesh_x={mesh_x} mesh_y={mesh_y} omega_u={omega_u} omega_v={omega_v} omega_p={omega_p} diff_u_threshold={diff_u_threshold} diff_v_threshold={diff_v_threshold} res_iter_v_threshold={res_iter_v_threshold} boundary_condition={boundary_type}"
+    subprocess.run(cmd, shell=True, check=True)
+>>>>>>> bba370b (WIP: ns_channel_2d changes)
 
     # Load the cost from the meta.json file
     try:
