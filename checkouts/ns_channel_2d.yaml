@@ -1,0 +1,264 @@
+# NS Channel 2D Solver Checkout Configuration
+# This file centralizes all parameter settings for both documentation and dummy solution generation
+
+solver_info:
+  name: "NS Channel 2D"
+  numerical_method: "Steady incompressible Navier–Stokes (SIMPLE) on staggered FVM grid"
+  reference: "Patankar (1980), standard channel benchmarks"
+
+task_distribution:
+  strategy: "benchmark"
+  total_individuals: 12600
+  description: "50 profiles × 7 target parameters × 3 precision levels × 12 non-target combos = 2520 tasks"
+
+precision_levels:
+  high:
+    mass_tolerance: 5.0e-05
+    u_rmse_tolerance: 0.01
+    v_rmse_tolerance: 0.01
+    p_rmse_tolerance: 0.01
+    max_iter: 30
+    description: "Most stringent convergence criteria"
+  medium:
+    mass_tolerance: 0.0001
+    u_rmse_tolerance: 0.03
+    v_rmse_tolerance: 0.03
+    p_rmse_tolerance: 0.03
+    max_iter: 20
+    description: "Moderate convergence criteria"
+  low:
+    mass_tolerance: 0.0005
+    u_rmse_tolerance: 0.05
+    v_rmse_tolerance: 0.05
+    p_rmse_tolerance: 0.05
+    max_iter: 15
+    description: "Relaxed convergence criteria"
+
+profiles:
+  num_profiles: 50
+  active_profiles: ["p1", "p2", "p3", "p4", "p5", "p6", "p7", "p8", "p9", "p10", "p11", "p12", "p13", "p14", "p15", "p16", "p17", "p18", "p19", "p20", "p21", "p22", "p23", "p24", "p25", "p26", "p27", "p28", "p29", "p30", "p31", "p32", "p33", "p34", "p35", "p36", "p37", "p38", "p39", "p40", "p41", "p42", "p43", "p44", "p45", "p46", "p47", "p48", "p49", "p50"]
+  geometry_defaults:
+    length: 20.0
+    breadth: 1.0
+    mu: 0.01
+    rho: 1.0
+  # Profile descriptions based on boundary conditions and geometry
+  p1:
+    boundary_condition: "channel_flow"
+    description: "Standard channel flow with uniform inlet"
+    reynolds_range: "Low to moderate"
+  p2:
+    boundary_condition: "channel_flow"
+    description: "Channel flow with parabolic inlet"
+    reynolds_range: "Low to moderate"
+  p3:
+    boundary_condition: "channel_flow"
+    description: "Channel flow with modified inlet conditions"
+    reynolds_range: "Moderate"
+  p4:
+    boundary_condition: "channel_flow"
+    description: "Channel flow with varying inlet profiles"
+    reynolds_range: "Moderate to high"
+  p5:
+    boundary_condition: "channel_flow"
+    description: "Channel flow with complex inlet conditions"
+    reynolds_range: "High"
+  p6:
+    boundary_condition: "back_stair_flow"
+    description: "Backward-facing step flow"
+    reynolds_range: "Moderate"
+  p7:
+    boundary_condition: "back_stair_flow"
+    description: "Backward-facing step with modified geometry"
+    reynolds_range: "Moderate to high"
+  p8:
+    boundary_condition: "expansion_channel"
+    description: "Expansion channel flow"
+    reynolds_range: "Low to moderate"
+  p9:
+    boundary_condition: "expansion_channel"
+    description: "Expansion channel with modified expansion ratio"
+    reynolds_range: "Moderate"
+  p10:
+    boundary_condition: "cube_driven_flow"
+    description: "Cube-driven cavity flow"
+    reynolds_range: "Low"
+
+# Parameter configurations for each target parameter
+target_parameters:
+  mesh_x:
+    description: "Number of grid cells in x-direction - determines spatial resolution along channel length"
+    search_type: "iterative+0-shot"
+    initial_value: 256
+    multiplication_factor: 2
+    max_iteration_num: 6
+    candidates_by_precision:
+      low:
+        mesh_x: [96, 128, 160]
+      medium:
+        mesh_x: [192, 256, 320]
+      high:
+        mesh_x: [384, 448, 512]
+    non_target_parameters:
+      mesh_y: 64
+      omega_u: 0.6
+      omega_v: 0.6
+      omega_p: 0.3
+      diff_u_threshold: 1.0e-07
+      diff_v_threshold: 1.0e-07
+      res_iter_v_threshold: "exp_decay"
+
+  mesh_y:
+    description: "Number of grid cells in y-direction - determines spatial resolution across channel width"
+    search_type: "iterative+0-shot"
+    initial_value: 64
+    multiplication_factor: 2
+    max_iteration_num: 6
+    candidates_by_precision:
+      low:
+        mesh_y: [24, 32, 40]
+      medium:
+        mesh_y: [48, 64, 80]
+      high:
+        mesh_y: [96, 112, 128]
+    non_target_parameters:
+      mesh_x: 256
+      omega_u: 0.6
+      omega_v: 0.6
+      omega_p: 0.3
+      diff_u_threshold: 1.0e-07
+      diff_v_threshold: 1.0e-07
+      res_iter_v_threshold: "exp_decay"
+
+  omega_u:
+    description: "Under-relaxation factor for u-velocity - controls convergence rate and stability"
+    search_type: "0-shot"
+    search_range: [0.1, 1.0]
+    search_range_slice_num: 10
+    max_iteration_num: 5
+    typical_values: [0.3, 0.5, 0.7, 0.9]
+    non_target_parameters:
+      mesh_x: 256
+      mesh_y: 64
+      omega_v: 0.6
+      omega_p: 0.3
+      diff_u_threshold: 1.0e-07
+      diff_v_threshold: 1.0e-07
+      res_iter_v_threshold: "exp_decay"
+
+  omega_v:
+    description: "Under-relaxation factor for v-velocity - controls convergence rate and stability"
+    search_type: "0-shot"
+    search_range: [0.1, 1.0]
+    search_range_slice_num: 10
+    max_iteration_num: 5
+    typical_values: [0.3, 0.5, 0.7, 0.9]
+    non_target_parameters:
+      mesh_x: 256
+      mesh_y: 64
+      omega_u: 0.6
+      omega_p: 0.3
+      diff_u_threshold: 1.0e-07
+      diff_v_threshold: 1.0e-07
+      res_iter_v_threshold: "exp_decay"
+
+  omega_p:
+    description: "Under-relaxation factor for pressure - controls pressure correction convergence"
+    search_type: "0-shot"
+    search_range: [0.1, 0.5]
+    search_range_slice_num: 8
+    max_iteration_num: 5
+    typical_values: [0.1, 0.2, 0.3, 0.4]
+    non_target_parameters:
+      mesh_x: 256
+      mesh_y: 64
+      omega_u: 0.6
+      omega_v: 0.6
+      diff_u_threshold: 1.0e-07
+      diff_v_threshold: 1.0e-07
+      res_iter_v_threshold: "exp_decay"
+
+  diff_u_threshold:
+    description: "Convergence threshold for u-velocity difference between iterations"
+    search_type: "0-shot"
+    search_range: [1e-07, 1e-03]
+    search_range_slice_num: 5
+    max_iteration_num: 5
+    typical_values: [1.0e-06, 1.0e-07, 1.0e-08]
+    diff_candidates_by_precision:
+      low:
+        diff_u_threshold: [1.0e-06, 5.0e-07, 1.0e-07]
+      medium:
+        diff_u_threshold: [1.0e-07, 5.0e-08, 1.0e-08]
+      high:
+        diff_u_threshold: [1.0e-08, 5.0e-09, 1.0e-09]
+    non_target_parameters:
+      mesh_x: 256
+      mesh_y: 64
+      omega_u: 0.6
+      omega_v: 0.6
+      omega_p: 0.3
+      diff_v_threshold: 1.0e-07
+      res_iter_v_threshold: "exp_decay"
+
+  diff_v_threshold:
+    description: "Convergence threshold for v-velocity difference between iterations"
+    search_type: "0-shot"
+    search_range: [1e-07, 1e-03]
+    search_range_slice_num: 5
+    max_iteration_num: 5
+    typical_values: [1.0e-06, 1.0e-07, 1.0e-08]
+    diff_candidates_by_precision:
+      low:
+        diff_v_threshold: [1.0e-06, 5.0e-07, 1.0e-07]
+      medium:
+        diff_v_threshold: [1.0e-07, 5.0e-08, 1.0e-08]
+      high:
+        diff_v_threshold: [1.0e-08, 5.0e-09, 1.0e-09]
+    non_target_parameters:
+      mesh_x: 256
+      mesh_y: 64
+      omega_u: 0.6
+      omega_v: 0.6
+      omega_p: 0.3
+      diff_u_threshold: 1.0e-07
+      res_iter_v_threshold: "exp_decay"
+
+  res_iter_v_threshold:
+    description: "Residual threshold for inner v-velocity iterations - can be fixed value or exp_decay"
+    search_type: "0-shot"
+    search_range: [1e-07, 1e-03]
+    search_range_slice_num: 5
+    max_iteration_num: 5
+    typical_values: [1.0e-06, 1.0e-07, 1.0e-08]
+    schedule_options: ["exp_decay", "linear_decay", 1.0e-04, 1.0e-05]
+    non_target_parameters:
+      mesh_x: 256
+      mesh_y: 64
+      omega_u: 0.6
+      omega_v: 0.6
+      omega_p: 0.3
+      diff_u_threshold: 1.0e-07
+      diff_v_threshold: 1.0e-07
+
+# Additional metadata for analysis and documentation
+analysis_metadata:
+  convergence_criteria:
+    mass_conservation: "Primary convergence check based on mass balance"
+    velocity_rmse: "Secondary convergence check for velocity field accuracy"
+    pressure_rmse: "Secondary convergence check for pressure field accuracy"
+  
+  parameter_importance:
+    critical: ["mesh_x", "mesh_y", "omega_p"]
+    important: ["omega_u", "omega_v"]
+    secondary: ["diff_u_threshold", "diff_v_threshold", "res_iter_v_threshold"]
+  
+  optimization_strategy:
+    mesh_parameters: "Iterative refinement for spatial convergence"
+    relaxation_factors: "Grid search for optimal convergence rate"
+    thresholds: "Precision-based selection for accuracy vs. cost trade-off"
+  
+  expected_outcomes:
+    convergence_rate: "60-90% depending on precision level and profile"
+    computational_cost: "Varies from 10^3 to 10^6 operations per task"
+    parameter_sensitivity: "Mesh parameters most sensitive, thresholds least sensitive"

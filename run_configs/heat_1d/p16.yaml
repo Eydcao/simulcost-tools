@@ -4,20 +4,20 @@ defaults:
   - override hydra/job_logging: none
 
 # Static parameters
-L: 0.181                # Wall thickness [m]
-k: 0.82                # Thermal conductivity [W/m-K]
-h: 61.53               # Convection coefficient [W/m²-K]
-rho: 1871           # Density [kg/m³]
-cp: 961            # Specific heat [J/kg-K]
-T_inf: 7          # Ambient temperature [K]
-T_init: 29         # Initial temperature [K]
+L: 0.122                # Wall thickness [m]
+k: 0.52                # Thermal conductivity [W/m-K]
+h: 0.13               # Convection coefficient [W/m²-K]
+rho: 1636           # Density [kg/m³]
+cp: 863            # Specific heat [J/kg-K]
+T_inf: 1          # Ambient temperature [K]
+T_init: 27         # Initial temperature [K]
 
 # Tunable parameters
 n_space: 1000          # Number of spatial points
 cfl: 1.0              # CFL number for stability
 
 # Simulator statics
-record_dt: 50        # Time interval between recordings [s]
+record_dt: 10.0        # Time interval between recordings [s]
 end_frame: 24        # Simulation end after certain number of frames
 
 # Output configuration
