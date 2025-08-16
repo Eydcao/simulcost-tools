@@ -1,0 +1,114 @@
+{
+  "metadata": {
+    "solver": "ns_channel_2d",
+    "description": "Failed to converge parameter optimization tasks",
+    "total_tasks": 1
+  },
+  "tasks": [
+    {
+      "solver": "ns_channel_2d",
+      "target_parameter": "mesh_x",
+      "profile": "p1",
+      "precision_level": "high",
+      "precision_config": {
+        "mass_tolerance": 1e-07,
+        "u_rmse_tolerance": 0.005,
+        "v_rmse_tolerance": 0.005,
+        "p_rmse_tolerance": 0.005,
+        "max_iter": 50
+      },
+      "target_config": {
+        "initial_value": 64,
+        "multiplication_factor": 2,
+        "max_iteration_num": 6,
+        "search_range": null,
+        "search_range_slice_num": null,
+        "schedule_options": null
+      },
+      "non_target_parameters": {
+        "omega_u": 0.6,
+        "omega_v": 0.6,
+        "omega_p": 0.3,
+        "diff_u_threshold": 1e-07,
+        "diff_v_threshold": 1e-07,
+        "res_iter_v_threshold": "exp_decay",
+        "mesh_y": 6
+      },
+      "results": {
+        "converged": false,
+        "optimal_parameter_value": 2048,
+        "total_computational_cost": 58217088,
+        "cost_history": [
+          25728,
+          90624,
+          362496,
+          1637376,
+          8374272,
+          47726592
+        ],
+        "parameter_history": [
+          {
+            "mesh_x": 64,
+            "mesh_y": 6,
+            "omega_u": 0.6,
+            "omega_v": 0.6,
+            "omega_p": 0.3,
+            "diff_u_threshold": 1e-07,
+            "diff_v_threshold": 1e-07,
+            "res_iter_v_threshold": "exp_decay"
+          },
+          {
+            "mesh_x": 128,
+            "mesh_y": 6,
+            "omega_u": 0.6,
+            "omega_v": 0.6,
+            "omega_p": 0.3,
+            "diff_u_threshold": 1e-07,
+            "diff_v_threshold": 1e-07,
+            "res_iter_v_threshold": "exp_decay"
+          },
+          {
+            "mesh_x": 256,
+            "mesh_y": 6,
+            "omega_u": 0.6,
+            "omega_v": 0.6,
+            "omega_p": 0.3,
+            "diff_u_threshold": 1e-07,
+            "diff_v_threshold": 1e-07,
+            "res_iter_v_threshold": "exp_decay"
+          },
+          {
+            "mesh_x": 512,
+            "mesh_y": 6,
+            "omega_u": 0.6,
+            "omega_v": 0.6,
+            "omega_p": 0.3,
+            "diff_u_threshold": 1e-07,
+            "diff_v_threshold": 1e-07,
+            "res_iter_v_threshold": "exp_decay"
+          },
+          {
+            "mesh_x": 1024,
+            "mesh_y": 6,
+            "omega_u": 0.6,
+            "omega_v": 0.6,
+            "omega_p": 0.3,
+            "diff_u_threshold": 1e-07,
+            "diff_v_threshold": 1e-07,
+            "res_iter_v_threshold": "exp_decay"
+          },
+          {
+            "mesh_x": 2048,
+            "mesh_y": 6,
+            "omega_u": 0.6,
+            "omega_v": 0.6,
+            "omega_p": 0.3,
+            "diff_u_threshold": 1e-07,
+            "diff_v_threshold": 1e-07,
+            "res_iter_v_threshold": "exp_decay"
+          }
+        ]
+      }
+    }
+  ]
+}
