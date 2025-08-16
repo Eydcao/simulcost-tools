@@ -21,7 +21,7 @@ def run_sim_heat_1d(profile, cfl, n_space):
                 return meta["cost"]
 
     # Run the simulation if not already done
-    cmd = f"python runners/heat_1d.py  --config-name={profile} cfl={cfl} n_space={n_space}"
+    cmd = f"python costsci_tools/runners/heat_1d.py  --config-name={profile} cfl={cfl} n_space={n_space}"
     subprocess.run(cmd, shell=True, check=True, env=env)
 
     # Load the cost from the meta.json file
