@@ -2,17 +2,17 @@ import numpy as np
 import re
 from pathlib import Path
 
-# fix np random seed
+# Fix np random seed
 np.random.seed(42)
 
 
-def create_heat1d_profiles(num_profiles, base_profile_path, solver_name):
+def create_heat_steady_2d_profiles(boundary_configs, base_profile_path):
     """
-    Create multiple random Heat1D profiles based on the p1 base profile.
+    Create multiple Heat Steady 2D profiles based on the p1 base profile.
     Preserves comments and formatting from the base profile.
 
     Args:
-        num_profiles: Number of random profiles to generate
+        boundary_configs: List of dictionaries with boundary condition configurations
         base_profile_path: Path to the base p1.yaml file
 
     Returns:
@@ -29,28 +29,30 @@ def create_heat1d_profiles(num_profiles, base_profile_path, solver_name):
 
     generated_paths = []
 
-    # Generate random profiles
+    num_profiles = len(boundary_configs)
+
+    # Generate profiles
     for i in range(num_profiles):
         profile_name = f"p{i+2}"  # p2, p3, etc.
 
-        # Generate random parameters
+        # Get configuration for this profile
+        config = boundary_configs[i]
 
-        # Create parameter dictionary with random values
-        random_params = {
-            "T_top": round(np.random.uniform(0.0, 1.0), 2),
-            "T_bottom": round(np.random.uniform(0.0, 1.0), 2),
-            "T_left": round(np.random.uniform(0.0, 1.0), 2),
-            "T_right": round(np.random.uniform(0.0, 1.0), 2),
+        # Set parameters to update
+        update_params = {
+            "T_top": config["T_top"],
+            "T_bottom": config["T_bottom"],
+            "T_left": config["T_left"],
+            "T_right": config["T_right"],
+            "T_init": config.get("T_init", 0.0),
+            "dump_dir": f"sim_res/heat_steady_2d/{profile_name}",
         }
-
-        # Add dump_dir with new profile name
-        random_params["dump_dir"] = f"sim_res/{solver_name}/{profile_name}"
 
         # Modify the lines to update parameters while preserving comments and format
         new_lines = []
         for line in lines:
             # Skip empty lines and comments
-            if not line.strip() or line.strip().startswith("#"):
+            if not line.strip() or (line.strip().startswith("#") and not re.match(r"^(\s*)([a-zA-Z_]+):", line)):
                 new_lines.append(line)
                 continue
 
@@ -61,13 +63,13 @@ def create_heat1d_profiles(num_profiles, base_profile_path, solver_name):
                 if comment is None:
                     comment = ""
 
-                # Update parameter if it's in our random_params dictionary
-                if param_name in random_params:
+                # Update parameter if it's in our update_params dictionary
+                if param_name in update_params:
                     # Format the new value similar to the original (preserve quotes if needed)
-                    if isinstance(random_params[param_name], str):
-                        new_value = f'"{random_params[param_name]}"'
+                    if isinstance(update_params[param_name], str):
+                        new_value = f'"{update_params[param_name]}"'
                     else:
-                        new_value = str(random_params[param_name])
+                        new_value = str(update_params[param_name])
 
                     # Construct the new line with same spacing and comments
                     new_line = f"{spaces}{param_name}: {new_value}{comment}\n"
@@ -86,15 +88,24 @@ def create_heat1d_profiles(num_profiles, base_profile_path, solver_name):
             f.writelines(new_lines)
 
         generated_paths.append(output_path)
-        print(f"Created profile {profile_name} at {output_path} with preserved formatting")
+        print(f"Created profile {profile_name} at {output_path} with boundary conditions: {config}")
 
     return generated_paths
 
 
 if __name__ == "__main__":
-    # Example usage:
+    # Create Heat Steady 2D profiles with diverse boundary condition patterns
+    boundary_configs = [
+        # p2: Hot sides opposite (top and bottom hot)
+        {"T_top": 1.0, "T_bottom": 1.0, "T_left": 0.0, "T_right": 0.0, "T_init": 0.0},
+        # p3: Corner hot spot (right side hot)
+        {"T_top": 0.0, "T_bottom": 0.0, "T_left": 0.0, "T_right": 1.0, "T_init": 0.0},
+        # p4: Alternating pattern (left hot, moderate top/bottom)
+        {"T_top": 0.5, "T_bottom": 0.5, "T_left": 1.0, "T_right": 0.0, "T_init": 0.25},
+        # p5: Uniform heating (all boundaries warm)
+        {"T_top": 0.8, "T_bottom": 0.8, "T_left": 0.8, "T_right": 0.8, "T_init": 0.2},
+    ]
 
-    # 1. Create multiple random profiles
-    random_profiles = create_heat1d_profiles(
-        num_profiles=9, base_profile_path="./run_configs/heat_steady_2d/p1.yaml", solver_name="heat_steady_2d"
+    profiles = create_heat_steady_2d_profiles(
+        boundary_configs=boundary_configs, base_profile_path="./run_configs/heat_steady_2d/p1.yaml"
     )
