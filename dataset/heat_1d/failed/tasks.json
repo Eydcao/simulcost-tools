@@ -1,0 +1,304 @@
+{
+  "metadata": {
+    "solver": "heat_1d",
+    "description": "Failed to converge parameter optimization tasks",
+    "total_tasks": 5
+  },
+  "tasks": [
+    {
+      "solver": "heat_1d",
+      "target_parameter": "n_space",
+      "profile": "p1",
+      "precision_config": {
+        "tolerance_rmse": 0.0001
+      },
+      "target_config": {
+        "initial_value": 64,
+        "multiplication_factor": 2,
+        "max_iteration_num": 6
+      },
+      "non_target_parameters": {
+        "cfl": 0.25
+      },
+      "results": {
+        "converged": false,
+        "optimal_parameter_value": 2048,
+        "total_computational_cost": 558898440,
+        "cost_history": [
+          17160,
+          123840,
+          962208,
+          7658064,
+          61180200,
+          488956968
+        ],
+        "parameter_history": [
+          {
+            "cfl": 0.25,
+            "n_space": 64
+          },
+          {
+            "cfl": 0.25,
+            "n_space": 128
+          },
+          {
+            "cfl": 0.25,
+            "n_space": 256
+          },
+          {
+            "cfl": 0.25,
+            "n_space": 512
+          },
+          {
+            "cfl": 0.25,
+            "n_space": 1024
+          },
+          {
+            "cfl": 0.25,
+            "n_space": 2048
+          }
+        ]
+      }
+    },
+    {
+      "solver": "heat_1d",
+      "target_parameter": "cfl",
+      "profile": "p2",
+      "precision_config": {
+        "tolerance_rmse": 0.0001
+      },
+      "target_config": {
+        "initial_value": 1.0,
+        "multiplication_factor": 0.5,
+        "max_iteration_num": 7
+      },
+      "non_target_parameters": {
+        "n_space": 64
+      },
+      "results": {
+        "converged": false,
+        "optimal_parameter_value": 0.015625,
+        "total_computational_cost": 135720,
+        "cost_history": [
+          1560,
+          3120,
+          6240,
+          9360,
+          17160,
+          32760,
+          65520
+        ],
+        "parameter_history": [
+          {
+            "cfl": 1.0,
+            "n_space": 64
+          },
+          {
+            "cfl": 0.5,
+            "n_space": 64
+          },
+          {
+            "cfl": 0.25,
+            "n_space": 64
+          },
+          {
+            "cfl": 0.125,
+            "n_space": 64
+          },
+          {
+            "cfl": 0.0625,
+            "n_space": 64
+          },
+          {
+            "cfl": 0.03125,
+            "n_space": 64
+          },
+          {
+            "cfl": 0.015625,
+            "n_space": 64
+          }
+        ]
+      }
+    },
+    {
+      "solver": "heat_1d",
+      "target_parameter": "cfl",
+      "profile": "p13",
+      "precision_config": {
+        "tolerance_rmse": 0.0001
+      },
+      "target_config": {
+        "initial_value": 1.0,
+        "multiplication_factor": 0.5,
+        "max_iteration_num": 7
+      },
+      "non_target_parameters": {
+        "n_space": 64
+      },
+      "results": {
+        "converged": false,
+        "optimal_parameter_value": 0.015625,
+        "total_computational_cost": 188760,
+        "cost_history": [
+          1560,
+          4680,
+          7800,
+          12480,
+          23400,
+          46800,
+          92040
+        ],
+        "parameter_history": [
+          {
+            "cfl": 1.0,
+            "n_space": 64
+          },
+          {
+            "cfl": 0.5,
+            "n_space": 64
+          },
+          {
+            "cfl": 0.25,
+            "n_space": 64
+          },
+          {
+            "cfl": 0.125,
+            "n_space": 64
+          },
+          {
+            "cfl": 0.0625,
+            "n_space": 64
+          },
+          {
+            "cfl": 0.03125,
+            "n_space": 64
+          },
+          {
+            "cfl": 0.015625,
+            "n_space": 64
+          }
+        ]
+      }
+    },
+    {
+      "solver": "heat_1d",
+      "target_parameter": "cfl",
+      "profile": "p15",
+      "precision_config": {
+        "tolerance_rmse": 0.0001
+      },
+      "target_config": {
+        "initial_value": 1.0,
+        "multiplication_factor": 0.5,
+        "max_iteration_num": 7
+      },
+      "non_target_parameters": {
+        "n_space": 64
+      },
+      "results": {
+        "converged": false,
+        "optimal_parameter_value": 0.015625,
+        "total_computational_cost": 134160,
+        "cost_history": [
+          1560,
+          3120,
+          6240,
+          9360,
+          17160,
+          32760,
+          63960
+        ],
+        "parameter_history": [
+          {
+            "cfl": 1.0,
+            "n_space": 64
+          },
+          {
+            "cfl": 0.5,
+            "n_space": 64
+          },
+          {
+            "cfl": 0.25,
+            "n_space": 64
+          },
+          {
+            "cfl": 0.125,
+            "n_space": 64
+          },
+          {
+            "cfl": 0.0625,
+            "n_space": 64
+          },
+          {
+            "cfl": 0.03125,
+            "n_space": 64
+          },
+          {
+            "cfl": 0.015625,
+            "n_space": 64
+          }
+        ]
+      }
+    },
+    {
+      "solver": "heat_1d",
+      "target_parameter": "cfl",
+      "profile": "p18",
+      "precision_config": {
+        "tolerance_rmse": 0.0001
+      },
+      "target_config": {
+        "initial_value": 1.0,
+        "multiplication_factor": 0.5,
+        "max_iteration_num": 7
+      },
+      "non_target_parameters": {
+        "n_space": 64
+      },
+      "results": {
+        "converged": false,
+        "optimal_parameter_value": 0.015625,
+        "total_computational_cost": 117000,
+        "cost_history": [
+          1560,
+          3120,
+          4680,
+          7800,
+          15600,
+          28080,
+          56160
+        ],
+        "parameter_history": [
+          {
+            "cfl": 1.0,
+            "n_space": 64
+          },
+          {
+            "cfl": 0.5,
+            "n_space": 64
+          },
+          {
+            "cfl": 0.25,
+            "n_space": 64
+          },
+          {
+            "cfl": 0.125,
+            "n_space": 64
+          },
+          {
+            "cfl": 0.0625,
+            "n_space": 64
+          },
+          {
+            "cfl": 0.03125,
+            "n_space": 64
+          },
+          {
+            "cfl": 0.015625,
+            "n_space": 64
+          }
+        ]
+      }
+    }
+  ]
+}
