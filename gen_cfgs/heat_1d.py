@@ -36,19 +36,18 @@ def create_heat1d_profiles(num_profiles, base_profile_path, solver_name):
         # Generate random parameters
         # Heat transfer coefficient (log-uniform between 0.1 and 100)
         log_h_min = np.log10(0.1)
-        log_h_max = np.log10(100)
+        log_h_max = np.log10(10000)
         log_h = np.random.uniform(log_h_min, log_h_max)
 
         # Create parameter dictionary with random values
         random_params = {
             "h": round(10**log_h, 2),  # Heat transfer coefficient [W/m²-K]
-            "L": round(np.random.uniform(0.1, 0.2), 3),  # Rod length [m]
+            "L": round(np.random.uniform(0.1, 0.3), 3),  # Rod length [m]
             "k": round(np.random.uniform(0.5, 1), 2),  # Thermal conductivity [W/m-K]
             "rho": round(np.random.uniform(1000, 2000)),  # Density [kg/m³]
             "cp": round(np.random.uniform(800, 1000)),  # Specific heat [J/kg-K]
-            "T_inf": round(np.random.uniform(4, 20)),  # Ambient temp [°C]
-            "T_init": round(np.random.uniform(21, 30)),  # Initial temp [°C]
-            "record_dt": round(np.random.uniform(1, 8)) * 10,  # Recording interval [s]
+            "T_inf": round(np.random.uniform(-40, 40)),  # Ambient temp [°C]
+            "T_init": round(np.random.uniform(0, 30)),  # Initial temp [°C]
         }
 
         # Add dump_dir with new profile name
@@ -102,7 +101,7 @@ def create_heat1d_profiles(num_profiles, base_profile_path, solver_name):
 if __name__ == "__main__":
     # Example usage:
 
-    # 1. Create multiple random profiles
+    # 1. Create multiple random profiles (24 additional profiles for 25 total)
     random_profiles = create_heat1d_profiles(
-        num_profiles=9, base_profile_path="./run_configs/heat_1d/p1.yaml", solver_name="heat_1d"
+        num_profiles=24, base_profile_path="./run_configs/heat_1d/p1.yaml", solver_name="heat_1d"
     )

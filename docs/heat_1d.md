@@ -1,62 +1,112 @@
-# Dummy Solution for Heat1D
+# Heat 1D Equations with Explicit Finite Difference Method
 
-This doc concerns solving 1D heat conduction problems, where the left tip is convected to air, and right tip is adiabatic, and identifies optimal simulation parameters: CFL number and grid resolution. The metric for convergence check is the heat flux into the air (ie, gradient at the left tip) at the final time step.
+## Introduction
 
-## Finding Convergent CFL Number (Task type: 0-shot and iterative)
+This simulation solves the 1D heat conduction equation with mixed boundary conditions using an explicit finite difference scheme:
 
-**Notes:**
-The CFL (Courant-Friedrichs-Lewy) condition establishes a relationship between temporal and spatial discretization. For heat transfer problems:
-```
-dt = CFL * α / dx²
-```
-where:
-- α = thermal diffusivity (k*ρ/cₚ)
-- k = thermal conductivity
-- ρ = density
-- cₚ = specific heat capacity
+**Heat Equation:**
+$$\frac{\partial T}{\partial t} = \alpha \frac{\partial^2 T}{\partial x^2}$$
 
-To determine the maximum stable CFL number for a given grid size, progressively reduce the CFL until convergence is achieved. The dummy solution implements a menthod halving CFL each iteration.
+Where:
 
-**Example Command:**
-```bash
-python dummy_sols/heat1d.py --task cfl --profile p1 --initial_cfl 1.0 --initial_n_space 100
-```
+- $T$ = temperature
+- $\alpha = \frac{k}{\rho c_p}$ = thermal diffusivity
+- $k$ = thermal conductivity
+- $\rho$ = density  
+- $c_p$ = specific heat capacity
 
-## Finding Convergent Grid Resolution (Task type: 0-shot and iterative)
+**Boundary Conditions:**
 
-**Notes:**
-Grid resolution determines spatial discretization (dx = L/n_space). Higher resolution provides finer solutions but increases computational cost. Note that dt automatically adjusts according to the CFL condition.
+- Left boundary (x=0): Convection to ambient temperature: $\frac{k}{\Delta x}(T_1 - T_0) = h(T_0 - T_{\infty})$
+- Right boundary (x=L): Adiabatic: $\frac{\partial T}{\partial x} = 0$
 
-For a fixed CFL number, double the grid resolution until the solution converges.
+### Numerical Discretization
 
-**Example Command:**
-```bash
-python dummy_sols/heat1d.py --task n_space --profile p1 --initial_cfl 1.0 --initial_n_space 10
-```
+The spatial discretization uses explicit finite differences:
 
-**Parameters:**
-| Parameter        | Description                                                                 |
-|------------------|-----------------------------------------------------------------------------|
-| `--task`         | Task type (`cfl` or `n_space`)                                              |
-| `--profile`      | Physics/numerical profile                                              |
-| `--initial_cfl`  | Starting CFL number (halved each iteration for CFL task)                    |
-| `--initial_n_space` | Starting grid resolution (doubled each iteration for grid task)          |
+$$T_i^{n+1} = T_i^n + \frac{\alpha \Delta t}{(\Delta x)^2} (T_{i-1}^n - 2T_i^n + T_{i+1}^n)$$
 
-## Creating New Test Profiles
+The time step is constrained by the CFL condition for diffusion:
+$$\Delta t = \frac{\text{CFL} \cdot (\Delta x)^2}{2\alpha}$$
 
-To generate new test cases with randomized material properties:
+### Boundary Treatment
 
-**Property Ranges:**
-- Heat transfer coefficient (h): 0.1 to 100 (log-uniform)
-- Rod length (L): 0.1 to 0.2 m
-- Thermal conductivity (k): 0.5 to 1 W/m-K
-- Density (ρ): 1000 to 2000 kg/m³
-- Specific heat (cp): 800 to 1000 J/kg-K
-- Ambient temp (T_inf): 4 to 20°C
-- Initial temp (T_init): 21 to 30°C
-- Recording interval (record_dt): 10 to 80s
+- **Left boundary (convection)**: $T_0 = \frac{\frac{\Delta x}{k} T_1 + h T_{\infty}}{\frac{\Delta x}{k} + h}$
+- **Right boundary (adiabatic)**: $T_{N} = T_{N-1}$
 
-See code for ref:
-```bash
-python gen_cfgs/heat_1d.py
-```
+## Test Cases
+
+The solver supports multiple profiles with varying material properties and conditions:
+
+1. **p1** - Reference case:
+   - L = 0.15 m, k = 1.0 W/m-K, h = 1000 W/m²-K
+   - ρ = 1500 kg/m³, cp = 1000 J/kg-K
+   - T_inf = 12°C, T_init = 25°C
+
+2. **p2-p25** - Variations with different material properties and conditions
+
+**Note for LLM Developers**: When generating natural language descriptions of the test cases, read the actual profile configuration files (run_configs/heat_1d/p*.yaml) to extract specific parameter values for each profile and create accurate, detailed descriptions.
+
+The simulated results are considered correct if the relative RMSE meets the precision-dependent tolerance (high: 0.0001, medium: 0.001, low: 0.01) compared to reference solution.
+
+## Parameter Tuning Tasks and Dummy Strategy
+
+### Tasks
+
+1. **CFL Convergence Search (iterative+0-shot)**
+   - CFL number controls temporal stability for diffusion: $\Delta t = \frac{\text{CFL} \cdot (\Delta x)^2}{2\alpha}$
+
+2. **n_space Convergence Search (iterative+0-shot)**  
+   - n_space determines spatial resolution: $\Delta x = L / n\_space$
+
+### Dummy Strategy
+
+1. **CFL Convergence Search (iterative+0-shot)**
+   - For dummy solution, halve CFL each round (multiplication factor: 0.5) starting from 1.0 until convergence
+   - **Non-target parameters**: n_space ∈ {64, 256, 1024} (different starting resolutions)
+
+2. **n_space Convergence Search (iterative+0-shot)**
+   - For dummy solution, double n_space each iteration (multiplication factor: 2) starting from 64 until convergence
+   - **Non-target parameters**: CFL = 0.25 (fixed stable value)
+
+## Summarized parameter table for developer only (Not LLM)
+
+| Parameter | Description | Range |
+|-----------|-------------|-------|
+| cfl | Courant-Friedrichs-Lewy number for temporal stability | 0 < cfl ≤ 1 |
+| n_space | Number of spatial grid points | 64 ≤ n_space ≤ 2048 |
+
+**Other Parameters:**
+
+- L: Domain length [m]
+- k: Thermal conductivity [W/m-K]
+- h: Convection coefficient [W/m²-K]
+- ρ: Density [kg/m³]  
+- cp: Specific heat [J/kg-K]
+- T_inf: Ambient temperature [°C]
+- T_init: Initial temperature [°C]
+
+## Checkout
+
+### Summary
+
+- **Profiles**: 25 (p1: reference, p2-p25: material/condition variations)
+- **Target Parameters**: 2 (CFL, n_space)
+- **Precision Levels**: 3 (high: 0.0001, medium: 0.001, low: 0.01)
+
+### Task Distribution
+
+- **CFL**: 25 profiles × 3 non-target combos = 75 tasks
+- **n_space**: 25 profiles × 1 non-target combo = 25 tasks  
+- **Total per precision**: 100 tasks
+- **Total tasks**: 300 tasks (across 3 precision levels)
+
+**Non-target parameter variations:**
+
+- For CFL search: n_space ∈ {64, 256, 1024}
+- For n_space search: cfl = 0.25
+
+### Dummy Solution Cache
+
+Config for dummy solution cache: `checkouts/heat_1d.yaml`
+Cache script: `checkouts/heat_1d.py`

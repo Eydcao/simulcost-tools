@@ -6,7 +6,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from wrappers import *
 
 
-def find_convergent_cfl(profile, initial_cfl, initial_n_space, tolerance, max_iter):
+def find_convergent_cfl(profile, initial_cfl, initial_n_space, tolerance, max_iter, multiplication_factor):
     """Iteratively reduce CFL number until convergence is achieved."""
     cfl_history = []
     cost_history = []
@@ -43,9 +43,8 @@ def find_convergent_cfl(profile, initial_cfl, initial_n_space, tolerance, max_it
             else:
                 print(f"No convergence between CFL {prev_cfl} and {current_cfl}")
 
-        # Prepare next CFL (half of current)
-        next_cfl = current_cfl / 2
-        current_cfl = next_cfl
+        # Prepare next CFL using multiplication factor
+        current_cfl = current_cfl * multiplication_factor
 
     if not converged and len(cfl_history) > 1:
         # Check if last two simulations converged
@@ -71,7 +70,7 @@ def find_convergent_cfl(profile, initial_cfl, initial_n_space, tolerance, max_it
     return bool(is_converged), best_cfl, cost_history, param_history
 
 
-def find_convergent_n_space(profile, initial_n_space, cfl, tolerance, max_iter):
+def find_convergent_n_space(profile, initial_n_space, cfl, tolerance, max_iter, multiplication_factor):
     """Iteratively increase n_space number until convergence is achieved."""
     n_space_history = []
     cost_history = []
@@ -110,8 +109,8 @@ def find_convergent_n_space(profile, initial_n_space, cfl, tolerance, max_iter):
             else:
                 print(f"No convergence between n_space {prev_n_space} and {current_n_space}")
 
-        # Prepare next n_space (double current)
-        next_n_space = current_n_space * 2
+        # Prepare next n_space using multiplication factor
+        next_n_space = current_n_space * multiplication_factor
         current_n_space = next_n_space
 
     if not converged and len(n_space_history) > 1:
@@ -136,57 +135,3 @@ def find_convergent_n_space(profile, initial_n_space, cfl, tolerance, max_iter):
     print(f"Cost history: {cost_history}, total cost: {sum(cost_history)}")
 
     return bool(is_converged), best_n_space, cost_history, param_history
-
-
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Find convergent parameters for heat1d simulation")
-
-    # Search mode selection
-    parser.add_argument(
-        "--task",
-        type=str,
-        choices=["cfl", "n_space"],
-        required=True,
-        help="Choose which parameter to search: 'cfl' or 'n_space'",
-    )
-
-    # Profile choice
-    parser.add_argument("--profile", type=str, default="p1", help="Name of the simulation profile configuration")
-
-    # CFL search parameters
-    parser.add_argument(
-        "--initial_cfl", type=float, default=1.0, help="Initial CFL number to start testing (for CFL search)"
-    )
-    parser.add_argument("--initial_n_space", type=int, default=100, help="Fixed grid number for CFL search")
-
-    # Fixed parameters
-    parser.add_argument("--tolerance", type=float, default=1e-4, help="Tolerance for convergence checking")
-    parser.add_argument("--max_iter", type=int, default=20, help="Maximum number of iterations to try")
-
-    args = parser.parse_args()
-
-    if args.task == "cfl":
-        print("\n=== Starting CFL convergence search ===")
-        best_param, total_cost = find_convergent_cfl(
-            profile=args.profile,
-            initial_cfl=args.initial_cfl,
-            initial_n_space=args.initial_n_space,
-            tolerance=args.tolerance,
-            max_iter=args.max_iter,
-        )
-        param_name = "CFL"
-    else:
-        print("\n=== Starting n_space convergence search ===")
-        best_param, total_cost = find_convergent_n_space(
-            profile=args.profile,
-            initial_n_space=args.initial_n_space,
-            cfl=args.initial_cfl,
-            tolerance=args.tolerance,
-            max_iter=args.max_iter,
-        )
-        param_name = "n_space"
-
-    if best_param is not None:
-        print(f"\nRecommended {param_name}: {best_param}, the total cost is {total_cost}")
-    else:
-        print(f"\nNo convergent {param_name} found within the given iterations, the total cost is {total_cost}")

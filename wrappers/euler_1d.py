@@ -8,8 +8,7 @@ import matplotlib.pyplot as plt
 
 def run_sim_euler_1d(profile, cfl, beta, k, n_space):
     """Run the euler_1d simulation with the given parameters if not already simulated."""
-    n_space_str = f"_n_{n_space}" if n_space is not None else ""
-    dir_path = f"sim_res/euler_1d/{profile}_cfl_{cfl}_beta_{beta}_k_{k}{n_space_str}/"
+    dir_path = f"sim_res/euler_1d/{profile}_cfl_{cfl}_beta_{beta}_k_{k}_n_{n_space}/"
     meta_path = os.path.join(dir_path, "meta.json")
 
     # Check if the simulation has already been run
@@ -21,9 +20,8 @@ def run_sim_euler_1d(profile, cfl, beta, k, n_space):
                 return meta["cost"]
 
     # Run the simulation if not already done
-    n_space_param = f" n_space={n_space}" if n_space is not None else ""
     print(f"Running new simulation with parameters: cfl={cfl}, beta={beta}, k={k}, n_space={n_space}")
-    cmd = f"python runners/euler_1d.py --config-name={profile} cfl={cfl} beta={beta} k={k}{n_space_param}"
+    cmd = f"python costsci_tools/runners/euler_1d.py --config-name={profile} cfl={cfl} beta={beta} k={k} n_space={n_space}"
     subprocess.run(cmd, shell=True, check=True)
 
     # Load the cost from the meta.json file
@@ -36,8 +34,7 @@ def run_sim_euler_1d(profile, cfl, beta, k, n_space):
 
 def get_res_euler_1d(profile, cfl, beta, k, n_space):
     """Load all time frames for a given parameter set, triggering a simulation if results are missing."""
-    n_space_str = f"_n_{n_space}" if n_space is not None else ""
-    dir_path = f"sim_res/euler_1d/{profile}_cfl_{cfl}_beta_{beta}_k_{k}{n_space_str}/"
+    dir_path = f"sim_res/euler_1d/{profile}_cfl_{cfl}_beta_{beta}_k_{k}_n_{n_space}/"
     results = {}
     X = None
 
@@ -48,7 +45,7 @@ def get_res_euler_1d(profile, cfl, beta, k, n_space):
         print(
             f"No results found for parameters: cfl={cfl}, beta={beta}, k={k}, n_space={n_space}. Triggering simulation."
         )
-        run_sim_euler_1d(profile, cfl, beta, k, n_space)
+        run_sim_euler_1d(profile=profile, cfl=cfl, beta=beta, k=k, n_space=n_space)
 
     # Sort files by time frame
     files = [f for f in os.listdir(dir_path) if f.startswith("res_") and f.endswith(".h5")]
@@ -214,6 +211,6 @@ if __name__ == "__main__":
     profiles = ["p1"]
     rmse_tolerance = 1e-2
 
-    _, _, _, rmse = compare_res_euler_1d("p1", 0.5, beta, k, "p1", 0.25, beta, k, rmse_tolerance, 512, 256)
+    _, _, _, rmse = compare_res_euler_1d(profile1="p1", cfl1=0.5, beta1=beta, k1=k, profile2="p1", cfl2=0.25, beta2=beta, k2=k, rmse_tolerance=rmse_tolerance, n_space1=512, n_space2=256)
 
     print(f"Difference in RMSE between CFL 0.5 and CFL 0.25: {rmse}")

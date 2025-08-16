@@ -1,4 +1,3 @@
-import torch
 import h5py
 import os
 from .base_solver import SIMULATOR
@@ -34,10 +33,10 @@ class Heat1D(SIMULATOR):
         # Initialize spatial grid
         self.dx = self.L / self.n_space
         self.nx = self.n_space + 1
-        self.x = torch.linspace(0, self.L, self.nx)
+        self.x = np.linspace(0, self.L, self.nx)
 
         # Initialize temperature field
-        self.T = self.T_init * torch.ones(self.nx)
+        self.T = self.T_init * np.ones(self.nx)
 
         # Base initialization
         super().__init__(verbose, cfg)
@@ -48,11 +47,10 @@ class Heat1D(SIMULATOR):
         max_dt = self.cfl * self.dx**2 / (2 * self.alpha)
         return max_dt
 
-    @torch.no_grad()
     def step(self, dt):
         """Perform a single time step"""
         # explicit form
-        T_new = self.T.clone()
+        T_new = self.T.copy()
         # inner node
         T_new[1:-1] += self.alpha * dt / (self.dx**2) * (T_new[:-2] - 2 * T_new[1:-1] + T_new[2:])
         # right node is adiabatic
@@ -68,13 +66,13 @@ class Heat1D(SIMULATOR):
 
         # Save HDF5 data file
         with h5py.File(f"{file_base}.h5", "w") as f:
-            f.create_dataset("x", data=self.x.numpy())
-            f.create_dataset("T", data=self.T.numpy())
+            f.create_dataset("x", data=self.x)
+            f.create_dataset("T", data=self.T)
             f.create_dataset("time", data=self.current_time)
 
         # Create and save plot
         plt.figure(figsize=(8, 5))
-        plt.plot(self.x.numpy(), self.T.numpy(), "b-", linewidth=2)
+        plt.plot(self.x, self.T, "b-", linewidth=2)
         plt.xlabel("Position (x)")
         plt.ylabel("Temperature (T)")
         plt.title(f"Time = {self.current_time:.3f}")
