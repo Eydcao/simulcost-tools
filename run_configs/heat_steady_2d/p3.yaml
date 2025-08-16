@@ -10,7 +10,7 @@ Ly: 1.0          # Domain length in y
 # Boundary conditions
 T_top: 0.0       # Fixed top boundary temperature
 T_bottom: 0.0    # Fixed bottom boundary temperature
-T_left: 0.0      # Fixed left boundary temperature
+T_left: 0.25      # Fixed left boundary temperature
 T_right: 1.0     # Fixed right boundary temperature
 
 # Controllable parameters
@@ -20,8 +20,8 @@ error_threshold: 1e-8  # Convergence threshold
 T_init: 0.0      # Initial temperature field
 
 # Simulator statics
-record_dt: 100   # Time interval between recordings (iterations)
-end_frame: 50    # Simulation end after certain number of frames
+record_dt: 10000
+end_frame: 10
 
 # Output configuration
 dump_dir: "sim_res/heat_steady_2d/p3"  # Directory for output files

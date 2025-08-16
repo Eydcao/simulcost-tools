@@ -162,7 +162,7 @@ def plot_statistics(statistics, output_dir):
         )
 
     ax.set_ylabel("Frequency")
-    ax.set_title("Optimal Parameter Values (All Tasks)")
+    ax.set_title("Optimal Parameter Values (Successful Tasks Only)")
     ax.legend()
     ax.tick_params(axis="x", rotation=45)
 
@@ -214,7 +214,7 @@ def plot_statistics(statistics, output_dir):
             f.write(f"   {profile}: {data['converged']}/{data['total']} ({rate:.2f}%)\n")
         f.write("\n")
 
-        f.write("5. Optimal Parameter Frequencies (All Tasks):\n")
+        f.write("5. Optimal Parameter Frequencies (Successful Tasks Only):\n")
         if statistics["optimal_dx_values"]:
             dx_values, dx_counts = np.unique(list(statistics["optimal_dx_values"]), return_counts=True)
             f.write("   dx parameter (iterative):\n")
@@ -323,7 +323,7 @@ def main():
                             multiplication_factor=target_config["multiplication_factor"],
                             max_iteration_num=target_config["max_iteration_num"],
                         )
-                        if best_param is not None:
+                        if is_converged and best_param is not None:
                             statistics["optimal_dx_values"].append(best_param)
 
                     elif target_param == "error_threshold":
@@ -337,11 +337,11 @@ def main():
                             multiplication_factor=target_config["multiplication_factor"],
                             max_iteration_num=target_config["max_iteration_num"],
                         )
-                        if best_param is not None:
+                        if is_converged and best_param is not None:
                             statistics["optimal_error_threshold_values"].append(best_param)
 
                     elif target_param == "relax":
-                        is_converged, optimal_param, cost_history, param_history = find_optimal_relax(
+                        is_converged, best_param, cost_history, param_history = find_optimal_relax(
                             profile=profile,
                             dx=task_params["dx"],
                             error_threshold=task_params["error_threshold"],
@@ -350,15 +350,12 @@ def main():
                             search_range_min=target_config["search_range_min"],
                             search_range_max=target_config["search_range_max"],
                             search_range_slice_num=target_config["search_range_slice_num"],
-                            multiplication_factor=target_config["multiplication_factor"],
-                            max_iteration_num=target_config["max_iteration_num"],
                         )
-                        best_param = optimal_param[0] if optimal_param[0] is not None else None
-                        if best_param is not None:
+                        if is_converged and best_param is not None:
                             statistics["optimal_relax_values"].append(best_param)
 
                     elif target_param == "t_init":
-                        is_converged, optimal_param, cost_history, param_history = find_optimal_t_init(
+                        is_converged, best_param, cost_history, param_history = find_optimal_t_init(
                             profile=profile,
                             dx=task_params["dx"],
                             relax=task_params["relax"],
@@ -367,11 +364,8 @@ def main():
                             search_range_min=target_config["search_range_min"],
                             search_range_max=target_config["search_range_max"],
                             search_range_slice_num=target_config["search_range_slice_num"],
-                            multiplication_factor=target_config["multiplication_factor"],
-                            max_iteration_num=target_config["max_iteration_num"],
                         )
-                        best_param = optimal_param[0] if optimal_param[0] is not None else None
-                        if best_param is not None:
+                        if is_converged and best_param is not None:
                             statistics["optimal_t_init_values"].append(best_param)
 
                     # Create task record for dataset
