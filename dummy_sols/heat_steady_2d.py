@@ -1,276 +1,455 @@
 import argparse
 import numpy as np
 
-# Append abs path
 import sys
 import os
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from wrappers import *
+
+from wrappers.heat_steady_2d import run_sim_heat_steady_2d, compare_res_heat_steady_2d
 
 
-def find_optimal_dx(profile, initial_dx, relax, error_threshold, T_init, tolerance, max_iter):
-    """Iteratively halve dx until convergence is achieved."""
-    param_history = []
+def find_convergent_dx(
+    profile, dx, relax, error_threshold, t_init, tolerance_rmse, multiplication_factor, max_iteration_num
+):
+    """Iteratively reduce dx (increase resolution) until convergence is achieved."""
+    dx_history = []
     cost_history = []
+    param_history = []
 
-    current_dx = initial_dx
+    current_dx = dx
     converged = False
     best_dx = None
 
-    for i in range(max_iter):
-        print(f"\nRunning simulation with dx = {current_dx}")
+    for i in range(max_iteration_num):
+        print(
+            f"\nRunning simulation with dx = {current_dx}, relax = {relax}, error_threshold = {error_threshold}, T_init = {t_init}"
+        )
 
-        # Run simulation and track cost
-        cost_i, num_steps = run_sim_heat_steady_2d(profile, current_dx, relax, error_threshold, T_init)
+        # Run simulation and load results
+        cost_i = run_sim_heat_steady_2d(profile, current_dx, relax, error_threshold, t_init)
         cost_history.append(cost_i)
-        param_history.append({"dx": current_dx, "relax": relax, "T_init": T_init, "error_threshold": error_threshold})
+        dx_history.append(current_dx)
+        param_history.append({"dx": current_dx, "relax": relax, "error_threshold": error_threshold, "t_init": t_init})
 
         # If we have previous results to compare with
-        if len(param_history) > 1:
-            prev_dx = param_history[-2]["dx"]
+        if len(dx_history) > 1:
+            prev_dx = dx_history[-2]
 
             # Compare with previous results
-            is_converged, _ = compare_res_heat_steady_2d(
+            is_converged, metrics1, metrics2, rmse = compare_res_heat_steady_2d(
                 profile,
                 prev_dx,
                 relax,
                 error_threshold,
-                T_init,
+                t_init,
                 profile,
                 current_dx,
                 relax,
                 error_threshold,
-                T_init,
-                tolerance,
+                t_init,
+                tolerance_rmse,
             )
 
             if is_converged:
                 print(f"Convergence achieved between dx {prev_dx} and {current_dx}")
-                best_dx = param_history[-1]["dx"]  # The coarser of the two grids that converged
+                best_dx = dx_history[-1]  # The finer grid that converged
                 converged = True
                 break
             else:
                 print(f"No convergence between dx {prev_dx} and {current_dx}")
 
-        # Halve the dx for next iteration
-        next_dx = current_dx / 2
+        # Prepare next dx using multiplication factor
+        next_dx = current_dx * multiplication_factor
         current_dx = next_dx
 
     if converged:
         print(f"\nConvergent dx found: {best_dx}")
     else:
         print("\nMaximum iterations reached without convergence")
-        if len(param_history) > 0:
-            best_dx = param_history[-1]["dx"]
+        if len(dx_history) > 1:
+            best_dx = dx_history[-1]
             print(f"Finest tested dx: {best_dx}")
         else:
             best_dx = None
 
     print(f"Cost history: {cost_history}, total cost: {sum(cost_history)}")
 
-    return bool(is_converged), best_dx, cost_history, param_history
+    return bool(converged), best_dx, cost_history, param_history
 
 
-def grid_search_relax(profile, dx, relax_values, error_threshold, T_init, max_iter):
-    """Perform grid search for optimal relaxation factor."""
-    relax_costs = {}
+def find_optimal_relax(
+    profile,
+    dx,
+    error_threshold,
+    t_init,
+    tolerance_rmse,
+    search_range_min,
+    search_range_max,
+    search_range_slice_num,
+    multiplication_factor,
+    max_iteration_num,
+):
+    """
+    Grid search over relax ∈ [search_range_min, search_range_max] for optimal relaxation parameter.
+    For each relax, iterate dx until spatial convergence is achieved.
+
+    Returns
+    -------
+    is_converged_optimal : bool
+        Whether optimal_relax achieved spatial convergence.
+    optimal_param : (float | None, float | None)
+        (optimal_relax, optimal_dx). None if no convergent solution found.
+    optimal_cost_history : list[float] | None
+        Cost history for optimal_relax corresponding to converged dx sequence.
+        None if no convergent solution found.
+    param_history : list
+        Full parameter exploration history.
+    """
+    relax_values = np.linspace(search_range_min, search_range_max, search_range_slice_num)
     param_history = []
+    relax_results = []  # Save key info for each relax (when converged)
 
     for relax in relax_values:
-        print(f"\nTesting relaxation factor: {relax}")
-        cost, num_steps = run_sim_heat_steady_2d(profile, dx, relax, error_threshold, T_init)
-        relax_costs[relax] = cost
-        param_history.append({"dx": dx, "relax": relax, "T_init": T_init, "error_threshold": error_threshold})
-        print(f"Cost for relax={relax}: {cost}")
+        relax = round(float(relax), 2)
+        print(f"\n=== Testing relax = {relax} ===")
 
-    # Find relaxation factor with minimum cost
-    best_relax = min(relax_costs, key=relax_costs.get)
-    min_cost = relax_costs[best_relax]
+        is_converged, best_dx, cost_history, one_param_history = find_convergent_dx(
+            profile, dx, relax, error_threshold, t_init, tolerance_rmse, multiplication_factor, max_iteration_num
+        )
 
-    print(f"\nOptimal relaxation factor: {best_relax} with cost {min_cost}")
-    print(f"All costs: {relax_costs}")
+        # Record dx exploration trajectory for each relax
+        param_history.append(one_param_history)
 
-    return True, best_relax, relax_costs, param_history
+        # If convergent dx found, save to results pool
+        if best_dx is not None:
+            total_cost = sum(cost_history)
+            relax_results.append(
+                {
+                    "relax": relax,
+                    "best_dx": best_dx,
+                    "total_cost": total_cost,
+                    "is_converged": is_converged,
+                    "cost_history": cost_history,
+                }
+            )
+            print(f"relax = {relax}: Best dx = {best_dx}, Total Cost = {total_cost}")
+        else:
+            print(f"relax = {relax}: No convergent dx found")
+
+    # Select convergent solution with minimum total cost
+    if relax_results:
+        min_cost_idx = int(np.argmin([r["total_cost"] for r in relax_results]))
+        opt_rec = relax_results[min_cost_idx]
+
+        optimal_relax = opt_rec["relax"]
+        optimal_dx = opt_rec["best_dx"]
+        optimal_cost_history = opt_rec["cost_history"]
+        is_converged_optimal = opt_rec["is_converged"]
+
+        print(f"\nOptimal relax found: {optimal_relax} with dx = {optimal_dx}")
+        print(f"Optimal cost history length: {len(optimal_cost_history)}")
+    else:
+        optimal_relax = optimal_dx = None
+        optimal_cost_history = None
+        is_converged_optimal = False
+        print("\nNo optimal relax found")
+
+    optimal_param = (optimal_relax, optimal_dx)
+
+    return (
+        is_converged_optimal,
+        optimal_param,
+        optimal_cost_history,
+        param_history,
+    )
 
 
-def grid_search_T_init(profile, dx, relax, error_threshold, T_init_values, max_iter):
-    """Perform grid search for optimal initial temperature."""
-    T_init_costs = {}
+def find_optimal_t_init(
+    profile,
+    dx,
+    relax,
+    error_threshold,
+    tolerance_rmse,
+    search_range_min,
+    search_range_max,
+    search_range_slice_num,
+    multiplication_factor,
+    max_iteration_num,
+):
+    """
+    Grid search over t_init ∈ [search_range_min, search_range_max] for optimal initial temperature.
+    For each t_init, iterate dx until spatial convergence is achieved.
+
+    Returns
+    -------
+    is_converged_optimal : bool
+        Whether optimal_t_init achieved spatial convergence.
+    optimal_param : (float | None, float | None)
+        (optimal_t_init, optimal_dx). None if no convergent solution found.
+    optimal_cost_history : list[float] | None
+        Cost history for optimal_t_init corresponding to converged dx sequence.
+        None if no convergent solution found.
+    param_history : list
+        Full parameter exploration history.
+    """
+    t_init_values = np.linspace(search_range_min, search_range_max, search_range_slice_num)
     param_history = []
+    t_init_results = []  # Save key info for each t_init (when converged)
 
-    for T_init in T_init_values:
-        print(f"\nTesting initial temperature: {T_init}")
-        cost, num_steps = run_sim_heat_steady_2d(profile, dx, relax, error_threshold, T_init)
-        T_init_costs[T_init] = cost
-        param_history.append({"dx": dx, "relax": relax, "T_init": T_init, "error_threshold": error_threshold})
-        print(f"Cost for T_init={T_init}: {cost}")
+    for t_init in t_init_values:
+        t_init = round(float(t_init), 2)
+        print(f"\n=== Testing t_init = {t_init} ===")
 
-    # Find initial temperature with minimum cost
-    best_T_init = min(T_init_costs, key=T_init_costs.get)
-    min_cost = T_init_costs[best_T_init]
+        is_converged, best_dx, cost_history, one_param_history = find_convergent_dx(
+            profile, dx, relax, error_threshold, t_init, tolerance_rmse, multiplication_factor, max_iteration_num
+        )
 
-    print(f"\nOptimal initial temperature: {best_T_init} with cost {min_cost}")
-    print(f"All costs: {T_init_costs}")
+        # Record dx exploration trajectory for each t_init
+        param_history.append(one_param_history)
 
-    return True, best_T_init, T_init_costs, param_history
+        # If convergent dx found, save to results pool
+        if best_dx is not None:
+            total_cost = sum(cost_history)
+            t_init_results.append(
+                {
+                    "t_init": t_init,
+                    "best_dx": best_dx,
+                    "total_cost": total_cost,
+                    "is_converged": is_converged,
+                    "cost_history": cost_history,
+                }
+            )
+            print(f"t_init = {t_init}: Best dx = {best_dx}, Total Cost = {total_cost}")
+        else:
+            print(f"t_init = {t_init}: No convergent dx found")
+
+    # Select convergent solution with minimum total cost
+    if t_init_results:
+        min_cost_idx = int(np.argmin([r["total_cost"] for r in t_init_results]))
+        opt_rec = t_init_results[min_cost_idx]
+
+        optimal_t_init = opt_rec["t_init"]
+        optimal_dx = opt_rec["best_dx"]
+        optimal_cost_history = opt_rec["cost_history"]
+        is_converged_optimal = opt_rec["is_converged"]
+
+        print(f"\nOptimal t_init found: {optimal_t_init} with dx = {optimal_dx}")
+        print(f"Optimal cost history length: {len(optimal_cost_history)}")
+    else:
+        optimal_t_init = optimal_dx = None
+        optimal_cost_history = None
+        is_converged_optimal = False
+        print("\nNo optimal t_init found")
+
+    optimal_param = (optimal_t_init, optimal_dx)
+
+    return (
+        is_converged_optimal,
+        optimal_param,
+        optimal_cost_history,
+        param_history,
+    )
 
 
-def find_optimal_error_threshold(profile, dx, relax, T_init, initial_error, tolerance, max_iter):
-    """Decrease error threshold by factors of 10 until convergence."""
-    param_history = []
+def find_convergent_error_threshold(
+    profile, dx, relax, t_init, error_threshold, tolerance_rmse, multiplication_factor, max_iteration_num
+):
+    """Iteratively reduce error_threshold until convergence is achieved."""
+    error_threshold_history = []
     cost_history = []
+    param_history = []
 
-    current_error = initial_error
-    best_error = None
+    current_error_threshold = error_threshold
     converged = False
+    best_error_threshold = None
 
-    for i in range(max_iter):
-        print(f"\nRunning simulation with error threshold = {current_error}")
+    for i in range(max_iteration_num):
+        print(
+            f"\nRunning simulation with error_threshold = {current_error_threshold}, dx = {dx}, relax = {relax}, T_init = {t_init}"
+        )
 
-        # Run simulation and track cost
-        cost_i, num_steps = run_sim_heat_steady_2d(profile, dx, relax, current_error, T_init)
+        # Run simulation and load results
+        cost_i = run_sim_heat_steady_2d(profile, dx, relax, current_error_threshold, t_init)
         cost_history.append(cost_i)
-        param_history.append({"dx": dx, "relax": relax, "T_init": T_init, "error_threshold": current_error})
+        error_threshold_history.append(current_error_threshold)
+        param_history.append({"error_threshold": current_error_threshold, "dx": dx, "relax": relax, "t_init": t_init})
 
         # If we have previous results to compare with
-        if len(param_history) > 1:
-            prev_error = param_history[-2]["error_threshold"]
+        if len(error_threshold_history) > 1:
+            prev_error_threshold = error_threshold_history[-2]
 
             # Compare with previous results
-            is_converged, _ = compare_res_heat_steady_2d(
-                profile, dx, relax, prev_error, T_init, profile, dx, relax, current_error, T_init, tolerance
+            is_converged, metrics1, metrics2, rmse = compare_res_heat_steady_2d(
+                profile,
+                dx,
+                relax,
+                prev_error_threshold,
+                t_init,
+                profile,
+                dx,
+                relax,
+                current_error_threshold,
+                t_init,
+                tolerance_rmse,
             )
 
             if is_converged:
-                print(f"Convergence achieved between error {prev_error} and {current_error}")
-                best_error = param_history[-1]["error_threshold"]  # The looser error threshold that still converged
+                print(
+                    f"Convergence achieved between error_threshold {prev_error_threshold} and {current_error_threshold}"
+                )
+                best_error_threshold = error_threshold_history[-1]  # The stricter threshold that converged
                 converged = True
                 break
             else:
-                print(f"No convergence between error {prev_error} and {current_error}")
+                print(f"No convergence between error_threshold {prev_error_threshold} and {current_error_threshold}")
 
-        # Decrease error threshold by factor of 10
-        next_error = current_error / 10
-        current_error = next_error
+        # Prepare next error_threshold using multiplication factor
+        next_error_threshold = current_error_threshold * multiplication_factor
+        current_error_threshold = next_error_threshold
 
     if converged:
-        print(f"\nConvergent error threshold found: {best_error}")
+        print(f"\nConvergent error_threshold found: {best_error_threshold}")
     else:
         print("\nMaximum iterations reached without convergence")
-        if len(param_history) > 0:
-            best_error = param_history[-1]["error_threshold"]
-            print(f"Smallest tested error threshold: {best_error}")
+        if len(error_threshold_history) > 1:
+            best_error_threshold = error_threshold_history[-1]
+            print(f"Strictest tested error_threshold: {best_error_threshold}")
         else:
-            best_error = None
+            best_error_threshold = None
 
     print(f"Cost history: {cost_history}, total cost: {sum(cost_history)}")
 
-    return bool(is_converged), best_error, cost_history, param_history
+    return bool(converged), best_error_threshold, cost_history, param_history
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Find optimal parameters for heat_steady_2d simulation")
+    parser = argparse.ArgumentParser(description="Find optimal parameters for Heat Steady 2D simulation")
 
     # Search mode selection
     parser.add_argument(
         "--task",
         type=str,
-        choices=["dx", "relax", "T_init", "error_threshold"],
+        choices=["dx", "relax", "t_init", "error_threshold"],
         required=True,
-        help="Choose which parameter to search",
+        help="Choose which parameter to search: 'dx', 'relax', 't_init', or 'error_threshold'",
     )
 
     # Profile choice
-    parser.add_argument("--profile", type=str, default="p1", help="Name of the simulation profile")
+    parser.add_argument("--profile", type=str, default="p1", help="Name of the simulation profile configuration")
 
-    # Parameter values
-    parser.add_argument("--dx", type=float, default=0.005, help="Grid spacing")
-    parser.add_argument("--relax", type=float, default=1.0, help="Relaxation factor")
-    parser.add_argument("--T_init", type=float, default=0.25, help="Initial temperature")
-    parser.add_argument("--error_threshold", type=float, default=1e-7, help="Tolerance for inner convergence checking")
+    # Controllable parameters
+    parser.add_argument("--dx", type=float, default=0.01, help="Initial grid spacing to start testing")
+    parser.add_argument("--relax", type=float, default=1.0, help="SOR relaxation parameter")
+    parser.add_argument("--error_threshold", type=float, default=1e-8, help="Convergence threshold for iterations")
+    parser.add_argument("--t_init", type=float, default=0.0, help="Initial temperature field value")
 
-    # Fixed parameters
-    parser.add_argument("--max_iter", type=int, default=20, help="Maximum number of iterations")
-    parser.add_argument("--tolerance", type=float, default=1e-3, help="Tolerance for outter convergence check")
+    # Tolerance parameters
+    parser.add_argument("--tolerance_rmse", type=float, default=1e-6, help="RMSE tolerance for convergence checking")
+
+    # Search parameters for iterative tasks
+    parser.add_argument(
+        "--multiplication_factor",
+        type=float,
+        default=0.5,
+        help="Factor to multiply parameter values in iterative search",
+    )
+    parser.add_argument(
+        "--max_iteration_num", type=int, default=7, help="Maximum number of iterations for iterative search"
+    )
+
+    # Search parameters for 0-shot tasks
+    parser.add_argument(
+        "--search_range_min", type=float, default=0.1, help="Minimum value for 0-shot parameter search range"
+    )
+    parser.add_argument(
+        "--search_range_max", type=float, default=1.9, help="Maximum value for 0-shot parameter search range"
+    )
+    parser.add_argument(
+        "--search_range_slice_num", type=int, default=10, help="Number of slices for 0-shot parameter search range"
+    )
 
     args = parser.parse_args()
 
     if args.task == "dx":
-        print("\n=== Starting grid resolution (dx) search ===")
-        best_param, total_cost = find_optimal_dx(
+        print("\n=== Starting dx convergence search ===")
+        is_converged, best_dx, cost_history, param_history = find_convergent_dx(
             profile=args.profile,
-            initial_dx=args.dx,
+            dx=args.dx,
             relax=args.relax,
             error_threshold=args.error_threshold,
-            T_init=args.T_init,
-            tolerance=args.tolerance,
-            max_iter=args.max_iter,
+            t_init=args.t_init,
+            tolerance_rmse=args.tolerance_rmse,
+            multiplication_factor=args.multiplication_factor,
+            max_iteration_num=args.max_iteration_num,
         )
-        param_name = "dx"
+
+        if best_dx is not None:
+            print(f"\nRecommended dx: {best_dx}, total cost: {sum(cost_history)}")
+        else:
+            print(f"\nNo convergent dx found, total cost: {sum(cost_history)}")
 
     elif args.task == "relax":
-        print("\n=== Starting relaxation factor search ===")
-        # 0.1, 0.2, ..., 1.9 (defualt relax range)
-        # NOTE apply a trick here (no need to try over-relaxation for Jacobi NOTE do not tell LLM!!!)
-        relax_values = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
-        best_param, total_cost = grid_search_relax(
+        print("\n=== Starting relax parameter search ===")
+        is_converged, optimal_param, optimal_cost_history, param_history = find_optimal_relax(
             profile=args.profile,
             dx=args.dx,
-            relax_values=relax_values,
             error_threshold=args.error_threshold,
-            T_init=args.T_init,
-            max_iter=args.max_iter,
+            t_init=args.t_init,
+            tolerance_rmse=args.tolerance_rmse,
+            search_range_min=args.search_range_min,
+            search_range_max=args.search_range_max,
+            search_range_slice_num=args.search_range_slice_num,
+            multiplication_factor=args.multiplication_factor,
+            max_iteration_num=args.max_iteration_num,
         )
-        param_name = "relaxation factor"
 
-    elif args.task == "T_init":
-        print("\n=== Starting initial temperature search ===")
-        # 0.05, 0.1, 0.15, ..., 0.9
-        T_init_values = [
-            0.05,
-            0.1,
-            0.15,
-            0.2,
-            0.25,
-            0.3,
-            0.35,
-            0.4,
-            0.45,
-            0.5,
-            0.55,
-            0.6,
-            0.65,
-            0.7,
-            0.75,
-            0.8,
-            0.85,
-            0.9,
-        ]
-        best_param, total_cost = grid_search_T_init(
+        optimal_relax, optimal_dx = optimal_param
+        if optimal_relax is not None:
+            print(f"\nRecommended relax: {optimal_relax} with dx: {optimal_dx}")
+            print(f"Total cost: {sum(optimal_cost_history)}")
+        else:
+            print("\nNo optimal relax found")
+
+    elif args.task == "t_init":
+        print("\n=== Starting t_init parameter search ===")
+        is_converged, optimal_param, optimal_cost_history, param_history = find_optimal_t_init(
             profile=args.profile,
             dx=args.dx,
             relax=args.relax,
             error_threshold=args.error_threshold,
-            T_init_values=T_init_values,
-            max_iter=args.max_iter,
+            tolerance_rmse=args.tolerance_rmse,
+            search_range_min=args.search_range_min,
+            search_range_max=args.search_range_max,
+            search_range_slice_num=args.search_range_slice_num,
+            multiplication_factor=args.multiplication_factor,
+            max_iteration_num=args.max_iteration_num,
         )
-        param_name = "initial temperature"
+
+        optimal_t_init, optimal_dx = optimal_param
+        if optimal_t_init is not None:
+            print(f"\nRecommended t_init: {optimal_t_init} with dx: {optimal_dx}")
+            print(f"Total cost: {sum(optimal_cost_history)}")
+        else:
+            print("\nNo optimal t_init found")
 
     elif args.task == "error_threshold":
-        print("\n=== Starting error threshold search ===")
-        best_param, total_cost = find_optimal_error_threshold(
+        print("\n=== Starting error_threshold convergence search ===")
+        is_converged, best_error_threshold, cost_history, param_history = find_convergent_error_threshold(
             profile=args.profile,
             dx=args.dx,
             relax=args.relax,
-            T_init=args.T_init,
-            initial_error=args.error_threshold,
-            tolerance=args.tolerance,
-            max_iter=args.max_iter,
+            t_init=args.t_init,
+            error_threshold=args.error_threshold,
+            tolerance_rmse=args.tolerance_rmse,
+            multiplication_factor=args.multiplication_factor,
+            max_iteration_num=args.max_iteration_num,
         )
-        param_name = "error threshold"
 
-    if best_param is not None:
-        print(f"\nRecommended {param_name}: {best_param}, total cost: {total_cost}")
+        if best_error_threshold is not None:
+            print(f"\nRecommended error_threshold: {best_error_threshold}, total cost: {sum(cost_history)}")
+        else:
+            print(f"\nNo convergent error_threshold found, total cost: {sum(cost_history)}")
+
     else:
-        print(f"\nNo convergent {param_name} found within the given iterations, total cost: {total_cost}")
+        print(f"\nTask type '{args.task}' is not supported.")

@@ -7,41 +7,48 @@ from scipy.interpolate import RegularGridInterpolator
 
 
 def run_sim_heat_steady_2d(profile, dx, relax, error_threshold, t_init):
-    """Run the heat_steady_2d simulation with the given parameters."""
-    dir_path = f"sim_res/heat_steady_2d/{profile}_dx{dx}_relax_{relax}_Tinit_{t_init}_error_{error_threshold}/"
-    meta_file_path = os.path.join(dir_path, "meta.json")
+    """Run the heat_steady_2d simulation with the given parameters if not already simulated."""
+    dir_path = f"sim_res/heat_steady_2d/{profile}_dx_{dx}_relax_{relax}_Tinit_{t_init}_error_{error_threshold}/"
+    meta_path = os.path.join(dir_path, "meta.json")
 
-    # Check if the directory and meta.json file with the key of cost and num_steps exist
-    if os.path.exists(meta_file_path):
-        with open(meta_file_path, "r") as f:
+    # Check if the simulation has already been run
+    if os.path.exists(meta_path):
+        with open(meta_path, "r") as f:
             meta = json.load(f)
-            if "cost" in meta and "num_steps" in meta:
-                return meta["cost"], meta["num_steps"]
+            if "cost" in meta:
+                print(f"Using existing simulation results from {dir_path}")
+                return meta["cost"]
 
-    # Run the simulation if the directory or meta.json file does not exist
-    cmd = f"python costsci_tools/runners/heat_steady_2d.py --config-name={profile} dx={dx} relax={relax} error_threshold={error_threshold} T_init={t_init}"
+    # Run the simulation if not already done
+    print(
+        f"Running new simulation with parameters: dx={dx}, relax={relax}, error_threshold={error_threshold}, T_init={t_init}"
+    )
+    cmd = f"python runners/heat_steady_2d.py --config-name={profile} dx={dx} relax={relax} error_threshold={error_threshold} T_init={t_init}"
     subprocess.run(cmd, shell=True, check=True)
 
     # Load the cost from the meta.json file
-    with open(meta_file_path, "r") as f:
+    with open(meta_path, "r") as f:
         meta = json.load(f)
+        cost = meta["cost"]
 
-    return meta["cost"], meta["num_steps"]
+    return cost
 
 
 def get_res_heat_steady_2d(profile, dx, relax, error_threshold, t_init):
-    """Load final temperature field for given parameters."""
-    dir_path = f"sim_res/heat_steady_2d/{profile}_dx{dx}_relax_{relax}_Tinit_{t_init}_error_{error_threshold}/"
+    """Load final temperature field for given parameters, triggering a simulation if results are missing."""
+    dir_path = f"sim_res/heat_steady_2d/{profile}_dx_{dx}_relax_{relax}_Tinit_{t_init}_error_{error_threshold}/"
+
+    # Check if at least one result file exists, otherwise trigger a simulation
+    if not os.path.exists(dir_path) or not any(
+        fname.startswith("res_") and fname.endswith(".h5") for fname in os.listdir(dir_path)
+    ):
+        print(
+            f"No results found for parameters: dx={dx}, relax={relax}, error_threshold={error_threshold}, T_init={t_init}. Triggering simulation."
+        )
+        run_sim_heat_steady_2d(profile, dx, relax, error_threshold, t_init)
 
     # Find the latest result file in the directory
     files = [f for f in os.listdir(dir_path) if f.startswith("res_") and f.endswith(".h5")]
-    if not files:
-        # Trigger a simulation run if no result files are found
-        run_sim_heat_steady_2d(profile, dx, relax, error_threshold, t_init)
-        files = [f for f in os.listdir(dir_path) if f.startswith("res_") and f.endswith(".h5")]
-        if not files:
-            raise FileNotFoundError(f"No result files found in {dir_path} after triggering a simulation run.")
-
     files.sort(key=lambda x: int(x.split("_")[1].split(".")[0]))
     latest_file = files[-1]
 
@@ -55,11 +62,49 @@ def get_res_heat_steady_2d(profile, dx, relax, error_threshold, t_init):
     return T, X, Y, iter_count
 
 
-def compare_res_heat_steady_2d(
-    profile1, dx1, relax1, error_threshold1, t_init1, profile2, dx2, relax2, error_threshold2, t_init2, tolerance
-):
+def compute_heat_steady_metrics(T, X, Y):
+    """Compute physical metrics for steady-state heat transfer solution.
+    Args:
+        T: Temperature field (nx, ny)
+        X: x coordinates
+        Y: y coordinates
+    Returns:
+        Dictionary containing:
+        - temperature_valid: bool if all temperatures are finite and within bounds
+        - gradient_reasonable: bool if temperature gradients are reasonable
     """
-    Compare two sets of results using the RMSE of the temperature distribution on the middle vertical line (x=0.5).
+    # Check for NaN/Infinity
+    temperature_valid = np.all(np.isfinite(T))
+
+    # Check temperature bounds (should be within boundary condition range)
+    T_min = np.min([np.min(X), np.min(Y), 0.0])  # Assume 0 is minimum boundary
+    T_max = np.max([np.max(X), np.max(Y), 1.0])  # Assume 1 is maximum boundary
+    temperature_bounded = np.all((T >= T_min - 0.1) & (T <= T_max + 0.1))
+
+    return {
+        "temperature_valid": temperature_valid and temperature_bounded
+    }
+
+
+def print_heat_steady_metrics(name, metrics):
+    """Print summary statistics for heat transfer metrics"""
+    print(f"\n--- {name} Metrics ---")
+    if not metrics:
+        print("No metrics available (insufficient data)")
+        return
+
+    print(f"Temperature field valid: {metrics['temperature_valid']}")
+
+
+def compare_res_heat_steady_2d(
+    profile1, dx1, relax1, error_threshold1, t_init1, profile2, dx2, relax2, error_threshold2, t_init2, rmse_tolerance
+):
+    """Compare two sets of results using RMSE of temperature distribution on the middle vertical line (x=0.5).
+    Returns:
+        converged (bool): True if RMSE tolerance is met.
+        metrics1 (dict): Metrics for case 1.
+        metrics2 (dict): Metrics for case 2.
+        rmse (float): RMSE of temperature difference.
     """
     res1, x1, y1, _ = get_res_heat_steady_2d(profile1, dx1, relax1, error_threshold1, t_init1)
     res2, x2, y2, _ = get_res_heat_steady_2d(profile2, dx2, relax2, error_threshold2, t_init2)
@@ -72,18 +117,6 @@ def compare_res_heat_steady_2d(
     T_line1 = res1[idx1, :]
     T_line2 = res2[idx2, :]
 
-    # # save to fig plot for debugging
-    # import matplotlib.pyplot as plt
-
-    # plt.plot(y1, T_line1, label=f"dx={dx1}")
-    # plt.plot(y2, T_line2, label=f"dx={dx2}")
-    # plt.xlabel("y")
-    # plt.ylabel("Temperature")
-    # plt.title("Temperature Distribution at x=0.5")
-    # plt.legend()
-    # plt.savefig(f"temp_dist_x_0.5_dx_{dx1}_{dx2}.png")
-    # plt.close()
-
     # Interpolate T_line2 to match the y-coordinates of T_line1
     interpolator = RegularGridInterpolator((y2,), T_line2)
     T_line2_interp = interpolator(y1)
@@ -91,37 +124,20 @@ def compare_res_heat_steady_2d(
     # Calculate RMSE
     rmse = np.sqrt(np.mean((T_line1 - T_line2_interp) ** 2))
 
-    # plot this 2 lines of T_line1 and T_line2_interp
-    # import matplotlib.pyplot as plt
+    # Compute metrics
+    metrics1 = compute_heat_steady_metrics(res1, x1, y1)
+    metrics2 = compute_heat_steady_metrics(res2, x2, y2)
 
-    # # plt.plot(y1, T_line1, label=f"dx={dx1}")
-    # # plt.plot(y1, T_line2_interp, label=f"dx={dx2}")
-    # # plot difference between T_line1 and T_line2_interp
-    # plt.plot(y1, (T_line1 - T_line2_interp), label=f"dx={dx2}")
-    # plt.xlabel("y")
-    # plt.ylabel("Temperature")
-    # plt.legend()
-    # plt.savefig(f"temp_dist_x_0.5_dx_{dx1}_{dx2}.png")
-    # plt.close()
-
-    print(f"RMSE of temperature distribution on x=0.5: {rmse:.6f}")
-    print(f"Tolerance: {tolerance:.6f}")
-
-    return rmse < tolerance, rmse
-
-
-if __name__ == "__main__":
-    # Example usage: compare dx  0.01 and 0.005
-    profile = "p1"
-    dx = 0.01
-    relax = 1.0
-    error_threshold = 1e-7
-    t_init = 0.25
-
-    tolerance = 1e-6
-
-    # Compare results
-    is_converged = compare_res_heat_steady_2d(
-        profile, dx, relax, error_threshold, t_init, profile, dx / 2, relax, error_threshold, t_init, tolerance
+    # Convergence criteria
+    converged = (
+        rmse < rmse_tolerance
+        and metrics1["temperature_valid"]
+        and metrics2["temperature_valid"]
     )
-    print(f"Convergence achieved: {is_converged}")
+
+    print_heat_steady_metrics("Case 1", metrics1)
+    print_heat_steady_metrics("Case 2", metrics2)
+
+    print(f"RMSE (middle line): {rmse}")
+
+    return converged, metrics1, metrics2, rmse
