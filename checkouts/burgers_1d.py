@@ -13,6 +13,7 @@ import time
 import yaml
 import json
 import matplotlib.pyplot as plt
+import numpy as np
 from collections import defaultdict, Counter
 
 # Add project root to Python path
@@ -63,189 +64,173 @@ def save_datasets(successful_tasks, failed_tasks, output_dir):
 
 
 def plot_statistics(statistics, output_dir):
-    """Generate comprehensive statistical plots matching Euler 1D format."""
-    print("\nGenerating statistical plots...")
+    """Plot convergence and optimal parameter statistics"""
     os.makedirs(output_dir, exist_ok=True)
-    
-    # Create figure with subplots
-    fig = plt.figure(figsize=(16, 12))
-    
-    # Plot 1: Convergence rates by target parameter
-    ax1 = plt.subplot(2, 3, 1)
-    target_params = list(statistics["convergence_by_target"].keys())
-    convergence_rates = []
-    for param in target_params:
-        total = statistics["convergence_by_target"][param]["total"]
-        converged = statistics["convergence_by_target"][param]["converged"]
-        rate = converged / max(total, 1)
-        convergence_rates.append(rate)
-    
-    bars1 = ax1.bar(target_params, convergence_rates, color=["skyblue", "lightgreen", "lightcoral", "gold"])
-    ax1.set_title("Convergence Rate by Target Parameter")
-    ax1.set_ylabel("Convergence Rate")
-    ax1.set_ylim(0, 1)
-    ax1.tick_params(axis='x', rotation=45)
-    
-    # Add percentage labels
-    for bar, rate in zip(bars1, convergence_rates):
-        height = bar.get_height()
-        ax1.text(bar.get_x() + bar.get_width()/2., height + 0.01, 
-                f'{rate:.1%}', ha='center', va='bottom', fontweight='bold')
-    
-    # Plot 2: Convergence rates by precision level
-    ax2 = plt.subplot(2, 3, 2)
+
+    # 1. Convergence rate by precision level and target parameter
+    fig, axes = plt.subplots(2, 2, figsize=(15, 12))
+    fig.suptitle("Burgers 1D Dummy Search Statistics", fontsize=16)
+
+    # Plot 1: Convergence rates by precision level
+    ax = axes[0, 0]
     precision_levels = list(statistics["convergence_by_precision"].keys())
-    precision_rates = []
+    convergence_rates = []
     for precision in precision_levels:
         total = statistics["convergence_by_precision"][precision]["total"]
         converged = statistics["convergence_by_precision"][precision]["converged"]
-        rate = converged / max(total, 1)
-        precision_rates.append(rate)
-    
-    bars2 = ax2.bar(precision_levels, precision_rates, color=["lightblue", "orange", "lightgreen"])
-    ax2.set_title("Convergence Rate by Precision Level")
-    ax2.set_ylabel("Convergence Rate")
-    ax2.set_ylim(0, 1)
-    
-    for bar, rate in zip(bars2, precision_rates):
-        height = bar.get_height()
-        ax2.text(bar.get_x() + bar.get_width()/2., height + 0.01, 
-                f'{rate:.1%}', ha='center', va='bottom', fontweight='bold')
-    
-    # Plot 3: Convergence rates by profile
-    ax3 = plt.subplot(2, 3, 3)
-    profiles = list(statistics["convergence_by_profile"].keys())
-    profile_rates = []
-    for profile in profiles:
-        total = statistics["convergence_by_profile"][profile]["total"]
-        converged = statistics["convergence_by_profile"][profile]["converged"]
-        rate = converged / max(total, 1)
-        profile_rates.append(rate)
-    
-    bars3 = ax3.bar(profiles, profile_rates, color=["pink", "lightcyan", "wheat", "lavender", "lightsalmon"])
-    ax3.set_title("Convergence Rate by Profile")
-    ax3.set_ylabel("Convergence Rate")
-    ax3.set_ylim(0, 1)
-    
-    for bar, rate in zip(bars3, profile_rates):
-        height = bar.get_height()
-        ax3.text(bar.get_x() + bar.get_width()/2., height + 0.01, 
-                f'{rate:.1%}', ha='center', va='bottom', fontweight='bold')
-    
-    # Plot 4: Cost distribution by target parameter
-    ax4 = plt.subplot(2, 3, 4)
-    cost_data = []
-    cost_labels = []
+        rate = (converged / total * 100) if total > 0 else 0
+        convergence_rates.append(rate)
+
+    ax.bar(precision_levels, convergence_rates, color=["red", "orange", "green"])
+    ax.set_ylabel("Convergence Rate (%)")
+    ax.set_title("Convergence Rate by Precision Level")
+    ax.set_ylim(0, 100)
+
+    # Add text annotations
+    for i, rate in enumerate(convergence_rates):
+        ax.text(i, rate + 2, f"{rate:.1f}%", ha="center", va="bottom")
+
+    # Plot 2: Convergence rates by target parameter
+    ax = axes[0, 1]
+    target_params = list(statistics["convergence_by_target"].keys())
+    target_rates = []
     for param in target_params:
-        costs = statistics["convergence_by_target"][param]["costs"]
-        if costs:
-            cost_data.append(costs)
-            cost_labels.append(param)
-    
-    if cost_data:
-        ax4.boxplot(cost_data, labels=cost_labels)
-        ax4.set_title("Computational Cost Distribution")
-        ax4.set_ylabel("Total Cost")
-        ax4.tick_params(axis='x', rotation=45)
-        ax4.set_yscale('log')
-    
-    # Plot 5: Optimal parameter frequency for CFL
-    ax5 = plt.subplot(2, 3, 5)
+        total = statistics["convergence_by_target"][param]["total"]
+        converged = statistics["convergence_by_target"][param]["converged"]
+        rate = (converged / total * 100) if total > 0 else 0
+        target_rates.append(rate)
+
+    ax.bar(target_params, target_rates, color=["blue", "cyan", "purple", "magenta"])
+    ax.set_ylabel("Convergence Rate (%)")
+    ax.set_title("Convergence Rate by Target Parameter")
+    ax.set_ylim(0, 100)
+    ax.tick_params(axis="x", rotation=45)
+
+    # Add text annotations
+    for i, rate in enumerate(target_rates):
+        ax.text(i, rate + 2, f"{rate:.1f}%", ha="center", va="bottom")
+
+    # Plot 3: Optimal parameter frequency (for all tasks)
+    ax = axes[1, 0]
+    colors = ["skyblue", "lightgreen", "lightcoral", "gold"]
+    color_idx = 0
+
     if statistics["optimal_cfl_values"]:
-        from collections import Counter
-        cfl_counter = Counter([round(val, 4) for val in statistics["optimal_cfl_values"]])
-        most_common_cfl = cfl_counter.most_common(10)
-        
-        if most_common_cfl:
-            values, counts = zip(*most_common_cfl)
-            bars5 = ax5.bar(range(len(values)), counts, color="lightsteelblue")
-            ax5.set_title("Most Frequent Optimal CFL Values")
-            ax5.set_xlabel("CFL Value")
-            ax5.set_ylabel("Frequency")
-            ax5.set_xticks(range(len(values)))
-            ax5.set_xticklabels([str(v) for v in values], rotation=45, ha='right')
-            
-            for bar, count in zip(bars5, counts):
-                height = bar.get_height()
-                ax5.text(bar.get_x() + bar.get_width()/2., height + 0.01, 
-                        str(count), ha='center', va='bottom')
-    else:
-        ax5.text(0.5, 0.5, 'No optimal CFL\nvalues found', 
-                ha='center', va='center', transform=ax5.transAxes, fontsize=12)
-        ax5.set_title("Optimal CFL Values")
-    
-    # Plot 6: Optimal parameter frequency for k
-    ax6 = plt.subplot(2, 3, 6)
+        cfl_values, cfl_counts = np.unique(list(statistics["optimal_cfl_values"]), return_counts=True)
+        ax.bar(
+            [f"{c:.4f}" for c in cfl_values],
+            cfl_counts,
+            alpha=0.7,
+            label="CFL parameter",
+            color=colors[color_idx % len(colors)],
+        )
+        color_idx += 1
+
+    if statistics["optimal_n_space_values"]:
+        n_space_values, n_space_counts = np.unique(list(statistics["optimal_n_space_values"]), return_counts=True)
+        ax.bar(
+            [str(n) for n in n_space_values],
+            n_space_counts,
+            alpha=0.7,
+            label="n_space parameter",
+            color=colors[color_idx % len(colors)],
+        )
+        color_idx += 1
+
     if statistics["optimal_k_values"]:
-        from collections import Counter
-        k_counter = Counter([round(val, 2) for val in statistics["optimal_k_values"]])
-        most_common_k = k_counter.most_common(10)
-        
-        if most_common_k:
-            values, counts = zip(*most_common_k)
-            bars6 = ax6.bar(range(len(values)), counts, color="lightcoral")
-            ax6.set_title("Most Frequent Optimal k Values")
-            ax6.set_xlabel("k Value")
-            ax6.set_ylabel("Frequency")
-            ax6.set_xticks(range(len(values)))
-            ax6.set_xticklabels([str(v) for v in values], rotation=45, ha='right')
-            
-            for bar, count in zip(bars6, counts):
-                height = bar.get_height()
-                ax6.text(bar.get_x() + bar.get_width()/2., height + 0.01, 
-                        str(count), ha='center', va='bottom')
-    else:
-        ax6.text(0.5, 0.5, 'No optimal k\nvalues found', 
-                ha='center', va='center', transform=ax6.transAxes, fontsize=12)
-        ax6.set_title("Optimal k Values")
-    
+        k_values, k_counts = np.unique(list(statistics["optimal_k_values"]), return_counts=True)
+        ax.bar(
+            [str(k) for k in k_values], k_counts, alpha=0.7, label="k parameter", color=colors[color_idx % len(colors)]
+        )
+        color_idx += 1
+
+    if statistics["optimal_w_values"]:
+        w_values, w_counts = np.unique(list(statistics["optimal_w_values"]), return_counts=True)
+        ax.bar(
+            [str(w) for w in w_values],
+            w_counts,
+            alpha=0.7,
+            label="w parameter",
+            color=colors[color_idx % len(colors)],
+        )
+
+    ax.set_ylabel("Frequency")
+    ax.set_title("Optimal Parameter Values (All Tasks)")
+    ax.legend()
+    ax.tick_params(axis="x", rotation=45)
+
+    # Plot 4: Cost distribution
+    ax = axes[1, 1]
+    all_costs = []
+    for target in statistics["convergence_by_target"]:
+        all_costs.extend(statistics["convergence_by_target"][target]["costs"])
+
+    if all_costs:
+        ax.hist(all_costs, bins=20, alpha=0.7, edgecolor="black")
+        ax.set_xlabel("Total Cost")
+        ax.set_ylabel("Frequency")
+        ax.set_title("Distribution of Total Costs")
+        ax.set_yscale("log")
+
     plt.tight_layout()
-    plt.savefig(os.path.join(output_dir, "burgers_1d_statistics.png"), dpi=300, bbox_inches='tight')
+    plt.savefig(os.path.join(output_dir, "burgers_1d_statistics.png"), dpi=300, bbox_inches="tight")
     plt.close()
     
-    # Generate summary text file
-    with open(os.path.join(output_dir, "burgers_1d_statistics_summary.txt"), "w") as f:
-        f.write("BURGERS 1D DUMMY SOLUTION STATISTICS SUMMARY\n")
-        f.write("=" * 50 + "\n\n")
-        
-        f.write(f"Total tasks executed: {statistics['total_tasks']}\n")
-        f.write(f"Successfully converged: {statistics['total_converged']}\n")
-        f.write(f"Overall convergence rate: {(statistics['total_converged']/max(statistics['total_tasks'], 1)*100):.2f}%\n\n")
-        
-        f.write("CONVERGENCE BY TARGET PARAMETER:\n")
-        for param, stats in statistics["convergence_by_target"].items():
-            rate = stats["converged"] / max(stats["total"], 1) * 100
-            f.write(f"  {param.upper()}: {rate:.2f}% ({stats['converged']}/{stats['total']})\n")
-        
-        f.write("\nCONVERGENCE BY PRECISION LEVEL:\n")
-        for precision, stats in statistics["convergence_by_precision"].items():
-            rate = stats["converged"] / max(stats["total"], 1) * 100
-            f.write(f"  {precision.upper()}: {rate:.2f}% ({stats['converged']}/{stats['total']})\n")
-        
-        f.write("\nCONVERGENCE BY PROFILE:\n")
-        for profile, stats in statistics["convergence_by_profile"].items():
-            rate = stats["converged"] / max(stats["total"], 1) * 100
-            f.write(f"  {profile.upper()}: {rate:.2f}% ({stats['converged']}/{stats['total']})\n")
-        
-        f.write(f"\nMOST FREQUENT OPTIMAL VALUES:\n")
-        for param_name, values in [("CFL", statistics["optimal_cfl_values"]), 
-                                   ("k", statistics["optimal_k_values"]),
-                                   ("w", statistics["optimal_w_values"]),
-                                   ("n_space", statistics["optimal_n_space_values"])]:
-            if values:
-                from collections import Counter
-                if param_name == "CFL":
-                    counter = Counter([round(val, 4) for val in values])
-                elif param_name in ["k", "w"]:
-                    counter = Counter([round(val, 2) for val in values])
-                else:
-                    counter = Counter([int(val) for val in values])
-                    
-                most_common = counter.most_common(1)[0]
-                frequency = most_common[1] / len(values) * 100
-                f.write(f"  {param_name}: {most_common[0]} (appears {frequency:.1f}% of the time)\n")
-            else:
-                f.write(f"  {param_name}: No values found\n")
+    # Create detailed statistics file
+    stats_file = os.path.join(output_dir, "burgers_1d_statistics_summary.txt")
+    with open(stats_file, "w") as f:
+        f.write("=== Burgers 1D Dummy Search Statistics Summary ===\n\n")
+
+        f.write("1. Overall Statistics:\n")
+        f.write(f"   Total tasks: {statistics['total_tasks']}\n")
+        f.write(f"   Successfully converged: {statistics['total_converged']}\n")
+        f.write(
+            f"   Overall convergence rate: {(statistics['total_converged']/statistics['total_tasks']*100):.2f}%\n\n"
+        )
+
+        f.write("2. Convergence by Precision Level:\n")
+        for precision, data in statistics["convergence_by_precision"].items():
+            rate = (data["converged"] / data["total"] * 100) if data["total"] > 0 else 0
+            f.write(f"   {precision}: {data['converged']}/{data['total']} ({rate:.2f}%)\n")
+        f.write("\n")
+
+        f.write("3. Convergence by Target Parameter:\n")
+        for param, data in statistics["convergence_by_target"].items():
+            rate = (data["converged"] / data["total"] * 100) if data["total"] > 0 else 0
+            avg_cost = np.mean(data["costs"]) if data["costs"] else 0
+            f.write(f"   {param}: {data['converged']}/{data['total']} ({rate:.2f}%), avg cost: {avg_cost:.0f}\n")
+        f.write("\n")
+
+        f.write("4. Convergence by Profile:\n")
+        for profile, data in statistics["convergence_by_profile"].items():
+            rate = (data["converged"] / data["total"] * 100) if data["total"] > 0 else 0
+            f.write(f"   {profile}: {data['converged']}/{data['total']} ({rate:.2f}%)\n")
+        f.write("\n")
+
+        f.write("5. Optimal Parameter Frequencies (All Tasks):\n")
+        if statistics["optimal_cfl_values"]:
+            cfl_values, cfl_counts = np.unique(list(statistics["optimal_cfl_values"]), return_counts=True)
+            f.write("   CFL parameter (iterative):\n")
+            for cfl, count in zip(cfl_values, cfl_counts):
+                f.write(f"     CFL={cfl:.4f}: {count} times\n")
+
+        if statistics["optimal_n_space_values"]:
+            n_space_values, n_space_counts = np.unique(list(statistics["optimal_n_space_values"]), return_counts=True)
+            f.write("   n_space parameter (iterative):\n")
+            for n_space, count in zip(n_space_values, n_space_counts):
+                f.write(f"     n_space={n_space}: {count} times\n")
+
+        if statistics["optimal_k_values"]:
+            k_values, k_counts = np.unique(list(statistics["optimal_k_values"]), return_counts=True)
+            f.write("   k parameter (0-shot):\n")
+            for k, count in zip(k_values, k_counts):
+                f.write(f"     k={k}: {count} times\n")
+
+        if statistics["optimal_w_values"]:
+            w_values, w_counts = np.unique(list(statistics["optimal_w_values"]), return_counts=True)
+            f.write("   w parameter (0-shot):\n")
+            for w, count in zip(w_values, w_counts):
+                f.write(f"     w={w}: {count} times\n")
 
 
 def main():
@@ -324,6 +309,8 @@ def main():
                             w=task_params["w"],
                             tolerance_infity=precision_vals["tolerance_linf"],
                             tolerance_2=precision_vals["tolerance_rmse"],
+                            multiplication_factor=target_config["multiplication_factor"],
+                            max_iter=target_config["max_iteration_num"],
                         )
                         if best_param is not None:
                             statistics["optimal_cfl_values"].append(best_param)
@@ -337,6 +324,8 @@ def main():
                             w=task_params["w"],
                             tolerance_infity=precision_vals["tolerance_linf"],
                             tolerance_2=precision_vals["tolerance_rmse"],
+                            multiplication_factor=target_config["multiplication_factor"],
+                            max_iter=target_config["max_iteration_num"],
                         )
                         if best_param is not None:
                             statistics["optimal_n_space_values"].append(best_param)
@@ -344,11 +333,18 @@ def main():
                     elif target_param == "k":
                         is_converged, optimal_params, optimal_cost_history, param_history = find_optimal_k(
                             profile=profile, 
+                            cfl=task_params["cfl"],
                             w=task_params["w"], 
+                            n_space=target_configs["n_space"]["initial_value"],
                             tolerance_infity=precision_vals["tolerance_linf"], 
-                            tolerance_2=precision_vals["tolerance_rmse"]
+                            tolerance_2=precision_vals["tolerance_rmse"],
+                            search_range_min=target_config["search_range_min"],
+                            search_range_max=target_config["search_range_max"],
+                            search_range_slice_num=target_config["search_range_slice_num"],
+                            multiplication_factor=target_configs["n_space"]["multiplication_factor"],
+                            max_iter=target_configs["n_space"]["max_iteration_num"],
                         )
-                        best_param, optimal_cfl = optimal_params if optimal_params != (None, None) else (None, None)
+                        best_param, optimal_n_space = optimal_params if optimal_params is not None else (None, None)
                         cost_history = optimal_cost_history
                         if best_param is not None:
                             statistics["optimal_k_values"].append(best_param)
@@ -356,11 +352,18 @@ def main():
                     elif target_param == "w":
                         is_converged, optimal_params, optimal_cost_history, param_history = find_optimal_w(
                             profile=profile, 
+                            cfl=task_params["cfl"],
                             k=task_params["k"], 
+                            n_space=target_configs["n_space"]["initial_value"],
                             tolerance_infity=precision_vals["tolerance_linf"], 
-                            tolerance_2=precision_vals["tolerance_rmse"]
+                            tolerance_2=precision_vals["tolerance_rmse"],
+                            search_range_min=target_config["search_range_min"],
+                            search_range_max=target_config["search_range_max"],
+                            search_range_slice_num=target_config["search_range_slice_num"],
+                            multiplication_factor=target_configs["n_space"]["multiplication_factor"],
+                            max_iter=target_configs["n_space"]["max_iteration_num"],
                         )
-                        best_param, optimal_cfl = optimal_params if optimal_params != (None, None) else (None, None)
+                        best_param, optimal_n_space = optimal_params if optimal_params is not None else (None, None)
                         cost_history = optimal_cost_history
                         if best_param is not None:
                             statistics["optimal_w_values"].append(best_param)
@@ -432,6 +435,38 @@ def main():
     print(f"💾 Dataset files saved to: {dataset_dir}")
     print(f"   ✅ Successful tasks: {len(successful_tasks)} tasks")
     print(f"   ❌ Failed tasks: {len(failed_tasks)} tasks")
+    
+    # Display dataset summary
+    if len(successful_tasks) > 0:
+        print(f"\n📈 Successful Task Examples:")
+        for i, task in enumerate(successful_tasks[:3]):  # Show first 3 successful tasks
+            print(f"   {i+1}. {task['profile']} profile, {task['target_parameter']} optimization -> {task['results']['optimal_parameter_value']}")
+    
+    if len(failed_tasks) > 0:
+        print(f"\n📉 Failed Task Examples:")
+        for i, task in enumerate(failed_tasks[:3]):  # Show first 3 failed tasks
+            print(f"   {i+1}. {task['profile']} profile, {task['target_parameter']} optimization (cost: {task['results']['total_computational_cost']})")
+
+    # Expected task calculation for verification
+    expected_total = 0
+    for target_param, target_config in target_configs.items():
+        param_values = [target_config["non_target_parameters"][name] for name in target_config["non_target_parameters"]]
+        combinations_per_target = 1
+        for values in param_values:
+            combinations_per_target *= len(values)
+        expected_total += len(profiles) * combinations_per_target
+
+    print(f"\nTask breakdown:")
+    for target_param, target_config in target_configs.items():
+        param_values = [target_config["non_target_parameters"][name] for name in target_config["non_target_parameters"]]
+        combinations_per_target = 1
+        for values in param_values:
+            combinations_per_target *= len(values)
+        tasks_for_param = len(profiles) * combinations_per_target
+        print(f"  {target_param}: {len(profiles)} profiles × {combinations_per_target} combos = {tasks_for_param}")
+    print(f"  Expected total per precision: {expected_total}")
+    print(f"  Expected total across {len(precision_configs)} precisions: {expected_total * len(precision_configs)}")
+    print(f"  Actual total: {statistics['total_tasks']}")
     
     print(f"\n{'='*60}")
     print("BURGERS 1D DUMMY SOLUTION GENERATION COMPLETED!")

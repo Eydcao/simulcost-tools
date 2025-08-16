@@ -12,13 +12,11 @@ from wrappers.burgers_1d import (
 )
 
 
-def find_convergent_cfl(profile, cfl, k, w, tolerance_infity, tolerance_2):
+def find_convergent_cfl(profile, cfl, k, w, tolerance_infity, tolerance_2, multiplication_factor, max_iter):
     """Iteratively reduce CFL number until convergence is achieved."""
     cfl_history = []
     cost_history = []
     param_history = []
-
-    max_iter = 10  # Fixed maximum iterations
 
     current_cfl = cfl
     converged = False
@@ -69,51 +67,51 @@ def find_convergent_cfl(profile, cfl, k, w, tolerance_infity, tolerance_2):
     return bool(is_converged), best_cfl, cost_history, param_history
 
 
-def find_optimal_k(profile, w, tolerance_infity, tolerance_2):
+def find_optimal_k(profile, cfl, w, n_space, tolerance_infity, tolerance_2, search_range_min, search_range_max, search_range_slice_num, multiplication_factor, max_iter):
     """
-    Grid search on k ∈ [-1, 1] (step size 0.1) and record all CFL exploration sequences for each k.
+    Grid search on k ∈ [-1, 1] (step size 0.1) and record all n_space exploration sequences for each k.
 
     Returns
     -------
     is_converged_optimal : bool
-        Whether the simulation with optimal_k + optimal_cfl finally converged.
+        Whether the simulation with optimal_k + optimal_n_space finally converged.
     optimal_param : (float | None, float | None)
-        (optimal_k, optimal_cfl). Both are None if no convergent solution exists.
+        (optimal_k, optimal_n_space). Both are None if no convergent solution exists.
     optimal_cost_history : list[float] | None
-        The CFL → cost evolution sequence (cost_history) corresponding to optimal_k and finally converged.
+        The n_space → cost evolution sequence (cost_history) corresponding to optimal_k and finally converged.
         None if no convergent solution exists.
     param_history : list
     """
-    k_values = np.linspace(-1.0, 1.0, 21)
-    param_history = []  # Store (k, cfl_history)
+    k_values = np.linspace(search_range_min, search_range_max, search_range_slice_num)
+    param_history = []  # Store (k, n_space_history)
     k_results = []  # Store key information for each k (when converged)
 
     for k in k_values:
         k = round(float(k), 1)
         print(f"\n=== Testing k = {k} ===")
 
-        is_converged, best_cfl, cost_history, one_param_history = find_convergent_cfl(
-            profile, 1.0, k, w, tolerance_infity, tolerance_2
+        is_converged, best_n_space, cost_history, one_param_history = find_convergent_n_space(
+            profile, n_space, cfl, k, w, tolerance_infity, tolerance_2, multiplication_factor, max_iter
         )
 
-        # Record CFL exploration trajectory for each k
+        # Record n_space exploration trajectory for each k
         param_history.append(one_param_history)
 
-        # If convergent CFL is found, store in result pool
-        if best_cfl is not None:
-            total_cost = sum(cost_history[:-1])  # Calculate total cost
+        # If convergent n_space is found, store in result pool
+        if best_n_space is not None:
+            total_cost = sum(cost_history)  # Calculate total cost
             k_results.append(
                 {
                     "k": k,
-                    "best_cfl": best_cfl,
+                    "best_n_space": best_n_space,
                     "total_cost": total_cost,
                     "is_converged": is_converged,
                     "cost_history": cost_history,  # ★ Key: save complete cost_history
                 }
             )
-            print(f"k = {k}: Best CFL = {best_cfl}, Total Cost = {total_cost}")
+            print(f"k = {k}: Best n_space = {best_n_space}, Total Cost = {total_cost}")
         else:
-            print(f"k = {k}: No convergent CFL found")
+            print(f"k = {k}: No convergent n_space found")
 
     # Select convergent solution with minimum total cost
     if k_results:
@@ -121,19 +119,19 @@ def find_optimal_k(profile, w, tolerance_infity, tolerance_2):
         opt_rec = k_results[min_cost_idx]
 
         optimal_k = opt_rec["k"]
-        optimal_cfl = opt_rec["best_cfl"]
+        optimal_n_space = opt_rec["best_n_space"]
         optimal_cost_history = opt_rec["cost_history"]
         is_converged_optimal = opt_rec["is_converged"]
 
-        print(f"\nOptimal k found: {optimal_k} with CFL = {optimal_cfl}")
+        print(f"\nOptimal k found: {optimal_k} with n_space = {optimal_n_space}")
         print(f"Optimal cost history length: {len(optimal_cost_history)}")
     else:
-        optimal_k = optimal_cfl = None
+        optimal_k = optimal_n_space = None
         optimal_cost_history = None
         is_converged_optimal = False
         print("\nNo optimal k found")
 
-    optimal_param = (optimal_k, optimal_cfl)
+    optimal_param = (optimal_k, optimal_n_space)
 
     return (
         is_converged_optimal,
@@ -143,22 +141,22 @@ def find_optimal_k(profile, w, tolerance_infity, tolerance_2):
     )
 
 
-def find_optimal_w(profile, k, tolerance_infity, tolerance_2):
+def find_optimal_w(profile, cfl, k, n_space, tolerance_infity, tolerance_2, search_range_min, search_range_max, search_range_slice_num, multiplication_factor, max_iter):
     """
-    Grid search on w ∈ [0, 2] (step size 0.1) and record all CFL exploration sequences for each w.
+    Grid search on w ∈ [0, 2] (step size 0.1) and record all n_space exploration sequences for each w.
 
     Returns
     -------
     is_converged_optimal : bool
-        Whether the simulation with optimal_w + optimal_cfl finally converged.
+        Whether the simulation with optimal_w + optimal_n_space finally converged.
     optimal_param : (float | None, float | None)
-        (optimal_w, optimal_cfl). Both are None if no convergent solution exists.
+        (optimal_w, optimal_n_space). Both are None if no convergent solution exists.
     optimal_cost_history : list[float] | None
-        The CFL → cost evolution sequence (cost_history) corresponding to optimal_w and finally converged.
+        The n_space → cost evolution sequence (cost_history) corresponding to optimal_w and finally converged.
         None if no convergent solution exists.
     param_history : list
     """
-    w_values = np.linspace(0.0, 2.0, 21)
+    w_values = np.linspace(search_range_min, search_range_max, search_range_slice_num)
     param_history = []
     w_results = []  # Store key information for each w when converged
 
@@ -166,28 +164,28 @@ def find_optimal_w(profile, k, tolerance_infity, tolerance_2):
         w = round(float(w), 1)
         print(f"\n=== Testing w = {w} ===")
 
-        is_converged, best_cfl, cost_history, one_param_history = find_convergent_cfl(
-            profile, 1.0, k, w, tolerance_infity, tolerance_2
+        is_converged, best_n_space, cost_history, one_param_history = find_convergent_n_space(
+            profile, n_space, cfl, k, w, tolerance_infity, tolerance_2, multiplication_factor, max_iter
         )
 
-        # Record CFL exploration trajectory for each w
+        # Record n_space exploration trajectory for each w
         param_history.append(one_param_history)
 
-        # If convergent CFL is found, collect results
-        if best_cfl is not None:
-            total_cost = sum(cost_history[:-1])  # Calculate total cost
+        # If convergent n_space is found, collect results
+        if best_n_space is not None:
+            total_cost = sum(cost_history)  # Calculate total cost
             w_results.append(
                 {
                     "w": w,
-                    "best_cfl": best_cfl,
+                    "best_n_space": best_n_space,
                     "total_cost": total_cost,
                     "is_converged": is_converged,
                     "cost_history": cost_history,
                 }
             )
-            print(f"w = {w}: Best CFL = {best_cfl}, Total Cost = {total_cost}")
+            print(f"w = {w}: Best n_space = {best_n_space}, Total Cost = {total_cost}")
         else:
-            print(f"w = {w}: No convergent CFL found")
+            print(f"w = {w}: No convergent n_space found")
 
     # Select convergent solution with minimum total cost
     if w_results:
@@ -195,19 +193,19 @@ def find_optimal_w(profile, k, tolerance_infity, tolerance_2):
         opt_rec = w_results[min_cost_idx]
 
         optimal_w = opt_rec["w"]
-        optimal_cfl = opt_rec["best_cfl"]
+        optimal_n_space = opt_rec["best_n_space"]
         optimal_cost_history = opt_rec["cost_history"]
         is_converged_optimal = opt_rec["is_converged"]
 
-        print(f"\nOptimal w found: {optimal_w} with CFL = {optimal_cfl}")
+        print(f"\nOptimal w found: {optimal_w} with n_space = {optimal_n_space}")
         print(f"Optimal cost history length: {len(optimal_cost_history)}")
     else:
-        optimal_w = optimal_cfl = None
+        optimal_w = optimal_n_space = None
         optimal_cost_history = None
         is_converged_optimal = False
         print("\nNo optimal w found")
 
-    optimal_param = (optimal_w, optimal_cfl)
+    optimal_param = (optimal_w, optimal_n_space)
 
     return (
         is_converged_optimal,
@@ -217,14 +215,11 @@ def find_optimal_w(profile, k, tolerance_infity, tolerance_2):
     )
 
 
-def find_convergent_n_space(profile, n_space, cfl, k, w, tolerance_infity, tolerance_2):
+def find_convergent_n_space(profile, n_space, cfl, k, w, tolerance_infity, tolerance_2, multiplication_factor, max_iter):
     """Iteratively increase n_space (spatial resolution) until convergence is achieved."""
     n_space_history = []
     cost_history = []
     param_history = []
-
-    max_iter = 7  # Maximum iterations
-    multiplication_factor = 2  # Double n_space each iteration
 
     current_n_space = n_space
     converged = False
@@ -308,7 +303,7 @@ if __name__ == "__main__":
 
     if args.task == "cfl":
         print("\n=== Starting CFL convergence search ===")
-        best_cfl, total_cost, cost_history, param_history = find_convergent_cfl(
+        is_converged, best_cfl, cost_history, param_history = find_convergent_cfl(
             profile=args.profile,
             cfl=args.cfl,
             k=args.k,
@@ -318,43 +313,43 @@ if __name__ == "__main__":
         )
 
         if best_cfl is not None:
-            print(f"\nRecommended CFL: {best_cfl}, total cost: {total_cost}")
+            print(f"\nRecommended CFL: {best_cfl}, total cost: {sum(cost_history)}")
         else:
-            print(f"\nNo convergent CFL found, total cost: {total_cost}")
+            print(f"\nNo convergent CFL found, total cost: {sum(cost_history)}")
 
     elif args.task == "k":
         print("\n=== Starting k parameter search ===")
-        optimal_k, optimal_cfl, optimal_cost, k_results = find_optimal_k(
+        is_converged, optimal_param, optimal_cost_history, param_history = find_optimal_k(
             profile=args.profile,
+            cfl=args.cfl,
             w=args.w,
+            n_space=args.n_space,
             tolerance_infity=args.tolerance_infity,
             tolerance_2=args.tolerance_2,
         )
 
+        optimal_k, optimal_n_space = optimal_param
         if optimal_k is not None:
-            print(f"\nRecommended k: {optimal_k} with CFL: {optimal_cfl}")
-            print(f"Total cost across all k tests: {optimal_cost}")
-            print(f"Print log for each k")
-            for k_log in k_results:
-                print(k_log)
+            print(f"\nRecommended k: {optimal_k} with n_space: {optimal_n_space}")
+            print(f"Total cost: {sum(optimal_cost_history)}")
         else:
             print("\nNo optimal k found")
 
     elif args.task == "w":
         print("\n=== Starting w parameter search ===")
-        optimal_w, optimal_cfl, optimal_cost, w_results = find_optimal_w(
+        is_converged, optimal_param, optimal_cost_history, param_history = find_optimal_w(
             profile=args.profile,
+            cfl=args.cfl,
             k=args.k,
+            n_space=args.n_space,
             tolerance_infity=args.tolerance_infity,
             tolerance_2=args.tolerance_2,
         )
 
+        optimal_w, optimal_n_space = optimal_param
         if optimal_w is not None:
-            print(f"\nRecommended w: {optimal_w} with CFL: {optimal_cfl}")
-            print(f"Total cost across all w tests: {optimal_cost}")
-            print(f"Print log for each w")
-            for w_log in w_results:
-                print(w_log)
+            print(f"\nRecommended w: {optimal_w} with n_space: {optimal_n_space}")
+            print(f"Total cost: {sum(optimal_cost_history)}")
         else:
             print("\nNo optimal w found")
 

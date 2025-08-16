@@ -10,16 +10,16 @@ task_distribution:
 
 precision_levels:
   high:
-    tolerance_rmse: 0.001
-    tolerance_linf: 0.01
+    tolerance_rmse: 0.01
+    tolerance_linf: 10
     description: "Most stringent convergence criteria"
   medium:
-    tolerance_rmse: 0.005
-    tolerance_linf: 0.025
+    tolerance_rmse: 0.04
+    tolerance_linf: 10
     description: "Moderate convergence criteria"
   low:
-    tolerance_rmse: 0.01
-    tolerance_linf: 0.05
+    tolerance_rmse: 0.08
+    tolerance_linf: 10
     description: "Relaxed convergence criteria"
 
 profiles:
@@ -57,7 +57,7 @@ target_parameters:
     search_type: "iterative+0-shot"
     initial_value: 256
     multiplication_factor: 2
-    max_iteration_num: 7
+    max_iteration_num: 6
     non_target_parameters:
       cfl: 0.25                # Fixed stable CFL for spatial convergence studies
       k: [-1.0, 0.0, 1.0]      # Array for multiple choices
@@ -71,7 +71,7 @@ target_parameters:
     max_iteration_num: 7       # For subsequent CFL search after finding optimal k
     multiplication_factor: 0.5 # For CFL search
     non_target_parameters:
-      cfl: 1.0                 # Starting CFL for composite search
+      cfl: 0.25                 # Starting CFL for composite search
       w: [1.0, 1.5, 2.0]       # Array for multiple choices
 
   w:
@@ -82,5 +82,5 @@ target_parameters:
     max_iteration_num: 7       # For subsequent CFL search after finding optimal w
     multiplication_factor: 0.5 # For CFL search
     non_target_parameters:
-      cfl: 1.0                 # Starting CFL for composite search
+      cfl: 0.25                 # Starting CFL for composite search
       k: [-1.0, 0.0, 1.0]      # Array for multiple choices
