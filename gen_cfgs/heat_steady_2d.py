@@ -3,7 +3,7 @@ import re
 from pathlib import Path
 
 # Fix np random seed
-np.random.seed(42)
+np.random.seed(21)
 
 
 def create_heat_steady_2d_profiles(boundary_configs, base_profile_path):
@@ -44,7 +44,6 @@ def create_heat_steady_2d_profiles(boundary_configs, base_profile_path):
             "T_bottom": config["T_bottom"],
             "T_left": config["T_left"],
             "T_right": config["T_right"],
-            "T_init": config.get("T_init", 0.0),
             "dump_dir": f"sim_res/heat_steady_2d/{profile_name}",
         }
 
@@ -96,15 +95,26 @@ def create_heat_steady_2d_profiles(boundary_configs, base_profile_path):
 if __name__ == "__main__":
     # Create Heat Steady 2D profiles with diverse boundary condition patterns
     boundary_configs = [
-        # p2: Hot sides opposite (top and bottom hot)
-        {"T_top": 1.0, "T_bottom": 1.0, "T_left": 0.0, "T_right": 0.0, "T_init": 0.0},
-        # p3: Corner hot spot (right side hot)
-        {"T_top": 0.0, "T_bottom": 0.0, "T_left": 0.0, "T_right": 1.0, "T_init": 0.0},
-        # p4: Alternating pattern (left hot, moderate top/bottom)
-        {"T_top": 0.5, "T_bottom": 0.5, "T_left": 1.0, "T_right": 0.0, "T_init": 0.25},
-        # p5: Uniform heating (all boundaries warm)
-        {"T_top": 0.8, "T_bottom": 0.8, "T_left": 0.8, "T_right": 0.8, "T_init": 0.2},
+        # p2: gradient vertical
+        {"T_top": 0.125, "T_bottom": 1.0, "T_left": 0.0, "T_right": 0.0, "Ly": 2.0},
+        # p3: gradient horizontal
+        {"T_top": 0.0, "T_bottom": 0.0, "T_left": 0.25, "T_right": 1.0, "Lx": 1.5},
+        # p4: gradient right-upper to left-bottom
+        {"T_top": 1.0, "T_bottom": 0.125, "T_left": 0.0, "T_right": 0.5, "Ly": 2.0, "Lx": 1.25},
     ]
+
+    # Add 4 randomized profiles (p5-p8)
+    for _ in range(4):
+        boundary_configs.append(
+            {
+                "T_top": round(float(np.random.rand()), 3),
+                "T_bottom": round(float(np.random.rand()), 3),
+                "T_left": round(float(np.random.rand()), 3),
+                "T_right": round(float(np.random.rand()), 3),
+                "Lx": round(float(np.random.uniform(1.0, 2.0)), 2),
+                "Ly": round(float(np.random.uniform(1.0, 2.0)), 2),
+            }
+        )
 
     profiles = create_heat_steady_2d_profiles(
         boundary_configs=boundary_configs, base_profile_path="./run_configs/heat_steady_2d/p1.yaml"

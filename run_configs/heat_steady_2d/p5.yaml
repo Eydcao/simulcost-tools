@@ -8,20 +8,20 @@ Lx: 1.0          # Domain length in x
 Ly: 1.0          # Domain length in y
 
 # Boundary conditions
-T_top: 0.8       # Fixed top boundary temperature
-T_bottom: 0.8    # Fixed bottom boundary temperature
-T_left: 0.8      # Fixed left boundary temperature
-T_right: 0.8     # Fixed right boundary temperature
+T_top: 0.049       # Fixed top boundary temperature
+T_bottom: 0.289    # Fixed bottom boundary temperature
+T_left: 0.721      # Fixed left boundary temperature
+T_right: 0.022     # Fixed right boundary temperature
 
 # Controllable parameters
 dx: 0.01         # Grid spacing (determines resolution)
 relax: 1.0       # SOR relaxation parameter
 error_threshold: 1e-8  # Convergence threshold
-T_init: 0.2      # Initial temperature field
+T_init: 0.0      # Initial temperature field
 
 # Simulator statics
-record_dt: 100   # Time interval between recordings (iterations)
-end_frame: 50    # Simulation end after certain number of frames
+record_dt: 10000
+end_frame: 10
 
 # Output configuration
 dump_dir: "sim_res/heat_steady_2d/p5"  # Directory for output files

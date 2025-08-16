@@ -4,11 +4,15 @@ import h5py
 import numpy as np
 import json
 from scipy.interpolate import RegularGridInterpolator
+import sys
+
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from solvers.utils import format_param_for_path
 
 
 def run_sim_heat_steady_2d(profile, dx, relax, error_threshold, t_init):
     """Run the heat_steady_2d simulation with the given parameters if not already simulated."""
-    dir_path = f"sim_res/heat_steady_2d/{profile}_dx_{dx}_relax_{relax}_Tinit_{t_init}_error_{error_threshold}/"
+    dir_path = f"sim_res/heat_steady_2d/{profile}_dx_{format_param_for_path(dx)}_relax_{format_param_for_path(relax)}_Tinit_{format_param_for_path(t_init)}_error_{format_param_for_path(error_threshold)}/"
     meta_path = os.path.join(dir_path, "meta.json")
 
     # Check if the simulation has already been run
@@ -35,23 +39,30 @@ def run_sim_heat_steady_2d(profile, dx, relax, error_threshold, t_init):
 
 
 def get_res_heat_steady_2d(profile, dx, relax, error_threshold, t_init):
-    """Load final temperature field for given parameters, triggering a simulation if results are missing."""
-    dir_path = f"sim_res/heat_steady_2d/{profile}_dx_{dx}_relax_{relax}_Tinit_{t_init}_error_{error_threshold}/"
+    dir_path = f"sim_res/heat_steady_2d/{profile}_dx_{format_param_for_path(dx)}_relax_{format_param_for_path(relax)}_Tinit_{format_param_for_path(t_init)}_error_{format_param_for_path(error_threshold)}/"
+    meta_path = os.path.join(dir_path, "meta.json")
 
-    # Check if at least one result file exists, otherwise trigger a simulation
-    if not os.path.exists(dir_path) or not any(
-        fname.startswith("res_") and fname.endswith(".h5") for fname in os.listdir(dir_path)
-    ):
+    # Check if meta.json exists and contains 'cost', otherwise trigger a simulation
+    if not os.path.exists(meta_path):
         print(
-            f"No results found for parameters: dx={dx}, relax={relax}, error_threshold={error_threshold}, T_init={t_init}. Triggering simulation."
+            f"No meta.json found for parameters: dx={dx}, relax={relax}, error_threshold={error_threshold}, T_init={t_init}. Triggering simulation."
         )
         run_sim_heat_steady_2d(profile, dx, relax, error_threshold, t_init)
+    else:
+        with open(meta_path, "r") as f:
+            meta = json.load(f)
+            if "cost" not in meta:
+                print(
+                    f"meta.json found but missing 'cost' for parameters: dx={dx}, relax={relax}, error_threshold={error_threshold}, T_init={t_init}. Triggering simulation."
+                )
+                run_sim_heat_steady_2d(profile, dx, relax, error_threshold, t_init)
 
     # Find the latest result file in the directory
     files = [f for f in os.listdir(dir_path) if f.startswith("res_") and f.endswith(".h5")]
     files.sort(key=lambda x: int(x.split("_")[1].split(".")[0]))
     latest_file = files[-1]
 
+    # Load simulation results
     file_path = os.path.join(dir_path, latest_file)
     with h5py.File(file_path, "r") as f:
         T = np.array(f["T"])
@@ -59,7 +70,11 @@ def get_res_heat_steady_2d(profile, dx, relax, error_threshold, t_init):
         Y = np.array(f["y"])
         iter_count = np.array(f["iter"])
 
-    return T, X, Y, iter_count
+    # Load metadata (cost, convergence info, etc.)
+    with open(meta_path, "r") as f:
+        metadata = json.load(f)
+
+    return T, X, Y, iter_count, metadata
 
 
 def compute_heat_steady_metrics(T, X, Y):
@@ -81,9 +96,7 @@ def compute_heat_steady_metrics(T, X, Y):
     T_max = np.max([np.max(X), np.max(Y), 1.0])  # Assume 1 is maximum boundary
     temperature_bounded = np.all((T >= T_min - 0.1) & (T <= T_max + 0.1))
 
-    return {
-        "temperature_valid": temperature_valid and temperature_bounded
-    }
+    return {"temperature_valid": temperature_valid and temperature_bounded}
 
 
 def print_heat_steady_metrics(name, metrics):
@@ -99,15 +112,15 @@ def print_heat_steady_metrics(name, metrics):
 def compare_res_heat_steady_2d(
     profile1, dx1, relax1, error_threshold1, t_init1, profile2, dx2, relax2, error_threshold2, t_init2, rmse_tolerance
 ):
-    """Compare two sets of results using RMSE of temperature distribution on the middle vertical line (x=0.5).
+    """Compare two sets of results using relative RMSE of temperature distribution on central line.
     Returns:
         converged (bool): True if RMSE tolerance is met.
         metrics1 (dict): Metrics for case 1.
         metrics2 (dict): Metrics for case 2.
         rmse (float): RMSE of temperature difference.
     """
-    res1, x1, y1, _ = get_res_heat_steady_2d(profile1, dx1, relax1, error_threshold1, t_init1)
-    res2, x2, y2, _ = get_res_heat_steady_2d(profile2, dx2, relax2, error_threshold2, t_init2)
+    res1, x1, y1, _, metadata1 = get_res_heat_steady_2d(profile1, dx1, relax1, error_threshold1, t_init1)
+    res2, x2, y2, _, metadata2 = get_res_heat_steady_2d(profile2, dx2, relax2, error_threshold2, t_init2)
 
     # Find the index of x=0.5 in both datasets
     idx1 = np.argmin(np.abs(x1 - 0.5))
@@ -117,27 +130,38 @@ def compare_res_heat_steady_2d(
     T_line1 = res1[idx1, :]
     T_line2 = res2[idx2, :]
 
-    # Interpolate T_line2 to match the y-coordinates of T_line1
-    interpolator = RegularGridInterpolator((y2,), T_line2)
-    T_line2_interp = interpolator(y1)
+    # Interpolate the higher-resolution line to the lower-resolution y-coordinates
+    if len(y1) < len(y2):
+        interpolator = RegularGridInterpolator((y2,), T_line2)
+        T_line2_interp = interpolator(y1)
+        T_line2 = T_line2_interp
+    else:
+        interpolator = RegularGridInterpolator((y1,), T_line1)
+        T_line1_interp = interpolator(y2)
+        T_line1 = T_line1_interp
+
+    # Compute relative error norms for all primitive variables
+    eps = 1e-12  # To avoid division by zero
+
+    def denom(a, b):
+        # Use average of abs(std) of both arrays plus eps
+        std_a = np.std(a)
+        std_b = np.std(b)
+        return 0.5 * (np.abs(std_a) + np.abs(std_b)) + eps
 
     # Calculate RMSE
-    rmse = np.sqrt(np.mean((T_line1 - T_line2_interp) ** 2))
+    rmse = np.sqrt(np.mean((T_line1 - T_line2) ** 2)) / denom(T_line1, T_line2)
 
     # Compute metrics
     metrics1 = compute_heat_steady_metrics(res1, x1, y1)
     metrics2 = compute_heat_steady_metrics(res2, x2, y2)
 
     # Convergence criteria
-    converged = (
-        rmse < rmse_tolerance
-        and metrics1["temperature_valid"]
-        and metrics2["temperature_valid"]
-    )
+    converged = rmse < rmse_tolerance and metrics1["temperature_valid"] and metrics2["temperature_valid"]
 
     print_heat_steady_metrics("Case 1", metrics1)
     print_heat_steady_metrics("Case 2", metrics2)
 
-    print(f"RMSE (middle line): {rmse}")
+    print(f"RMSE (relative middle line): {rmse}")
 
     return converged, metrics1, metrics2, rmse
