@@ -189,15 +189,19 @@ def plot_statistics(statistics, output_dir):
             mesh_labels.append("mesh_y")
     
     if mesh_data:
-        x = np.arange(len(mesh_data[0]))
+        # Find the maximum length to ensure all arrays have the same shape
+        max_len = max(len(data) for data in mesh_data)
+        x = np.arange(max_len)
         width = 0.35
         for i, (data, label) in enumerate(zip(mesh_data, mesh_labels)):
-            ax5.bar(x + i*width, data, width, label=label, color=mesh_colors[i])
+            # Pad the data array to match the maximum length
+            padded_data = list(data) + [0] * (max_len - len(data))
+            ax5.bar(x + i*width, padded_data, width, label=label, color=mesh_colors[i])
         ax5.set_title("Most Frequent Optimal Mesh Values")
         ax5.set_xlabel("Rank")
         ax5.set_ylabel("Frequency")
         ax5.set_xticks(x + width/2)
-        ax5.set_xticklabels([f"#{i+1}" for i in range(len(mesh_data[0]))])
+        ax5.set_xticklabels([f"#{i+1}" for i in range(max_len)])
         ax5.legend()
     else:
         ax5.text(0.5, 0.5, 'No optimal mesh\nvalues found', 
@@ -235,15 +239,19 @@ def plot_statistics(statistics, output_dir):
             omega_labels.append("omega_p")
     
     if omega_data:
-        x = np.arange(len(omega_data[0]))
+        # Find the maximum length to ensure all arrays have the same shape
+        max_len = max(len(data) for data in omega_data)
+        x = np.arange(max_len)
         width = 0.25
         for i, (data, label) in enumerate(zip(omega_data, omega_labels)):
-            ax6.bar(x + i*width, data, width, label=label, color=omega_colors[i])
+            # Pad the data array to match the maximum length
+            padded_data = list(data) + [0] * (max_len - len(data))
+            ax6.bar(x + i*width, padded_data, width, label=label, color=omega_colors[i])
         ax6.set_title("Most Frequent Optimal Relaxation Factors")
         ax6.set_xlabel("Rank")
         ax6.set_ylabel("Frequency")
         ax6.set_xticks(x + width)
-        ax6.set_xticklabels([f"#{i+1}" for i in range(len(omega_data[0]))])
+        ax6.set_xticklabels([f"#{i+1}" for i in range(max_len)])
         ax6.legend()
     else:
         ax6.text(0.5, 0.5, 'No optimal relaxation\nfactor values found', 
@@ -449,6 +457,530 @@ def plot_statistics(statistics, output_dir):
                 f.write(f"  {param_name}: No values found\n")
 
 
+def process_mesh_task(target_param, target_config, task_params, profile, precision_name, precision_vals, statistics, successful_tasks, failed_tasks, mesh_base_values, wall_base_values):
+    """Process a mesh task with proper aspect ratio handling."""
+    # Call appropriate search function based on target parameter
+    if target_param == "mesh_x":
+        # For mesh_x, use initial_value and multiplication_factor for iterative search
+        initial_value = target_config.get("initial_value", 256)
+        multiplication_factor = target_config.get("multiplication_factor", 2)
+        max_iteration_num = target_config.get("max_iteration_num", 6)
+        
+        # Generate mesh_x values using initial_value and multiplication_factor
+        mesh_x_values = []
+        current_value = initial_value
+        for i in range(max_iteration_num):
+            mesh_x_values.append(int(current_value))
+            current_value *= multiplication_factor
+        
+        # For mesh_x task, use the mesh_y value that was already calculated in the main loop
+        # to maintain the aspect ratio
+        mesh_y = task_params["mesh_y"]
+        mesh_y_values = []
+        current_value = mesh_y
+        
+        for i in range(max_iteration_num):
+            mesh_y_values.append(current_value)
+            current_value *= multiplication_factor
+
+        # Scale wall dimensions proportionally with mesh resolution
+        other_params_list = None
+        if "other_params" in task_params:
+            other_params_list = []
+            base_mesh_x = mesh_base_values["base_mesh_x"]
+            base_mesh_y = mesh_base_values["base_mesh_y"]
+            
+            for i in range(max_iteration_num):
+                current_mesh_x = mesh_x_values[i]
+                current_mesh_y = mesh_y_values[i]
+                
+                # Calculate scaling factors based on current mesh vs base mesh
+                scale_x = current_mesh_x / base_mesh_x
+                scale_y = current_mesh_y / base_mesh_y
+                
+                scaled_wall_params = {
+                    "wall_height": int(round(wall_base_values["base_wall_height"] * scale_y)),
+                    "wall_width": int(round(wall_base_values["base_wall_width"] * scale_x)),
+                    "wall_start_height": int(round(wall_base_values["base_wall_start_height"] * scale_y)),
+                    "wall_start_width": int(round(wall_base_values["base_wall_start_width"] * scale_x))
+                }
+                other_params_list.append(scaled_wall_params)
+            
+        
+        
+        boundary_condition = get_boundary_condition(profile)
+        is_converged, best_param, cost_history, param_history = grid_search_mesh_x(
+            profile=profile,
+            boundary_condition=boundary_condition,
+            mesh_x_values=mesh_x_values,
+            mesh_y_values=mesh_y_values,
+            omega_u=task_params["omega_u"],
+            omega_v=task_params["omega_v"],
+            omega_p=task_params["omega_p"],
+            diff_u_threshold=task_params["diff_u_threshold"],
+            diff_v_threshold=task_params["diff_v_threshold"],
+            res_iter_v_threshold=task_params["res_iter_v_threshold"],
+            length=20.0,  # Default from config
+            breadth=1.0,  # Default from config
+            mass_tolerance=precision_vals["mass_tolerance"],
+            u_rmse_tolerance=precision_vals["u_rmse_tolerance"],
+            v_rmse_tolerance=precision_vals["v_rmse_tolerance"],
+            p_rmse_tolerance=precision_vals["p_rmse_tolerance"],
+            other_params_list=other_params_list
+        )
+        if best_param is not None:
+            statistics["optimal_mesh_x_values"].append(best_param)
+
+    elif target_param == "mesh_y":
+        # For mesh_y, use initial_value and multiplication_factor for iterative search
+        initial_value = target_config.get("initial_value", 64)
+        multiplication_factor = target_config.get("multiplication_factor", 2)
+        max_iteration_num = target_config.get("max_iteration_num", 6)
+        
+        # Generate mesh_y values using initial_value and multiplication_factor
+        mesh_y_values = []
+        current_value = initial_value
+        for i in range(max_iteration_num):
+            mesh_y_values.append(int(current_value))
+            current_value *= multiplication_factor
+        
+        # For mesh_y task, use the mesh_x value that was already calculated in the main loop
+        # to maintain the aspect ratio
+        mesh_x = task_params["mesh_x"]
+        mesh_x_values = []
+        current_value = mesh_x
+        for i in range(max_iteration_num):
+            mesh_x_values.append(current_value)
+            current_value *= multiplication_factor
+        
+        # Scale wall dimensions proportionally with mesh resolution
+        other_params_list = None
+        if "other_params" in task_params:
+            other_params_list = []
+            base_mesh_x = mesh_base_values["base_mesh_x"]
+            base_mesh_y = mesh_base_values["base_mesh_y"]
+            
+            for i in range(max_iteration_num):
+                current_mesh_x = mesh_x_values[i]
+                current_mesh_y = mesh_y_values[i]
+                
+                # Calculate scaling factors based on current mesh vs base mesh
+                scale_x = current_mesh_x / base_mesh_x
+                scale_y = current_mesh_y / base_mesh_y
+                
+                scaled_wall_params = {
+                    "wall_height": int(round(wall_base_values["base_wall_height"] * scale_y)),
+                    "wall_width": int(round(wall_base_values["base_wall_width"] * scale_x)),
+                    "wall_start_height": int(round(wall_base_values["base_wall_start_height"] * scale_y)),
+                    "wall_start_width": int(round(wall_base_values["base_wall_start_width"] * scale_x))
+                }
+                other_params_list.append(scaled_wall_params)
+            
+        boundary_condition = get_boundary_condition(profile)
+        is_converged, best_param, cost_history, param_history = grid_search_mesh_y(
+            profile=profile,
+            boundary_condition=boundary_condition,
+            mesh_x_values=mesh_x_values,
+            mesh_y_values=mesh_y_values,
+            omega_u=task_params["omega_u"],
+            omega_v=task_params["omega_v"],
+            omega_p=task_params["omega_p"],
+            diff_u_threshold=task_params["diff_u_threshold"],
+            diff_v_threshold=task_params["diff_v_threshold"],
+            res_iter_v_threshold=task_params["res_iter_v_threshold"],
+            length=20.0,  # Default from config
+            breadth=1.0,  # Default from config
+            mass_tolerance=precision_vals["mass_tolerance"],
+            u_rmse_tolerance=precision_vals["u_rmse_tolerance"],
+            v_rmse_tolerance=precision_vals["v_rmse_tolerance"],
+            p_rmse_tolerance=precision_vals["p_rmse_tolerance"],
+            other_params_list=other_params_list
+        )
+        if best_param is not None:
+            statistics["optimal_mesh_y_values"].append(best_param)
+
+    # Create task record for dataset
+    task_record = {
+        "solver": "ns_channel_2d",
+        "target_parameter": target_param,
+        "profile": profile,
+        "precision_level": precision_name,
+        "precision_config": {
+            "mass_tolerance": precision_vals["mass_tolerance"],
+            "u_rmse_tolerance": precision_vals["u_rmse_tolerance"],
+            "v_rmse_tolerance": precision_vals["v_rmse_tolerance"],
+            "p_rmse_tolerance": precision_vals["p_rmse_tolerance"],
+            "max_iter": precision_vals["max_iter"]
+        },
+        "target_config": {
+            "initial_value": target_config.get("initial_value"),
+            "multiplication_factor": target_config.get("multiplication_factor"),
+            "max_iteration_num": target_config.get("max_iteration_num"),
+            "search_range": target_config.get("search_range"),
+            "search_range_slice_num": target_config.get("search_range_slice_num"),
+            "schedule_options": target_config.get("schedule_options")
+        },
+        "non_target_parameters": task_params.copy(),
+        "results": {
+            "converged": is_converged,
+            "optimal_parameter_value": best_param,
+            "total_computational_cost": sum(cost_history) if cost_history else 0,
+            "cost_history": cost_history if cost_history else [],
+            "parameter_history": param_history if param_history else []
+        }
+    }
+
+    # Add task to appropriate dataset
+    if is_converged:
+        successful_tasks.append(task_record)
+    else:
+        failed_tasks.append(task_record)
+
+    # Update statistics
+    total_cost = sum(cost_history) if cost_history else 0
+    statistics["total_tasks"] += 1
+    statistics["convergence_by_precision"][precision_name]["total"] += 1
+    statistics["convergence_by_target"][target_param]["total"] += 1
+    statistics["convergence_by_profile"][profile]["total"] += 1
+    statistics["convergence_by_target"][target_param]["costs"].append(total_cost)
+
+    if is_converged:
+        statistics["total_converged"] += 1
+        statistics["convergence_by_precision"][precision_name]["converged"] += 1
+        statistics["convergence_by_target"][target_param]["converged"] += 1
+        statistics["convergence_by_profile"][profile]["converged"] += 1
+        print(f"      ✅ SUCCESS: Found {target_param}={best_param}, cost={total_cost}")
+    else:
+        print(f"      ❌ FAILED: No convergence, cost={total_cost}")
+
+
+def process_non_mesh_task(target_param, target_config, task_params, profile, precision_name, precision_vals, statistics, successful_tasks, failed_tasks):
+    """Process a non-mesh task with the original logic."""
+    # Call appropriate search function based on target parameter
+    if target_param == "omega_u":
+        # For omega_u, use search_range for 0-shot search
+        search_range = target_config.get("search_range", [0.1, 1.0])
+        search_range_min = search_range[0]
+        search_range_max = search_range[1]
+        search_range_slice_num = target_config.get("search_range_slice_num", 10)
+        
+        # Generate omega_u values using search_range
+        omega_u_values = np.linspace(search_range_min, search_range_max, search_range_slice_num)
+        
+        boundary_condition = get_boundary_condition(profile)
+        print(f"        Using mesh: mesh_x={task_params['mesh_x']}, mesh_y={task_params['mesh_y']}")
+        is_converged, best_param, cost_history, param_history = grid_search_omega_u(
+            profile=profile,
+            boundary_condition=boundary_condition,
+            mesh_x=task_params["mesh_x"],
+            mesh_y=task_params["mesh_y"],
+            omega_u_values=omega_u_values,
+            omega_v=task_params["omega_v"],
+            omega_p=task_params["omega_p"],
+            diff_u_threshold=task_params["diff_u_threshold"],
+            diff_v_threshold=task_params["diff_v_threshold"],
+            res_iter_v_threshold=task_params["res_iter_v_threshold"],
+            length=20.0,  # Default from config
+            breadth=1.0,  # Default from config
+            mass_tolerance=precision_vals["mass_tolerance"],
+            u_rmse_tolerance=precision_vals["u_rmse_tolerance"],
+            v_rmse_tolerance=precision_vals["v_rmse_tolerance"],
+            p_rmse_tolerance=precision_vals["p_rmse_tolerance"],
+            other_params=task_params.get("other_params")
+        )
+        if best_param is not None:
+            statistics["optimal_omega_u_values"].append(best_param)
+
+    elif target_param == "omega_v":
+        # For omega_v, use search_range for 0-shot search
+        search_range = target_config.get("search_range", [0.1, 1.0])
+        search_range_min = search_range[0]
+        search_range_max = search_range[1]
+        search_range_slice_num = target_config.get("search_range_slice_num", 10)
+        
+        # Generate omega_v values using search_range
+        omega_v_values = np.linspace(search_range_min, search_range_max, search_range_slice_num)
+        
+        boundary_condition = get_boundary_condition(profile)
+        print(f"        Using mesh: mesh_x={task_params['mesh_x']}, mesh_y={task_params['mesh_y']}")
+        is_converged, best_param, cost_history, param_history = grid_search_omega_v(
+            profile=profile,
+            boundary_condition=boundary_condition,
+            mesh_x=task_params["mesh_x"],
+            mesh_y=task_params["mesh_y"],
+            omega_u=task_params["omega_u"],
+            omega_v_values=omega_v_values,
+            omega_p=task_params["omega_p"],
+            diff_u_threshold=task_params["diff_u_threshold"],
+            diff_v_threshold=task_params["diff_v_threshold"],
+            res_iter_v_threshold=task_params["res_iter_v_threshold"],
+            length=20.0,  # Default from config
+            breadth=1.0,  # Default from config
+            mass_tolerance=precision_vals["mass_tolerance"],
+            u_rmse_tolerance=precision_vals["u_rmse_tolerance"],
+            v_rmse_tolerance=precision_vals["v_rmse_tolerance"],
+            p_rmse_tolerance=precision_vals["p_rmse_tolerance"],
+            other_params=task_params.get("other_params")
+        )
+        if best_param is not None:
+            statistics["optimal_omega_v_values"].append(best_param)
+
+    elif target_param == "omega_p":
+        # For omega_p, use search_range for 0-shot search
+        search_range = target_config.get("search_range", [0.1, 0.5])
+        search_range_min = search_range[0]
+        search_range_max = search_range[1]
+        search_range_slice_num = target_config.get("search_range_slice_num", 8)
+        
+        # Generate omega_p values using search_range
+        omega_p_values = np.linspace(search_range_min, search_range_max, search_range_slice_num)
+        
+        boundary_condition = get_boundary_condition(profile)
+        print(f"        Using mesh: mesh_x={task_params['mesh_x']}, mesh_y={task_params['mesh_y']}")
+        is_converged, best_param, cost_history, param_history = grid_search_omega_p(
+            profile=profile,
+            boundary_condition=boundary_condition,
+            mesh_x=task_params["mesh_x"],
+            mesh_y=task_params["mesh_y"],
+            omega_u=task_params["omega_u"],
+            omega_v=task_params["omega_v"],
+            omega_p_values=omega_p_values,
+            diff_u_threshold=task_params["diff_u_threshold"],
+            diff_v_threshold=task_params["diff_v_threshold"],
+            res_iter_v_threshold=task_params["res_iter_v_threshold"],
+            length=20.0,  # Default from config
+            breadth=1.0,  # Default from config
+            mass_tolerance=precision_vals["mass_tolerance"],
+            u_rmse_tolerance=precision_vals["u_rmse_tolerance"],
+            v_rmse_tolerance=precision_vals["v_rmse_tolerance"],
+            p_rmse_tolerance=precision_vals["p_rmse_tolerance"],
+            other_params=task_params.get("other_params")
+        )
+        if best_param is not None:
+            statistics["optimal_omega_p_values"].append(best_param)
+
+    elif target_param == "diff_u_threshold":
+        # For diff_u_threshold, use search_range for 0-shot search
+        search_range = target_config.get("search_range", [1e-07, 1e-03])
+        search_range_min = search_range[0]
+        search_range_max = search_range[1]
+        search_range_slice_num = target_config.get("search_range_slice_num", 5)
+        
+        # Generate diff_u_threshold values using search_range (logarithmic spacing)
+        # Reverse order to start with looser thresholds and work towards tighter ones
+        diff_u_values = np.logspace(np.log10(float(search_range_min)), np.log10(float(search_range_max)), search_range_slice_num)[::-1]
+        
+        boundary_condition = get_boundary_condition(profile)
+        print(f"        Using mesh: mesh_x={task_params['mesh_x']}, mesh_y={task_params['mesh_y']}")
+        is_converged, best_param, cost_history, param_history = grid_search_diff_u_threshold(
+            profile=profile,
+            boundary_condition=boundary_condition,
+            mesh_x=task_params["mesh_x"],
+            mesh_y=task_params["mesh_y"],
+            omega_u=task_params["omega_u"],
+            omega_v=task_params["omega_v"],
+            omega_p=task_params["omega_p"],
+            diff_u_values=diff_u_values,
+            diff_v_threshold=task_params["diff_v_threshold"],
+            res_iter_v_threshold=task_params["res_iter_v_threshold"],
+            length=20.0,  # Default from config
+            breadth=1.0,  # Default from config
+            mass_tolerance=precision_vals["mass_tolerance"],
+            u_rmse_tolerance=precision_vals["u_rmse_tolerance"],
+            v_rmse_tolerance=precision_vals["v_rmse_tolerance"],
+            p_rmse_tolerance=precision_vals["p_rmse_tolerance"],
+            other_params=task_params.get("other_params")
+        )
+        if best_param is not None:
+            statistics["optimal_diff_u_threshold_values"].append(best_param)
+
+    elif target_param == "diff_v_threshold":
+        # For diff_v_threshold, use search_range for 0-shot search
+        search_range = target_config.get("search_range", [1e-07, 1e-03])
+        search_range_min = search_range[0]
+        search_range_max = search_range[1]
+        search_range_slice_num = target_config.get("search_range_slice_num", 5)
+        
+        # Generate diff_v_threshold values using search_range (logarithmic spacing)
+        # Reverse order to start with looser thresholds and work towards tighter ones
+        diff_v_values = np.logspace(np.log10(float(search_range_min)), np.log10(float(search_range_max)), search_range_slice_num)[::-1]
+        
+        boundary_condition = get_boundary_condition(profile)
+        print(f"        Using mesh: mesh_x={task_params['mesh_x']}, mesh_y={task_params['mesh_y']}")
+        is_converged, best_param, cost_history, param_history = grid_search_diff_v_threshold(
+            profile=profile,
+            boundary_condition=boundary_condition,
+            mesh_x=task_params["mesh_x"],
+            mesh_y=task_params["mesh_y"],
+            omega_u=task_params["omega_u"],
+            omega_v=task_params["omega_v"],
+            omega_p=task_params["omega_p"],
+            diff_u_threshold=task_params["diff_u_threshold"],
+            diff_v_values=diff_v_values,
+            res_iter_v_threshold=task_params["res_iter_v_threshold"],
+            length=20.0,  # Default from config
+            breadth=1.0,  # Default from config
+            mass_tolerance=precision_vals["mass_tolerance"],
+            u_rmse_tolerance=precision_vals["u_rmse_tolerance"],
+            v_rmse_tolerance=precision_vals["v_rmse_tolerance"],
+            p_rmse_tolerance=precision_vals["p_rmse_tolerance"],
+            other_params=task_params.get("other_params")
+        )
+        if best_param is not None:
+            statistics["optimal_diff_v_threshold_values"].append(best_param)
+
+    elif target_param == "res_iter_v_threshold":
+        # For res_iter_v_threshold, use search_range for 0-shot search
+        search_range = target_config.get("search_range", [1e-07, 1e-03])
+        search_range_min = search_range[0]
+        search_range_max = search_range[1]
+        search_range_slice_num = target_config.get("search_range_slice_num", 5)
+        
+        # Generate res_iter_v_threshold values using search_range (logarithmic spacing)
+        # Reverse order to start with looser thresholds and work towards tighter ones
+        res_iter_v_values = np.logspace(np.log10(float(search_range_min)), np.log10(float(search_range_max)), search_range_slice_num)[::-1]
+        
+        # Add schedule options if available
+        schedule_options = target_config.get("schedule_options", ["exp_decay"])
+        if schedule_options:
+            res_iter_v_values = list(res_iter_v_values) + schedule_options
+        
+        boundary_condition = get_boundary_condition(profile)
+        print(f"        Using mesh: mesh_x={task_params['mesh_x']}, mesh_y={task_params['mesh_y']}")
+        is_converged, best_param, cost_history, param_history = grid_search_res_iter_v_threshold(
+            profile=profile,
+            boundary_condition=boundary_condition,
+            mesh_x=task_params["mesh_x"],
+            mesh_y=task_params["mesh_y"],
+            omega_u=task_params["omega_u"],
+            omega_v=task_params["omega_v"],
+            omega_p=task_params["omega_p"],
+            diff_u_threshold=task_params["diff_u_threshold"],
+            diff_v_threshold=task_params["diff_v_threshold"],
+            res_iter_v_values=res_iter_v_values,
+            length=20.0,  # Default from config
+            breadth=1.0,  # Default from config
+            mass_tolerance=precision_vals["mass_tolerance"],
+            u_rmse_tolerance=precision_vals["u_rmse_tolerance"],
+            v_rmse_tolerance=precision_vals["v_rmse_tolerance"],
+            p_rmse_tolerance=precision_vals["p_rmse_tolerance"],
+            other_params=task_params.get("other_params")
+        )
+        if best_param is not None:
+            statistics["optimal_res_iter_v_threshold_values"].append(best_param)
+
+    # Create task record for dataset
+    task_record = {
+        "solver": "ns_channel_2d",
+        "target_parameter": target_param,
+        "profile": profile,
+        "precision_level": precision_name,
+        "precision_config": {
+            "mass_tolerance": precision_vals["mass_tolerance"],
+            "u_rmse_tolerance": precision_vals["u_rmse_tolerance"],
+            "v_rmse_tolerance": precision_vals["v_rmse_tolerance"],
+            "p_rmse_tolerance": precision_vals["p_rmse_tolerance"],
+            "max_iter": precision_vals["max_iter"]
+        },
+        "target_config": {
+            "initial_value": target_config.get("initial_value"),
+            "multiplication_factor": target_config.get("multiplication_factor"),
+            "max_iteration_num": target_config.get("max_iteration_num"),
+            "search_range": target_config.get("search_range"),
+            "search_range_slice_num": target_config.get("search_range_slice_num"),
+            "schedule_options": target_config.get("schedule_options")
+        },
+        "non_target_parameters": task_params.copy(),
+        "results": {
+            "converged": is_converged,
+            "optimal_parameter_value": best_param,
+            "total_computational_cost": sum(cost_history) if cost_history else 0,
+            "cost_history": cost_history if cost_history else [],
+            "parameter_history": param_history if param_history else []
+        }
+    }
+
+    # Add task to appropriate dataset
+    if is_converged:
+        successful_tasks.append(task_record)
+    else:
+        failed_tasks.append(task_record)
+
+    # Update statistics
+    total_cost = sum(cost_history) if cost_history else 0
+    statistics["total_tasks"] += 1
+    statistics["convergence_by_precision"][precision_name]["total"] += 1
+    statistics["convergence_by_target"][target_param]["total"] += 1
+    statistics["convergence_by_profile"][profile]["total"] += 1
+    statistics["convergence_by_target"][target_param]["costs"].append(total_cost)
+
+    if is_converged:
+        statistics["total_converged"] += 1
+        statistics["convergence_by_precision"][precision_name]["converged"] += 1
+        statistics["convergence_by_target"][target_param]["converged"] += 1
+        statistics["convergence_by_profile"][profile]["converged"] += 1
+        print(f"      ✅ SUCCESS: Found {target_param}={best_param}, cost={total_cost}")
+    else:
+        print(f"      ❌ FAILED: No convergence, cost={total_cost}")
+
+
+def calculate_scaled_wall_dimensions(mesh_x, mesh_y, wall_base_values, mesh_base_values):
+    """Calculate wall dimensions scaled proportionally with mesh resolution"""
+    # Calculate scaling factors
+    scale_x = mesh_x / mesh_base_values["base_mesh_x"]
+    scale_y = mesh_y / mesh_base_values["base_mesh_y"]
+    
+    # Scale wall dimensions proportionally
+    scaled_wall_height = int(round(wall_base_values["base_wall_height"] * scale_y))
+    scaled_wall_width = int(round(wall_base_values["base_wall_width"] * scale_x))
+    scaled_wall_start_height = int(round(wall_base_values["base_wall_start_height"] * scale_y))
+    scaled_wall_start_width = int(round(wall_base_values["base_wall_start_width"] * scale_x))
+    
+    return {
+        "wall_height": scaled_wall_height,
+        "wall_width": scaled_wall_width,
+        "wall_start_height": scaled_wall_start_height,
+        "wall_start_width": scaled_wall_start_width
+    }
+
+
+def process_task_at_all_precisions(target_param, target_config, task_params, profile, precision_levels, statistics, successful_tasks, failed_tasks, wall_base_values, mesh_base_values):
+    """Process a task at all precision levels"""
+    # Process from high to low precision
+    precision_order = ["high", "medium", "low"]
+    
+    for precision_name in precision_order:
+        if precision_name not in precision_levels:
+            continue
+            
+        precision_vals = precision_levels[precision_name]
+        
+        # Process the task
+        if target_param in ["mesh_x", "mesh_y"]:
+            # For mesh tasks, we don't have mesh_x/mesh_y in task_params yet, so we'll handle wall scaling in the mesh task functions
+            process_mesh_task(target_param, target_config, task_params, profile, precision_name, precision_vals, statistics, successful_tasks, failed_tasks, mesh_base_values, wall_base_values)
+        else:
+            # For non-mesh tasks, calculate scaled wall dimensions for this mesh configuration
+            mesh_x = task_params["mesh_x"]
+            mesh_y = task_params["mesh_y"]
+            scaled_wall_params = calculate_scaled_wall_dimensions(mesh_x, mesh_y, wall_base_values, mesh_base_values)
+            
+            # Add scaled wall parameters to task_params
+            task_params_with_walls = task_params.copy()
+            task_params_with_walls["other_params"] = scaled_wall_params
+            
+            # Calculate and print ratios
+            wall_height = scaled_wall_params["wall_height"]
+            wall_width = scaled_wall_params["wall_width"]
+            wall_height_ratio = wall_height / mesh_y
+            wall_width_ratio = wall_width / mesh_x
+            
+            print(f"        Scaled wall dimensions: {scaled_wall_params}")
+            print(f"        Wall ratios: wall_height/mesh_y={wall_height_ratio:.3f}, wall_width/mesh_x={wall_width_ratio:.3f}")
+            
+            process_non_mesh_task(target_param, target_config, task_params_with_walls, profile, precision_name, precision_vals, statistics, successful_tasks, failed_tasks)
+
+
 def main():
     """Main execution function."""
     repo_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -463,6 +995,18 @@ def main():
     target_configs = build_target_configs(config)
     precision_configs = config["precision_levels"]
     profiles = config["profiles"]["active_profiles"]
+    
+    # Load non-target combinations from configuration
+    non_target_config = config.get("non_target_combinations", {})
+    aspect_ratios = non_target_config.get("aspect_ratios", [1.0])
+    mesh_combinations = non_target_config.get("mesh_combinations", [[64, 16], [128, 32], [192, 48], [256, 64]])
+    mesh_base_values = non_target_config.get("mesh_base_values", {"base_mesh_x": 64, "base_mesh_y": 32})
+    wall_base_values = non_target_config.get("wall_base_values", {"base_wall_height": 10, "base_wall_width": 10, "base_wall_start_height": 20, "base_wall_start_width": 80})
+    
+    print(f"Aspect ratios for mesh tasks: {aspect_ratios}")
+    print(f"Mesh combinations: {mesh_combinations}")
+    print(f"Base mesh values: {mesh_base_values}")
+    print(f"Base wall values: {wall_base_values}")
     
     # Print configuration overview
     print(f"Profiles: {profiles}")
@@ -497,319 +1041,65 @@ def main():
     # Data collection for datasets
     successful_tasks = []
     failed_tasks = []
-
+    
     # Generate all task combinations
     import itertools
-    for precision_name, precision_vals in precision_configs.items():
-        print(f"\n--- Processing {precision_name.upper()} precision ---")
+    for profile in profiles:
+        print(f"\n--- Processing Profile: {profile} ---")
 
-        for profile in profiles:
-            print(f"  Profile: {profile}")
+        for target_param, target_config in target_configs.items():
+            print(f"  Target parameter: {target_param}")
 
-            for target_param, target_config in target_configs.items():
-                print(f"    Target parameter: {target_param}")
+            # Get all non-target parameter names and their value lists
+            non_target_params = target_config["non_target_parameters"]
+            param_names = list(non_target_params.keys())
+            param_values = [non_target_params[name] for name in param_names]
 
-                # Get all non-target parameter names and their value lists
-                non_target_params = target_config["non_target_parameters"]
-                param_names = list(non_target_params.keys())
-                param_values = [non_target_params[name] for name in param_names]
+            # Generate all combinations using nested loops (cartesian product)
+            for combination in itertools.product(*param_values):
+                # Build parameters dictionary
+                task_params = dict(zip(param_names, combination))
 
-                # Generate all combinations using nested loops (cartesian product)
-                for combination in itertools.product(*param_values):
-                    # Build parameters dictionary
-                    task_params = dict(zip(param_names, combination))
-
-                    print(f"      Running {target_param} search with params: {task_params}")
+                # For mesh tasks, we need to handle aspect ratios
+                if target_param in ["mesh_x", "mesh_y"]:
+                    for aspect_ratio in aspect_ratios:
+                        aspect_task_params = task_params.copy()
+                        
+                        if target_param == "mesh_x":
+                            # For mesh_x task, calculate mesh_y based on aspect ratio
+                            if aspect_ratio > 0.5:
+                                continue
+                            base_mesh_x = mesh_base_values["base_mesh_x"]
+                            aspect_task_params["mesh_y"] = int(base_mesh_x * aspect_ratio)
+                            scaled_wall_params = calculate_scaled_wall_dimensions(base_mesh_x, aspect_task_params["mesh_y"], wall_base_values, mesh_base_values)
+                            aspect_task_params["other_params"] = scaled_wall_params
+                        else:  # mesh_y task
+                            # For mesh_y task, calculate mesh_x based on aspect ratio
+                            if aspect_ratio < 0.2:
+                                continue
+                            base_mesh_y = mesh_base_values["base_mesh_y"]
+                            aspect_task_params["mesh_x"] = int(base_mesh_y / aspect_ratio)
+                            scaled_wall_params = calculate_scaled_wall_dimensions(aspect_task_params["mesh_x"], base_mesh_y, wall_base_values, mesh_base_values)
+                            aspect_task_params["other_params"] = scaled_wall_params
+                        
+                        # Process this task at all precision levels
+                        process_task_at_all_precisions(target_param, target_config, aspect_task_params, profile, 
+                                                      precision_configs, statistics, successful_tasks, failed_tasks,
+                                                      wall_base_values, mesh_base_values)
+                else:
+                    # For non-mesh tasks, convert mesh_combination index to actual mesh_x and mesh_y pairs
+                    mesh_combination_idx = task_params["mesh_combination"]
+                    mesh_x, mesh_y = mesh_combinations[mesh_combination_idx]
                     
-                    # Call appropriate search function based on target parameter
-                    if target_param == "mesh_x":
-                        # For mesh_x, we need to get the mesh_x values from the config
-                        if "candidates_by_precision" in target_config and precision_name in target_config["candidates_by_precision"]:
-                            mesh_x_values = target_config["candidates_by_precision"][precision_name]["mesh_x"]
-                        else:
-                            # Fallback to typical values or generate range
-                            mesh_x_values = [96, 128, 160, 192, 256, 320, 384, 448, 512]
-                        boundary_condition = get_boundary_condition(profile)
-                        is_converged, best_param, cost_history, param_history = grid_search_mesh_x(
-                            profile=profile,
-                            boundary_condition=boundary_condition,
-                            mesh_x_values=mesh_x_values,
-                            mesh_y=task_params["mesh_y"],
-                            omega_u=task_params["omega_u"],
-                            omega_v=task_params["omega_v"],
-                            omega_p=task_params["omega_p"],
-                            diff_u_threshold=task_params["diff_u_threshold"],
-                            diff_v_threshold=task_params["diff_v_threshold"],
-                            res_iter_v_threshold=task_params["res_iter_v_threshold"],
-                            length=20.0,  # Default from config
-                            breadth=1.0,  # Default from config
-                            mass_tolerance=precision_vals["mass_tolerance"],
-                            u_rmse_tolerance=precision_vals["u_rmse_tolerance"],
-                            v_rmse_tolerance=precision_vals["v_rmse_tolerance"],
-                            p_rmse_tolerance=precision_vals["p_rmse_tolerance"]
-                        )
-                        if best_param is not None:
-                            statistics["optimal_mesh_x_values"].append(best_param)
-
-                    elif target_param == "mesh_y":
-                        # For mesh_y, we need to get the mesh_y values from the config
-                        if "candidates_by_precision" in target_config and precision_name in target_config["candidates_by_precision"]:
-                            mesh_y_values = target_config["candidates_by_precision"][precision_name]["mesh_y"]
-                        else:
-                            # Fallback to typical values or generate range
-                            mesh_y_values = [24, 32, 40, 48, 64, 80, 96, 112, 128]
-                        boundary_condition = get_boundary_condition(profile)
-                        is_converged, best_param, cost_history, param_history = grid_search_mesh_y(
-                            profile=profile,
-                            boundary_condition=boundary_condition,
-                            mesh_x=task_params["mesh_x"],
-                            mesh_y_values=mesh_y_values,
-                            omega_u=task_params["omega_u"],
-                            omega_v=task_params["omega_v"],
-                            omega_p=task_params["omega_p"],
-                            diff_u_threshold=task_params["diff_u_threshold"],
-                            diff_v_threshold=task_params["diff_v_threshold"],
-                            res_iter_v_threshold=task_params["res_iter_v_threshold"],
-                            length=20.0,  # Default from config
-                            breadth=1.0,  # Default from config
-                            mass_tolerance=precision_vals["mass_tolerance"],
-                            u_rmse_tolerance=precision_vals["u_rmse_tolerance"],
-                            v_rmse_tolerance=precision_vals["v_rmse_tolerance"],
-                            p_rmse_tolerance=precision_vals["p_rmse_tolerance"]
-                        )
-                        if best_param is not None:
-                            statistics["optimal_mesh_y_values"].append(best_param)
-
-                    elif target_param == "omega_u":
-                        # For omega_u, use typical values from config or generate range
-                        if "typical_values" in target_config:
-                            omega_u_values = target_config["typical_values"]
-                        else:
-                            omega_u_values = [0.1 * i for i in range(1, 11)]  # 0.1 to 1.0
-                        boundary_condition = get_boundary_condition(profile)
-                        is_converged, best_param, cost_history, param_history = grid_search_omega_u(
-                            profile=profile,
-                            boundary_condition=boundary_condition,
-                            mesh_x=task_params["mesh_x"],
-                            mesh_y=task_params["mesh_y"],
-                            omega_u_values=omega_u_values,
-                            omega_v=task_params["omega_v"],
-                            omega_p=task_params["omega_p"],
-                            diff_u_threshold=task_params["diff_u_threshold"],
-                            diff_v_threshold=task_params["diff_v_threshold"],
-                            res_iter_v_threshold=task_params["res_iter_v_threshold"],
-                            length=20.0,  # Default from config
-                            breadth=1.0,  # Default from config
-                            mass_tolerance=precision_vals["mass_tolerance"],
-                            u_rmse_tolerance=precision_vals["u_rmse_tolerance"],
-                            v_rmse_tolerance=precision_vals["v_rmse_tolerance"],
-                            p_rmse_tolerance=precision_vals["p_rmse_tolerance"]
-                        )
-                        if best_param is not None:
-                            statistics["optimal_omega_u_values"].append(best_param)
-
-                    elif target_param == "omega_v":
-                        # For omega_v, use typical values from config or generate range
-                        if "typical_values" in target_config:
-                            omega_v_values = target_config["typical_values"]
-                        else:
-                            omega_v_values = [0.1 * i for i in range(1, 11)]  # 0.1 to 1.0
-                        boundary_condition = get_boundary_condition(profile)
-                        is_converged, best_param, cost_history, param_history = grid_search_omega_v(
-                            profile=profile,
-                            boundary_condition=boundary_condition,
-                            mesh_x=task_params["mesh_x"],
-                            mesh_y=task_params["mesh_y"],
-                            omega_u=task_params["omega_u"],
-                            omega_v_values=omega_v_values,
-                            omega_p=task_params["omega_p"],
-                            diff_u_threshold=task_params["diff_u_threshold"],
-                            diff_v_threshold=task_params["diff_v_threshold"],
-                            res_iter_v_threshold=task_params["res_iter_v_threshold"],
-                            length=20.0,  # Default from config
-                            breadth=1.0,  # Default from config
-                            mass_tolerance=precision_vals["mass_tolerance"],
-                            u_rmse_tolerance=precision_vals["u_rmse_tolerance"],
-                            v_rmse_tolerance=precision_vals["v_rmse_tolerance"],
-                            p_rmse_tolerance=precision_vals["p_rmse_tolerance"]
-                        )
-                        if best_param is not None:
-                            statistics["optimal_omega_v_values"].append(best_param)
-
-                    elif target_param == "omega_p":
-                        # For omega_p, use typical values from config or generate range
-                        if "typical_values" in target_config:
-                            omega_p_values = target_config["typical_values"]
-                        else:
-                            omega_p_values = [0.1 * i for i in range(1, 6)]  # 0.1 to 0.5
-                        boundary_condition = get_boundary_condition(profile)
-                        is_converged, best_param, cost_history, param_history = grid_search_omega_p(
-                            profile=profile,
-                            boundary_condition=boundary_condition,
-                            mesh_x=task_params["mesh_x"],
-                            mesh_y=task_params["mesh_y"],
-                            omega_u=task_params["omega_u"],
-                            omega_v=task_params["omega_v"],
-                            omega_p_values=omega_p_values,
-                            diff_u_threshold=task_params["diff_u_threshold"],
-                            diff_v_threshold=task_params["diff_v_threshold"],
-                            res_iter_v_threshold=task_params["res_iter_v_threshold"],
-                            length=20.0,  # Default from config
-                            breadth=1.0,  # Default from config
-                            mass_tolerance=precision_vals["mass_tolerance"],
-                            u_rmse_tolerance=precision_vals["u_rmse_tolerance"],
-                            v_rmse_tolerance=precision_vals["v_rmse_tolerance"],
-                            p_rmse_tolerance=precision_vals["p_rmse_tolerance"]
-                        )
-                        if best_param is not None:
-                            statistics["optimal_omega_p_values"].append(best_param)
-
-                    elif target_param == "diff_u_threshold":
-                        # For diff_u_threshold, use values from config
-                        if "diff_candidates_by_precision" in target_config:
-                            diff_u_values = target_config["diff_candidates_by_precision"][precision_name]["diff_u_threshold"]
-                        elif "typical_values" in target_config:
-                            diff_u_values = target_config["typical_values"]
-                        else:
-                            diff_u_values = [1e-6, 1e-7, 1e-8]
-                        boundary_condition = get_boundary_condition(profile)
-                        is_converged, best_param, cost_history, param_history = grid_search_diff_u_threshold(
-                            profile=profile,
-                            boundary_condition=boundary_condition,
-                            mesh_x=task_params["mesh_x"],
-                            mesh_y=task_params["mesh_y"],
-                            omega_u=task_params["omega_u"],
-                            omega_v=task_params["omega_v"],
-                            omega_p=task_params["omega_p"],
-                            diff_u_values=diff_u_values,
-                            diff_v_threshold=task_params["diff_v_threshold"],
-                            res_iter_v_threshold=task_params["res_iter_v_threshold"],
-                            length=20.0,  # Default from config
-                            breadth=1.0,  # Default from config
-                            mass_tolerance=precision_vals["mass_tolerance"],
-                            u_rmse_tolerance=precision_vals["u_rmse_tolerance"],
-                            v_rmse_tolerance=precision_vals["v_rmse_tolerance"],
-                            p_rmse_tolerance=precision_vals["p_rmse_tolerance"]
-                        )
-                        if best_param is not None:
-                            statistics["optimal_diff_u_threshold_values"].append(best_param)
-
-                    elif target_param == "diff_v_threshold":
-                        # For diff_v_threshold, use values from config
-                        if "diff_candidates_by_precision" in target_config:
-                            diff_v_values = target_config["diff_candidates_by_precision"][precision_name]["diff_v_threshold"]
-                        elif "typical_values" in target_config:
-                            diff_v_values = target_config["typical_values"]
-                        else:
-                            diff_v_values = [1e-6, 1e-7, 1e-8]
-                        boundary_condition = get_boundary_condition(profile)
-                        is_converged, best_param, cost_history, param_history = grid_search_diff_v_threshold(
-                            profile=profile,
-                            boundary_condition=boundary_condition,
-                            mesh_x=task_params["mesh_x"],
-                            mesh_y=task_params["mesh_y"],
-                            omega_u=task_params["omega_u"],
-                            omega_v=task_params["omega_v"],
-                            omega_p=task_params["omega_p"],
-                            diff_u_threshold=task_params["diff_u_threshold"],
-                            diff_v_values=diff_v_values,
-                            res_iter_v_threshold=task_params["res_iter_v_threshold"],
-                            length=20.0,  # Default from config
-                            breadth=1.0,  # Default from config
-                            mass_tolerance=precision_vals["mass_tolerance"],
-                            u_rmse_tolerance=precision_vals["u_rmse_tolerance"],
-                            v_rmse_tolerance=precision_vals["v_rmse_tolerance"],
-                            p_rmse_tolerance=precision_vals["p_rmse_tolerance"]
-                        )
-                        if best_param is not None:
-                            statistics["optimal_diff_v_threshold_values"].append(best_param)
-
-                    elif target_param == "res_iter_v_threshold":
-                        # For res_iter_v_threshold, use values from config
-                        if "schedule_options" in target_config:
-                            res_iter_v_values = target_config["schedule_options"]
-                        elif "typical_values" in target_config:
-                            res_iter_v_values = target_config["typical_values"]
-                        else:
-                            res_iter_v_values = [1e-3, 1e-4, 1e-5, 1e-6, 1e-7]
-                        boundary_condition = get_boundary_condition(profile)
-                        is_converged, best_param, cost_history, param_history = grid_search_res_iter_v_threshold(
-                            profile=profile,
-                            boundary_condition=boundary_condition,
-                            mesh_x=task_params["mesh_x"],
-                            mesh_y=task_params["mesh_y"],
-                            omega_u=task_params["omega_u"],
-                            omega_v=task_params["omega_v"],
-                            omega_p=task_params["omega_p"],
-                            diff_u_threshold=task_params["diff_u_threshold"],
-                            diff_v_threshold=task_params["diff_v_threshold"],
-                            res_iter_v_values=res_iter_v_values,
-                            length=20.0,  # Default from config
-                            breadth=1.0,  # Default from config
-                            mass_tolerance=precision_vals["mass_tolerance"],
-                            u_rmse_tolerance=precision_vals["u_rmse_tolerance"],
-                            v_rmse_tolerance=precision_vals["v_rmse_tolerance"],
-                            p_rmse_tolerance=precision_vals["p_rmse_tolerance"]
-                        )
-                        if best_param is not None:
-                            statistics["optimal_res_iter_v_threshold_values"].append(best_param)
-
-                    # Create task record for dataset
-                    task_record = {
-                        "solver": "ns_channel_2d",
-                        "target_parameter": target_param,
-                        "profile": profile,
-                        "precision_level": precision_name,
-                        "precision_config": {
-                            "mass_tolerance": precision_vals["mass_tolerance"],
-                            "u_rmse_tolerance": precision_vals["u_rmse_tolerance"],
-                            "v_rmse_tolerance": precision_vals["v_rmse_tolerance"],
-                            "p_rmse_tolerance": precision_vals["p_rmse_tolerance"],
-                            "max_iter": precision_vals["max_iter"]
-                        },
-                        "target_config": {
-                            "initial_value": target_config.get("initial_value"),
-                            "initial_values": target_config.get("initial_values"),
-                            "candidates_by_precision": target_config.get("candidates_by_precision"),
-                            "diff_candidates_by_precision": target_config.get("diff_candidates_by_precision"),
-                            "typical_values": target_config.get("typical_values"),
-                            "schedule_options": target_config.get("schedule_options"),
-                            "max_iteration_num": target_config.get("max_iteration_num"),
-                            "search_range": target_config.get("search_range"),
-                            "search_range_slice_num": target_config.get("search_range_slice_num")
-                        },
-                        "non_target_parameters": task_params.copy(),
-                        "results": {
-                            "converged": is_converged,
-                            "optimal_parameter_value": best_param,
-                            "total_computational_cost": sum(cost_history) if cost_history else 0,
-                            "cost_history": cost_history if cost_history else [],
-                            "parameter_history": param_history if param_history else []
-                        }
-                    }
-
-                    # Add task to appropriate dataset
-                    if is_converged:
-                        successful_tasks.append(task_record)
-                    else:
-                        failed_tasks.append(task_record)
-
-                    # Update statistics
-                    total_cost = sum(cost_history) if cost_history else 0
-                    statistics["total_tasks"] += 1
-                    statistics["convergence_by_precision"][precision_name]["total"] += 1
-                    statistics["convergence_by_target"][target_param]["total"] += 1
-                    statistics["convergence_by_profile"][profile]["total"] += 1
-                    statistics["convergence_by_target"][target_param]["costs"].append(total_cost)
-
-                    if is_converged:
-                        statistics["total_converged"] += 1
-                        statistics["convergence_by_precision"][precision_name]["converged"] += 1
-                        statistics["convergence_by_target"][target_param]["converged"] += 1
-                        statistics["convergence_by_profile"][profile]["converged"] += 1
-                        print(f"      ✅ SUCCESS: Found {target_param}={best_param}, cost={total_cost}")
-                    else:
-                        print(f"      ❌ FAILED: No convergence, cost={total_cost}")
+                    # Update task_params with actual mesh values
+                    task_params["mesh_x"] = mesh_x
+                    task_params["mesh_y"] = mesh_y
+                    del task_params["mesh_combination"]  # Remove the index
+                    
+                    # Process this task at all precision levels
+                    process_task_at_all_precisions(target_param, target_config, task_params, profile, 
+                                                  precision_configs, statistics, successful_tasks, failed_tasks,
+                                                  wall_base_values, mesh_base_values)
 
     print(f"\n=== Generation Complete ===")
     print(f"Total tasks: {statistics['total_tasks']}")

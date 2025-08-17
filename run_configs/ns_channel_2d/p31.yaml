@@ -30,4 +30,6 @@ verbose: False
 other_params: 
   wall_height: 5
   wall_width: 10
+  wall_start_height: 10
+  wall_start_width: 40
 

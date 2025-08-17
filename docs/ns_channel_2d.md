@@ -1,219 +1,177 @@
-# Steady 2D Navier–Stokes — Channel Flow (SIMPLE, Staggered FVM)
+# Navier-Stokes Channel 2D Equations with SIMPLE Method
 
-This document describes the **steady, incompressible** 2D Navier–Stokes channel-flow solver that uses the **SIMPLE** algorithm on a **staggered finite-volume grid**. It also documents the **task-driven** tuning interface exposed by the CLI.
+## Introduction
 
----
+This simulation solves the 2D steady incompressible Navier-Stokes equations using the SIMPLE (Semi-Implicit Method for Pressure Linked Equations) algorithm on a staggered finite volume grid:
 
-## 1) Problem statement
+**Continuity equation:**
+$$\frac{\partial u}{\partial x} + \frac{\partial v}{\partial y} = 0$$
 
-We solve, in a rectangular domain of length `L` and breadth `B`,
+**Momentum equations:**
+$$\rho \left(u \frac{\partial u}{\partial x} + v \frac{\partial u}{\partial y}\right) = -\frac{\partial p}{\partial x} + \mu \left(\frac{\partial^2 u}{\partial x^2} + \frac{\partial^2 u}{\partial y^2}\right)$$
 
-- **Momentum (component-wise)**  
-  \[\rho(\mathbf{u}\cdot\nabla)\mathbf{u} = -\nabla p + \mu\nabla^2\mathbf{u}\]
+$$\rho \left(u \frac{\partial v}{\partial x} + v \frac{\partial v}{\partial y}\right) = -\frac{\partial p}{\partial y} + \mu \left(\frac{\partial^2 v}{\partial x^2} + \frac{\partial^2 v}{\partial y^2}\right)$$
 
-- **Continuity**  
-  \[\nabla\cdot\mathbf{u} = 0\]
+Where:
+- $u, v$ = velocity components in x, y directions
+- $p$ = pressure
+- $\rho$ = density (constant for incompressible flow)
+- $\mu$ = dynamic viscosity
 
-### Discretization & coupling
-- **Grid**: staggered. Pressure `p` is stored at cell centers; `u` and `v` at faces. Viscous terms use second‑order central differences; convection uses upwind/central per solver internals.  
-- **Pressure–velocity coupling**: **SIMPLE** with under‑relaxation on `u`, `v`, and `p`. The pressure correction step enforces mass conservation.  
-- **Convergence**: outer loop stops when (i) mass residual is below `mass_tolerance` and (ii) velocity/pressure RMSE drop below their tolerances (see §5).
+### Numerical Method
 
----
+The SIMPLE algorithm uses:
+1. **Staggered grid**: Pressure at cell centers, velocities at cell faces
+2. **Under-relaxation**: Factors $\omega_u$, $\omega_v$, $\omega_p$ for stability
+3. **Iterative convergence**: Based on mass conservation and velocity/pressure residuals
+4. **Geometric flexibility**: Supports various channel geometries with obstacles
 
-## 2) Boundary conditions & profiles
+### Convergence Criteria
 
-Pick a **profile** to configure geometry and BCs:
+The solution is considered converged when all criteria are met:
+1. **Mass conservation**: $\left|\sum \text{mass flux}\right| < \text{mass\_tolerance}$
+2. **Velocity convergence**: $\text{RMSE}(u) < \text{u\_rmse\_tolerance}$, $\text{RMSE}(v) < \text{v\_rmse\_tolerance}$
+3. **Pressure convergence**: $\text{RMSE}(p) < \text{p\_rmse\_tolerance}$
 
-- `channel_flow` (typical): no‑slip walls (`u=v=0`), prescribed inlet profile (often parabolic or uniform as set in the profile), and a fixed/zero‑gradient outlet pressure.  
-- Other geometries present in the repository may include `back_stair_flow`, `expansion_channel`, `cube_driven_flow`. Use the one that matches your experiment; the exact geometry/BC wiring lives with the profile.
+## Test Cases
 
-You select the profile via `--profile` (default: `p1`) and, if applicable, set `--length` and `--breadth` (defaults below).
+The solver supports multiple boundary conditions and geometries:
 
----
+1. **p1 - Channel Flow**: Standard rectangular channel with uniform inlet velocity
+   - Geometry: Straight channel
+   - Boundary: Uniform inlet, no-slip walls, pressure outlet
+   - Reynolds: Low to moderate
 
-## 3) CLI overview
+2. **p31 - Back Stair Flow**: Channel with backward-facing step
+   - Geometry: Channel with sudden expansion
+   - Boundary: Uniform inlet, no-slip walls, pressure outlet
+   - Reynolds: Low to moderate
 
-The solver exposes a **task** interface to tune one parameter at a time via grid search or simple heuristics. The same executable also supports running a single simulation at chosen values.
+3. **p54 - Expansion Channel**: Channel with gradual expansion
+   - Geometry: Diverging channel
+   - Boundary: Uniform inlet, no-slip walls, pressure outlet
+   - Reynolds: Low to moderate
 
-### Required
-- `--task {mesh_x|mesh_y|omega_u|omega_v|omega_p|diff_u_threshold|diff_v_threshold|res_iter_v_threshold}`
+4. **p84 - Cube Driven Flow**: Channel with cubic obstacle
+   - Geometry: Channel with cubic blockage
+   - Boundary: Uniform inlet, no-slip walls, pressure outlet
+   - Reynolds: Low to moderate
 
-### Common geometry/flow
-- `--profile str` (default `p1`)  
-- `--length float` (default `20.0`) — channel length  
-- `--breadth float` (default `1.0`) — channel height
+## Parameter Tuning Tasks and Dummy Strategy
 
-### Discretization & relaxation (with defaults from `ns_channel_2d.py`)
-- `--mesh_x int` (default `250`) — number of cells in x  
-- `--mesh_y int` (default `50`) — number of cells in y  
-- `--omega_u float` (default `0.7`) — under‑relaxation for `u`  
-- `--omega_v float` (default `0.7`) — under‑relaxation for `v`  
-- `--omega_p float` (default `0.3`) — under‑relaxation for `p`
+### Tasks
 
-### Convergence thresholds
-- `--diff_u_threshold float` (default `1e-7`) — per‑iteration update threshold for `u`  
-- `--diff_v_threshold float` (default `1e-7`) — per‑iteration update threshold for `v`  
-- `--res_iter_v_threshold {float|keyword}` (default `"exp_decay"`) — schedule for the pressure/velocity residual gate. Accepts a **number** (constant threshold) or the keywords **`exp_decay`**, **`linear_decay`** (parsed by `float_or_str`).
+1. **Mesh Resolution Convergence Search (iterative+0-shot)**
+   - **mesh_x**: Number of grid cells in x-direction, determines spatial resolution along channel length
+   - **mesh_y**: Number of grid cells in y-direction, determines spatial resolution across channel width
+   - Both use iterative refinement with multiplication factor of 2
 
-### Global stopping & iteration budget
-- `--mass_tolerance float` (default `1e-4`) — mass residual target  
-- `--u_rmse_tolerance float` (default `3e-2`)  
-- `--v_rmse_tolerance float` (default `3e-2`)  
-- `--p_rmse_tolerance float` (default `3e-2`)  
-- `--max_iter int` (default `20`) — outer SIMPLE iterations (upper bound)
+2. **Under-Relaxation Factor Optimization (0-shot)**
+   - **omega_u**: Under-relaxation factor for u-velocity (0.1 ≤ ω ≤ 1.0)
+   - **omega_v**: Under-relaxation factor for v-velocity (0.1 ≤ ω ≤ 1.0)
+   - **omega_p**: Under-relaxation factor for pressure (0.1 ≤ ω ≤ 0.5)
 
-> **Note**: `run_sim_ns_channel_2d(...)` and grid‑search helpers live in `wrappers/`. This script wires tasks → helper functions and passes the geometry/threshold arguments through.
+3. **Convergence Threshold Optimization (0-shot)**
+   - **diff_u_threshold**: Convergence threshold for u-velocity iterations (1e-07 to 1e-03)
+   - **diff_v_threshold**: Convergence threshold for v-velocity iterations (1e-07 to 1e-03)
+   - **res_iter_v_threshold**: Residual threshold for inner v-velocity iterations (1e-07 to 1e-03 or exp_decay)
 
----
+### Dummy Strategy
 
-## 4) Tasks and what they optimize
+1. **Mesh Resolution Convergence Search (iterative+0-shot)**
+   - **mesh_x**: Start from 64, multiply by 2 each iteration until convergence
+   - **mesh_y**: Start from 16, multiply by 2 each iteration until convergence
+   - **Non-target parameters**: Fixed relaxation factors (ω_u=0.6, ω_v=0.6, ω_p=0.3) and tight thresholds
+   - **Aspect ratios**: Test with 4 out of 5 different aspect ratios (0.1, 0.2, 0.25, 0.5, 1.0) (first four for mesh_x and last four for mesh_y) for geometric sensitivity
 
-Each **task** performs a small search to minimize solve cost (wall time or iteration count) subject to convergence.
+2. **Under-Relaxation Factor Optimization (0-shot)**
+   - **omega_u**: Grid search over [0.1, 1.0] with 10 equally spaced values
+   - **omega_v**: Grid search over [0.1, 1.0] with 10 equally spaced values
+   - **omega_p**: Grid search over [0.1, 0.5] with 8 equally spaced values
+   - **Non-target parameters**: 4 paired mesh combinations [(64,16), (128,32), (192,48), (256,64)]
 
-- **`mesh_x` / `mesh_y`**  
-  Grid refinement along x or y. Typical sweeps: `mesh_x ∈ {64, 128, 256, 512}`, `mesh_y ∈ {16, 32, 64, 128}` at fixed counterpart. Objective is to reach target residual/RMSE with minimal cost. `mesh_y` especially controls near‑wall resolution.
+3. **Convergence Threshold Optimization (0-shot)**
+   - **diff_u_threshold**: Grid search over [1e-07, 1e-03] with 5 values (decreasing order)
+   - **diff_v_threshold**: Grid search over [1e-07, 1e-03] with 5 values (decreasing order)
+   - **res_iter_v_threshold**: Grid search over [1e-07, 1e-03] with 5 values or exp_decay
+   - **Non-target parameters**: 4 paired mesh combinations [(64,16), (128,32), (192,48), (256,64)]
 
-- **`omega_u`, `omega_v`, `omega_p`**  
-  Under‑relaxation factors. Helpers commonly try `0.1, 0.2, …, 1.0` for `omega_u/v` and a narrower band for `omega_p`. Higher values can speed convergence but may destabilize; lower values are safer but slower.
+### Wall Scaling Strategy
 
-- **`diff_u_threshold` / `diff_v_threshold`**  
-  Per‑iteration update thresholds for velocity components. Tight thresholds → accuracy ↑, iterations ↑. These are used by the outer stopping criteria together with mass residuals.
+For mesh tasks, wall dimensions scale proportionally with mesh resolution:
+- **wall_height**: Scales with mesh_y (maintains height/mesh_y ratio)
+- **wall_width**: Scales with mesh_x (maintains width/mesh_x ratio)
+- **wall_start_height**: Scales with mesh_y (maintains position/mesh_y ratio)
+- **wall_start_width**: Scales with mesh_x (maintains position/mesh_x ratio)
 
-- **`res_iter_v_threshold`**  
-  Controls how strictly the algorithm treats residuals over iterations. Passing a **float** keeps it constant; `"exp_decay"` or `"linear_decay"` tightens the gate as iterations proceed.
+Base wall values: height=4, width=16, start_height=4, start_width=20
 
-Internally, *grid_search_* / *find_optimal_* helpers run the simulation via `run_sim_ns_channel_2d(...)` with the current candidate parameter and record cost and convergence status. The best converged candidate is reported.
+## Summarized parameter table for developer only (Not LLM)
 
----
+### Controllable
 
-## 5) Convergence & diagnostics
+| Parameter | Description | Range | Search Type |
+|-----------|-------------|-------|-------------|
+| mesh_x | Number of grid cells in x-direction | 64 ≤ mesh_x ≤ 256 | iterative+0-shot |
+| mesh_y | Number of grid cells in y-direction | 16 ≤ mesh_y ≤ 64 | iterative+0-shot |
+| omega_u | Under-relaxation factor for u-velocity | 0.1 ≤ omega_u ≤ 1.0 | 0-shot |
+| omega_v | Under-relaxation factor for v-velocity | 0.1 ≤ omega_v ≤ 1.0 | 0-shot |
+| omega_p | Under-relaxation factor for pressure | 0.1 ≤ omega_p ≤ 0.5 | 0-shot |
+| diff_u_threshold | Convergence threshold for u-velocity | 1e-07 ≤ diff_u_threshold ≤ 1e-03 | 0-shot |
+| diff_v_threshold | Convergence threshold for v-velocity | 1e-07 ≤ diff_v_threshold ≤ 1e-03 | 0-shot |
+| res_iter_v_threshold | Residual threshold for inner iterations | 1e-07 ≤ res_iter_v_threshold ≤ 1e-03 or exp_decay | 0-shot |
 
-At the end of a run (or at each candidate inside a task search), the following are tracked:
+### Other
 
-- **Mass conservation**: global mass residual ≤ `mass_tolerance`.  
-- **Field stability**: RMSE between successive outer iterations for `u`, `v`, `p` falls below `u_rmse_tolerance`, `v_rmse_tolerance`, `p_rmse_tolerance`.  
-- **Cost**: iteration count and/or wall time (as provided by wrapper utilities).  
-- **Metadata**: chosen task/parameter, mesh, relaxation factors, and schedule keyword/values.
+| Parameter | Description | Default Values by Profile |
+|-----------|-------------|---------------------------|
+| length | Channel length | p1: 20.0, p31: 14.56, p54: 12.8, p84: 10.23 |
+| breadth | Channel width | p1: 1.0, p31: 1.14, p54: 1.28, p84: 1.2 |
+| mu | Dynamic viscosity | p1: 0.01, p31: 0.04181, p54: 0.04448, p84: 0.00753 |
+| rho | Density | p1: 1.0, p31: 4.42, p54: 3.91, p84: 1.3 |
+| max_iter | Maximum iterations | 25-50 (precision dependent) |
+| verbose | Enable verbose output | False |
 
-These values are recorded to the console and, when enabled by wrappers, serialized alongside field outputs.
+### Notes
 
----
+- **Aspect ratios**: Different aspect ratios (0.1, 0.2, 0.25, 0.5, 1.0) test geometric sensitivity
+- **Mesh combinations**: Paired values [(64,16), (128,32), (192,48), (256,64)] maintain consistent aspect ratios
+- **Wall scaling**: Wall dimensions scale proportionally with mesh resolution to maintain physical geometry
+- **Convergence order**: Thresholds decrease from loose to tight during search (easier to harder convergence)
+- **Relaxation factors**: Lower values = more stable but slower convergence, higher values = faster but potentially unstable
 
-## 6) Output artifacts
+## Checkout
 
-Depending on your wrapper configuration:
-- Field arrays: `u.npy`, `v.npy`, `p.npy` (or an `.h5` bundle).  
-- `meta.json`: geometry (`length`, `breadth`), mesh sizes, chosen parameters for the task, tolerances, convergence flags, iteration counts, and (optionally) timing.  
-- Optional figures (centerline velocity, residual history) if plotting is enabled in wrappers.
+### Summary
 
-> **Tip**: Keep runs in separate folders per task/sweep (e.g., `dumps/ns2d/p1/omega_u_0p5/`), so you can compare convergence histories cleanly.
+- **Benchmarks**: 4 profiles (p1: channel_flow, p31: back_stair_flow, p54: expansion_channel, p84: cube_driven_flow)
+- **Target Parameters**: 7 (mesh_x, mesh_y, omega_u, omega_v, omega_p, diff_u_threshold, diff_v_threshold, res_iter_v_threshold)
+- **Precision Levels**: 3 (low, medium, high with varying convergence criteria)
 
----
+### Task Distribution
 
-## 7) Usage examples
+Current configuration generates:
 
-### 7.1 Mesh refinement (x then y)
-```bash
-# Start with a reasonable y-resolution and refine x
-python dummy_sols/ns_channel_2d.py \
-  --profile p1 --task mesh_x \
-  --mesh_x 128 --mesh_y 32 \
-  --length 20 --breadth 1 \
-  --mass_tolerance 1e-4 --u_rmse_tolerance 3e-2 --v_rmse_tolerance 3e-2 --p_rmse_tolerance 3e-2
+- **mesh_x** (iterative+0-shot): 4 profiles × 4 aspect ratios = 16 tasks per precision
+- **mesh_y** (iterative+0-shot): 4 profiles × 4 aspect ratios = 16 tasks per precision
+- **omega_u** (0-shot): 4 profiles × 4 mesh combinations = 16 tasks per precision
+- **omega_v** (0-shot): 4 profiles × 4 mesh combinations = 16 tasks per precision
+- **omega_p** (0-shot): 4 profiles × 4 mesh combinations = 16 tasks per precision
+- **diff_u_threshold** (0-shot): 4 profiles × 4 mesh combinations = 16 tasks per precision
+- **diff_v_threshold** (0-shot): 4 profiles × 4 mesh combinations = 16 tasks per precision
+- **res_iter_v_threshold** (0-shot): 4 profiles × 4 mesh combinations = 16 tasks per precision
+- **Total per precision**: 128 tasks
+- **Total tasks**: 384 tasks (across 3 precision levels)
 
-# Then refine y holding x fixed
-python dummy_sols/ns_channel_2d.py \
-  --profile p1 --task mesh_y \
-  --mesh_x 256 --mesh_y 32
-```
+### Dummy Solution Cache
 
-### 7.2 Relaxation tuning
-```bash
-# omega_u sweep (helpers usually try 0.1..1.0)
-python dummy_sols/ns_channel_2d.py --profile p1 --task omega_u --mesh_x 256 --mesh_y 64
+Config for dummy solution cache: `checkouts/ns_channel_2d.yaml`
+Cache script: `checkouts/ns_channel_2d.py`
 
-# omega_v sweep
-python dummy_sols/ns_channel_2d.py --profile p1 --task omega_v --mesh_x 256 --mesh_y 64
+### Key Features
 
-# omega_p sweep
-python dummy_sols/ns_channel_2d.py --profile p1 --task omega_p --mesh_x 256 --mesh_y 64
-```
-
-### 7.3 Thresholds & schedules
-```bash
-# Fix thresholds tighter for accuracy
-python dummy_sols/ns_channel_2d.py --profile p1 --task diff_u_threshold --diff_u_threshold 1e-8
-python dummy_sols/ns_channel_2d.py --profile p1 --task diff_v_threshold --diff_v_threshold 1e-8
-
-# Residual schedule: constant number OR a keyword
-python dummy_sols/ns_channel_2d.py --profile p1 --task res_iter_v_threshold --res_iter_v_threshold 5e-3
-python dummy_sols/ns_channel_2d.py --profile p1 --task res_iter_v_threshold --res_iter_v_threshold exp_decay
-python dummy_sols/ns_channel_2d.py --profile p1 --task res_iter_v_threshold --res_iter_v_threshold linear_decay
-```
-
-### 7.4 Full custom run (no search), just “set & solve”
-```bash
-python dummy_sols/ns_channel_2d.py \
-  --profile p1 --task omega_u \
-  --mesh_x 256 --mesh_y 64 \
-  --omega_u 0.6 --omega_v 0.6 --omega_p 0.3 \
-  --diff_u_threshold 1e-7 --diff_v_threshold 1e-7 \
-  --res_iter_v_threshold exp_decay \
-  --length 20.0 --breadth 1.0 \
-  --mass_tolerance 1e-4 --u_rmse_tolerance 3e-2 --v_rmse_tolerance 3e-2 --p_rmse_tolerance 3e-2 \
-  --max_iter 20
-```
-
----
-
-## 8) Suggested workflow (quick‑start matrix)
-
-| Task | Primary knob(s) | Typical sweep | Goal |
-|---|---|---|---|
-| `mesh_x` | `mesh_x` @ fixed `mesh_y` | 64 → 128 → 256 → 512 | Accuracy–cost tradeoff along streamwise |
-| `mesh_y` | `mesh_y` @ fixed `mesh_x` | 16 → 32 → 64 → 128 | Resolve near‑wall gradients |
-| `omega_u` / `omega_v` | `0.1 … 1.0` | coarse→fine around best | Fewer SIMPLE iterations, stable |
-| `omega_p` | `0.2 … 0.8` | coarse→fine | Faster mass‑residual closure |
-| `diff_u_threshold` / `diff_v_threshold` | `1e-2 … 1e-8` | tighten until stable | Balance accuracy vs. runtime |
-| `res_iter_v_threshold` | float or `exp_decay` / `linear_decay` | pick schedule | Robust yet efficient residual gating |
-
----
-
-## 9) Troubleshooting
-
-- **Divergence when `omega_*` are large** → reduce the offending relaxation(s), especially `omega_p`.  
-- **Mass residual stalls** → tighten `res_iter_v_threshold` or try `exp_decay`; also check `mesh_y` near walls.  
-- **RMSEs won’t drop** → ensure `diff_*_threshold` aren’t looser than your target; try lowering `max_iter` only after stability is confirmed.  
-- **Out‑of‑bounds interpolation errors** (if using wrappers to compare different meshes) → verify target grid extents and that interpolation points lie within the source grid domain.
-
----
-
-## 10) Reproducibility checklist
-
-- Record: `profile`, `length`, `breadth`, `mesh_x`, `mesh_y`, `omega_u`, `omega_v`, `omega_p`, `diff_u_threshold`, `diff_v_threshold`, `res_iter_v_threshold`, `mass_tolerance`, `u/v/p_rmse_tolerance`, `max_iter`, solver commit hash, and dump directory.  
-- Keep one folder per task/setting.  
-- Save `meta.json` for each run.
-
----
-
-### Defaults (from `ns_channel_2d.py`)
-
-```text
-profile: p1
-mesh_x: 250
-mesh_y: 50
-omega_u: 0.7
-omega_v: 0.7
-omega_p: 0.3
-diff_u_threshold: 1e-7
-diff_v_threshold: 1e-7
-res_iter_v_threshold: "exp_decay"   # or a float, or "linear_decay"
-max_iter: 20
-length: 20.0
-breadth: 1.0
-mass_tolerance: 1e-4
-u_rmse_tolerance: 3e-2
-v_rmse_tolerance: 3e-2
-p_rmse_tolerance: 3e-2
-```
+1. **Geometric Flexibility**: Supports multiple channel geometries with obstacles
+2. **Aspect Ratio Testing**: Evaluates sensitivity to different mesh aspect ratios
+3. **Proportional Scaling**: Wall dimensions scale with mesh resolution
+4. **Convergence Optimization**: Multiple precision levels for accuracy vs. cost trade-off
+5. **Parameter Sensitivity**: Tests critical parameters (mesh, relaxation factors) and secondary parameters (thresholds)

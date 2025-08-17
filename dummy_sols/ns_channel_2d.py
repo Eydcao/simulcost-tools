@@ -10,15 +10,18 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from wrappers import *
 
 # Grid search version for mesh_x
-def grid_search_mesh_x(profile, boundary_condition, mesh_x_values, mesh_y, omega_u, omega_v, omega_p, diff_u_threshold, diff_v_threshold, res_iter_v_threshold, length, breadth, mass_tolerance, u_rmse_tolerance, v_rmse_tolerance, p_rmse_tolerance):
+def grid_search_mesh_x(profile, boundary_condition, mesh_x_values, mesh_y_values, omega_u, omega_v, omega_p, diff_u_threshold, diff_v_threshold, res_iter_v_threshold, length, breadth, mass_tolerance, u_rmse_tolerance, v_rmse_tolerance, p_rmse_tolerance, other_params_list=None):
     param_history = []
     cost_history = []
     converged = False
     best_mesh_x = None
 
-    for mesh_x in mesh_x_values:
-        print(f"\nRunning simulation with mesh_x = {mesh_x}")
-        cost_i, _ = run_sim_ns_channel_2d(profile, boundary_condition, mesh_x, mesh_y, omega_u, omega_v, omega_p, diff_u_threshold, diff_v_threshold, res_iter_v_threshold)
+    for i in range(len(mesh_x_values)):
+        mesh_x = mesh_x_values[i]
+        mesh_y = mesh_y_values[i]
+        other_params = other_params_list[i] if other_params_list is not None else None
+        print(f"\nRunning simulation with mesh_x = {mesh_x}; current other_params: {other_params}, mesh_y: {mesh_y}")
+        cost_i, _ = run_sim_ns_channel_2d(profile, boundary_condition, mesh_x, mesh_y, omega_u, omega_v, omega_p, diff_u_threshold, diff_v_threshold, res_iter_v_threshold, other_params)
         cost_history.append(cost_i)
         param_history.append({
             "mesh_x": mesh_x,
@@ -33,10 +36,13 @@ def grid_search_mesh_x(profile, boundary_condition, mesh_x_values, mesh_y, omega
 
         if len(param_history) > 1:
             prev_mesh_x = param_history[-2]["mesh_x"]
+            prev_mesh_y = param_history[-2]["mesh_y"]
+            prev_other_params = other_params_list[i-1] if other_params_list is not None else None
             is_converged, _, _, _, _, _ = compare_res_ns_channel_2d(
-                profile, boundary_condition, prev_mesh_x, mesh_y, omega_u, omega_v, omega_p, diff_u_threshold, diff_v_threshold, res_iter_v_threshold,
+                profile, boundary_condition, prev_mesh_x, prev_mesh_y, omega_u, omega_v, omega_p, diff_u_threshold, diff_v_threshold, res_iter_v_threshold,
                 profile, boundary_condition, mesh_x, mesh_y, omega_u, omega_v, omega_p, diff_u_threshold, diff_v_threshold, res_iter_v_threshold,
-                length, breadth, mass_tolerance, u_rmse_tolerance, v_rmse_tolerance, p_rmse_tolerance
+                length, breadth, mass_tolerance, u_rmse_tolerance, v_rmse_tolerance, p_rmse_tolerance,
+                prev_other_params, other_params
             )
             if is_converged:
                 print(f"Convergence achieved between mesh_x {prev_mesh_x} and {mesh_x}")
@@ -51,15 +57,18 @@ def grid_search_mesh_x(profile, boundary_condition, mesh_x_values, mesh_y, omega
     return bool(converged), best_mesh_x, cost_history, param_history
 
 # Grid search version for mesh_y
-def grid_search_mesh_y(profile, boundary_condition, mesh_x, mesh_y_values, omega_u, omega_v, omega_p, diff_u_threshold, diff_v_threshold, res_iter_v_threshold, length, breadth, mass_tolerance, u_rmse_tolerance, v_rmse_tolerance, p_rmse_tolerance):
+def grid_search_mesh_y(profile, boundary_condition, mesh_x_values, mesh_y_values, omega_u, omega_v, omega_p, diff_u_threshold, diff_v_threshold, res_iter_v_threshold, length, breadth, mass_tolerance, u_rmse_tolerance, v_rmse_tolerance, p_rmse_tolerance, other_params_list=None):
     param_history = []
     cost_history = []
     converged = False
     best_mesh_y = None
 
-    for mesh_y in mesh_y_values:
-        print(f"\nRunning simulation with mesh_y = {mesh_y}")
-        cost_i, _ = run_sim_ns_channel_2d(profile, boundary_condition, mesh_x, mesh_y, omega_u, omega_v, omega_p, diff_u_threshold, diff_v_threshold, res_iter_v_threshold)
+    for i in range(len(mesh_y_values)):
+        mesh_x = mesh_x_values[i]
+        mesh_y = mesh_y_values[i]
+        other_params = other_params_list[i] if other_params_list is not None else None
+        print(f"\nRunning simulation with mesh_y = {mesh_y}; current other_params: {other_params}, mesh_x: {mesh_x}")
+        cost_i, _ = run_sim_ns_channel_2d(profile, boundary_condition, mesh_x, mesh_y, omega_u, omega_v, omega_p, diff_u_threshold, diff_v_threshold, res_iter_v_threshold, other_params)
         cost_history.append(cost_i)
         param_history.append({
             "mesh_x": mesh_x,
@@ -72,11 +81,14 @@ def grid_search_mesh_y(profile, boundary_condition, mesh_x, mesh_y_values, omega
             "res_iter_v_threshold": res_iter_v_threshold
         })
         if len(param_history) > 1:
+            prev_mesh_x = param_history[-2]["mesh_x"]
             prev_mesh_y = param_history[-2]["mesh_y"]
+            prev_other_params = other_params_list[i-1] if other_params_list is not None else None
             is_converged, _, _, _, _, _ = compare_res_ns_channel_2d(
-                profile, boundary_condition, mesh_x, prev_mesh_y, omega_u, omega_v, omega_p, diff_u_threshold, diff_v_threshold, res_iter_v_threshold,
+                profile, boundary_condition, prev_mesh_x, prev_mesh_y, omega_u, omega_v, omega_p, diff_u_threshold, diff_v_threshold, res_iter_v_threshold,
                 profile, boundary_condition, mesh_x, mesh_y, omega_u, omega_v, omega_p, diff_u_threshold, diff_v_threshold, res_iter_v_threshold,
-                length, breadth, mass_tolerance, u_rmse_tolerance, v_rmse_tolerance, p_rmse_tolerance
+                length, breadth, mass_tolerance, u_rmse_tolerance, v_rmse_tolerance, p_rmse_tolerance,
+                prev_other_params, other_params
             )
             if is_converged:
                 print(f"Convergence achieved between mesh_y {prev_mesh_y} and {mesh_y}")
@@ -90,7 +102,7 @@ def grid_search_mesh_y(profile, boundary_condition, mesh_x, mesh_y_values, omega
     return bool(converged), best_mesh_y, cost_history, param_history
 
 
-def grid_search_omega_u(profile, boundary_condition, mesh_x, mesh_y, omega_u_values, omega_v, omega_p, diff_u_threshold, diff_v_threshold, res_iter_v_threshold, length, breadth, mass_tolerance, u_rmse_tolerance, v_rmse_tolerance, p_rmse_tolerance):
+def grid_search_omega_u(profile, boundary_condition, mesh_x, mesh_y, omega_u_values, omega_v, omega_p, diff_u_threshold, diff_v_threshold, res_iter_v_threshold, length, breadth, mass_tolerance, u_rmse_tolerance, v_rmse_tolerance, p_rmse_tolerance, other_params=None):
     """
     Grid search for omega_u: run over all omega_u_values, compare results for convergence.
     Returns: (converged, best_omega_u, cost_history, param_history)
@@ -101,8 +113,8 @@ def grid_search_omega_u(profile, boundary_condition, mesh_x, mesh_y, omega_u_val
     best_omega_u = None
 
     for omega_u in omega_u_values:
-        print(f"\nRunning simulation with omega_u = {omega_u}")
-        cost_i, num_steps = run_sim_ns_channel_2d(profile, boundary_condition, mesh_x, mesh_y, omega_u, omega_v, omega_p, diff_u_threshold, diff_v_threshold, res_iter_v_threshold)
+        print(f"\nRunning simulation with omega_u = {omega_u}; current other_params: {other_params}; current mesh_x: {mesh_x}; current mesh_y: {mesh_y}")
+        cost_i, num_steps = run_sim_ns_channel_2d(profile, boundary_condition, mesh_x, mesh_y, omega_u, omega_v, omega_p, diff_u_threshold, diff_v_threshold, res_iter_v_threshold, other_params)
         cost_history.append(cost_i)
         param_history.append({
             "mesh_x": mesh_x,
@@ -121,7 +133,8 @@ def grid_search_omega_u(profile, boundary_condition, mesh_x, mesh_y, omega_u_val
             is_converged, _, _, _, _, _ = compare_res_ns_channel_2d(
                 profile, boundary_condition, mesh_x, mesh_y, prev_omega_u, omega_v, omega_p, diff_u_threshold, diff_v_threshold, res_iter_v_threshold,
                 profile, boundary_condition, mesh_x, mesh_y, omega_u, omega_v, omega_p, diff_u_threshold, diff_v_threshold, res_iter_v_threshold,
-                length, breadth, mass_tolerance, u_rmse_tolerance, v_rmse_tolerance, p_rmse_tolerance
+                length, breadth, mass_tolerance, u_rmse_tolerance, v_rmse_tolerance, p_rmse_tolerance,
+                other_params, other_params
             )
             if is_converged:
                 print(f"Convergence achieved between omega_u {prev_omega_u} and {omega_u}")
@@ -144,7 +157,7 @@ def grid_search_omega_u(profile, boundary_condition, mesh_x, mesh_y, omega_u_val
     return bool(converged), best_omega_u, cost_history, param_history
 
 
-def grid_search_omega_v(profile, boundary_condition, mesh_x, mesh_y, omega_u, omega_v_values, omega_p, diff_u_threshold, diff_v_threshold, res_iter_v_threshold, length, breadth, mass_tolerance, u_rmse_tolerance, v_rmse_tolerance, p_rmse_tolerance):
+def grid_search_omega_v(profile, boundary_condition, mesh_x, mesh_y, omega_u, omega_v_values, omega_p, diff_u_threshold, diff_v_threshold, res_iter_v_threshold, length, breadth, mass_tolerance, u_rmse_tolerance, v_rmse_tolerance, p_rmse_tolerance, other_params=None):
     """
     Grid search for omega_v: run over all omega_v_values, compare results for convergence.
     Returns: (converged, best_omega_v, cost_history, param_history)
@@ -155,8 +168,8 @@ def grid_search_omega_v(profile, boundary_condition, mesh_x, mesh_y, omega_u, om
     best_omega_v = None
 
     for omega_v in omega_v_values:
-        print(f"\nRunning simulation with omega_v = {omega_v}")
-        cost_i, num_steps = run_sim_ns_channel_2d(profile, boundary_condition, mesh_x, mesh_y, omega_u, omega_v, omega_p, diff_u_threshold, diff_v_threshold, res_iter_v_threshold)
+        print(f"\nRunning simulation with omega_v = {omega_v}; current other_params: {other_params}; current mesh_x: {mesh_x}; current mesh_y: {mesh_y}")
+        cost_i, num_steps = run_sim_ns_channel_2d(profile, boundary_condition, mesh_x, mesh_y, omega_u, omega_v, omega_p, diff_u_threshold, diff_v_threshold, res_iter_v_threshold, other_params)
         cost_history.append(cost_i)
         param_history.append({
             "mesh_x": mesh_x,
@@ -174,7 +187,8 @@ def grid_search_omega_v(profile, boundary_condition, mesh_x, mesh_y, omega_u, om
             is_converged, _, _, _, _, _ = compare_res_ns_channel_2d(
                 profile, boundary_condition, mesh_x, mesh_y, omega_u, prev_omega_v, omega_p, diff_u_threshold, diff_v_threshold, res_iter_v_threshold,
                 profile, boundary_condition, mesh_x, mesh_y, omega_u, omega_v, omega_p, diff_u_threshold, diff_v_threshold, res_iter_v_threshold,
-                length, breadth, mass_tolerance, u_rmse_tolerance, v_rmse_tolerance, p_rmse_tolerance
+                length, breadth, mass_tolerance, u_rmse_tolerance, v_rmse_tolerance, p_rmse_tolerance,
+                other_params, other_params
             )
             if is_converged:
                 print(f"Convergence achieved between omega_v {prev_omega_v} and {omega_v}")
@@ -197,7 +211,7 @@ def grid_search_omega_v(profile, boundary_condition, mesh_x, mesh_y, omega_u, om
     return bool(converged), best_omega_v, cost_history, param_history
 
 
-def grid_search_omega_p(profile, boundary_condition, mesh_x, mesh_y, omega_u, omega_v, omega_p_values, diff_u_threshold, diff_v_threshold, res_iter_v_threshold, length, breadth, mass_tolerance, u_rmse_tolerance, v_rmse_tolerance, p_rmse_tolerance):
+def grid_search_omega_p(profile, boundary_condition, mesh_x, mesh_y, omega_u, omega_v, omega_p_values, diff_u_threshold, diff_v_threshold, res_iter_v_threshold, length, breadth, mass_tolerance, u_rmse_tolerance, v_rmse_tolerance, p_rmse_tolerance, other_params=None):
     """
     Grid search for omega_p: run over all omega_p_values, compare results for convergence.
     Returns: (converged, best_omega_p, cost_history, param_history)
@@ -208,8 +222,8 @@ def grid_search_omega_p(profile, boundary_condition, mesh_x, mesh_y, omega_u, om
     best_omega_p = None
 
     for omega_p in omega_p_values:
-        print(f"\nRunning simulation with omega_p = {omega_p}")
-        cost_i, num_steps = run_sim_ns_channel_2d(profile, boundary_condition, mesh_x, mesh_y, omega_u, omega_v, omega_p, diff_u_threshold, diff_v_threshold, res_iter_v_threshold)
+        print(f"\nRunning simulation with omega_p = {omega_p}; current other_params: {other_params}; current mesh_x: {mesh_x}; current mesh_y: {mesh_y}")
+        cost_i, num_steps = run_sim_ns_channel_2d(profile, boundary_condition, mesh_x, mesh_y, omega_u, omega_v, omega_p, diff_u_threshold, diff_v_threshold, res_iter_v_threshold, other_params)
         cost_history.append(cost_i)
         param_history.append({
             "mesh_x": mesh_x,
@@ -227,7 +241,8 @@ def grid_search_omega_p(profile, boundary_condition, mesh_x, mesh_y, omega_u, om
             is_converged, _, _, _, _, _ = compare_res_ns_channel_2d(
                 profile, boundary_condition, mesh_x, mesh_y, omega_u, omega_v, prev_omega_p, diff_u_threshold, diff_v_threshold, res_iter_v_threshold,
                 profile, boundary_condition, mesh_x, mesh_y, omega_u, omega_v, omega_p, diff_u_threshold, diff_v_threshold, res_iter_v_threshold,
-                length, breadth, mass_tolerance, u_rmse_tolerance, v_rmse_tolerance, p_rmse_tolerance
+                length, breadth, mass_tolerance, u_rmse_tolerance, v_rmse_tolerance, p_rmse_tolerance,
+                other_params, other_params
             )
             if is_converged:
                 print(f"Convergence achieved between omega_p {prev_omega_p} and {omega_p}")
@@ -250,14 +265,14 @@ def grid_search_omega_p(profile, boundary_condition, mesh_x, mesh_y, omega_u, om
     return bool(converged), best_omega_p, cost_history, param_history
 
 # Grid search version for diff_u_threshold
-def grid_search_diff_u_threshold(profile, boundary_condition, mesh_x, mesh_y, omega_u, omega_v, omega_p, diff_u_values, diff_v_threshold, res_iter_v_threshold, length, breadth, mass_tolerance, u_rmse_tolerance, v_rmse_tolerance, p_rmse_tolerance):
+def grid_search_diff_u_threshold(profile, boundary_condition, mesh_x, mesh_y, omega_u, omega_v, omega_p, diff_u_values, diff_v_threshold, res_iter_v_threshold, length, breadth, mass_tolerance, u_rmse_tolerance, v_rmse_tolerance, p_rmse_tolerance, other_params=None):
     param_history = []
     cost_history = []
     converged = False
     best_diff_u_threshold = None
     for diff_u_threshold in diff_u_values:
-        print(f"\nRunning simulation with diff_u_threshold = {diff_u_threshold}")
-        cost_i, _ = run_sim_ns_channel_2d(profile, boundary_condition, mesh_x, mesh_y, omega_u, omega_v, omega_p, diff_u_threshold, diff_v_threshold, res_iter_v_threshold)
+        print(f"\nRunning simulation with diff_u_threshold = {diff_u_threshold}; current other_params: {other_params}; current mesh_x: {mesh_x}; current mesh_y: {mesh_y}")
+        cost_i, _ = run_sim_ns_channel_2d(profile, boundary_condition, mesh_x, mesh_y, omega_u, omega_v, omega_p, diff_u_threshold, diff_v_threshold, res_iter_v_threshold, other_params)
         cost_history.append(cost_i)
         param_history.append({
             "mesh_x": mesh_x,
@@ -274,7 +289,8 @@ def grid_search_diff_u_threshold(profile, boundary_condition, mesh_x, mesh_y, om
             is_converged, _, _, _, _, _ = compare_res_ns_channel_2d(
                 profile, boundary_condition, mesh_x, mesh_y, omega_u, omega_v, omega_p, prev_diff_u_threshold, diff_v_threshold, res_iter_v_threshold,
                 profile, boundary_condition, mesh_x, mesh_y, omega_u, omega_v, omega_p, diff_u_threshold, diff_v_threshold, res_iter_v_threshold,
-                length, breadth, mass_tolerance, u_rmse_tolerance, v_rmse_tolerance, p_rmse_tolerance
+                length, breadth, mass_tolerance, u_rmse_tolerance, v_rmse_tolerance, p_rmse_tolerance,
+                other_params, other_params
             )
             if is_converged:
                 print(f"Convergence achieved between diff_u_threshold {prev_diff_u_threshold} and {diff_u_threshold}")
@@ -288,14 +304,14 @@ def grid_search_diff_u_threshold(profile, boundary_condition, mesh_x, mesh_y, om
     return bool(converged), best_diff_u_threshold, cost_history, param_history
 
 # Grid search version for diff_v_threshold
-def grid_search_diff_v_threshold(profile, boundary_condition, mesh_x, mesh_y, omega_u, omega_v, omega_p, diff_u_threshold, diff_v_values, res_iter_v_threshold, length, breadth, mass_tolerance, u_rmse_tolerance, v_rmse_tolerance, p_rmse_tolerance):
+def grid_search_diff_v_threshold(profile, boundary_condition, mesh_x, mesh_y, omega_u, omega_v, omega_p, diff_u_threshold, diff_v_values, res_iter_v_threshold, length, breadth, mass_tolerance, u_rmse_tolerance, v_rmse_tolerance, p_rmse_tolerance, other_params=None):
     param_history = []
     cost_history = []
     converged = False
     best_diff_v_threshold = None
     for diff_v_threshold in diff_v_values:
-        print(f"\nRunning simulation with diff_v_threshold = {diff_v_threshold}")
-        cost_i, _ = run_sim_ns_channel_2d(profile, boundary_condition, mesh_x, mesh_y, omega_u, omega_v, omega_p, diff_u_threshold, diff_v_threshold, res_iter_v_threshold)
+        print(f"\nRunning simulation with diff_v_threshold = {diff_v_threshold}; current other_params: {other_params}; current mesh_x: {mesh_x}; current mesh_y: {mesh_y}")
+        cost_i, _ = run_sim_ns_channel_2d(profile, boundary_condition, mesh_x, mesh_y, omega_u, omega_v, omega_p, diff_u_threshold, diff_v_threshold, res_iter_v_threshold, other_params)
         cost_history.append(cost_i)
         param_history.append({
             "mesh_x": mesh_x,
@@ -312,7 +328,8 @@ def grid_search_diff_v_threshold(profile, boundary_condition, mesh_x, mesh_y, om
             is_converged, _, _, _, _, _ = compare_res_ns_channel_2d(
                 profile, boundary_condition, mesh_x, mesh_y, omega_u, omega_v, omega_p, diff_u_threshold, prev_diff_v_threshold, res_iter_v_threshold,
                 profile, boundary_condition, mesh_x, mesh_y, omega_u, omega_v, omega_p, diff_u_threshold, diff_v_threshold, res_iter_v_threshold,
-                length, breadth, mass_tolerance, u_rmse_tolerance, v_rmse_tolerance, p_rmse_tolerance
+                length, breadth, mass_tolerance, u_rmse_tolerance, v_rmse_tolerance, p_rmse_tolerance,
+                other_params, other_params
             )
             if is_converged:
                 print(f"Convergence achieved between diff_v_threshold {prev_diff_v_threshold} and {diff_v_threshold}")
@@ -376,14 +393,14 @@ def grid_search_diff_v_threshold(profile, boundary_condition, mesh_x, mesh_y, om
 #     return bool(converged), best_res_iter_v_threshold, cost_history, param_history
 
 
-def grid_search_res_iter_v_threshold(profile, boundary_condition, mesh_x, mesh_y, omega_u, omega_v, omega_p, diff_u_threshold, diff_v_threshold, res_iter_v_values, length, breadth, mass_tolerance, u_rmse_tolerance, v_rmse_tolerance, p_rmse_tolerance):
+def grid_search_res_iter_v_threshold(profile, boundary_condition, mesh_x, mesh_y, omega_u, omega_v, omega_p, diff_u_threshold, diff_v_threshold, res_iter_v_values, length, breadth, mass_tolerance, u_rmse_tolerance, v_rmse_tolerance, p_rmse_tolerance, other_params=None):
     param_history = []
     cost_history = []
     converged = False
     best_res_iter_v_threshold = None
     for res_iter_v_threshold in res_iter_v_values:
-        print(f"\nRunning simulation with res_iter_v_threshold = {res_iter_v_threshold}")
-        cost_i, _ = run_sim_ns_channel_2d(profile, boundary_condition, mesh_x, mesh_y, omega_u, omega_v, omega_p, diff_u_threshold, diff_v_threshold, res_iter_v_threshold)
+        print(f"\nRunning simulation with res_iter_v_threshold = {res_iter_v_threshold}; current other_params: {other_params}; current mesh_x: {mesh_x}; current mesh_y: {mesh_y}")
+        cost_i, _ = run_sim_ns_channel_2d(profile, boundary_condition, mesh_x, mesh_y, omega_u, omega_v, omega_p, diff_u_threshold, diff_v_threshold, res_iter_v_threshold, other_params)
         cost_history.append(cost_i)
         param_history.append({
             "mesh_x": mesh_x,
@@ -400,7 +417,8 @@ def grid_search_res_iter_v_threshold(profile, boundary_condition, mesh_x, mesh_y
             is_converged, _, _, _, _, _ = compare_res_ns_channel_2d(
                 profile, boundary_condition, mesh_x, mesh_y, omega_u, omega_v, omega_p, diff_u_threshold, diff_v_threshold, prev_res_iter_v_threshold,
                 profile, boundary_condition, mesh_x, mesh_y, omega_u, omega_v, omega_p, diff_u_threshold, diff_v_threshold, res_iter_v_threshold,
-                length, breadth, mass_tolerance, u_rmse_tolerance, v_rmse_tolerance, p_rmse_tolerance
+                length, breadth, mass_tolerance, u_rmse_tolerance, v_rmse_tolerance, p_rmse_tolerance,
+                other_params, other_params
             )
             if is_converged:
                 print(f"Convergence achieved between res_iter_v_threshold {prev_res_iter_v_threshold} and {res_iter_v_threshold}")
