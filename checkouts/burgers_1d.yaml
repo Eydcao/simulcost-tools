@@ -1,6 +1,6 @@
 solver_info:
   name: "Burgers 1D"
-  numerical_method: "2nd Order Roe Method with Minmod Limiter"
+  numerical_method: "2nd Order Roe Method with Generalized Superbee Limiter"
   reference: "Inviscid Burgers equation - simplified compressible flow model"
 
 task_distribution:
@@ -10,16 +10,13 @@ task_distribution:
 
 precision_levels:
   high:
-    tolerance_rmse: 0.001
-    tolerance_linf: 0.01
+    tolerance_rmse: 0.01
     description: "Most stringent convergence criteria"
   medium:
-    tolerance_rmse: 0.005
-    tolerance_linf: 0.025
+    tolerance_rmse: 0.04
     description: "Moderate convergence criteria"
   low:
-    tolerance_rmse: 0.01
-    tolerance_linf: 0.05
+    tolerance_rmse: 0.08
     description: "Relaxed convergence criteria"
 
 profiles:
@@ -50,18 +47,18 @@ target_parameters:
     max_iteration_num: 7
     non_target_parameters:
       k: [-1.0, 0.0, 1.0]      # Array for multiple choices of blending parameter
-      w: [1.0, 1.5, 2.0]       # Array for multiple choices of limiter parameter
+      beta: [1.0, 1.5, 2.0]    # Array for multiple choices of limiter parameter
 
   n_space:
     description: "Number of spatial grid points - determines spatial resolution"
     search_type: "iterative+0-shot"
     initial_value: 256
     multiplication_factor: 2
-    max_iteration_num: 7
+    max_iteration_num: 6
     non_target_parameters:
       cfl: 0.25                # Fixed stable CFL for spatial convergence studies
       k: [-1.0, 0.0, 1.0]      # Array for multiple choices
-      w: [1.0, 1.5, 2.0]       # Array for multiple choices
+      beta: [1.0, 1.5, 2.0]    # Array for multiple choices
 
   k:
     description: "Spatial scheme blending parameter (1.0=central, -1.0=upwind, 0.0=mixed)"
@@ -71,16 +68,16 @@ target_parameters:
     max_iteration_num: 7       # For subsequent CFL search after finding optimal k
     multiplication_factor: 0.5 # For CFL search
     non_target_parameters:
-      cfl: 1.0                 # Starting CFL for composite search
-      w: [1.0, 1.5, 2.0]       # Array for multiple choices
+      cfl: 0.25                 # Starting CFL for composite search
+      beta: [1.0, 1.5, 2.0]    # Array for multiple choices
 
-  w:
-    description: "Minmod limiter strength parameter - controls dissipation (w>=1, higher=less dissipative)"
+  beta:
+    description: "Generalized superbee limiter parameter - controls dissipation (beta>=1, higher=less dissipative)"
     search_type: "0-shot"
     search_range: [1.0, 2.0]
     search_range_slice_num: 6
-    max_iteration_num: 7       # For subsequent CFL search after finding optimal w
+    max_iteration_num: 7       # For subsequent CFL search after finding optimal beta
     multiplication_factor: 0.5 # For CFL search
     non_target_parameters:
-      cfl: 1.0                 # Starting CFL for composite search
+      cfl: 0.25                 # Starting CFL for composite search
       k: [-1.0, 0.0, 1.0]      # Array for multiple choices

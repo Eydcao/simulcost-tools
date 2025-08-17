@@ -9,7 +9,7 @@ case: "double_shock"        # Initial condition name
 
 # Numerical parameters
 cfl: 0.25              # CFL number for stability
-w: 1                # Weight for flux limiter
+beta: 1             # Beta parameter for generalized superbee limiter
 k: 1                # the blending parameter between the central (1) and upwind (-1) fluxes
 
 # Simulator statics
