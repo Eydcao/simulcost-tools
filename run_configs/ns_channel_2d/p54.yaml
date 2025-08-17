@@ -30,4 +30,6 @@ verbose: False
 other_params: 
   wall_height: 17
   wall_width: 79
+  wall_start_height: 34
+  wall_start_width: 158
 

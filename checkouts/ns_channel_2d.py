@@ -457,7 +457,7 @@ def plot_statistics(statistics, output_dir):
                 f.write(f"  {param_name}: No values found\n")
 
 
-def process_mesh_task(target_param, target_config, task_params, profile, precision_name, precision_vals, statistics, successful_tasks, failed_tasks):
+def process_mesh_task(target_param, target_config, task_params, profile, precision_name, precision_vals, statistics, successful_tasks, failed_tasks, mesh_base_values, wall_base_values):
     """Process a mesh task with proper aspect ratio handling."""
     # Call appropriate search function based on target parameter
     if target_param == "mesh_x":
@@ -473,16 +473,47 @@ def process_mesh_task(target_param, target_config, task_params, profile, precisi
             mesh_x_values.append(int(current_value))
             current_value *= multiplication_factor
         
-        # Calculate corresponding mesh_y values to maintain aspect ratio
-        aspect_ratio = task_params["mesh_y"] / 64  # Calculate aspect ratio from the task_params
-        mesh_y_values = [int(mesh_x * aspect_ratio) for mesh_x in mesh_x_values]
+        # For mesh_x task, use the mesh_y value that was already calculated in the main loop
+        # to maintain the aspect ratio
+        mesh_y = task_params["mesh_y"]
+        mesh_y_values = []
+        current_value = mesh_y
+        
+        for i in range(max_iteration_num):
+            mesh_y_values.append(current_value)
+            current_value *= multiplication_factor
+
+        # Scale wall dimensions proportionally with mesh resolution
+        other_params_list = None
+        if "other_params" in task_params:
+            other_params_list = []
+            base_mesh_x = mesh_base_values["base_mesh_x"]
+            base_mesh_y = mesh_base_values["base_mesh_y"]
+            
+            for i in range(max_iteration_num):
+                current_mesh_x = mesh_x_values[i]
+                current_mesh_y = mesh_y_values[i]
+                
+                # Calculate scaling factors based on current mesh vs base mesh
+                scale_x = current_mesh_x / base_mesh_x
+                scale_y = current_mesh_y / base_mesh_y
+                
+                scaled_wall_params = {
+                    "wall_height": int(round(wall_base_values["base_wall_height"] * scale_y)),
+                    "wall_width": int(round(wall_base_values["base_wall_width"] * scale_x)),
+                    "wall_start_height": int(round(wall_base_values["base_wall_start_height"] * scale_y)),
+                    "wall_start_width": int(round(wall_base_values["base_wall_start_width"] * scale_x))
+                }
+                other_params_list.append(scaled_wall_params)
+            
+        
         
         boundary_condition = get_boundary_condition(profile)
         is_converged, best_param, cost_history, param_history = grid_search_mesh_x(
             profile=profile,
             boundary_condition=boundary_condition,
             mesh_x_values=mesh_x_values,
-            mesh_y=task_params["mesh_y"],
+            mesh_y_values=mesh_y_values,
             omega_u=task_params["omega_u"],
             omega_v=task_params["omega_v"],
             omega_p=task_params["omega_p"],
@@ -494,7 +525,8 @@ def process_mesh_task(target_param, target_config, task_params, profile, precisi
             mass_tolerance=precision_vals["mass_tolerance"],
             u_rmse_tolerance=precision_vals["u_rmse_tolerance"],
             v_rmse_tolerance=precision_vals["v_rmse_tolerance"],
-            p_rmse_tolerance=precision_vals["p_rmse_tolerance"]
+            p_rmse_tolerance=precision_vals["p_rmse_tolerance"],
+            other_params_list=other_params_list
         )
         if best_param is not None:
             statistics["optimal_mesh_x_values"].append(best_param)
@@ -512,15 +544,43 @@ def process_mesh_task(target_param, target_config, task_params, profile, precisi
             mesh_y_values.append(int(current_value))
             current_value *= multiplication_factor
         
-        # Calculate corresponding mesh_x values to maintain aspect ratio
-        aspect_ratio = mesh_y_values[0] / task_params["mesh_x"]  # Calculate aspect ratio
-        mesh_x_values = [int(mesh_y / aspect_ratio) for mesh_y in mesh_y_values]
+        # For mesh_y task, use the mesh_x value that was already calculated in the main loop
+        # to maintain the aspect ratio
+        mesh_x = task_params["mesh_x"]
+        mesh_x_values = []
+        current_value = mesh_x
+        for i in range(max_iteration_num):
+            mesh_x_values.append(current_value)
+            current_value *= multiplication_factor
         
+        # Scale wall dimensions proportionally with mesh resolution
+        other_params_list = None
+        if "other_params" in task_params:
+            other_params_list = []
+            base_mesh_x = mesh_base_values["base_mesh_x"]
+            base_mesh_y = mesh_base_values["base_mesh_y"]
+            
+            for i in range(max_iteration_num):
+                current_mesh_x = mesh_x_values[i]
+                current_mesh_y = mesh_y_values[i]
+                
+                # Calculate scaling factors based on current mesh vs base mesh
+                scale_x = current_mesh_x / base_mesh_x
+                scale_y = current_mesh_y / base_mesh_y
+                
+                scaled_wall_params = {
+                    "wall_height": int(round(wall_base_values["base_wall_height"] * scale_y)),
+                    "wall_width": int(round(wall_base_values["base_wall_width"] * scale_x)),
+                    "wall_start_height": int(round(wall_base_values["base_wall_start_height"] * scale_y)),
+                    "wall_start_width": int(round(wall_base_values["base_wall_start_width"] * scale_x))
+                }
+                other_params_list.append(scaled_wall_params)
+            
         boundary_condition = get_boundary_condition(profile)
         is_converged, best_param, cost_history, param_history = grid_search_mesh_y(
             profile=profile,
             boundary_condition=boundary_condition,
-            mesh_x=task_params["mesh_x"],
+            mesh_x_values=mesh_x_values,
             mesh_y_values=mesh_y_values,
             omega_u=task_params["omega_u"],
             omega_v=task_params["omega_v"],
@@ -533,7 +593,8 @@ def process_mesh_task(target_param, target_config, task_params, profile, precisi
             mass_tolerance=precision_vals["mass_tolerance"],
             u_rmse_tolerance=precision_vals["u_rmse_tolerance"],
             v_rmse_tolerance=precision_vals["v_rmse_tolerance"],
-            p_rmse_tolerance=precision_vals["p_rmse_tolerance"]
+            p_rmse_tolerance=precision_vals["p_rmse_tolerance"],
+            other_params_list=other_params_list
         )
         if best_param is not None:
             statistics["optimal_mesh_y_values"].append(best_param)
@@ -624,7 +685,8 @@ def process_non_mesh_task(target_param, target_config, task_params, profile, pre
             mass_tolerance=precision_vals["mass_tolerance"],
             u_rmse_tolerance=precision_vals["u_rmse_tolerance"],
             v_rmse_tolerance=precision_vals["v_rmse_tolerance"],
-            p_rmse_tolerance=precision_vals["p_rmse_tolerance"]
+            p_rmse_tolerance=precision_vals["p_rmse_tolerance"],
+            other_params=task_params.get("other_params")
         )
         if best_param is not None:
             statistics["optimal_omega_u_values"].append(best_param)
@@ -657,7 +719,8 @@ def process_non_mesh_task(target_param, target_config, task_params, profile, pre
             mass_tolerance=precision_vals["mass_tolerance"],
             u_rmse_tolerance=precision_vals["u_rmse_tolerance"],
             v_rmse_tolerance=precision_vals["v_rmse_tolerance"],
-            p_rmse_tolerance=precision_vals["p_rmse_tolerance"]
+            p_rmse_tolerance=precision_vals["p_rmse_tolerance"],
+            other_params=task_params.get("other_params")
         )
         if best_param is not None:
             statistics["optimal_omega_v_values"].append(best_param)
@@ -690,7 +753,8 @@ def process_non_mesh_task(target_param, target_config, task_params, profile, pre
             mass_tolerance=precision_vals["mass_tolerance"],
             u_rmse_tolerance=precision_vals["u_rmse_tolerance"],
             v_rmse_tolerance=precision_vals["v_rmse_tolerance"],
-            p_rmse_tolerance=precision_vals["p_rmse_tolerance"]
+            p_rmse_tolerance=precision_vals["p_rmse_tolerance"],
+            other_params=task_params.get("other_params")
         )
         if best_param is not None:
             statistics["optimal_omega_p_values"].append(best_param)
@@ -703,7 +767,8 @@ def process_non_mesh_task(target_param, target_config, task_params, profile, pre
         search_range_slice_num = target_config.get("search_range_slice_num", 5)
         
         # Generate diff_u_threshold values using search_range (logarithmic spacing)
-        diff_u_values = np.logspace(np.log10(float(search_range_min)), np.log10(float(search_range_max)), search_range_slice_num)
+        # Reverse order to start with looser thresholds and work towards tighter ones
+        diff_u_values = np.logspace(np.log10(float(search_range_min)), np.log10(float(search_range_max)), search_range_slice_num)[::-1]
         
         boundary_condition = get_boundary_condition(profile)
         print(f"        Using mesh: mesh_x={task_params['mesh_x']}, mesh_y={task_params['mesh_y']}")
@@ -723,7 +788,8 @@ def process_non_mesh_task(target_param, target_config, task_params, profile, pre
             mass_tolerance=precision_vals["mass_tolerance"],
             u_rmse_tolerance=precision_vals["u_rmse_tolerance"],
             v_rmse_tolerance=precision_vals["v_rmse_tolerance"],
-            p_rmse_tolerance=precision_vals["p_rmse_tolerance"]
+            p_rmse_tolerance=precision_vals["p_rmse_tolerance"],
+            other_params=task_params.get("other_params")
         )
         if best_param is not None:
             statistics["optimal_diff_u_threshold_values"].append(best_param)
@@ -736,7 +802,8 @@ def process_non_mesh_task(target_param, target_config, task_params, profile, pre
         search_range_slice_num = target_config.get("search_range_slice_num", 5)
         
         # Generate diff_v_threshold values using search_range (logarithmic spacing)
-        diff_v_values = np.logspace(np.log10(float(search_range_min)), np.log10(float(search_range_max)), search_range_slice_num)
+        # Reverse order to start with looser thresholds and work towards tighter ones
+        diff_v_values = np.logspace(np.log10(float(search_range_min)), np.log10(float(search_range_max)), search_range_slice_num)[::-1]
         
         boundary_condition = get_boundary_condition(profile)
         print(f"        Using mesh: mesh_x={task_params['mesh_x']}, mesh_y={task_params['mesh_y']}")
@@ -756,7 +823,8 @@ def process_non_mesh_task(target_param, target_config, task_params, profile, pre
             mass_tolerance=precision_vals["mass_tolerance"],
             u_rmse_tolerance=precision_vals["u_rmse_tolerance"],
             v_rmse_tolerance=precision_vals["v_rmse_tolerance"],
-            p_rmse_tolerance=precision_vals["p_rmse_tolerance"]
+            p_rmse_tolerance=precision_vals["p_rmse_tolerance"],
+            other_params=task_params.get("other_params")
         )
         if best_param is not None:
             statistics["optimal_diff_v_threshold_values"].append(best_param)
@@ -769,7 +837,8 @@ def process_non_mesh_task(target_param, target_config, task_params, profile, pre
         search_range_slice_num = target_config.get("search_range_slice_num", 5)
         
         # Generate res_iter_v_threshold values using search_range (logarithmic spacing)
-        res_iter_v_values = np.logspace(np.log10(float(search_range_min)), np.log10(float(search_range_max)), search_range_slice_num)
+        # Reverse order to start with looser thresholds and work towards tighter ones
+        res_iter_v_values = np.logspace(np.log10(float(search_range_min)), np.log10(float(search_range_max)), search_range_slice_num)[::-1]
         
         # Add schedule options if available
         schedule_options = target_config.get("schedule_options", ["exp_decay"])
@@ -794,7 +863,8 @@ def process_non_mesh_task(target_param, target_config, task_params, profile, pre
             mass_tolerance=precision_vals["mass_tolerance"],
             u_rmse_tolerance=precision_vals["u_rmse_tolerance"],
             v_rmse_tolerance=precision_vals["v_rmse_tolerance"],
-            p_rmse_tolerance=precision_vals["p_rmse_tolerance"]
+            p_rmse_tolerance=precision_vals["p_rmse_tolerance"],
+            other_params=task_params.get("other_params")
         )
         if best_param is not None:
             statistics["optimal_res_iter_v_threshold_values"].append(best_param)
@@ -854,7 +924,27 @@ def process_non_mesh_task(target_param, target_config, task_params, profile, pre
         print(f"      ❌ FAILED: No convergence, cost={total_cost}")
 
 
-def process_task_at_all_precisions(target_param, target_config, task_params, profile, precision_levels, statistics, successful_tasks, failed_tasks):
+def calculate_scaled_wall_dimensions(mesh_x, mesh_y, wall_base_values, mesh_base_values):
+    """Calculate wall dimensions scaled proportionally with mesh resolution"""
+    # Calculate scaling factors
+    scale_x = mesh_x / mesh_base_values["base_mesh_x"]
+    scale_y = mesh_y / mesh_base_values["base_mesh_y"]
+    
+    # Scale wall dimensions proportionally
+    scaled_wall_height = int(round(wall_base_values["base_wall_height"] * scale_y))
+    scaled_wall_width = int(round(wall_base_values["base_wall_width"] * scale_x))
+    scaled_wall_start_height = int(round(wall_base_values["base_wall_start_height"] * scale_y))
+    scaled_wall_start_width = int(round(wall_base_values["base_wall_start_width"] * scale_x))
+    
+    return {
+        "wall_height": scaled_wall_height,
+        "wall_width": scaled_wall_width,
+        "wall_start_height": scaled_wall_start_height,
+        "wall_start_width": scaled_wall_start_width
+    }
+
+
+def process_task_at_all_precisions(target_param, target_config, task_params, profile, precision_levels, statistics, successful_tasks, failed_tasks, wall_base_values, mesh_base_values):
     """Process a task at all precision levels"""
     # Process from high to low precision
     precision_order = ["high", "medium", "low"]
@@ -865,13 +955,30 @@ def process_task_at_all_precisions(target_param, target_config, task_params, pro
             
         precision_vals = precision_levels[precision_name]
         
-        print(f"      Running {target_param} at {precision_name} precision with params: {task_params}")
-        
         # Process the task
         if target_param in ["mesh_x", "mesh_y"]:
-            process_mesh_task(target_param, target_config, task_params, profile, precision_name, precision_vals, statistics, successful_tasks, failed_tasks)
+            # For mesh tasks, we don't have mesh_x/mesh_y in task_params yet, so we'll handle wall scaling in the mesh task functions
+            process_mesh_task(target_param, target_config, task_params, profile, precision_name, precision_vals, statistics, successful_tasks, failed_tasks, mesh_base_values, wall_base_values)
         else:
-            process_non_mesh_task(target_param, target_config, task_params, profile, precision_name, precision_vals, statistics, successful_tasks, failed_tasks)
+            # For non-mesh tasks, calculate scaled wall dimensions for this mesh configuration
+            mesh_x = task_params["mesh_x"]
+            mesh_y = task_params["mesh_y"]
+            scaled_wall_params = calculate_scaled_wall_dimensions(mesh_x, mesh_y, wall_base_values, mesh_base_values)
+            
+            # Add scaled wall parameters to task_params
+            task_params_with_walls = task_params.copy()
+            task_params_with_walls["other_params"] = scaled_wall_params
+            
+            # Calculate and print ratios
+            wall_height = scaled_wall_params["wall_height"]
+            wall_width = scaled_wall_params["wall_width"]
+            wall_height_ratio = wall_height / mesh_y
+            wall_width_ratio = wall_width / mesh_x
+            
+            print(f"        Scaled wall dimensions: {scaled_wall_params}")
+            print(f"        Wall ratios: wall_height/mesh_y={wall_height_ratio:.3f}, wall_width/mesh_x={wall_width_ratio:.3f}")
+            
+            process_non_mesh_task(target_param, target_config, task_params_with_walls, profile, precision_name, precision_vals, statistics, successful_tasks, failed_tasks)
 
 
 def main():
@@ -894,10 +1001,12 @@ def main():
     aspect_ratios = non_target_config.get("aspect_ratios", [1.0])
     mesh_combinations = non_target_config.get("mesh_combinations", [[64, 16], [128, 32], [192, 48], [256, 64]])
     mesh_base_values = non_target_config.get("mesh_base_values", {"base_mesh_x": 64, "base_mesh_y": 32})
+    wall_base_values = non_target_config.get("wall_base_values", {"base_wall_height": 10, "base_wall_width": 10, "base_wall_start_height": 20, "base_wall_start_width": 80})
     
     print(f"Aspect ratios for mesh tasks: {aspect_ratios}")
     print(f"Mesh combinations: {mesh_combinations}")
     print(f"Base mesh values: {mesh_base_values}")
+    print(f"Base wall values: {wall_base_values}")
     
     # Print configuration overview
     print(f"Profiles: {profiles}")
@@ -958,16 +1067,25 @@ def main():
                         
                         if target_param == "mesh_x":
                             # For mesh_x task, calculate mesh_y based on aspect ratio
+                            if aspect_ratio > 0.5:
+                                continue
                             base_mesh_x = mesh_base_values["base_mesh_x"]
                             aspect_task_params["mesh_y"] = int(base_mesh_x * aspect_ratio)
+                            scaled_wall_params = calculate_scaled_wall_dimensions(base_mesh_x, aspect_task_params["mesh_y"], wall_base_values, mesh_base_values)
+                            aspect_task_params["other_params"] = scaled_wall_params
                         else:  # mesh_y task
                             # For mesh_y task, calculate mesh_x based on aspect ratio
+                            if aspect_ratio < 0.2:
+                                continue
                             base_mesh_y = mesh_base_values["base_mesh_y"]
                             aspect_task_params["mesh_x"] = int(base_mesh_y / aspect_ratio)
+                            scaled_wall_params = calculate_scaled_wall_dimensions(aspect_task_params["mesh_x"], base_mesh_y, wall_base_values, mesh_base_values)
+                            aspect_task_params["other_params"] = scaled_wall_params
                         
                         # Process this task at all precision levels
                         process_task_at_all_precisions(target_param, target_config, aspect_task_params, profile, 
-                                                      precision_configs, statistics, successful_tasks, failed_tasks)
+                                                      precision_configs, statistics, successful_tasks, failed_tasks,
+                                                      wall_base_values, mesh_base_values)
                 else:
                     # For non-mesh tasks, convert mesh_combination index to actual mesh_x and mesh_y pairs
                     mesh_combination_idx = task_params["mesh_combination"]
@@ -980,7 +1098,8 @@ def main():
                     
                     # Process this task at all precision levels
                     process_task_at_all_precisions(target_param, target_config, task_params, profile, 
-                                                  precision_configs, statistics, successful_tasks, failed_tasks)
+                                                  precision_configs, statistics, successful_tasks, failed_tasks,
+                                                  wall_base_values, mesh_base_values)
 
     print(f"\n=== Generation Complete ===")
     print(f"Total tasks: {statistics['total_tasks']}")

@@ -8,8 +8,8 @@ solver_info:
 
 task_distribution:
   strategy: "benchmark"
-  total_individuals: 408
-  description: "4 profile * (2 mesh tasks * 5 aspect ratios + 6 non-mesh tasks * 4 mesh pairs) * 3 precision levels = 408 tasks"
+  total_individuals: 384
+  description: "4 profile * (2 mesh tasks * 4 aspect ratios + 6 non-mesh tasks * 4 mesh pairs) * 3 precision levels = 408 tasks"
 
 # Non-target parameter combinations
 non_target_combinations:
@@ -22,29 +22,35 @@ non_target_combinations:
     - [256, 64]  # index 3: mesh_x=256, mesh_y=64
   mesh_base_values:
     base_mesh_x: 64
-    base_mesh_y: 32
+    base_mesh_y: 16
     description: "Base mesh values for aspect ratio calculations in mesh tasks"
+  wall_base_values:
+    base_wall_height: 4
+    base_wall_width: 16
+    base_wall_start_height: 4
+    base_wall_start_width: 20
+    description: "Base wall dimensions for scaling with mesh resolution"
 
 precision_levels:
   high:
-    mass_tolerance: 1.0e-07
-    u_rmse_tolerance: 0.005
-    v_rmse_tolerance: 0.005
-    p_rmse_tolerance: 0.005
+    mass_tolerance: 1.0e-05
+    u_rmse_tolerance: 0.008
+    v_rmse_tolerance: 0.001
+    p_rmse_tolerance: 0.08
     max_iter: 50
     description: "Extremely stringent convergence criteria - very challenging"
   medium:
-    mass_tolerance: 1.0e-06
-    u_rmse_tolerance: 0.01
-    v_rmse_tolerance: 0.01
-    p_rmse_tolerance: 0.01
+    mass_tolerance: 1.0e-04
+    u_rmse_tolerance: 0.02
+    v_rmse_tolerance: 0.005
+    p_rmse_tolerance: 0.10
     max_iter: 35
     description: "Stringent convergence criteria - challenging"
   low:
-    mass_tolerance: 1.0e-05
-    u_rmse_tolerance: 0.03
-    v_rmse_tolerance: 0.03
-    p_rmse_tolerance: 0.03
+    mass_tolerance: 5.0e-04
+    u_rmse_tolerance: 0.05
+    v_rmse_tolerance: 0.01
+    p_rmse_tolerance: 0.15
     max_iter: 25
     description: "Moderate convergence criteria - achievable but not trivial"
 
@@ -81,7 +87,7 @@ target_parameters:
     search_type: "iterative+0-shot"
     initial_value: 64
     multiplication_factor: 2
-    max_iteration_num: 6
+    max_iteration_num: 3
     non_target_parameters:
       omega_u: 0.6
       omega_v: 0.6
@@ -94,9 +100,9 @@ target_parameters:
   mesh_y:
     description: "Number of grid cells in y-direction - determines spatial resolution across channel width"
     search_type: "iterative+0-shot"
-    initial_value: 32
+    initial_value: 16
     multiplication_factor: 2
-    max_iteration_num: 6
+    max_iteration_num: 3
     non_target_parameters:
       omega_u: 0.6
       omega_v: 0.6
@@ -111,7 +117,7 @@ target_parameters:
     search_type: "0-shot"
     search_range: [0.1, 1.0]
     search_range_slice_num: 10
-    max_iteration_num: 5
+    max_iteration_num: 10
     non_target_parameters:
       mesh_combination: [0, 1, 2, 3]  # Index for mesh pairs: 0=(64,16), 1=(128,32), 2=(192,48), 3=(256,64)
       omega_v: 0.6
@@ -125,7 +131,7 @@ target_parameters:
     search_type: "0-shot"
     search_range: [0.1, 1.0]
     search_range_slice_num: 10
-    max_iteration_num: 5
+    max_iteration_num: 10
     non_target_parameters:
       mesh_combination: [0, 1, 2, 3]  # Index for mesh pairs: 0=(64,16), 1=(128,32), 2=(192,48), 3=(256,64)
       omega_u: 0.6
@@ -139,7 +145,7 @@ target_parameters:
     search_type: "0-shot"
     search_range: [0.1, 0.5]
     search_range_slice_num: 8
-    max_iteration_num: 5
+    max_iteration_num: 8
     non_target_parameters:
       mesh_combination: [0, 1, 2, 3]  # Index for mesh pairs: 0=(64,16), 1=(128,32), 2=(192,48), 3=(256,64)
       omega_u: 0.6
