@@ -2,12 +2,51 @@ import os
 import yaml
 
 
+def normalize_numeric_values(obj):
+    """
+    Recursively convert string representations of numbers (especially scientific notation)
+    to appropriate numeric types (int, float).
+
+    Args:
+        obj: Any object that may contain string numeric values
+
+    Returns:
+        The same object with string numbers converted to numeric types
+    """
+    if isinstance(obj, dict):
+        return {k: normalize_numeric_values(v) for k, v in obj.items()}
+    elif isinstance(obj, list):
+        return [normalize_numeric_values(item) for item in obj]
+    elif isinstance(obj, str):
+        # Try to convert string to numeric value
+        obj_lower = obj.lower()
+        try:
+            # Handle scientific notation (e.g., "1e-8", "2.5e+3")
+            if "e" in obj_lower and any(c.isdigit() for c in obj):
+                return float(obj)
+            # Handle decimal numbers
+            elif "." in obj and obj.replace(".", "").replace("-", "").isdigit():
+                return float(obj)
+            # Handle integers
+            elif obj.replace("-", "").isdigit():
+                return int(obj)
+            else:
+                return obj  # Keep as string if not numeric
+        except ValueError:
+            return obj  # Keep as string if conversion fails
+    else:
+        return obj  # Return unchanged for other types
+
+
 def load_config(config_path):
     if not os.path.exists(config_path):
         raise FileNotFoundError(f"Configuration file not found: {config_path}")
 
     with open(config_path, "r") as f:
         config = yaml.safe_load(f)
+
+    # Normalize any string numeric values to proper numeric types
+    config = normalize_numeric_values(config)
 
     return config
 
