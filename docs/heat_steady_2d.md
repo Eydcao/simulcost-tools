@@ -42,6 +42,8 @@ The profile configurations define different boundary condition patterns:
 1. **p1** - Classic case: Top hot (T=1.0), others cold (T=0.0)
 2. **p2-p8**: Random boundary conditions
 
+**Note for LLM Developers**: When generating natural language descriptions of the test cases, read the actual profile configuration files (run_configs/heat_1d/p*.yaml) to extract specific parameter values for each profile and create accurate, detailed descriptions.
+
 The simulated results are considered correct if the relative RMSE meets the precision-dependent tolerance and the solution satisfies physical constraints:
 
 1. **Temperature validity**: All values finite and within boundary range
