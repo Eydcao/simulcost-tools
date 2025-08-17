@@ -56,7 +56,7 @@ precision_levels:
 
 profiles:
   num_profiles: 4
-  active_profiles: ["p1", "p31", "p54", "p84"]
+  active_profiles: ["p1", "p2", "p3", "p4"]
   geometry_defaults:
     length: 20.0
     breadth: 1.0
@@ -67,15 +67,15 @@ profiles:
     boundary_condition: "channel_flow"
     description: "Standard channel flow with uniform inlet"
     reynolds_range: "Low to moderate"
-  p31:
+  p2:
     boundary_condition: "back_stair_flow"
     description: "Back stair flow with uniform inlet"
     reynolds_range: "Low to moderate"
-  p54:
+  p3:
     boundary_condition: "expansion_channel"
     description: "Expansion channel with uniform inlet"
     reynolds_range: "Low to moderate"
-  p84:
+  p4:
     boundary_condition: "cube_driven_flow"
     description: "Cube driven flow with uniform inlet"
     reynolds_range: "Low to moderate"

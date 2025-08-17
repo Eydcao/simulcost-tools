@@ -42,17 +42,17 @@ The solver supports multiple boundary conditions and geometries:
    - Boundary: Uniform inlet, no-slip walls, pressure outlet
    - Reynolds: Low to moderate
 
-2. **p31 - Back Stair Flow**: Channel with backward-facing step
+2. **p2 - Back Stair Flow**: Channel with backward-facing step
    - Geometry: Channel with sudden expansion
    - Boundary: Uniform inlet, no-slip walls, pressure outlet
    - Reynolds: Low to moderate
 
-3. **p54 - Expansion Channel**: Channel with gradual expansion
+3. **p3 - Expansion Channel**: Channel with gradual expansion
    - Geometry: Diverging channel
    - Boundary: Uniform inlet, no-slip walls, pressure outlet
    - Reynolds: Low to moderate
 
-4. **p84 - Cube Driven Flow**: Channel with cubic obstacle
+4. **p4 - Cube Driven Flow**: Channel with cubic obstacle
    - Geometry: Channel with cubic blockage
    - Boundary: Uniform inlet, no-slip walls, pressure outlet
    - Reynolds: Low to moderate
@@ -125,10 +125,10 @@ Base wall values: height=4, width=16, start_height=4, start_width=20
 
 | Parameter | Description | Default Values by Profile |
 |-----------|-------------|---------------------------|
-| length | Channel length | p1: 20.0, p31: 14.56, p54: 12.8, p84: 10.23 |
-| breadth | Channel width | p1: 1.0, p31: 1.14, p54: 1.28, p84: 1.2 |
-| mu | Dynamic viscosity | p1: 0.01, p31: 0.04181, p54: 0.04448, p84: 0.00753 |
-| rho | Density | p1: 1.0, p31: 4.42, p54: 3.91, p84: 1.3 |
+| length | Channel length | p1: 20.0, p2: 14.56, p3: 12.8, p4: 10.23 |
+| breadth | Channel width | p1: 1.0, p2: 1.14, p3: 1.28, p4: 1.2 |
+| mu | Dynamic viscosity | p1: 0.01, p2: 0.04181, p3: 0.04448, p4: 0.00753 |
+| rho | Density | p1: 1.0, p2: 4.42, p3: 3.91, p4: 1.3 |
 | max_iter | Maximum iterations | 25-50 (precision dependent) |
 | verbose | Enable verbose output | False |
 
@@ -144,7 +144,7 @@ Base wall values: height=4, width=16, start_height=4, start_width=20
 
 ### Summary
 
-- **Benchmarks**: 4 profiles (p1: channel_flow, p31: back_stair_flow, p54: expansion_channel, p84: cube_driven_flow)
+- **Benchmarks**: 4 profiles (p1: channel_flow, p2: back_stair_flow, p3: expansion_channel, p4: cube_driven_flow)
 - **Target Parameters**: 7 (mesh_x, mesh_y, omega_u, omega_v, omega_p, diff_u_threshold, diff_v_threshold, res_iter_v_threshold)
 - **Precision Levels**: 3 (low, medium, high with varying convergence criteria)
 
