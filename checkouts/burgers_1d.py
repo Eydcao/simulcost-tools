@@ -20,7 +20,7 @@ from collections import defaultdict, Counter
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from checkouts.config_utils import load_config, build_target_configs
-from dummy_sols.burgers_1d import find_convergent_cfl, find_convergent_n_space, find_optimal_k, find_optimal_w
+from dummy_sols.burgers_1d import find_convergent_cfl, find_convergent_n_space, find_optimal_k, find_optimal_beta
 
 
 def save_datasets(successful_tasks, failed_tasks, output_dir):
@@ -30,37 +30,43 @@ def save_datasets(successful_tasks, failed_tasks, output_dir):
     failed_dir = os.path.join(output_dir, "burgers_1d", "failed")
     os.makedirs(success_dir, exist_ok=True)
     os.makedirs(failed_dir, exist_ok=True)
-    
+
     # Save successful tasks (overwrite existing file)
     success_file = os.path.join(success_dir, "tasks.json")
     with open(success_file, "w") as f:  # "w" mode overwrites existing file
-        json.dump({
-            "metadata": {
-                "solver": "burgers_1d",
-                "description": "Successfully converged parameter optimization tasks",
-                "total_tasks": len(successful_tasks)
+        json.dump(
+            {
+                "metadata": {
+                    "solver": "burgers_1d",
+                    "description": "Successfully converged parameter optimization tasks",
+                    "total_tasks": len(successful_tasks),
+                },
+                "tasks": successful_tasks,
             },
-            "tasks": successful_tasks
-        }, f, indent=2)
-    
+            f,
+            indent=2,
+        )
+
     # Save failed tasks (overwrite existing file)
     failed_file = os.path.join(failed_dir, "tasks.json")
     with open(failed_file, "w") as f:  # "w" mode overwrites existing file
-        json.dump({
-            "metadata": {
-                "solver": "burgers_1d", 
-                "description": "Failed to converge parameter optimization tasks",
-                "total_tasks": len(failed_tasks)
+        json.dump(
+            {
+                "metadata": {
+                    "solver": "burgers_1d",
+                    "description": "Failed to converge parameter optimization tasks",
+                    "total_tasks": len(failed_tasks),
+                },
+                "tasks": failed_tasks,
             },
-            "tasks": failed_tasks
-        }, f, indent=2)
-    
+            f,
+            indent=2,
+        )
+
     print(f"✅ Saved {len(successful_tasks)} successful tasks to {success_file}")
     print(f"❌ Saved {len(failed_tasks)} failed tasks to {failed_file}")
-    
+
     return success_file, failed_file
-
-
 
 
 def plot_statistics(statistics, output_dir):
@@ -144,13 +150,13 @@ def plot_statistics(statistics, output_dir):
         )
         color_idx += 1
 
-    if statistics["optimal_w_values"]:
-        w_values, w_counts = np.unique(list(statistics["optimal_w_values"]), return_counts=True)
+    if statistics["optimal_beta_values"]:
+        beta_values, beta_counts = np.unique(list(statistics["optimal_beta_values"]), return_counts=True)
         ax.bar(
-            [str(w) for w in w_values],
-            w_counts,
+            [str(beta) for beta in beta_values],
+            beta_counts,
             alpha=0.7,
-            label="w parameter",
+            label="beta parameter",
             color=colors[color_idx % len(colors)],
         )
 
@@ -175,7 +181,7 @@ def plot_statistics(statistics, output_dir):
     plt.tight_layout()
     plt.savefig(os.path.join(output_dir, "burgers_1d_statistics.png"), dpi=300, bbox_inches="tight")
     plt.close()
-    
+
     # Create detailed statistics file
     stats_file = os.path.join(output_dir, "burgers_1d_statistics_summary.txt")
     with open(stats_file, "w") as f:
@@ -226,33 +232,33 @@ def plot_statistics(statistics, output_dir):
             for k, count in zip(k_values, k_counts):
                 f.write(f"     k={k}: {count} times\n")
 
-        if statistics["optimal_w_values"]:
-            w_values, w_counts = np.unique(list(statistics["optimal_w_values"]), return_counts=True)
-            f.write("   w parameter (0-shot):\n")
-            for w, count in zip(w_values, w_counts):
-                f.write(f"     w={w}: {count} times\n")
+        if statistics["optimal_beta_values"]:
+            beta_values, beta_counts = np.unique(list(statistics["optimal_beta_values"]), return_counts=True)
+            f.write("   beta parameter (0-shot):\n")
+            for beta, count in zip(beta_values, beta_counts):
+                f.write(f"     beta={beta}: {count} times\n")
 
 
 def main():
     """Main execution function."""
     repo_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    
+
     print("=" * 60)
     print("BURGERS 1D DUMMY SOLUTION GENERATION")
     print("=" * 60)
-    
+
     # Load configuration
     config_path = os.path.join(os.path.dirname(__file__), "burgers_1d.yaml")
     config = load_config(config_path)
     target_configs = build_target_configs(config)
     precision_configs = config["precision_levels"]
     profiles = config["profiles"]["active_profiles"]
-    
+
     # Print configuration overview
     print(f"Profiles: {profiles}")
     print(f"Target parameters: {list(target_configs.keys())}")
     print(f"Precision levels: {list(precision_configs.keys())}")
-    
+
     # Initialize statistics tracking
     statistics = {
         "total_tasks": 0,
@@ -262,10 +268,10 @@ def main():
         "convergence_by_profile": {},
         "optimal_cfl_values": [],
         "optimal_n_space_values": [],
-        "optimal_k_values": [], 
-        "optimal_w_values": []
+        "optimal_k_values": [],
+        "optimal_beta_values": [],
     }
-    
+
     # Initialize nested dictionaries
     for precision_name in precision_configs.keys():
         statistics["convergence_by_precision"][precision_name] = {"converged": 0, "total": 0}
@@ -273,13 +279,14 @@ def main():
         statistics["convergence_by_target"][target_param] = {"converged": 0, "total": 0, "costs": []}
     for profile in profiles:
         statistics["convergence_by_profile"][profile] = {"converged": 0, "total": 0}
-    
+
     # Data collection for datasets
     successful_tasks = []
     failed_tasks = []
 
     # Generate all task combinations
     import itertools
+
     for precision_name, precision_vals in precision_configs.items():
         print(f"\n--- Processing {precision_name.upper()} precision ---")
 
@@ -306,9 +313,8 @@ def main():
                             profile=profile,
                             cfl=target_config["initial_value"],
                             k=task_params["k"],
-                            w=task_params["w"],
-                            tolerance_infity=precision_vals["tolerance_linf"],
-                            tolerance_2=precision_vals["tolerance_rmse"],
+                            beta=task_params["beta"],
+                            tolerance_rmse=precision_vals["tolerance_rmse"],
                             multiplication_factor=target_config["multiplication_factor"],
                             max_iter=target_config["max_iteration_num"],
                         )
@@ -321,9 +327,8 @@ def main():
                             n_space=target_config["initial_value"],
                             cfl=task_params["cfl"],
                             k=task_params["k"],
-                            w=task_params["w"],
-                            tolerance_infity=precision_vals["tolerance_linf"],
-                            tolerance_2=precision_vals["tolerance_rmse"],
+                            beta=task_params["beta"],
+                            tolerance_rmse=precision_vals["tolerance_rmse"],
                             multiplication_factor=target_config["multiplication_factor"],
                             max_iter=target_config["max_iteration_num"],
                         )
@@ -332,12 +337,11 @@ def main():
 
                     elif target_param == "k":
                         is_converged, optimal_params, optimal_cost_history, param_history = find_optimal_k(
-                            profile=profile, 
+                            profile=profile,
                             cfl=task_params["cfl"],
-                            w=task_params["w"], 
+                            beta=task_params["beta"],
                             n_space=target_configs["n_space"]["initial_value"],
-                            tolerance_infity=precision_vals["tolerance_linf"], 
-                            tolerance_2=precision_vals["tolerance_rmse"],
+                            tolerance_rmse=precision_vals["tolerance_rmse"],
                             search_range_min=target_config["search_range_min"],
                             search_range_max=target_config["search_range_max"],
                             search_range_slice_num=target_config["search_range_slice_num"],
@@ -349,14 +353,13 @@ def main():
                         if best_param is not None:
                             statistics["optimal_k_values"].append(best_param)
 
-                    elif target_param == "w":
-                        is_converged, optimal_params, optimal_cost_history, param_history = find_optimal_w(
-                            profile=profile, 
+                    elif target_param == "beta":
+                        is_converged, optimal_params, optimal_cost_history, param_history = find_optimal_beta(
+                            profile=profile,
                             cfl=task_params["cfl"],
-                            k=task_params["k"], 
+                            k=task_params["k"],
                             n_space=target_configs["n_space"]["initial_value"],
-                            tolerance_infity=precision_vals["tolerance_linf"], 
-                            tolerance_2=precision_vals["tolerance_rmse"],
+                            tolerance_rmse=precision_vals["tolerance_rmse"],
                             search_range_min=target_config["search_range_min"],
                             search_range_max=target_config["search_range_max"],
                             search_range_slice_num=target_config["search_range_slice_num"],
@@ -366,7 +369,7 @@ def main():
                         best_param, optimal_n_space = optimal_params if optimal_params is not None else (None, None)
                         cost_history = optimal_cost_history
                         if best_param is not None:
-                            statistics["optimal_w_values"].append(best_param)
+                            statistics["optimal_beta_values"].append(best_param)
 
                     # Create task record for dataset
                     task_record = {
@@ -374,17 +377,14 @@ def main():
                         "target_parameter": target_param,
                         "profile": profile,
                         "precision_level": precision_name,
-                        "precision_config": {
-                            "tolerance_linf": precision_vals["tolerance_linf"],
-                            "tolerance_rmse": precision_vals["tolerance_rmse"]
-                        },
+                        "precision_config": {"tolerance_rmse": precision_vals["tolerance_rmse"]},
                         "target_config": {
                             "initial_value": target_config.get("initial_value"),
                             "multiplication_factor": target_config.get("multiplication_factor"),
                             "max_iteration_num": target_config.get("max_iteration_num"),
                             "search_range_min": target_config.get("search_range_min"),
                             "search_range_max": target_config.get("search_range_max"),
-                            "search_range_slice_num": target_config.get("search_range_slice_num")
+                            "search_range_slice_num": target_config.get("search_range_slice_num"),
                         },
                         "non_target_parameters": task_params.copy(),
                         "results": {
@@ -392,8 +392,8 @@ def main():
                             "optimal_parameter_value": best_param,
                             "total_computational_cost": sum(cost_history) if cost_history else 0,
                             "cost_history": cost_history if cost_history else [],
-                            "parameter_history": param_history if param_history else []
-                        }
+                            "parameter_history": param_history if param_history else [],
+                        },
                     }
 
                     # Add task to appropriate dataset
@@ -435,17 +435,21 @@ def main():
     print(f"💾 Dataset files saved to: {dataset_dir}")
     print(f"   ✅ Successful tasks: {len(successful_tasks)} tasks")
     print(f"   ❌ Failed tasks: {len(failed_tasks)} tasks")
-    
+
     # Display dataset summary
     if len(successful_tasks) > 0:
         print(f"\n📈 Successful Task Examples:")
         for i, task in enumerate(successful_tasks[:3]):  # Show first 3 successful tasks
-            print(f"   {i+1}. {task['profile']} profile, {task['target_parameter']} optimization -> {task['results']['optimal_parameter_value']}")
-    
+            print(
+                f"   {i+1}. {task['profile']} profile, {task['target_parameter']} optimization -> {task['results']['optimal_parameter_value']}"
+            )
+
     if len(failed_tasks) > 0:
         print(f"\n📉 Failed Task Examples:")
         for i, task in enumerate(failed_tasks[:3]):  # Show first 3 failed tasks
-            print(f"   {i+1}. {task['profile']} profile, {task['target_parameter']} optimization (cost: {task['results']['total_computational_cost']})")
+            print(
+                f"   {i+1}. {task['profile']} profile, {task['target_parameter']} optimization (cost: {task['results']['total_computational_cost']})"
+            )
 
     # Expected task calculation for verification
     expected_total = 0
@@ -467,7 +471,7 @@ def main():
     print(f"  Expected total per precision: {expected_total}")
     print(f"  Expected total across {len(precision_configs)} precisions: {expected_total * len(precision_configs)}")
     print(f"  Actual total: {statistics['total_tasks']}")
-    
+
     print(f"\n{'='*60}")
     print("BURGERS 1D DUMMY SOLUTION GENERATION COMPLETED!")
     print(f"{'='*60}")
