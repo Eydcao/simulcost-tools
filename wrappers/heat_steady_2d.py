@@ -35,7 +35,7 @@ def run_sim_heat_steady_2d(profile, dx, relax, error_threshold, t_init):
         meta = json.load(f)
         cost = meta["cost"]
 
-    return cost
+    return meta["cost"], meta["num_steps"]
 
 
 def get_res_heat_steady_2d(profile, dx, relax, error_threshold, t_init):
