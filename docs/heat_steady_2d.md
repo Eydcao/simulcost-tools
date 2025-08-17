@@ -40,10 +40,7 @@ Corner temperatures are set as the average of adjacent boundary values.
 The profile configurations define different boundary condition patterns:
 
 1. **p1** - Classic case: Top hot (T=1.0), others cold (T=0.0)
-2. **p2** - Opposite hot sides: Top and bottom hot (T=1.0), left and right cold (T=0.0)
-3. **p3** - Corner heating: Right side hot (T=1.0), others cold (T=0.0)
-4. **p4** - Mixed pattern: Left hot (T=1.0), top/bottom moderate (T=0.5), right cold (T=0.0)
-5. **p5** - Uniform heating: All boundaries warm (T=0.8)
+2. **p2-p8**: Random boundary conditions
 
 The simulated results are considered correct if the relative RMSE meets the precision-dependent tolerance and the solution satisfies physical constraints:
 
@@ -69,20 +66,20 @@ The simulated results are considered correct if the relative RMSE meets the prec
 ### Dummy Strategy
 
 1. **dx Convergence Search (iterative+0-shot)**
-   - For dummy solution, halve dx each round (multiplication factor: 0.5) starting from 0.01 until convergence
-   - **Non-target parameters**: relax=1.0, error_threshold=1e-8, T_init=0.0
+   - For dummy solution, halve dx each round (multiplication factor: 0.5) starting from 0.08 until convergence
+   - **Non-target parameters**: relax=[0.2,0.6,1.0], error_threshold=1e-8, t_init=[0.0,0.25,0.5,0.75,1.0]
 
 2. **relax Optimization (0-shot)**
    - For dummy solution, grid search the relax that achieves convergence with minimum computational cost
-   - **Non-target parameters**: dx=0.01, error_threshold=1e-8, T_init=0.0
+   - **Non-target parameters**: dx=0.01, error_threshold=1e-8, t_init=[0.0,0.25,0.5,0.75,1.0]
 
-3. **T_init Optimization (0-shot)**
-   - For dummy solution, grid search the T_init that achieves convergence with minimum computational cost
-   - **Non-target parameters**: dx=0.01, relax=1.0, error_threshold=1e-8
+3. **t_init Optimization (0-shot)**
+   - For dummy solution, grid search the t_init that achieves convergence with minimum computational cost
+   - **Non-target parameters**: dx=0.01, relax=[0.2,0.6,1.0], error_threshold=1e-8
 
 4. **error_threshold Convergence Search (iterative+0-shot)**
-   - For dummy solution, reduce error_threshold each round (multiplication factor: 0.1) starting from 1e-5 until convergence
-   - **Non-target parameters**: dx=0.01, relax=1.0, T_init=0.0
+   - For dummy solution, reduce error_threshold each round (multiplication factor: 0.1) starting from 1e-4 until convergence
+   - **Non-target parameters**: dx=0.01, relax=[0.2,0.6,1.0], t_init=[0.0,0.25,0.5,0.75,1.0]
 
 ## Summarized parameter table for developer only (Not LLM)
 
@@ -125,80 +122,22 @@ More Notes:
 
 - **Benchmarks**:
   - **p1**: Classic one-hot-side problem (top boundary heated)
-  - **p2**: Opposite heating (top and bottom heated)
-  - **p3**: Corner heating (side boundary heated)
-  - **p4**: Mixed boundary conditions (complex gradient patterns)
-  - **p5**: Uniform heating (convergence to steady state)
-- **Target Parameters**: 4 (dx, relax, error_threshold, T_init)
-- **Precision Levels**: 3 (low: 1e-4, medium: 1e-5, high: 1e-6)
+  - **p2-p8**: Random boundary conditions
+- **Target Parameters**: 4 (dx, relax, error_threshold, t_init)
+- **Precision Levels**: 3 (low: 0.05, medium: 0.005, high: 0.0005)
 
 ### Task Distribution
 
 Current configuration generates:
 
-- **dx** (iterative+0-shot): 5 profiles × 4 non-target combos = 20 tasks
-- **relax** (0-shot): 5 profiles × 3 non-target combos = 15 tasks
-- **T_init** (0-shot): 5 profiles × 3 non-target combos = 15 tasks
-- **error_threshold** (iterative+0-shot): 5 profiles × 3 non-target combos = 15 tasks
-- **Total per precision**: 65 tasks
-- **Total tasks**: 195 tasks (across 3 precision levels)
+- **dx** (iterative+0-shot): 8 profiles × 15 non-target combos = 120 tasks
+- **relax** (0-shot): 8 profiles × 5 non-target combos = 40 tasks
+- **t_init** (0-shot): 8 profiles × 3 non-target combos = 24 tasks
+- **error_threshold** (iterative+0-shot): 8 profiles × 15 non-target combos = 120 tasks
+- **Total per precision**: 304 tasks
+- **Total tasks**: 912 tasks (across 3 precision levels)
 
 ### Dummy Solution Cache
 
 Config for dummy solution cache: `checkouts/heat_steady_2d.yaml`
 Cache script: `checkouts/heat_steady_2d.py`
-
-## Checkout
-
-### Summary
-
-- **Benchmarks**:
-  - **p1**: Classic one-hot-side problem (top boundary heated)
-  - **p2**: Opposite heating (top and bottom heated)  
-  - **p3**: Corner heating (side boundary heated)
-  - **p4**: Mixed boundary conditions (complex gradient patterns)
-  - **p5**: Uniform heating (convergence to steady state)
-- **Target Parameters**: 4 (dx, relax, error_threshold, T_init)
-- **Precision Levels**: 3 (low: 1e-4, medium: 1e-5, high: 1e-6)
-
-### Task Distribution
-
-Current configuration generates:
-
-- **dx** (iterative+0-shot): 5 profiles × 4 non-target combos = 20 tasks
-- **error_threshold** (iterative+0-shot): 5 profiles × 3 non-target combos = 15 tasks
-- **relax** (0-shot): 5 profiles × 3 non-target combos = 15 tasks  
-- **T_init** (0-shot): 5 profiles × 3 non-target combos = 15 tasks
-- **Total per precision**: 65 tasks
-- **Total tasks**: 195 tasks (across 3 precision levels)
-
-### Dummy Solution Strategy
-
-1. **dx (iterative+0-shot)**:
-   - Start with dx=0.01, halve each iteration until spatial convergence
-   - Non-target: relax=1.0, error_threshold=1e-8, T_init varies
-
-2. **error_threshold (iterative+0-shot)**:
-   - Start with error_threshold=1e-5, reduce by factor 0.1 until convergence
-   - Non-target: dx=0.01, relax=1.0, T_init varies
-
-3. **relax (0-shot)**:
-   - Grid search over [0.1, 1.9] with 10 values to find minimum cost
-   - Non-target: dx=0.01, error_threshold=1e-8, T_init varies
-
-4. **T_init (0-shot)**:
-   - Grid search over [0.0, 1.0] with 10 values to find minimum cost
-   - Non-target: dx=0.01, relax=1.0, error_threshold varies
-
-### Running Checkout Generation
-
-```bash
-# Generate all dummy solution cache
-python checkouts/heat_steady_2d.py
-
-# Output locations:
-# - Dataset: dataset/heat_steady_2d/successful/tasks.json
-#           dataset/heat_steady_2d/failed/tasks.json  
-# - Statistics: outputs/statistics/heat_steady_2d_statistics.png
-#              outputs/statistics/heat_steady_2d_statistics_summary.txt
-```
