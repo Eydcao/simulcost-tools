@@ -1191,7 +1191,7 @@ def main():
         
         # For mesh tasks, multiply by aspect ratios
         if target_param in ["mesh_x", "mesh_y"]:
-            combinations_per_target *= len(aspect_ratios)
+            combinations_per_target *= (len(aspect_ratios) - 1)
         
         expected_total += len(profiles) * combinations_per_target
 
