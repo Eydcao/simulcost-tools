@@ -314,6 +314,7 @@ def main():
                             cfl=target_config["initial_value"],
                             k=task_params["k"],
                             beta=task_params["beta"],
+                            n_space=task_params["n_space"],
                             tolerance_rmse=precision_vals["tolerance_rmse"],
                             multiplication_factor=target_config["multiplication_factor"],
                             max_iter=target_config["max_iteration_num"],

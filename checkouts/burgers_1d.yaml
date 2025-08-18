@@ -46,6 +46,7 @@ target_parameters:
     multiplication_factor: 0.5
     max_iteration_num: 7
     non_target_parameters:
+      n_space: 2048             # Fixed grid resolution for CFL convergence studies
       k: [-1.0, 0.0, 1.0]      # Array for multiple choices of blending parameter
       beta: [1.0, 1.5, 2.0]    # Array for multiple choices of limiter parameter
 
@@ -63,7 +64,8 @@ target_parameters:
   k:
     description: "Spatial scheme blending parameter (1.0=central, -1.0=upwind, 0.0=mixed)"
     search_type: "0-shot"
-    search_range: [-1.0, 1.0]
+    search_range_min: -1.0
+    search_range_max: 1.0
     search_range_slice_num: 11
     max_iteration_num: 7       # For subsequent CFL search after finding optimal k
     multiplication_factor: 0.5 # For CFL search
@@ -74,7 +76,8 @@ target_parameters:
   beta:
     description: "Generalized superbee limiter parameter - controls dissipation (beta>=1, higher=less dissipative)"
     search_type: "0-shot"
-    search_range: [1.0, 2.0]
+    search_range_min: 1.0
+    search_range_max: 2.0
     search_range_slice_num: 6
     max_iteration_num: 7       # For subsequent CFL search after finding optimal beta
     multiplication_factor: 0.5 # For CFL search

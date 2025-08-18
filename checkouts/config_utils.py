@@ -63,6 +63,8 @@ def build_target_configs(config):
             "multiplication_factor": param_info.get("multiplication_factor"),
             "max_iteration_num": param_info.get("max_iteration_num"),
             "search_range": param_info.get("search_range"),
+            "search_range_min": param_info.get("search_range_min"),
+            "search_range_max": param_info.get("search_range_max"),
             "search_range_slice_num": param_info.get("search_range_slice_num"),
             # Additional parameters for different search types
             "schedule_options": param_info.get("schedule_options"),
