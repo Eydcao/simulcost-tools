@@ -12,7 +12,7 @@ from wrappers.burgers_1d import (
 )
 
 
-def find_convergent_cfl(profile, cfl, k, beta, tolerance_rmse, multiplication_factor, max_iter):
+def find_convergent_cfl(profile, cfl, k, beta, n_space, tolerance_rmse, multiplication_factor, max_iter):
     """Iteratively reduce CFL number until convergence is achieved."""
     cfl_history = []
     cost_history = []
@@ -23,13 +23,13 @@ def find_convergent_cfl(profile, cfl, k, beta, tolerance_rmse, multiplication_fa
     best_cfl = None
 
     for i in range(max_iter):
-        print(f"\nRunning simulation with CFL = {current_cfl}, k = {k}, beta = {beta}")
+        print(f"\nRunning simulation with CFL = {current_cfl}, k = {k}, beta = {beta}, n_space = {n_space}")
 
-        # Run simulation and load results (use default n_space from config)
-        cost_i = run_sim_burgers_1d(profile, current_cfl, k, beta, 2048)
+        # Run simulation and load results
+        cost_i = run_sim_burgers_1d(profile, current_cfl, k, beta, n_space)
         cost_history.append(cost_i)
         cfl_history.append(current_cfl)
-        param_history.append({"cfl": current_cfl, "k": k, "beta": beta})
+        param_history.append({"cfl": current_cfl, "k": k, "beta": beta, "n_space": n_space})
 
         # If we have previous results to compare with
         if len(cfl_history) > 1:
@@ -37,7 +37,7 @@ def find_convergent_cfl(profile, cfl, k, beta, tolerance_rmse, multiplication_fa
 
             # Compare with previous results
             is_converged, metrics1, metrics2, rmse = compare_res_burgers_1d(
-                profile, prev_cfl, k, beta, profile, current_cfl, k, beta, tolerance_rmse, 2048, 2048
+                profile, prev_cfl, k, beta, profile, current_cfl, k, beta, tolerance_rmse, n_space, n_space
             )
 
             if is_converged:
