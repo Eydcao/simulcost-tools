@@ -378,9 +378,12 @@ class NSChannel2D():
 
     def _plot_residuals(self):
         plt.figure(figsize=(10, 5))
-        plt.plot(self.u_residual, label='U Residual', color='blue')
-        plt.plot(self.v_residual, label='V Residual', color='orange')
-        plt.plot(self.tot, label='Mass Conservation', color='green')
+        if self.u_residual:
+            plt.plot(self.u_residual, label='U Residual', color='blue')
+        if self.v_residual:
+            plt.plot(self.v_residual, label='V Residual', color='orange')
+        if self.tot:
+            plt.plot(self.tot, label='Mass Conservation', color='green')
         plt.xlabel('Iteration')
         plt.ylabel('Residual')
         plt.title('Residuals Over Iterations')
@@ -391,11 +394,23 @@ class NSChannel2D():
     
     def post_process(self):
         cost = (self.mesh_x * self.mesh_y) * self.num_steps
-        meta = {"cost": cost, "num_steps": self.num_steps, "converged": int(self.converged)}  # ➜ Added
+        meta = {
+            "cost": cost, 
+            "num_steps": self.num_steps, 
+            "converged": int(self.converged),
+            "mesh_x": self.mesh_x,
+            "mesh_y": self.mesh_y,
+            "omega_u": self.omega_u,
+            "omega_v": self.omega_v,
+            "omega_p": self.omega_p,
+            "diff_u_threshold": self.diff_u_threshold,
+            "diff_v_threshold": self.diff_v_threshold,
+            "res_iter_v_threshold": self.res_iter_v_threshold_name
+        }
         with open(os.path.join(self.dump_dir, "meta.json"), "w") as f:
             json.dump(meta, f, indent=4)
 
-        print(f"Run cost: {cost}, num_steps: {self.num_steps}")
+        print(f"Run cost: {cost}, num_steps: {self.num_steps}, converged: {self.converged}")
         
 
     def run(self):
@@ -444,6 +459,12 @@ class NSChannel2D():
                         print(f"max|east_coeff|={np.nanmax(np.abs(ec)):.3e}, max|u|={np.nanmax(np.abs(block_u)):.3e}")
                     except Exception:
                         pass
+                    # Set failure state and ensure post_process is called
+                    self.num_steps = k + 1
+                    self.converged = False
+                    self._plot_residuals()
+                    self._dump_final()
+                    self.post_process()
                     # Stop early; caller can lower omega_u or check BCs.
                     return False
             # V-momentum coefficients
@@ -483,6 +504,12 @@ class NSChannel2D():
                         print(f"max|east_coeff|={np.nanmax(np.abs(ec)):.3e}, max|v|={np.nanmax(np.abs(block_v)):.3e}")
                     except Exception:
                         pass
+                    # Set failure state and ensure post_process is called
+                    self.num_steps = k + 1
+                    self.converged = False
+                    self._plot_residuals()
+                    self._dump_final()
+                    self.post_process()
                     return False
             # Pressure correction coefficients
             i_range_p = slice(1, my + 1)

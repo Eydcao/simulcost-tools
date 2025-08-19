@@ -197,7 +197,7 @@ def plot_statistics(statistics, output_dir):
             # Pad the data array to match the maximum length
             padded_data = list(data) + [0] * (max_len - len(data))
             ax5.bar(x + i*width, padded_data, width, label=label, color=mesh_colors[i])
-        ax5.set_title("Most Frequent Optimal Mesh Values")
+        ax5.set_title("Most Frequent Optimal Mesh Values (Successful Tasks Only)")
         ax5.set_xlabel("Rank")
         ax5.set_ylabel("Frequency")
         ax5.set_xticks(x + width/2)
@@ -206,7 +206,7 @@ def plot_statistics(statistics, output_dir):
     else:
         ax5.text(0.5, 0.5, 'No optimal mesh\nvalues found', 
                 ha='center', va='center', transform=ax5.transAxes, fontsize=12)
-        ax5.set_title("Optimal Mesh Values")
+        ax5.set_title("Optimal Mesh Values (Successful Tasks Only)")
     
     # Plot 6: Optimal parameter frequency for relaxation factors
     ax6 = plt.subplot(3, 4, 6)
@@ -247,7 +247,7 @@ def plot_statistics(statistics, output_dir):
             # Pad the data array to match the maximum length
             padded_data = list(data) + [0] * (max_len - len(data))
             ax6.bar(x + i*width, padded_data, width, label=label, color=omega_colors[i])
-        ax6.set_title("Most Frequent Optimal Relaxation Factors")
+        ax6.set_title("Most Frequent Optimal Relaxation Factors (Successful Tasks Only)")
         ax6.set_xlabel("Rank")
         ax6.set_ylabel("Frequency")
         ax6.set_xticks(x + width)
@@ -256,7 +256,7 @@ def plot_statistics(statistics, output_dir):
     else:
         ax6.text(0.5, 0.5, 'No optimal relaxation\nfactor values found', 
                 ha='center', va='center', transform=ax6.transAxes, fontsize=12)
-        ax6.set_title("Optimal Relaxation Factors")
+        ax6.set_title("Optimal Relaxation Factors (Successful Tasks Only)")
     
     # Plot 7: Optimal parameter frequency for diff_u_threshold
     ax7 = plt.subplot(3, 4, 7)
@@ -267,7 +267,7 @@ def plot_statistics(statistics, output_dir):
         if most_common_diff_u:
             values, counts = zip(*most_common_diff_u)
             bars7 = ax7.bar(range(len(values)), counts, color="lightpink")
-            ax7.set_title("Most Frequent Optimal diff_u_threshold")
+            ax7.set_title("Most Frequent Optimal diff_u_threshold (Successful Tasks Only)")
             ax7.set_xlabel("Threshold Value")
             ax7.set_ylabel("Frequency")
             ax7.set_xticks(range(len(values)))
@@ -280,7 +280,7 @@ def plot_statistics(statistics, output_dir):
     else:
         ax7.text(0.5, 0.5, 'No optimal diff_u_threshold\nvalues found', 
                 ha='center', va='center', transform=ax7.transAxes, fontsize=12)
-        ax7.set_title("Optimal diff_u_threshold Values")
+        ax7.set_title("Optimal diff_u_threshold Values (Successful Tasks Only)")
     
     # Plot 8: Optimal parameter frequency for diff_v_threshold
     ax8 = plt.subplot(3, 4, 8)
@@ -291,7 +291,7 @@ def plot_statistics(statistics, output_dir):
         if most_common_diff_v:
             values, counts = zip(*most_common_diff_v)
             bars8 = ax8.bar(range(len(values)), counts, color="lightcyan")
-            ax8.set_title("Most Frequent Optimal diff_v_threshold")
+            ax8.set_title("Most Frequent Optimal diff_v_threshold (Successful Tasks Only)")
             ax8.set_xlabel("Threshold Value")
             ax8.set_ylabel("Frequency")
             ax8.set_xticks(range(len(values)))
@@ -304,7 +304,7 @@ def plot_statistics(statistics, output_dir):
     else:
         ax8.text(0.5, 0.5, 'No optimal diff_v_threshold\nvalues found', 
                 ha='center', va='center', transform=ax8.transAxes, fontsize=12)
-        ax8.set_title("Optimal diff_v_threshold Values")
+        ax8.set_title("Optimal diff_v_threshold Values (Successful Tasks Only)")
     
     # Plot 9: Optimal parameter frequency for res_iter_v_threshold
     ax9 = plt.subplot(3, 4, 9)
@@ -315,7 +315,7 @@ def plot_statistics(statistics, output_dir):
         if most_common_res_iter:
             values, counts = zip(*most_common_res_iter)
             bars9 = ax9.bar(range(len(values)), counts, color="lightyellow")
-            ax9.set_title("Most Frequent Optimal res_iter_v_threshold")
+            ax9.set_title("Most Frequent Optimal res_iter_v_threshold (Successful Tasks Only)")
             ax9.set_xlabel("Threshold Value")
             ax9.set_ylabel("Frequency")
             ax9.set_xticks(range(len(values)))
@@ -328,7 +328,7 @@ def plot_statistics(statistics, output_dir):
     else:
         ax9.text(0.5, 0.5, 'No optimal res_iter_v_threshold\nvalues found', 
                 ha='center', va='center', transform=ax9.transAxes, fontsize=12)
-        ax9.set_title("Optimal res_iter_v_threshold Values")
+        ax9.set_title("Optimal res_iter_v_threshold Values (Successful Tasks Only)")
     
     # Plot 10: Parameter convergence comparison
     ax10 = plt.subplot(3, 4, 10)
@@ -402,59 +402,97 @@ def plot_statistics(statistics, output_dir):
     table.auto_set_font_size(False)
     table.set_fontsize(8)
     table.scale(1, 2)
-    ax12.set_title("Parameter Distribution Summary")
+    ax12.set_title("Parameter Distribution Summary (Successful Tasks Only)")
     ax12.axis('off')
     
     plt.tight_layout()
     plt.savefig(os.path.join(output_dir, "ns_channel_2d_statistics.png"), dpi=300, bbox_inches='tight')
     plt.close()
     
-    # Generate summary text file
-    with open(os.path.join(output_dir, "ns_channel_2d_statistics_summary.txt"), "w") as f:
-        f.write("NS CHANNEL 2D DUMMY SOLUTION STATISTICS SUMMARY\n")
-        f.write("=" * 50 + "\n\n")
-        
-        f.write(f"Total tasks executed: {statistics['total_tasks']}\n")
-        f.write(f"Successfully converged: {statistics['total_converged']}\n")
-        f.write(f"Overall convergence rate: {(statistics['total_converged']/max(statistics['total_tasks'], 1)*100):.2f}%\n\n")
-        
-        f.write("CONVERGENCE BY TARGET PARAMETER:\n")
-        for param, stats in statistics["convergence_by_target"].items():
-            rate = stats["converged"] / max(stats["total"], 1) * 100
-            f.write(f"  {param.upper()}: {rate:.2f}% ({stats['converged']}/{stats['total']})\n")
-        
-        f.write("\nCONVERGENCE BY PRECISION LEVEL:\n")
-        for precision, stats in statistics["convergence_by_precision"].items():
-            rate = stats["converged"] / max(stats["total"], 1) * 100
-            f.write(f"  {precision.upper()}: {rate:.2f}% ({stats['converged']}/{stats['total']})\n")
-        
-        f.write("\nCONVERGENCE BY PROFILE:\n")
-        for profile, stats in statistics["convergence_by_profile"].items():
-            rate = stats["converged"] / max(stats["total"], 1) * 100
-            f.write(f"  {profile.upper()}: {rate:.2f}% ({stats['converged']}/{stats['total']})\n")
-        
-        f.write(f"\nMOST FREQUENT OPTIMAL VALUES:\n")
-        for param_name, values in [("mesh_x", statistics["optimal_mesh_x_values"]), 
-                                   ("mesh_y", statistics["optimal_mesh_y_values"]),
-                                   ("omega_u", statistics["optimal_omega_u_values"]),
-                                   ("omega_v", statistics["optimal_omega_v_values"]),
-                                   ("omega_p", statistics["optimal_omega_p_values"]),
-                                   ("diff_u_threshold", statistics["optimal_diff_u_threshold_values"]),
-                                   ("diff_v_threshold", statistics["optimal_diff_v_threshold_values"]),
-                                   ("res_iter_v_threshold", statistics["optimal_res_iter_v_threshold_values"])]:
-            if values:
-                if param_name in ["mesh_x", "mesh_y"]:
-                    counter = Counter([int(val) for val in values])
-                elif param_name in ["omega_u", "omega_v", "omega_p"]:
-                    counter = Counter([round(val, 2) for val in values])
+    # Create detailed statistics file
+    stats_file = os.path.join(output_dir, "ns_channel_2d_statistics_summary.txt")
+    with open(stats_file, "w") as f:
+        f.write("=== NS Channel 2D Dummy Search Statistics Summary ===\n\n")
+
+        f.write("1. Overall Statistics:\n")
+        f.write(f"   Total tasks: {statistics['total_tasks']}\n")
+        f.write(f"   Successfully converged: {statistics['total_converged']}\n")
+        f.write(
+            f"   Overall convergence rate: {(statistics['total_converged']/statistics['total_tasks']*100):.2f}%\n\n"
+        )
+
+        f.write("2. Convergence by Precision Level:\n")
+        for precision, data in statistics["convergence_by_precision"].items():
+            rate = (data["converged"] / data["total"] * 100) if data["total"] > 0 else 0
+            f.write(f"   {precision}: {data['converged']}/{data['total']} ({rate:.2f}%)\n")
+        f.write("\n")
+
+        f.write("3. Convergence by Target Parameter:\n")
+        for param, data in statistics["convergence_by_target"].items():
+            rate = (data["converged"] / data["total"] * 100) if data["total"] > 0 else 0
+            # Filter out infinite costs for average calculation
+            finite_costs = [cost for cost in data["costs"] if not np.isinf(cost)]
+            avg_cost = np.mean(finite_costs) if finite_costs else 0
+            f.write(f"   {param}: {data['converged']}/{data['total']} ({rate:.2f}%), avg cost: {avg_cost:.0f}\n")
+        f.write("\n")
+
+        f.write("4. Convergence by Profile:\n")
+        for profile, data in statistics["convergence_by_profile"].items():
+            rate = (data["converged"] / data["total"] * 100) if data["total"] > 0 else 0
+            f.write(f"   {profile}: {data['converged']}/{data['total']} ({rate:.2f}%)\n")
+        f.write("\n")
+
+        f.write("5. Optimal Parameter Frequencies (Successful Tasks Only):\n")
+        if statistics["optimal_mesh_x_values"]:
+            mesh_x_values, mesh_x_counts = np.unique(list(statistics["optimal_mesh_x_values"]), return_counts=True)
+            f.write("   mesh_x parameter (iterative+0-shot):\n")
+            for mesh_x, count in zip(mesh_x_values, mesh_x_counts):
+                f.write(f"     mesh_x={mesh_x}: {count} times\n")
+
+        if statistics["optimal_mesh_y_values"]:
+            mesh_y_values, mesh_y_counts = np.unique(list(statistics["optimal_mesh_y_values"]), return_counts=True)
+            f.write("   mesh_y parameter (iterative+0-shot):\n")
+            for mesh_y, count in zip(mesh_y_values, mesh_y_counts):
+                f.write(f"     mesh_y={mesh_y}: {count} times\n")
+
+        if statistics["optimal_omega_u_values"]:
+            omega_u_values, omega_u_counts = np.unique(list(statistics["optimal_omega_u_values"]), return_counts=True)
+            f.write("   omega_u parameter (0-shot):\n")
+            for omega_u, count in zip(omega_u_values, omega_u_counts):
+                f.write(f"     omega_u={omega_u:.3f}: {count} times\n")
+
+        if statistics["optimal_omega_v_values"]:
+            omega_v_values, omega_v_counts = np.unique(list(statistics["optimal_omega_v_values"]), return_counts=True)
+            f.write("   omega_v parameter (0-shot):\n")
+            for omega_v, count in zip(omega_v_values, omega_v_counts):
+                f.write(f"     omega_v={omega_v:.3f}: {count} times\n")
+
+        if statistics["optimal_omega_p_values"]:
+            omega_p_values, omega_p_counts = np.unique(list(statistics["optimal_omega_p_values"]), return_counts=True)
+            f.write("   omega_p parameter (0-shot):\n")
+            for omega_p, count in zip(omega_p_values, omega_p_counts):
+                f.write(f"     omega_p={omega_p:.3f}: {count} times\n")
+
+        if statistics["optimal_diff_u_threshold_values"]:
+            diff_u_values, diff_u_counts = np.unique(list(statistics["optimal_diff_u_threshold_values"]), return_counts=True)
+            f.write("   diff_u_threshold parameter (0-shot):\n")
+            for diff_u, count in zip(diff_u_values, diff_u_counts):
+                f.write(f"     diff_u_threshold={diff_u:.2e}: {count} times\n")
+
+        if statistics["optimal_diff_v_threshold_values"]:
+            diff_v_values, diff_v_counts = np.unique(list(statistics["optimal_diff_v_threshold_values"]), return_counts=True)
+            f.write("   diff_v_threshold parameter (0-shot):\n")
+            for diff_v, count in zip(diff_v_values, diff_v_counts):
+                f.write(f"     diff_v_threshold={diff_v:.2e}: {count} times\n")
+
+        if statistics["optimal_res_iter_v_threshold_values"]:
+            res_iter_values, res_iter_counts = np.unique(list(statistics["optimal_res_iter_v_threshold_values"]), return_counts=True)
+            f.write("   res_iter_v_threshold parameter (0-shot):\n")
+            for res_iter, count in zip(res_iter_values, res_iter_counts):
+                if isinstance(res_iter, str):
+                    f.write(f"     res_iter_v_threshold={res_iter}: {count} times\n")
                 else:
-                    counter = Counter([round(val, 6) for val in values])
-                    
-                most_common = counter.most_common(1)[0]
-                frequency = most_common[1] / len(values) * 100
-                f.write(f"  {param_name}: {most_common[0]} (appears {frequency:.1f}% of the time)\n")
-            else:
-                f.write(f"  {param_name}: No values found\n")
+                    f.write(f"     res_iter_v_threshold={res_iter:.2e}: {count} times\n")
 
 
 def process_mesh_task(target_param, target_config, task_params, profile, precision_name, precision_vals, statistics, successful_tasks, failed_tasks, mesh_base_values, wall_base_values):
@@ -528,7 +566,7 @@ def process_mesh_task(target_param, target_config, task_params, profile, precisi
             p_rmse_tolerance=precision_vals["p_rmse_tolerance"],
             other_params_list=other_params_list
         )
-        if best_param is not None:
+        if is_converged and best_param is not None:
             statistics["optimal_mesh_x_values"].append(best_param)
 
     elif target_param == "mesh_y":
@@ -596,7 +634,7 @@ def process_mesh_task(target_param, target_config, task_params, profile, precisi
             p_rmse_tolerance=precision_vals["p_rmse_tolerance"],
             other_params_list=other_params_list
         )
-        if best_param is not None:
+        if is_converged and best_param is not None:
             statistics["optimal_mesh_y_values"].append(best_param)
 
     # Create task record for dataset
@@ -688,7 +726,7 @@ def process_non_mesh_task(target_param, target_config, task_params, profile, pre
             p_rmse_tolerance=precision_vals["p_rmse_tolerance"],
             other_params=task_params.get("other_params")
         )
-        if best_param is not None:
+        if is_converged and best_param is not None:
             statistics["optimal_omega_u_values"].append(best_param)
 
     elif target_param == "omega_v":
@@ -722,7 +760,7 @@ def process_non_mesh_task(target_param, target_config, task_params, profile, pre
             p_rmse_tolerance=precision_vals["p_rmse_tolerance"],
             other_params=task_params.get("other_params")
         )
-        if best_param is not None:
+        if is_converged and best_param is not None:
             statistics["optimal_omega_v_values"].append(best_param)
 
     elif target_param == "omega_p":
@@ -756,7 +794,7 @@ def process_non_mesh_task(target_param, target_config, task_params, profile, pre
             p_rmse_tolerance=precision_vals["p_rmse_tolerance"],
             other_params=task_params.get("other_params")
         )
-        if best_param is not None:
+        if is_converged and best_param is not None:
             statistics["optimal_omega_p_values"].append(best_param)
 
     elif target_param == "diff_u_threshold":
@@ -791,7 +829,7 @@ def process_non_mesh_task(target_param, target_config, task_params, profile, pre
             p_rmse_tolerance=precision_vals["p_rmse_tolerance"],
             other_params=task_params.get("other_params")
         )
-        if best_param is not None:
+        if is_converged and best_param is not None:
             statistics["optimal_diff_u_threshold_values"].append(best_param)
 
     elif target_param == "diff_v_threshold":
@@ -826,7 +864,7 @@ def process_non_mesh_task(target_param, target_config, task_params, profile, pre
             p_rmse_tolerance=precision_vals["p_rmse_tolerance"],
             other_params=task_params.get("other_params")
         )
-        if best_param is not None:
+        if is_converged and best_param is not None:
             statistics["optimal_diff_v_threshold_values"].append(best_param)
 
     elif target_param == "res_iter_v_threshold":
@@ -866,7 +904,7 @@ def process_non_mesh_task(target_param, target_config, task_params, profile, pre
             p_rmse_tolerance=precision_vals["p_rmse_tolerance"],
             other_params=task_params.get("other_params")
         )
-        if best_param is not None:
+        if is_converged and best_param is not None:
             statistics["optimal_res_iter_v_threshold_values"].append(best_param)
 
     # Create task record for dataset
@@ -982,16 +1020,15 @@ def process_task_at_all_precisions(target_param, target_config, task_params, pro
 
 
 def main():
-    """Main execution function."""
-    repo_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    
-    print("=" * 60)
-    print("NS CHANNEL 2D DUMMY SOLUTION GENERATION")
-    print("=" * 60)
-    
-    # Load configuration
+    print("=== NS Channel 2D Dummy Solution Generation ===")
+    print("Loading configuration from ns_channel_2d.yaml...")
+
+    # Load configuration from YAML
     config_path = os.path.join(os.path.dirname(__file__), "ns_channel_2d.yaml")
     config = load_config(config_path)
+    print("✅ Configuration loaded successfully")
+
+    # Extract configuration sections
     target_configs = build_target_configs(config)
     precision_configs = config["precision_levels"]
     profiles = config["profiles"]["active_profiles"]
@@ -1003,15 +1040,19 @@ def main():
     mesh_base_values = non_target_config.get("mesh_base_values", {"base_mesh_x": 64, "base_mesh_y": 32})
     wall_base_values = non_target_config.get("wall_base_values", {"base_wall_height": 10, "base_wall_width": 10, "base_wall_start_height": 20, "base_wall_start_width": 80})
     
-    print(f"Aspect ratios for mesh tasks: {aspect_ratios}")
-    print(f"Mesh combinations: {mesh_combinations}")
-    print(f"Base mesh values: {mesh_base_values}")
-    print(f"Base wall values: {wall_base_values}")
-    
-    # Print configuration overview
-    print(f"Profiles: {profiles}")
-    print(f"Target parameters: {list(target_configs.keys())}")
-    print(f"Precision levels: {list(precision_configs.keys())}")
+    print(f"📊 Active precision levels: {list(precision_configs.keys())}")
+    print(f"📁 Active profiles: {profiles}")
+    print(f"🎯 Target parameters: {list(target_configs.keys())}")
+    print(f"📐 Aspect ratios for mesh tasks: {aspect_ratios}")
+    print(f"🔲 Mesh combinations: {mesh_combinations}")
+    print(f"📏 Base mesh values: {mesh_base_values}")
+    print(f"🧱 Base wall values: {wall_base_values}")
+    print("Generating all cached results for LLM automation tasks...")
+
+    # Change to repository root directory
+    repo_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    os.chdir(repo_root)
+    print(f"Working directory: {os.getcwd()}")
     
     # Initialize statistics tracking
     statistics = {
@@ -1117,6 +1158,66 @@ def main():
     print(f"💾 Dataset files saved to: {dataset_dir}")
     print(f"   ✅ Successful tasks: {len(successful_tasks)} tasks")
     print(f"   ❌ Failed tasks: {len(failed_tasks)} tasks")
+
+    # Display dataset summary
+    if len(successful_tasks) > 0:
+        print(f"\n📈 Successful Task Examples:")
+        for i, task in enumerate(successful_tasks[:3]):  # Show first 3 successful tasks
+            print(
+                f"   {i+1}. {task['profile']} profile, {task['target_parameter']} optimization -> {task['results']['optimal_parameter_value']}"
+            )
+
+    if len(failed_tasks) > 0:
+        print(f"\n📉 Failed Task Examples:")
+        for i, task in enumerate(failed_tasks[:3]):  # Show first 3 failed tasks
+            print(
+                f"   {i+1}. {task['profile']} profile, {task['target_parameter']} optimization (cost: {task['results']['total_computational_cost']})"
+            )
+
+    # Expected task calculation for verification
+    expected_total = 0
+    for target_param, target_config in target_configs.items():
+        param_values = []
+        for name in target_config["non_target_parameters"]:
+            value = target_config["non_target_parameters"][name]
+            if isinstance(value, list):
+                param_values.append(value)
+            else:
+                param_values.append([value])
+
+        combinations_per_target = 1
+        for values in param_values:
+            combinations_per_target *= len(values)
+        
+        # For mesh tasks, multiply by aspect ratios
+        if target_param in ["mesh_x", "mesh_y"]:
+            combinations_per_target *= (len(aspect_ratios) - 1)
+        
+        expected_total += len(profiles) * combinations_per_target
+
+    print(f"\nTask breakdown:")
+    for target_param, target_config in target_configs.items():
+        param_values = []
+        for name in target_config["non_target_parameters"]:
+            value = target_config["non_target_parameters"][name]
+            if isinstance(value, list):
+                param_values.append(value)
+            else:
+                param_values.append([value])
+
+        combinations_per_target = 1
+        for values in param_values:
+            combinations_per_target *= len(values)
+        
+        # For mesh tasks, multiply by aspect ratios
+        if target_param in ["mesh_x", "mesh_y"]:
+            combinations_per_target *= len(aspect_ratios)
+        
+        tasks_for_param = len(profiles) * combinations_per_target
+        print(f"  {target_param}: {len(profiles)} profiles × {combinations_per_target} combos = {tasks_for_param}")
+    print(f"  Expected total per precision: {expected_total}")
+    print(f"  Expected total across {len(precision_configs)} precisions: {expected_total * len(precision_configs)}")
+    print(f"  Actual total: {statistics['total_tasks']}")
     
     print(f"\n{'='*60}")
     print("NS CHANNEL 2D DUMMY SOLUTION GENERATION COMPLETED!")

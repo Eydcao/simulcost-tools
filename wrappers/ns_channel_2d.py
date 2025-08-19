@@ -19,7 +19,7 @@ def run_sim_ns_channel_2d(profile, boundary_type, mesh_x, mesh_y, omega_u, omega
                 return meta["cost"], meta["num_steps"]
 
     # Build command with wall parameters if provided
-    cmd = f"python runners/ns_channel_2d.py --config-name={profile} mesh_x={mesh_x} mesh_y={mesh_y} omega_u={omega_u} omega_v={omega_v} omega_p={omega_p} diff_u_threshold={diff_u_threshold} diff_v_threshold={diff_v_threshold} res_iter_v_threshold={res_iter_v_threshold} boundary_condition={boundary_type}"
+    cmd = f"python costsci_tools/runners/ns_channel_2d.py --config-name={profile} mesh_x={mesh_x} mesh_y={mesh_y} omega_u={omega_u} omega_v={omega_v} omega_p={omega_p} diff_u_threshold={diff_u_threshold} diff_v_threshold={diff_v_threshold} res_iter_v_threshold={res_iter_v_threshold} boundary_condition={boundary_type}"
     
     # Add wall parameters if provided
     if other_params:
@@ -101,7 +101,7 @@ def compute_metrics(u, v, p, length, breadth, mass_tolerance):
     dx = length / mx
     dy = breadth / my
     source[1:my+1, 1:mx+1] = dy * (u[1:my+1, 1:mx+1] - u[1:my+1, 0:mx]) + dx * (v[1:my+1, 1:mx+1] - v[0:my, 1:mx+1])
-    mass = np.sum(source**2)
+    mass = np.sum(source**2) / (my * mx)
     mass_conserved = mass < mass_tolerance
 
     return {
@@ -164,7 +164,8 @@ def compare_res_ns_channel_2d(
     converged = (
         mass_conserved1 and mass_conserved2 and
         rmse_u < u_rmse_tolerance and
-        rmse_v < v_rmse_tolerance
+        rmse_v < v_rmse_tolerance and
+        rmse_p < p_rmse_tolerance
     )
     
     print(f"RMSE of u: {rmse_u:.6f}, RMSE of v: {rmse_v:.6f}, RMSE of p: {rmse_p:.6f}")

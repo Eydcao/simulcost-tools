@@ -145,7 +145,7 @@ Base wall values: height=4, width=16, start_height=4, start_width=20
 ### Summary
 
 - **Benchmarks**: 4 profiles (p1: channel_flow, p2: back_stair_flow, p3: expansion_channel, p4: cube_driven_flow)
-- **Target Parameters**: 7 (mesh_x, mesh_y, omega_u, omega_v, omega_p, diff_u_threshold, diff_v_threshold, res_iter_v_threshold)
+- **Target Parameters**: 8 (mesh_x, mesh_y, omega_u, omega_v, omega_p, diff_u_threshold, diff_v_threshold, res_iter_v_threshold)
 - **Precision Levels**: 3 (low, medium, high with varying convergence criteria)
 
 ### Task Distribution

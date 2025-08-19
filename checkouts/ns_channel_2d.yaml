@@ -9,7 +9,7 @@ solver_info:
 task_distribution:
   strategy: "benchmark"
   total_individuals: 384
-  description: "4 profile * (2 mesh tasks * 4 aspect ratios + 6 non-mesh tasks * 4 mesh pairs) * 3 precision levels = 408 tasks"
+  description: "4 profile * (2 mesh tasks * 4 aspect ratios + 6 non-mesh tasks * 4 mesh pairs) * 3 precision levels = 384 tasks"
 
 # Non-target parameter combinations
 non_target_combinations:
@@ -33,24 +33,24 @@ non_target_combinations:
 
 precision_levels:
   high:
-    mass_tolerance: 1.0e-05
+    mass_tolerance: 1.0e-08
     u_rmse_tolerance: 0.008
     v_rmse_tolerance: 0.001
     p_rmse_tolerance: 0.08
     max_iter: 50
     description: "Extremely stringent convergence criteria - very challenging"
   medium:
-    mass_tolerance: 1.0e-04
+    mass_tolerance: 1.0e-06
     u_rmse_tolerance: 0.02
     v_rmse_tolerance: 0.005
     p_rmse_tolerance: 0.10
     max_iter: 35
     description: "Stringent convergence criteria - challenging"
   low:
-    mass_tolerance: 5.0e-04
-    u_rmse_tolerance: 0.05
-    v_rmse_tolerance: 0.01
-    p_rmse_tolerance: 0.15
+    mass_tolerance: 1.0e-04
+    u_rmse_tolerance: 0.1
+    v_rmse_tolerance: 0.05
+    p_rmse_tolerance: 0.2
     max_iter: 25
     description: "Moderate convergence criteria - achievable but not trivial"
 
