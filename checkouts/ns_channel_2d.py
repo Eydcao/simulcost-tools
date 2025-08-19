@@ -197,7 +197,7 @@ def plot_statistics(statistics, output_dir):
             # Pad the data array to match the maximum length
             padded_data = list(data) + [0] * (max_len - len(data))
             ax5.bar(x + i*width, padded_data, width, label=label, color=mesh_colors[i])
-        ax5.set_title("Most Frequent Optimal Mesh Values")
+        ax5.set_title("Most Frequent Optimal Mesh Values (Successful Tasks Only)")
         ax5.set_xlabel("Rank")
         ax5.set_ylabel("Frequency")
         ax5.set_xticks(x + width/2)
@@ -206,7 +206,7 @@ def plot_statistics(statistics, output_dir):
     else:
         ax5.text(0.5, 0.5, 'No optimal mesh\nvalues found', 
                 ha='center', va='center', transform=ax5.transAxes, fontsize=12)
-        ax5.set_title("Optimal Mesh Values")
+        ax5.set_title("Optimal Mesh Values (Successful Tasks Only)")
     
     # Plot 6: Optimal parameter frequency for relaxation factors
     ax6 = plt.subplot(3, 4, 6)
@@ -247,7 +247,7 @@ def plot_statistics(statistics, output_dir):
             # Pad the data array to match the maximum length
             padded_data = list(data) + [0] * (max_len - len(data))
             ax6.bar(x + i*width, padded_data, width, label=label, color=omega_colors[i])
-        ax6.set_title("Most Frequent Optimal Relaxation Factors")
+        ax6.set_title("Most Frequent Optimal Relaxation Factors (Successful Tasks Only)")
         ax6.set_xlabel("Rank")
         ax6.set_ylabel("Frequency")
         ax6.set_xticks(x + width)
@@ -256,7 +256,7 @@ def plot_statistics(statistics, output_dir):
     else:
         ax6.text(0.5, 0.5, 'No optimal relaxation\nfactor values found', 
                 ha='center', va='center', transform=ax6.transAxes, fontsize=12)
-        ax6.set_title("Optimal Relaxation Factors")
+        ax6.set_title("Optimal Relaxation Factors (Successful Tasks Only)")
     
     # Plot 7: Optimal parameter frequency for diff_u_threshold
     ax7 = plt.subplot(3, 4, 7)
@@ -267,7 +267,7 @@ def plot_statistics(statistics, output_dir):
         if most_common_diff_u:
             values, counts = zip(*most_common_diff_u)
             bars7 = ax7.bar(range(len(values)), counts, color="lightpink")
-            ax7.set_title("Most Frequent Optimal diff_u_threshold")
+            ax7.set_title("Most Frequent Optimal diff_u_threshold (Successful Tasks Only)")
             ax7.set_xlabel("Threshold Value")
             ax7.set_ylabel("Frequency")
             ax7.set_xticks(range(len(values)))
@@ -280,7 +280,7 @@ def plot_statistics(statistics, output_dir):
     else:
         ax7.text(0.5, 0.5, 'No optimal diff_u_threshold\nvalues found', 
                 ha='center', va='center', transform=ax7.transAxes, fontsize=12)
-        ax7.set_title("Optimal diff_u_threshold Values")
+        ax7.set_title("Optimal diff_u_threshold Values (Successful Tasks Only)")
     
     # Plot 8: Optimal parameter frequency for diff_v_threshold
     ax8 = plt.subplot(3, 4, 8)
@@ -291,7 +291,7 @@ def plot_statistics(statistics, output_dir):
         if most_common_diff_v:
             values, counts = zip(*most_common_diff_v)
             bars8 = ax8.bar(range(len(values)), counts, color="lightcyan")
-            ax8.set_title("Most Frequent Optimal diff_v_threshold")
+            ax8.set_title("Most Frequent Optimal diff_v_threshold (Successful Tasks Only)")
             ax8.set_xlabel("Threshold Value")
             ax8.set_ylabel("Frequency")
             ax8.set_xticks(range(len(values)))
@@ -304,7 +304,7 @@ def plot_statistics(statistics, output_dir):
     else:
         ax8.text(0.5, 0.5, 'No optimal diff_v_threshold\nvalues found', 
                 ha='center', va='center', transform=ax8.transAxes, fontsize=12)
-        ax8.set_title("Optimal diff_v_threshold Values")
+        ax8.set_title("Optimal diff_v_threshold Values (Successful Tasks Only)")
     
     # Plot 9: Optimal parameter frequency for res_iter_v_threshold
     ax9 = plt.subplot(3, 4, 9)
@@ -315,7 +315,7 @@ def plot_statistics(statistics, output_dir):
         if most_common_res_iter:
             values, counts = zip(*most_common_res_iter)
             bars9 = ax9.bar(range(len(values)), counts, color="lightyellow")
-            ax9.set_title("Most Frequent Optimal res_iter_v_threshold")
+            ax9.set_title("Most Frequent Optimal res_iter_v_threshold (Successful Tasks Only)")
             ax9.set_xlabel("Threshold Value")
             ax9.set_ylabel("Frequency")
             ax9.set_xticks(range(len(values)))
@@ -328,7 +328,7 @@ def plot_statistics(statistics, output_dir):
     else:
         ax9.text(0.5, 0.5, 'No optimal res_iter_v_threshold\nvalues found', 
                 ha='center', va='center', transform=ax9.transAxes, fontsize=12)
-        ax9.set_title("Optimal res_iter_v_threshold Values")
+        ax9.set_title("Optimal res_iter_v_threshold Values (Successful Tasks Only)")
     
     # Plot 10: Parameter convergence comparison
     ax10 = plt.subplot(3, 4, 10)
@@ -402,7 +402,7 @@ def plot_statistics(statistics, output_dir):
     table.auto_set_font_size(False)
     table.set_fontsize(8)
     table.scale(1, 2)
-    ax12.set_title("Parameter Distribution Summary")
+    ax12.set_title("Parameter Distribution Summary (Successful Tasks Only)")
     ax12.axis('off')
     
     plt.tight_layout()
@@ -442,7 +442,7 @@ def plot_statistics(statistics, output_dir):
             f.write(f"   {profile}: {data['converged']}/{data['total']} ({rate:.2f}%)\n")
         f.write("\n")
 
-        f.write("5. Optimal Parameter Frequencies (All Tasks):\n")
+        f.write("5. Optimal Parameter Frequencies (Successful Tasks Only):\n")
         if statistics["optimal_mesh_x_values"]:
             mesh_x_values, mesh_x_counts = np.unique(list(statistics["optimal_mesh_x_values"]), return_counts=True)
             f.write("   mesh_x parameter (iterative+0-shot):\n")
@@ -566,7 +566,7 @@ def process_mesh_task(target_param, target_config, task_params, profile, precisi
             p_rmse_tolerance=precision_vals["p_rmse_tolerance"],
             other_params_list=other_params_list
         )
-        if best_param is not None:
+        if is_converged and best_param is not None:
             statistics["optimal_mesh_x_values"].append(best_param)
 
     elif target_param == "mesh_y":
@@ -634,7 +634,7 @@ def process_mesh_task(target_param, target_config, task_params, profile, precisi
             p_rmse_tolerance=precision_vals["p_rmse_tolerance"],
             other_params_list=other_params_list
         )
-        if best_param is not None:
+        if is_converged and best_param is not None:
             statistics["optimal_mesh_y_values"].append(best_param)
 
     # Create task record for dataset
@@ -726,7 +726,7 @@ def process_non_mesh_task(target_param, target_config, task_params, profile, pre
             p_rmse_tolerance=precision_vals["p_rmse_tolerance"],
             other_params=task_params.get("other_params")
         )
-        if best_param is not None:
+        if is_converged and best_param is not None:
             statistics["optimal_omega_u_values"].append(best_param)
 
     elif target_param == "omega_v":
@@ -760,7 +760,7 @@ def process_non_mesh_task(target_param, target_config, task_params, profile, pre
             p_rmse_tolerance=precision_vals["p_rmse_tolerance"],
             other_params=task_params.get("other_params")
         )
-        if best_param is not None:
+        if is_converged and best_param is not None:
             statistics["optimal_omega_v_values"].append(best_param)
 
     elif target_param == "omega_p":
@@ -794,7 +794,7 @@ def process_non_mesh_task(target_param, target_config, task_params, profile, pre
             p_rmse_tolerance=precision_vals["p_rmse_tolerance"],
             other_params=task_params.get("other_params")
         )
-        if best_param is not None:
+        if is_converged and best_param is not None:
             statistics["optimal_omega_p_values"].append(best_param)
 
     elif target_param == "diff_u_threshold":
@@ -829,7 +829,7 @@ def process_non_mesh_task(target_param, target_config, task_params, profile, pre
             p_rmse_tolerance=precision_vals["p_rmse_tolerance"],
             other_params=task_params.get("other_params")
         )
-        if best_param is not None:
+        if is_converged and best_param is not None:
             statistics["optimal_diff_u_threshold_values"].append(best_param)
 
     elif target_param == "diff_v_threshold":
@@ -864,7 +864,7 @@ def process_non_mesh_task(target_param, target_config, task_params, profile, pre
             p_rmse_tolerance=precision_vals["p_rmse_tolerance"],
             other_params=task_params.get("other_params")
         )
-        if best_param is not None:
+        if is_converged and best_param is not None:
             statistics["optimal_diff_v_threshold_values"].append(best_param)
 
     elif target_param == "res_iter_v_threshold":
@@ -904,7 +904,7 @@ def process_non_mesh_task(target_param, target_config, task_params, profile, pre
             p_rmse_tolerance=precision_vals["p_rmse_tolerance"],
             other_params=task_params.get("other_params")
         )
-        if best_param is not None:
+        if is_converged and best_param is not None:
             statistics["optimal_res_iter_v_threshold_values"].append(best_param)
 
     # Create task record for dataset
