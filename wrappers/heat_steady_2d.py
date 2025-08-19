@@ -19,23 +19,24 @@ def run_sim_heat_steady_2d(profile, dx, relax, error_threshold, t_init):
     if os.path.exists(meta_path):
         with open(meta_path, "r") as f:
             meta = json.load(f)
-            if "cost" in meta:
+            if "cost" in meta and "num_steps" in meta:
                 print(f"Using existing simulation results from {dir_path}")
-                return meta["cost"]
+                return meta["cost"], meta["num_steps"]
 
     # Run the simulation if not already done
     print(
         f"Running new simulation with parameters: dx={dx}, relax={relax}, error_threshold={error_threshold}, T_init={t_init}"
     )
-    cmd = f"python runners/heat_steady_2d.py --config-name={profile} dx={dx} relax={relax} error_threshold={error_threshold} T_init={t_init}"
+    cmd = f"python costsci_tools/runners/heat_steady_2d.py --config-name={profile} dx={dx} relax={relax} error_threshold={error_threshold} T_init={t_init}"
     subprocess.run(cmd, shell=True, check=True)
 
-    # Load the cost from the meta.json file
+    # Load the cost and num_steps from the meta.json file
     with open(meta_path, "r") as f:
         meta = json.load(f)
         cost = meta["cost"]
+        num_steps = meta["num_steps"]
 
-    return cost
+    return cost, num_steps
 
 
 def get_res_heat_steady_2d(profile, dx, relax, error_threshold, t_init):
@@ -89,12 +90,12 @@ def compute_heat_steady_metrics(T, X, Y):
         - gradient_reasonable: bool if temperature gradients are reasonable
     """
     # Check for NaN/Infinity
-    temperature_valid = np.all(np.isfinite(T))
+    temperature_valid = bool(np.all(np.isfinite(T)))
 
     # Check temperature bounds (should be within boundary condition range)
     T_min = np.min([np.min(X), np.min(Y), 0.0])  # Assume 0 is minimum boundary
     T_max = np.max([np.max(X), np.max(Y), 1.0])  # Assume 1 is maximum boundary
-    temperature_bounded = np.all((T >= T_min - 0.1) & (T <= T_max + 0.1))
+    temperature_bounded = bool(np.all((T >= T_min - 0.1) & (T <= T_max + 0.1)))
 
     return {"temperature_valid": temperature_valid and temperature_bounded}
 
