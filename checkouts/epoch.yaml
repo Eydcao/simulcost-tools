@@ -1,0 +1,87 @@
+# Epoch Solver Checkout Configuration
+# This file centralizes all parameter settings for both documentation and dummy solution generation
+
+solver_info:
+  name: "Epoch 1D"
+  numerical_method: "Particle in Cell"
+  reference: "[Literature or standard benchmarks]"
+
+task_distribution:
+  strategy: "benchmark"
+  total_individuals: 297
+
+precision_levels:
+  low:
+    tolerance_rmse: 0.36
+  medium:
+    tolerance_rmse: 0.33
+  high:
+    tolerance_rmse: 0.30
+
+profiles:
+  num_profiles: 3
+  # Available profiles: p1 (base), p2 (weaker laser), p3 (less dense target)
+  active_profiles: ["p1", "p2", "p3"]
+
+# Parameter configurations for each target parameter
+target_parameters:
+  dt_multipler:
+    description: "Controls dt (based on nx)"
+    search_type: "0-shot"
+    search_range: [0.80, 0.99]
+    search_range_slice_num: 11
+    multiplication_factor: 1.2  # For internal n_space search
+    max_iteration_num: 7       # For internal n_space search
+    non_target_parameters:
+      npart: 20      # Stable number of number of particles
+      field_order: [2,4,6]  # discrete field integration order
+      particle_order: [2,3,5] #particle-weighting orders
+      nx: 400   # Produces a dx=0.4microns, with laser wavelength of 1 micron need at least 0.5 microns for proper sampling
+
+  nx:
+    description: "Number of grid cells for spatial discretization - determines spatial resolution"
+    search_type: "iterative+0-shot"
+    initial_value: 400
+    multiplication_factor: 1.2
+    max_iteration_num: 7
+    non_target_parameters:
+      npart: 20      # Stable number of number of particles
+      field_order: [2,4,6]  # discrete field integration order
+      particle_order: [2,3,5] #particle-weighting orders
+      dt_multipler: 0.95   # Stable value for temporal resolution
+
+  npart:
+    description: "Number of pseudoparticles per cell"
+    search_type: "iterative+0-shot"
+    initial_value: 10
+    multiplication_factor: 1.2
+    max_iteration_num: 7
+    non_target_parameters:
+      nx: 3200
+      field_order: [2,4,6]  # discrete field integration order
+      particle_order: [2,3,5] #particle-weighting orders
+      dt_multipler: 0.95   # Stable value for temporal resolution
+
+  field_order:
+    description: "field integration order"
+    search_type: "0-shot"
+    search_values: [2,4,6]
+    multiplication_factor: 1.2  # For internal n_space search
+    max_iteration_num: 7       # For internal n_space search
+    non_target_parameters:
+      npart: 20      # Stable number of number of particles
+      dt_multipler: 0.95
+      particle_order: [2,3,5] #particle-weighting orders
+      nx: 400   # Produces a dx=0.4microns, with laser wavelength of 1 micron need at least 0.5 microns for proper sampling
+  
+  particle_order:
+    description: "particle-weighting order"
+    search_type: "0-shot"
+    search_values: [2, 4,5]
+    multiplication_factor: 1.2  # For internal n_space search
+    max_iteration_num: 7       # For internal n_space search
+    non_target_parameters:
+      npart: 20      # Stable number of number of particles
+      dt_multipler: 0.95
+      field_order: [2,4,6] #particle-weighting orders
+      nx: 400   # Produces a dx=0.4microns, with laser wavelength of 1 micron need at least 0.5 microns for proper sampling

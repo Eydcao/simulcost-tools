@@ -1,0 +1,172 @@
+begin:constant
+
+laser_lamada= 1*micron
+
+laser_omega      = 2.0*pi*c/laser_lamada
+
+laser_period     = laser_lamada/c
+
+a0 = 200
+
+Intensity        = (1.37*10^18)*a0^2/((laser_lamada^2)*10^12)
+
+n_cr            = critical(laser_omega)
+
+n_target  = 8*n_cr
+
+end:constant
+
+
+begin:control
+
+nx= 3200
+
+t_end = 800*femto
+
+x_min            = 0.0*micron 
+
+x_max = 160*micron
+
+dt_multiplier = 0.95
+
+stdout_frequency = 100
+
+use_random_seed  = F
+
+field_ionisation = T
+
+field_order = 2
+
+physics_table_location = /scratch/09994/robhakta/epoch2ndOrder/epoch/epoch1d/src/physics_packages/TABLES 
+
+end:control
+
+
+begin:boundaries
+
+bc_x_min = simple_laser
+
+bc_x_max = open
+
+end:boundaries
+
+
+begin:laser
+
+boundary         = x_min
+
+intensity_w_cm2  = Intensity
+
+lambda           = laser_lamada
+
+t_profile        = gauss(time, 60.0e-15, 100.0e-15/sqrt(2*loge(2)))
+
+pol_angle        = 0.0
+
+phase            = 0.0
+
+t_start          = 0.0
+
+t_end  = 400
+
+
+end:laser
+
+
+begin:species
+
+name            = carbon
+
+charge          = 0.0
+
+mass            = 12*1836
+
+atomic_no       = 6
+
+ionise          = T
+
+npart_per_cell = 26
+
+density = if (x gt 50*micron and x lt 80*micron,n_target,0)
+
+immobile       = F
+
+dumpmask        = always
+
+electron_species = electron_o
+
+end:species
+
+
+begin:species
+
+name = electron_o
+
+charge = -1.0
+
+mass = 1.0
+
+density = 0.0
+
+dumpmask        = always
+
+end:species
+
+
+#begin:subset
+#
+#name            = ee_subset
+#
+#include_species = electron_o
+#
+#random_fraction = 0.10
+#
+#end:subset
+
+
+#begin:output
+#
+#  name            = elec
+#
+#  file_prefix     = elec
+#
+#  dt_snapshot     = 1*femto
+#
+#  particle_grid   = ee_subset + single
+#
+#  particle_weight = ee_subset + single
+#
+#  px              = ee_subset
+#
+#  id              = ee_subset
+#
+#end:output
+
+
+begin:output
+
+name             = e_fields
+
+file_prefix      = e_fields
+
+dt_snapshot      = 10*femto
+
+ey               = always + single  + snapshot
+
+end:output
+
+
+begin:output
+
+name             = density
+
+file_prefix      = density
+
+dt_snapshot      = 20*femto
+
+dump_first      = T
+
+number_density   = always + single  + snapshot + species + no_sum
+
+end:output
+

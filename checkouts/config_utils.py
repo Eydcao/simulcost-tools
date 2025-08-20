@@ -62,12 +62,21 @@ def build_target_configs(config):
             # Search parameters
             "multiplication_factor": param_info.get("multiplication_factor"),
             "max_iteration_num": param_info.get("max_iteration_num"),
-            "search_range": param_info.get("search_range"),
-            "search_range_min": param_info.get("search_range_min"),
-            "search_range_max": param_info.get("search_range_max"),
+            "search_range_min": (
+                param_info.get("search_range", [None, None])[0]
+                if isinstance(param_info.get("search_range"), list)
+                else None
+            ),
+            "search_range_max": (
+                param_info.get("search_range", [None, None])[1]
+                if isinstance(param_info.get("search_range"), list)
+                else None
+            ),
             "search_range_slice_num": param_info.get("search_range_slice_num"),
-            # Additional parameters for different search types
-            "schedule_options": param_info.get("schedule_options"),
+            "search_values": (param_info.get("search_values", [None, None, None])
+                if isinstance(param_info.get("search_values"), list)
+                else None
+            )
         }
 
         # Normalize all non-target parameters to lists for consistent iteration
