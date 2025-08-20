@@ -149,25 +149,26 @@ def compare_res_ns_channel_2d(
         return False, float('inf'), float('inf'), float('inf'), False, False
 
     # Compute RMSE for velocity and pressure
-    # Always interpolate to the higher resolution to avoid downsampling artifacts
-    if u1.shape[0] >= u2.shape[0] and u1.shape[1] >= u2.shape[1]:
-        # u1 has higher or equal resolution, interpolate u2 to u1's shape
-        u2_interp = interpolate_field(u2, u2.shape, u1.shape, axis_offsets=(0.0, 0.5))
-        v2_interp = interpolate_field(v2, v2.shape, v1.shape, axis_offsets=(0.5, 0.0))
-        p2_interp = interpolate_field(p2, p2.shape, p1.shape, axis_offsets=(0.0, 0.0))
-        
-        rmse_u = np.sqrt(np.mean((u1 - u2_interp) ** 2))
-        rmse_v = np.sqrt(np.mean((v1 - v2_interp) ** 2))
-        rmse_p = np.sqrt(np.mean((p1 - p2_interp) ** 2))
-    else:
-        # u2 has higher resolution, interpolate u1 to u2's shape
-        u1_interp = interpolate_field(u1, u1.shape, u2.shape, axis_offsets=(0.0, 0.5))
-        v1_interp = interpolate_field(v1, v1.shape, v2.shape, axis_offsets=(0.5, 0.0))
-        p1_interp = interpolate_field(p1, p1.shape, p2.shape, axis_offsets=(0.0, 0.0))
-        
-        rmse_u = np.sqrt(np.mean((u1_interp - u2) ** 2))
-        rmse_v = np.sqrt(np.mean((v1_interp - v2) ** 2))
-        rmse_p = np.sqrt(np.mean((p1_interp - p2) ** 2))
+    # Interpolate both fields to the element-wise maximum resolution to avoid any downsampling
+    tgt_u_shape = (max(u1.shape[0], u2.shape[0]), max(u1.shape[1], u2.shape[1]))
+    tgt_v_shape = (max(v1.shape[0], v2.shape[0]), max(v1.shape[1], v2.shape[1]))
+    tgt_p_shape = (max(p1.shape[0], p2.shape[0]), max(p1.shape[1], p2.shape[1]))
+
+    def _maybe_interp(field, current_shape, target_shape, axis_offsets):
+        if current_shape == target_shape:
+            return field
+        return interpolate_field(field, current_shape, target_shape, axis_offsets=axis_offsets)
+
+    u1_up = _maybe_interp(u1, u1.shape, tgt_u_shape, axis_offsets=(0.0, 0.5))
+    u2_up = _maybe_interp(u2, u2.shape, tgt_u_shape, axis_offsets=(0.0, 0.5))
+    v1_up = _maybe_interp(v1, v1.shape, tgt_v_shape, axis_offsets=(0.5, 0.0))
+    v2_up = _maybe_interp(v2, v2.shape, tgt_v_shape, axis_offsets=(0.5, 0.0))
+    p1_up = _maybe_interp(p1, p1.shape, tgt_p_shape, axis_offsets=(0.0, 0.0))
+    p2_up = _maybe_interp(p2, p2.shape, tgt_p_shape, axis_offsets=(0.0, 0.0))
+
+    rmse_u = np.sqrt(np.mean((u1_up - u2_up) ** 2))
+    rmse_v = np.sqrt(np.mean((v1_up - v2_up) ** 2))
+    rmse_p = np.sqrt(np.mean((p1_up - p2_up) ** 2))
     
     # Mass conservation check
     mass_conserved1 = compute_metrics(u1, v1, p1, length, breadth, mass_tolerance)["mass_conserved"]
