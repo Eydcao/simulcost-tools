@@ -19,7 +19,7 @@ def run_sim_ns_channel_2d(profile, boundary_type, mesh_x, mesh_y, omega_u, omega
                 return meta["cost"], meta["num_steps"]
 
     # Build command with wall parameters if provided
-    cmd = f"python costsci_tools/runners/ns_channel_2d.py --config-name={profile} mesh_x={mesh_x} mesh_y={mesh_y} omega_u={omega_u} omega_v={omega_v} omega_p={omega_p} diff_u_threshold={diff_u_threshold} diff_v_threshold={diff_v_threshold} res_iter_v_threshold={res_iter_v_threshold} boundary_condition={boundary_type}"
+    cmd = f"python runners/ns_channel_2d.py --config-name={profile} mesh_x={mesh_x} mesh_y={mesh_y} omega_u={omega_u} omega_v={omega_v} omega_p={omega_p} diff_u_threshold={diff_u_threshold} diff_v_threshold={diff_v_threshold} res_iter_v_threshold={res_iter_v_threshold} boundary_condition={boundary_type}"
     
     # Add wall parameters if provided
     if other_params:
@@ -149,13 +149,25 @@ def compare_res_ns_channel_2d(
         return False, float('inf'), float('inf'), float('inf'), False, False
 
     # Compute RMSE for velocity and pressure
-    u2_interp = interpolate_field(u2, u2.shape, u1.shape, axis_offsets=(0.0, 0.5))
-    v2_interp = interpolate_field(v2, v2.shape, v1.shape, axis_offsets=(0.5, 0.0))
-    p2_interp = interpolate_field(p2, p2.shape, p1.shape, axis_offsets=(0.0, 0.0))
-    
-    rmse_u = np.sqrt(np.mean((u1 - u2_interp) ** 2))
-    rmse_v = np.sqrt(np.mean((v1 - v2_interp) ** 2))
-    rmse_p = np.sqrt(np.mean((p1 - p2_interp) ** 2))
+    # Always interpolate to the higher resolution to avoid downsampling artifacts
+    if u1.shape[0] >= u2.shape[0] and u1.shape[1] >= u2.shape[1]:
+        # u1 has higher or equal resolution, interpolate u2 to u1's shape
+        u2_interp = interpolate_field(u2, u2.shape, u1.shape, axis_offsets=(0.0, 0.5))
+        v2_interp = interpolate_field(v2, v2.shape, v1.shape, axis_offsets=(0.5, 0.0))
+        p2_interp = interpolate_field(p2, p2.shape, p1.shape, axis_offsets=(0.0, 0.0))
+        
+        rmse_u = np.sqrt(np.mean((u1 - u2_interp) ** 2))
+        rmse_v = np.sqrt(np.mean((v1 - v2_interp) ** 2))
+        rmse_p = np.sqrt(np.mean((p1 - p2_interp) ** 2))
+    else:
+        # u2 has higher resolution, interpolate u1 to u2's shape
+        u1_interp = interpolate_field(u1, u1.shape, u2.shape, axis_offsets=(0.0, 0.5))
+        v1_interp = interpolate_field(v1, v1.shape, v2.shape, axis_offsets=(0.5, 0.0))
+        p1_interp = interpolate_field(p1, p1.shape, p2.shape, axis_offsets=(0.0, 0.0))
+        
+        rmse_u = np.sqrt(np.mean((u1_interp - u2) ** 2))
+        rmse_v = np.sqrt(np.mean((v1_interp - v2) ** 2))
+        rmse_p = np.sqrt(np.mean((p1_interp - p2) ** 2))
     
     # Mass conservation check
     mass_conserved1 = compute_metrics(u1, v1, p1, length, breadth, mass_tolerance)["mass_conserved"]
