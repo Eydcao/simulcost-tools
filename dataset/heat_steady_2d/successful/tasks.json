@@ -2,7 +2,7 @@
   "metadata": {
     "solver": "heat_steady_2d",
     "description": "Successfully converged parameter optimization tasks",
-    "total_tasks": 831
+    "total_tasks": 817
   },
   "tasks": [
     {
@@ -676,8 +676,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -767,8 +767,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -858,8 +858,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -949,8 +949,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -1040,8 +1040,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -1131,8 +1131,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.0,
-        "search_range_max": 1.0,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 6
       },
       "non_target_parameters": {
@@ -1198,8 +1198,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.0,
-        "search_range_max": 1.0,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 6
       },
       "non_target_parameters": {
@@ -1265,8 +1265,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.0,
-        "search_range_max": 1.0,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 6
       },
       "non_target_parameters": {
@@ -2855,8 +2855,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -2946,8 +2946,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -3037,8 +3037,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -3128,8 +3128,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -3219,8 +3219,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -3310,8 +3310,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.0,
-        "search_range_max": 1.0,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 6
       },
       "non_target_parameters": {
@@ -3377,8 +3377,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.0,
-        "search_range_max": 1.0,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 6
       },
       "non_target_parameters": {
@@ -3444,8 +3444,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.0,
-        "search_range_max": 1.0,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 6
       },
       "non_target_parameters": {
@@ -5279,8 +5279,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -5370,8 +5370,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -5461,8 +5461,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -5552,8 +5552,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -5643,8 +5643,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -5734,8 +5734,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.0,
-        "search_range_max": 1.0,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 6
       },
       "non_target_parameters": {
@@ -5801,8 +5801,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.0,
-        "search_range_max": 1.0,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 6
       },
       "non_target_parameters": {
@@ -5868,8 +5868,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.0,
-        "search_range_max": 1.0,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 6
       },
       "non_target_parameters": {
@@ -7500,8 +7500,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -7591,8 +7591,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -7682,8 +7682,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -7773,8 +7773,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -7864,8 +7864,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -7955,8 +7955,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.0,
-        "search_range_max": 1.0,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 6
       },
       "non_target_parameters": {
@@ -8022,8 +8022,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.0,
-        "search_range_max": 1.0,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 6
       },
       "non_target_parameters": {
@@ -8089,8 +8089,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.0,
-        "search_range_max": 1.0,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 6
       },
       "non_target_parameters": {
@@ -9931,8 +9931,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -10022,8 +10022,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -10113,8 +10113,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -10204,8 +10204,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -10295,8 +10295,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -10386,8 +10386,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.0,
-        "search_range_max": 1.0,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 6
       },
       "non_target_parameters": {
@@ -10453,8 +10453,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.0,
-        "search_range_max": 1.0,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 6
       },
       "non_target_parameters": {
@@ -10520,8 +10520,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.0,
-        "search_range_max": 1.0,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 6
       },
       "non_target_parameters": {
@@ -12180,8 +12180,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -12271,8 +12271,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -12362,8 +12362,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -12453,8 +12453,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -12544,8 +12544,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -12635,8 +12635,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.0,
-        "search_range_max": 1.0,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 6
       },
       "non_target_parameters": {
@@ -12702,8 +12702,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.0,
-        "search_range_max": 1.0,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 6
       },
       "non_target_parameters": {
@@ -12769,8 +12769,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.0,
-        "search_range_max": 1.0,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 6
       },
       "non_target_parameters": {
@@ -13752,12 +13752,11 @@
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 0.02,
-        "total_computational_cost": 67416875,
+        "optimal_parameter_value": 0.04,
+        "total_computational_cost": 4948658,
         "cost_history": [
           303186,
-          4645472,
-          62468217
+          4645472
         ],
         "parameter_history": [
           {
@@ -13768,12 +13767,6 @@
           },
           {
             "dx": 0.04,
-            "relax": 0.2,
-            "error_threshold": 1e-08,
-            "t_init": 0.0
-          },
-          {
-            "dx": 0.02,
             "relax": 0.2,
             "error_threshold": 1e-08,
             "t_init": 0.0
@@ -13803,12 +13796,11 @@
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 0.02,
-        "total_computational_cost": 60992759,
+        "optimal_parameter_value": 0.04,
+        "total_computational_cost": 4535453,
         "cost_history": [
           280709,
-          4254744,
-          56457306
+          4254744
         ],
         "parameter_history": [
           {
@@ -13819,12 +13811,6 @@
           },
           {
             "dx": 0.04,
-            "relax": 0.2,
-            "error_threshold": 1e-08,
-            "t_init": 0.25
-          },
-          {
-            "dx": 0.02,
             "relax": 0.2,
             "error_threshold": 1e-08,
             "t_init": 0.25
@@ -13854,12 +13840,11 @@
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 0.02,
-        "total_computational_cost": 55972056,
+        "optimal_parameter_value": 0.04,
+        "total_computational_cost": 4212156,
         "cost_history": [
           262964,
-          3949192,
-          51759900
+          3949192
         ],
         "parameter_history": [
           {
@@ -13870,12 +13855,6 @@
           },
           {
             "dx": 0.04,
-            "relax": 0.2,
-            "error_threshold": 1e-08,
-            "t_init": 0.5
-          },
-          {
-            "dx": 0.02,
             "relax": 0.2,
             "error_threshold": 1e-08,
             "t_init": 0.5
@@ -13905,12 +13884,11 @@
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 0.02,
-        "total_computational_cost": 65804698,
+        "optimal_parameter_value": 0.04,
+        "total_computational_cost": 4845061,
         "cost_history": [
           297609,
-          4547452,
-          60959637
+          4547452
         ],
         "parameter_history": [
           {
@@ -13921,12 +13899,6 @@
           },
           {
             "dx": 0.04,
-            "relax": 0.2,
-            "error_threshold": 1e-08,
-            "t_init": 0.75
-          },
-          {
-            "dx": 0.02,
             "relax": 0.2,
             "error_threshold": 1e-08,
             "t_init": 0.75
@@ -13956,12 +13928,11 @@
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 0.02,
-        "total_computational_cost": 69754557,
+        "optimal_parameter_value": 0.04,
+        "total_computational_cost": 5098899,
         "cost_history": [
           311467,
-          4787432,
-          64655658
+          4787432
         ],
         "parameter_history": [
           {
@@ -13972,12 +13943,6 @@
           },
           {
             "dx": 0.04,
-            "relax": 0.2,
-            "error_threshold": 1e-08,
-            "t_init": 1.0
-          },
-          {
-            "dx": 0.02,
             "relax": 0.2,
             "error_threshold": 1e-08,
             "t_init": 1.0
@@ -14007,12 +13972,11 @@
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 0.02,
-        "total_computational_cost": 25042563,
+        "optimal_parameter_value": 0.04,
+        "total_computational_cost": 1813032,
         "cost_history": [
           109512,
-          1703520,
-          23229531
+          1703520
         ],
         "parameter_history": [
           {
@@ -14023,12 +13987,6 @@
           },
           {
             "dx": 0.04,
-            "relax": 0.6,
-            "error_threshold": 1e-08,
-            "t_init": 0.0
-          },
-          {
-            "dx": 0.02,
             "relax": 0.6,
             "error_threshold": 1e-08,
             "t_init": 0.0
@@ -14058,12 +14016,11 @@
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 0.02,
-        "total_computational_cost": 22901889,
+        "optimal_parameter_value": 0.04,
+        "total_computational_cost": 1675128,
         "cost_history": [
           102076,
-          1573052,
-          21226761
+          1573052
         ],
         "parameter_history": [
           {
@@ -14074,12 +14031,6 @@
           },
           {
             "dx": 0.04,
-            "relax": 0.6,
-            "error_threshold": 1e-08,
-            "t_init": 0.25
-          },
-          {
-            "dx": 0.02,
             "relax": 0.6,
             "error_threshold": 1e-08,
             "t_init": 0.25
@@ -14109,12 +14060,11 @@
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 0.02,
-        "total_computational_cost": 21228772,
+        "optimal_parameter_value": 0.04,
+        "total_computational_cost": 1567813,
         "cost_history": [
           96161,
-          1471652,
-          19660959
+          1471652
         ],
         "parameter_history": [
           {
@@ -14125,12 +14075,6 @@
           },
           {
             "dx": 0.04,
-            "relax": 0.6,
-            "error_threshold": 1e-08,
-            "t_init": 0.5
-          },
-          {
-            "dx": 0.02,
             "relax": 0.6,
             "error_threshold": 1e-08,
             "t_init": 0.5
@@ -14160,12 +14104,11 @@
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 0.02,
-        "total_computational_cost": 24505587,
+        "optimal_parameter_value": 0.04,
+        "total_computational_cost": 1778049,
         "cost_history": [
           107653,
-          1670396,
-          22727538
+          1670396
         ],
         "parameter_history": [
           {
@@ -14176,12 +14119,6 @@
           },
           {
             "dx": 0.04,
-            "relax": 0.6,
-            "error_threshold": 1e-08,
-            "t_init": 0.75
-          },
-          {
-            "dx": 0.02,
             "relax": 0.6,
             "error_threshold": 1e-08,
             "t_init": 0.75
@@ -14211,12 +14148,11 @@
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 0.02,
-        "total_computational_cost": 25820867,
+        "optimal_parameter_value": 0.04,
+        "total_computational_cost": 1863056,
         "cost_history": [
           112216,
-          1750840,
-          23957811
+          1750840
         ],
         "parameter_history": [
           {
@@ -14227,12 +14163,6 @@
           },
           {
             "dx": 0.04,
-            "relax": 0.6,
-            "error_threshold": 1e-08,
-            "t_init": 1.0
-          },
-          {
-            "dx": 0.02,
             "relax": 0.6,
             "error_threshold": 1e-08,
             "t_init": 1.0
@@ -14262,12 +14192,11 @@
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 0.02,
-        "total_computational_cost": 15739685,
+        "optimal_parameter_value": 0.04,
+        "total_computational_cost": 1132469,
         "cost_history": [
           67769,
-          1064700,
-          14607216
+          1064700
         ],
         "parameter_history": [
           {
@@ -14278,12 +14207,6 @@
           },
           {
             "dx": 0.04,
-            "relax": 1.0,
-            "error_threshold": 1e-08,
-            "t_init": 0.0
-          },
-          {
-            "dx": 0.02,
             "relax": 1.0,
             "error_threshold": 1e-08,
             "t_init": 0.0
@@ -14313,12 +14236,11 @@
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 0.02,
-        "total_computational_cost": 14455213,
+        "optimal_parameter_value": 0.04,
+        "total_computational_cost": 1049659,
         "cost_history": [
           63375,
-          986284,
-          13405554
+          986284
         ],
         "parameter_history": [
           {
@@ -14329,12 +14251,6 @@
           },
           {
             "dx": 0.04,
-            "relax": 1.0,
-            "error_threshold": 1e-08,
-            "t_init": 0.25
-          },
-          {
-            "dx": 0.02,
             "relax": 1.0,
             "error_threshold": 1e-08,
             "t_init": 0.25
@@ -14364,12 +14280,11 @@
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 0.02,
-        "total_computational_cost": 13452032,
+        "optimal_parameter_value": 0.04,
+        "total_computational_cost": 985439,
         "cost_history": [
           59995,
-          925444,
-          12466593
+          925444
         ],
         "parameter_history": [
           {
@@ -14380,12 +14295,6 @@
           },
           {
             "dx": 0.04,
-            "relax": 1.0,
-            "error_threshold": 1e-08,
-            "t_init": 0.5
-          },
-          {
-            "dx": 0.02,
             "relax": 1.0,
             "error_threshold": 1e-08,
             "t_init": 0.5
@@ -14415,12 +14324,11 @@
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 0.02,
-        "total_computational_cost": 15417351,
+        "optimal_parameter_value": 0.04,
+        "total_computational_cost": 1111851,
         "cost_history": [
           66755,
-          1045096,
-          14305500
+          1045096
         ],
         "parameter_history": [
           {
@@ -14431,12 +14339,6 @@
           },
           {
             "dx": 0.04,
-            "relax": 1.0,
-            "error_threshold": 1e-08,
-            "t_init": 0.75
-          },
-          {
-            "dx": 0.02,
             "relax": 1.0,
             "error_threshold": 1e-08,
             "t_init": 0.75
@@ -14466,12 +14368,11 @@
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 0.02,
-        "total_computational_cost": 16206059,
+        "optimal_parameter_value": 0.04,
+        "total_computational_cost": 1161875,
         "cost_history": [
           69459,
-          1092416,
-          15044184
+          1092416
         ],
         "parameter_history": [
           {
@@ -14482,12 +14383,6 @@
           },
           {
             "dx": 0.04,
-            "relax": 1.0,
-            "error_threshold": 1e-08,
-            "t_init": 1.0
-          },
-          {
-            "dx": 0.02,
             "relax": 1.0,
             "error_threshold": 1e-08,
             "t_init": 1.0
@@ -14506,8 +14401,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -14597,8 +14492,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -14688,8 +14583,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -14779,8 +14674,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -14870,8 +14765,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -14961,8 +14856,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.0,
-        "search_range_max": 1.0,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 6
       },
       "non_target_parameters": {
@@ -15028,8 +14923,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.0,
-        "search_range_max": 1.0,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 6
       },
       "non_target_parameters": {
@@ -15095,8 +14990,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.0,
-        "search_range_max": 1.0,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 6
       },
       "non_target_parameters": {
@@ -16762,8 +16657,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -16853,8 +16748,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -16944,8 +16839,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -17035,8 +16930,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -17126,8 +17021,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -17217,8 +17112,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.0,
-        "search_range_max": 1.0,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 6
       },
       "non_target_parameters": {
@@ -17284,8 +17179,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.0,
-        "search_range_max": 1.0,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 6
       },
       "non_target_parameters": {
@@ -17351,8 +17246,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.0,
-        "search_range_max": 1.0,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 6
       },
       "non_target_parameters": {
@@ -18983,8 +18878,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -19074,8 +18969,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -19165,8 +19060,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -19256,8 +19151,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -19347,8 +19242,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -19438,8 +19333,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.0,
-        "search_range_max": 1.0,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 6
       },
       "non_target_parameters": {
@@ -19505,8 +19400,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.0,
-        "search_range_max": 1.0,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 6
       },
       "non_target_parameters": {
@@ -19572,8 +19467,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.0,
-        "search_range_max": 1.0,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 6
       },
       "non_target_parameters": {
@@ -20618,11 +20513,12 @@
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 0.04,
-        "total_computational_cost": 4769180,
+        "optimal_parameter_value": 0.02,
+        "total_computational_cost": 64631195,
         "cost_history": [
           293384,
-          4475796
+          4475796,
+          59862015
         ],
         "parameter_history": [
           {
@@ -20633,6 +20529,12 @@
           },
           {
             "dx": 0.04,
+            "relax": 0.2,
+            "error_threshold": 1e-08,
+            "t_init": 0.0
+          },
+          {
+            "dx": 0.02,
             "relax": 0.2,
             "error_threshold": 1e-08,
             "t_init": 0.0
@@ -20662,11 +20564,12 @@
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 0.04,
-        "total_computational_cost": 3773939,
+        "optimal_parameter_value": 0.02,
+        "total_computational_cost": 49158788,
         "cost_history": [
           239135,
-          3534804
+          3534804,
+          45384849
         ],
         "parameter_history": [
           {
@@ -20677,6 +20580,12 @@
           },
           {
             "dx": 0.04,
+            "relax": 0.2,
+            "error_threshold": 1e-08,
+            "t_init": 0.25
+          },
+          {
+            "dx": 0.02,
             "relax": 0.2,
             "error_threshold": 1e-08,
             "t_init": 0.25
@@ -20838,11 +20747,12 @@
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 0.04,
-        "total_computational_cost": 1753037,
+        "optimal_parameter_value": 0.02,
+        "total_computational_cost": 24113834,
         "cost_history": [
           106301,
-          1646736
+          1646736,
+          22360797
         ],
         "parameter_history": [
           {
@@ -20853,6 +20763,12 @@
           },
           {
             "dx": 0.04,
+            "relax": 0.6,
+            "error_threshold": 1e-08,
+            "t_init": 0.0
+          },
+          {
+            "dx": 0.02,
             "relax": 0.6,
             "error_threshold": 1e-08,
             "t_init": 0.0
@@ -20882,11 +20798,12 @@
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 0.04,
-        "total_computational_cost": 1422135,
+        "optimal_parameter_value": 0.02,
+        "total_computational_cost": 18958077,
         "cost_history": [
           88387,
-          1333748
+          1333748,
+          17535942
         ],
         "parameter_history": [
           {
@@ -20897,6 +20814,12 @@
           },
           {
             "dx": 0.04,
+            "relax": 0.6,
+            "error_threshold": 1e-08,
+            "t_init": 0.25
+          },
+          {
+            "dx": 0.02,
             "relax": 0.6,
             "error_threshold": 1e-08,
             "t_init": 0.25
@@ -20926,11 +20849,12 @@
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 0.04,
-        "total_computational_cost": 1715181,
+        "optimal_parameter_value": 0.02,
+        "total_computational_cost": 23524566,
         "cost_history": [
           104273,
-          1610908
+          1610908,
+          21809385
         ],
         "parameter_history": [
           {
@@ -20941,6 +20865,12 @@
           },
           {
             "dx": 0.04,
+            "relax": 0.6,
+            "error_threshold": 1e-08,
+            "t_init": 0.5
+          },
+          {
+            "dx": 0.02,
             "relax": 0.6,
             "error_threshold": 1e-08,
             "t_init": 0.5
@@ -20970,11 +20900,12 @@
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 0.04,
-        "total_computational_cost": 1830270,
+        "optimal_parameter_value": 0.02,
+        "total_computational_cost": 25312098,
         "cost_history": [
           110526,
-          1719744
+          1719744,
+          23481828
         ],
         "parameter_history": [
           {
@@ -20985,6 +20916,12 @@
           },
           {
             "dx": 0.04,
+            "relax": 0.6,
+            "error_threshold": 1e-08,
+            "t_init": 0.75
+          },
+          {
+            "dx": 0.02,
             "relax": 0.6,
             "error_threshold": 1e-08,
             "t_init": 0.75
@@ -21014,11 +20951,12 @@
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 0.04,
-        "total_computational_cost": 1894490,
+        "optimal_parameter_value": 0.02,
+        "total_computational_cost": 26315279,
         "cost_history": [
           113906,
-          1780584
+          1780584,
+          24420789
         ],
         "parameter_history": [
           {
@@ -21029,6 +20967,12 @@
           },
           {
             "dx": 0.04,
+            "relax": 0.6,
+            "error_threshold": 1e-08,
+            "t_init": 1.0
+          },
+          {
+            "dx": 0.02,
             "relax": 0.6,
             "error_threshold": 1e-08,
             "t_init": 1.0
@@ -21058,11 +21002,12 @@
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 0.04,
-        "total_computational_cost": 1096810,
+        "optimal_parameter_value": 0.02,
+        "total_computational_cost": 15181225,
         "cost_history": [
           65910,
-          1030900
+          1030900,
+          14084415
         ],
         "parameter_history": [
           {
@@ -21073,6 +21018,12 @@
           },
           {
             "dx": 0.04,
+            "relax": 1.0,
+            "error_threshold": 1e-08,
+            "t_init": 0.0
+          },
+          {
+            "dx": 0.02,
             "relax": 1.0,
             "error_threshold": 1e-08,
             "t_init": 0.0
@@ -21102,11 +21053,12 @@
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 0.04,
-        "total_computational_cost": 898235,
+        "optimal_parameter_value": 0.02,
+        "total_computational_cost": 12090338,
         "cost_history": [
           55263,
-          842972
+          842972,
+          11192103
         ],
         "parameter_history": [
           {
@@ -21117,6 +21069,12 @@
           },
           {
             "dx": 0.04,
+            "relax": 1.0,
+            "error_threshold": 1e-08,
+            "t_init": 0.25
+          },
+          {
+            "dx": 0.02,
             "relax": 1.0,
             "error_threshold": 1e-08,
             "t_init": 0.25
@@ -21146,11 +21104,12 @@
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 0.04,
-        "total_computational_cost": 1073995,
+        "optimal_parameter_value": 0.02,
+        "total_computational_cost": 14828083,
         "cost_history": [
           64727,
-          1009268
+          1009268,
+          13754088
         ],
         "parameter_history": [
           {
@@ -21161,6 +21120,12 @@
           },
           {
             "dx": 0.04,
+            "relax": 1.0,
+            "error_threshold": 1e-08,
+            "t_init": 0.5
+          },
+          {
+            "dx": 0.02,
             "relax": 1.0,
             "error_threshold": 1e-08,
             "t_init": 0.5
@@ -21190,11 +21155,12 @@
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 0.04,
-        "total_computational_cost": 1142609,
+        "optimal_parameter_value": 0.02,
+        "total_computational_cost": 15900683,
         "cost_history": [
           68445,
-          1074164
+          1074164,
+          14758074
         ],
         "parameter_history": [
           {
@@ -21205,6 +21171,12 @@
           },
           {
             "dx": 0.04,
+            "relax": 1.0,
+            "error_threshold": 1e-08,
+            "t_init": 0.75
+          },
+          {
+            "dx": 0.02,
             "relax": 1.0,
             "error_threshold": 1e-08,
             "t_init": 0.75
@@ -21234,11 +21206,12 @@
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 0.04,
-        "total_computational_cost": 1181141,
+        "optimal_parameter_value": 0.02,
+        "total_computational_cost": 16501031,
         "cost_history": [
           70473,
-          1110668
+          1110668,
+          15319890
         ],
         "parameter_history": [
           {
@@ -21249,6 +21222,12 @@
           },
           {
             "dx": 0.04,
+            "relax": 1.0,
+            "error_threshold": 1e-08,
+            "t_init": 1.0
+          },
+          {
+            "dx": 0.02,
             "relax": 1.0,
             "error_threshold": 1e-08,
             "t_init": 1.0
@@ -21267,8 +21246,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -21358,8 +21337,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -21449,8 +21428,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -21540,8 +21519,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -21631,8 +21610,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -21722,8 +21701,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.0,
-        "search_range_max": 1.0,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 6
       },
       "non_target_parameters": {
@@ -21789,8 +21768,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.0,
-        "search_range_max": 1.0,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 6
       },
       "non_target_parameters": {
@@ -21856,8 +21835,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.0,
-        "search_range_max": 1.0,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 6
       },
       "non_target_parameters": {
@@ -23803,8 +23782,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -23894,8 +23873,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -23985,8 +23964,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -24076,8 +24055,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -24167,8 +24146,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -24258,8 +24237,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.0,
-        "search_range_max": 1.0,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 6
       },
       "non_target_parameters": {
@@ -24325,8 +24304,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.0,
-        "search_range_max": 1.0,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 6
       },
       "non_target_parameters": {
@@ -24392,8 +24371,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.0,
-        "search_range_max": 1.0,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 6
       },
       "non_target_parameters": {
@@ -26339,8 +26318,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -26430,8 +26409,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -26521,8 +26500,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -26612,8 +26591,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -26703,8 +26682,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -26794,8 +26773,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.0,
-        "search_range_max": 1.0,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 6
       },
       "non_target_parameters": {
@@ -26861,8 +26840,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.0,
-        "search_range_max": 1.0,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 6
       },
       "non_target_parameters": {
@@ -26928,8 +26907,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.0,
-        "search_range_max": 1.0,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 6
       },
       "non_target_parameters": {
@@ -28875,8 +28854,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -28966,8 +28945,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -29057,8 +29036,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -29148,8 +29127,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -29239,8 +29218,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -29330,8 +29309,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.0,
-        "search_range_max": 1.0,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 6
       },
       "non_target_parameters": {
@@ -29397,8 +29376,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.0,
-        "search_range_max": 1.0,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 6
       },
       "non_target_parameters": {
@@ -29464,8 +29443,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.0,
-        "search_range_max": 1.0,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 6
       },
       "non_target_parameters": {
@@ -31446,8 +31425,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -31537,8 +31516,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -31628,8 +31607,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -31719,8 +31698,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -31810,8 +31789,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -31901,8 +31880,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.0,
-        "search_range_max": 1.0,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 6
       },
       "non_target_parameters": {
@@ -31968,8 +31947,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.0,
-        "search_range_max": 1.0,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 6
       },
       "non_target_parameters": {
@@ -32035,8 +32014,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.0,
-        "search_range_max": 1.0,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 6
       },
       "non_target_parameters": {
@@ -33982,8 +33961,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -34073,8 +34052,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -34164,8 +34143,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -34255,8 +34234,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -34346,8 +34325,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -34437,8 +34416,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.0,
-        "search_range_max": 1.0,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 6
       },
       "non_target_parameters": {
@@ -34504,8 +34483,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.0,
-        "search_range_max": 1.0,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 6
       },
       "non_target_parameters": {
@@ -34571,8 +34550,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.0,
-        "search_range_max": 1.0,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 6
       },
       "non_target_parameters": {
@@ -36553,8 +36532,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -36644,8 +36623,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -36735,8 +36714,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -36826,8 +36805,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -36917,8 +36896,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -37008,8 +36987,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.0,
-        "search_range_max": 1.0,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 6
       },
       "non_target_parameters": {
@@ -37075,8 +37054,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.0,
-        "search_range_max": 1.0,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 6
       },
       "non_target_parameters": {
@@ -37142,8 +37121,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.0,
-        "search_range_max": 1.0,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 6
       },
       "non_target_parameters": {
@@ -39089,8 +39068,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -39180,8 +39159,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -39271,8 +39250,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -39362,8 +39341,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -39453,8 +39432,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -39544,8 +39523,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.0,
-        "search_range_max": 1.0,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 6
       },
       "non_target_parameters": {
@@ -39611,8 +39590,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.0,
-        "search_range_max": 1.0,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 6
       },
       "non_target_parameters": {
@@ -39678,8 +39657,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.0,
-        "search_range_max": 1.0,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 6
       },
       "non_target_parameters": {
@@ -40825,42 +40804,42 @@
       "non_target_parameters": {
         "relax": 0.2,
         "error_threshold": 1e-08,
-        "t_init": 0.0
+        "t_init": 0.5
       },
       "results": {
         "converged": true,
         "optimal_parameter_value": 0.01,
-        "total_computational_cost": 861400702,
+        "total_computational_cost": 833658382,
         "cost_history": [
-          293384,
-          4475796,
-          59862015,
-          796769507
+          287131,
+          4368312,
+          58205178,
+          770797761
         ],
         "parameter_history": [
           {
             "dx": 0.08,
             "relax": 0.2,
             "error_threshold": 1e-08,
-            "t_init": 0.0
+            "t_init": 0.5
           },
           {
             "dx": 0.04,
             "relax": 0.2,
             "error_threshold": 1e-08,
-            "t_init": 0.0
+            "t_init": 0.5
           },
           {
             "dx": 0.02,
             "relax": 0.2,
             "error_threshold": 1e-08,
-            "t_init": 0.0
+            "t_init": 0.5
           },
           {
             "dx": 0.01,
             "relax": 0.2,
             "error_threshold": 1e-08,
-            "t_init": 0.0
+            "t_init": 0.5
           }
         ]
       }
@@ -40883,42 +40862,100 @@
       "non_target_parameters": {
         "relax": 0.2,
         "error_threshold": 1e-08,
-        "t_init": 0.25
+        "t_init": 0.75
       },
       "results": {
         "converged": true,
         "optimal_parameter_value": 0.01,
-        "total_computational_cost": 618823432,
+        "total_computational_cost": 917798471,
         "cost_history": [
-          239135,
-          3534804,
-          45384849,
-          569664644
+          306059,
+          4694820,
+          63227709,
+          849569883
         ],
         "parameter_history": [
           {
             "dx": 0.08,
             "relax": 0.2,
             "error_threshold": 1e-08,
-            "t_init": 0.25
+            "t_init": 0.75
           },
           {
             "dx": 0.04,
             "relax": 0.2,
             "error_threshold": 1e-08,
-            "t_init": 0.25
+            "t_init": 0.75
           },
           {
             "dx": 0.02,
             "relax": 0.2,
             "error_threshold": 1e-08,
-            "t_init": 0.25
+            "t_init": 0.75
           },
           {
             "dx": 0.01,
             "relax": 0.2,
             "error_threshold": 1e-08,
-            "t_init": 0.25
+            "t_init": 0.75
+          }
+        ]
+      }
+    },
+    {
+      "solver": "heat_steady_2d",
+      "target_parameter": "dx",
+      "profile": "p2",
+      "precision_config": {
+        "tolerance_rmse": 0.0005
+      },
+      "target_config": {
+        "initial_value": 0.08,
+        "multiplication_factor": 0.5,
+        "max_iteration_num": 5,
+        "search_range_min": null,
+        "search_range_max": null,
+        "search_range_slice_num": null
+      },
+      "non_target_parameters": {
+        "relax": 0.2,
+        "error_threshold": 1e-08,
+        "t_init": 1.0
+      },
+      "results": {
+        "converged": true,
+        "optimal_parameter_value": 0.01,
+        "total_computational_cost": 964989559,
+        "cost_history": [
+          316537,
+          4878016,
+          66044592,
+          893750414
+        ],
+        "parameter_history": [
+          {
+            "dx": 0.08,
+            "relax": 0.2,
+            "error_threshold": 1e-08,
+            "t_init": 1.0
+          },
+          {
+            "dx": 0.04,
+            "relax": 0.2,
+            "error_threshold": 1e-08,
+            "t_init": 1.0
+          },
+          {
+            "dx": 0.02,
+            "relax": 0.2,
+            "error_threshold": 1e-08,
+            "t_init": 1.0
+          },
+          {
+            "dx": 0.01,
+            "relax": 0.2,
+            "error_threshold": 1e-08,
+            "t_init": 1.0
           }
         ]
       }
@@ -41514,8 +41551,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -41605,8 +41642,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -41696,8 +41733,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -41787,8 +41824,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -41878,8 +41915,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -41969,8 +42006,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.0,
-        "search_range_max": 1.0,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 6
       },
       "non_target_parameters": {
@@ -42036,8 +42073,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.0,
-        "search_range_max": 1.0,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 6
       },
       "non_target_parameters": {
@@ -42103,8 +42140,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.0,
-        "search_range_max": 1.0,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 6
       },
       "non_target_parameters": {
@@ -43097,354 +43134,6 @@
     },
     {
       "solver": "heat_steady_2d",
-      "target_parameter": "dx",
-      "profile": "p3",
-      "precision_config": {
-        "tolerance_rmse": 0.0005
-      },
-      "target_config": {
-        "initial_value": 0.08,
-        "multiplication_factor": 0.5,
-        "max_iteration_num": 5,
-        "search_range_min": null,
-        "search_range_max": null,
-        "search_range_slice_num": null
-      },
-      "non_target_parameters": {
-        "relax": 0.6,
-        "error_threshold": 1e-08,
-        "t_init": 0.5
-      },
-      "results": {
-        "converged": true,
-        "optimal_parameter_value": 0.01,
-        "total_computational_cost": 312616827,
-        "cost_history": [
-          102921,
-          1589276,
-          21471255,
-          289453375
-        ],
-        "parameter_history": [
-          {
-            "dx": 0.08,
-            "relax": 0.6,
-            "error_threshold": 1e-08,
-            "t_init": 0.5
-          },
-          {
-            "dx": 0.04,
-            "relax": 0.6,
-            "error_threshold": 1e-08,
-            "t_init": 0.5
-          },
-          {
-            "dx": 0.02,
-            "relax": 0.6,
-            "error_threshold": 1e-08,
-            "t_init": 0.5
-          },
-          {
-            "dx": 0.01,
-            "relax": 0.6,
-            "error_threshold": 1e-08,
-            "t_init": 0.5
-          }
-        ]
-      }
-    },
-    {
-      "solver": "heat_steady_2d",
-      "target_parameter": "dx",
-      "profile": "p3",
-      "precision_config": {
-        "tolerance_rmse": 0.0005
-      },
-      "target_config": {
-        "initial_value": 0.08,
-        "multiplication_factor": 0.5,
-        "max_iteration_num": 5,
-        "search_range_min": null,
-        "search_range_max": null,
-        "search_range_slice_num": null
-      },
-      "non_target_parameters": {
-        "relax": 0.6,
-        "error_threshold": 1e-08,
-        "t_init": 0.75
-      },
-      "results": {
-        "converged": true,
-        "optimal_parameter_value": 0.01,
-        "total_computational_cost": 343799061,
-        "cost_history": [
-          109850,
-          1709604,
-          23330970,
-          318648637
-        ],
-        "parameter_history": [
-          {
-            "dx": 0.08,
-            "relax": 0.6,
-            "error_threshold": 1e-08,
-            "t_init": 0.75
-          },
-          {
-            "dx": 0.04,
-            "relax": 0.6,
-            "error_threshold": 1e-08,
-            "t_init": 0.75
-          },
-          {
-            "dx": 0.02,
-            "relax": 0.6,
-            "error_threshold": 1e-08,
-            "t_init": 0.75
-          },
-          {
-            "dx": 0.01,
-            "relax": 0.6,
-            "error_threshold": 1e-08,
-            "t_init": 0.75
-          }
-        ]
-      }
-    },
-    {
-      "solver": "heat_steady_2d",
-      "target_parameter": "dx",
-      "profile": "p3",
-      "precision_config": {
-        "tolerance_rmse": 0.0005
-      },
-      "target_config": {
-        "initial_value": 0.08,
-        "multiplication_factor": 0.5,
-        "max_iteration_num": 5,
-        "search_range_min": null,
-        "search_range_max": null,
-        "search_range_slice_num": null
-      },
-      "non_target_parameters": {
-        "relax": 0.6,
-        "error_threshold": 1e-08,
-        "t_init": 1.0
-      },
-      "results": {
-        "converged": true,
-        "optimal_parameter_value": 0.01,
-        "total_computational_cost": 360427983,
-        "cost_history": [
-          113568,
-          1774500,
-          24324552,
-          334215363
-        ],
-        "parameter_history": [
-          {
-            "dx": 0.08,
-            "relax": 0.6,
-            "error_threshold": 1e-08,
-            "t_init": 1.0
-          },
-          {
-            "dx": 0.04,
-            "relax": 0.6,
-            "error_threshold": 1e-08,
-            "t_init": 1.0
-          },
-          {
-            "dx": 0.02,
-            "relax": 0.6,
-            "error_threshold": 1e-08,
-            "t_init": 1.0
-          },
-          {
-            "dx": 0.01,
-            "relax": 0.6,
-            "error_threshold": 1e-08,
-            "t_init": 1.0
-          }
-        ]
-      }
-    },
-    {
-      "solver": "heat_steady_2d",
-      "target_parameter": "dx",
-      "profile": "p3",
-      "precision_config": {
-        "tolerance_rmse": 0.0005
-      },
-      "target_config": {
-        "initial_value": 0.08,
-        "multiplication_factor": 0.5,
-        "max_iteration_num": 5,
-        "search_range_min": null,
-        "search_range_max": null,
-        "search_range_slice_num": null
-      },
-      "non_target_parameters": {
-        "relax": 1.0,
-        "error_threshold": 1e-08,
-        "t_init": 0.5
-      },
-      "results": {
-        "converged": true,
-        "optimal_parameter_value": 0.01,
-        "total_computational_cost": 198830699,
-        "cost_history": [
-          63882,
-          995748,
-          13551210,
-          184219859
-        ],
-        "parameter_history": [
-          {
-            "dx": 0.08,
-            "relax": 1.0,
-            "error_threshold": 1e-08,
-            "t_init": 0.5
-          },
-          {
-            "dx": 0.04,
-            "relax": 1.0,
-            "error_threshold": 1e-08,
-            "t_init": 0.5
-          },
-          {
-            "dx": 0.02,
-            "relax": 1.0,
-            "error_threshold": 1e-08,
-            "t_init": 0.5
-          },
-          {
-            "dx": 0.01,
-            "relax": 1.0,
-            "error_threshold": 1e-08,
-            "t_init": 0.5
-          }
-        ]
-      }
-    },
-    {
-      "solver": "heat_steady_2d",
-      "target_parameter": "dx",
-      "profile": "p3",
-      "precision_config": {
-        "tolerance_rmse": 0.0005
-      },
-      "target_config": {
-        "initial_value": 0.08,
-        "multiplication_factor": 0.5,
-        "max_iteration_num": 5,
-        "search_range_min": null,
-        "search_range_max": null,
-        "search_range_slice_num": null
-      },
-      "non_target_parameters": {
-        "relax": 1.0,
-        "error_threshold": 1e-08,
-        "t_init": 0.75
-      },
-      "results": {
-        "converged": true,
-        "optimal_parameter_value": 0.01,
-        "total_computational_cost": 217538202,
-        "cost_history": [
-          68107,
-          1068080,
-          14667039,
-          201734976
-        ],
-        "parameter_history": [
-          {
-            "dx": 0.08,
-            "relax": 1.0,
-            "error_threshold": 1e-08,
-            "t_init": 0.75
-          },
-          {
-            "dx": 0.04,
-            "relax": 1.0,
-            "error_threshold": 1e-08,
-            "t_init": 0.75
-          },
-          {
-            "dx": 0.02,
-            "relax": 1.0,
-            "error_threshold": 1e-08,
-            "t_init": 0.75
-          },
-          {
-            "dx": 0.01,
-            "relax": 1.0,
-            "error_threshold": 1e-08,
-            "t_init": 0.75
-          }
-        ]
-      }
-    },
-    {
-      "solver": "heat_steady_2d",
-      "target_parameter": "dx",
-      "profile": "p3",
-      "precision_config": {
-        "tolerance_rmse": 0.0005
-      },
-      "target_config": {
-        "initial_value": 0.08,
-        "multiplication_factor": 0.5,
-        "max_iteration_num": 5,
-        "search_range_min": null,
-        "search_range_max": null,
-        "search_range_slice_num": null
-      },
-      "non_target_parameters": {
-        "relax": 1.0,
-        "error_threshold": 1e-08,
-        "t_init": 1.0
-      },
-      "results": {
-        "converged": true,
-        "optimal_parameter_value": 0.01,
-        "total_computational_cost": 227508475,
-        "cost_history": [
-          70304,
-          1106612,
-          15262668,
-          211068891
-        ],
-        "parameter_history": [
-          {
-            "dx": 0.08,
-            "relax": 1.0,
-            "error_threshold": 1e-08,
-            "t_init": 1.0
-          },
-          {
-            "dx": 0.04,
-            "relax": 1.0,
-            "error_threshold": 1e-08,
-            "t_init": 1.0
-          },
-          {
-            "dx": 0.02,
-            "relax": 1.0,
-            "error_threshold": 1e-08,
-            "t_init": 1.0
-          },
-          {
-            "dx": 0.01,
-            "relax": 1.0,
-            "error_threshold": 1e-08,
-            "t_init": 1.0
-          }
-        ]
-      }
-    },
-    {
-      "solver": "heat_steady_2d",
       "target_parameter": "relax",
       "profile": "p3",
       "precision_config": {
@@ -43454,8 +43143,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -43545,8 +43234,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -43636,8 +43325,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -43727,8 +43416,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -43818,8 +43507,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -43909,8 +43598,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.0,
-        "search_range_max": 1.0,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 6
       },
       "non_target_parameters": {
@@ -43976,8 +43665,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.0,
-        "search_range_max": 1.0,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 6
       },
       "non_target_parameters": {
@@ -44043,8 +43732,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.0,
-        "search_range_max": 1.0,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 6
       },
       "non_target_parameters": {
@@ -44837,42 +44526,42 @@
       "non_target_parameters": {
         "relax": 0.2,
         "error_threshold": 1e-08,
-        "t_init": 0.0
+        "t_init": 0.5
       },
       "results": {
         "converged": true,
         "optimal_parameter_value": 0.01,
-        "total_computational_cost": 902000394,
+        "total_computational_cost": 740117252,
         "cost_history": [
-          302510,
-          4633304,
-          62286147,
-          834778433
+          266344,
+          4005300,
+          52623432,
+          683222176
         ],
         "parameter_history": [
           {
             "dx": 0.08,
             "relax": 0.2,
             "error_threshold": 1e-08,
-            "t_init": 0.0
+            "t_init": 0.5
           },
           {
             "dx": 0.04,
             "relax": 0.2,
             "error_threshold": 1e-08,
-            "t_init": 0.0
+            "t_init": 0.5
           },
           {
             "dx": 0.02,
             "relax": 0.2,
             "error_threshold": 1e-08,
-            "t_init": 0.0
+            "t_init": 0.5
           },
           {
             "dx": 0.01,
             "relax": 0.2,
             "error_threshold": 1e-08,
-            "t_init": 0.0
+            "t_init": 0.5
           }
         ]
       }
@@ -44895,42 +44584,100 @@
       "non_target_parameters": {
         "relax": 0.2,
         "error_threshold": 1e-08,
-        "t_init": 0.25
+        "t_init": 0.75
       },
       "results": {
         "converged": true,
         "optimal_parameter_value": 0.01,
-        "total_computational_cost": 796514852,
+        "total_computational_cost": 883561766,
         "cost_history": [
-          278850,
-          4224324,
-          55989126,
-          736022552
+          298454,
+          4561648,
+          61183323,
+          817518341
         ],
         "parameter_history": [
           {
             "dx": 0.08,
             "relax": 0.2,
             "error_threshold": 1e-08,
-            "t_init": 0.25
+            "t_init": 0.75
           },
           {
             "dx": 0.04,
             "relax": 0.2,
             "error_threshold": 1e-08,
-            "t_init": 0.25
+            "t_init": 0.75
           },
           {
             "dx": 0.02,
             "relax": 0.2,
             "error_threshold": 1e-08,
-            "t_init": 0.25
+            "t_init": 0.75
           },
           {
             "dx": 0.01,
             "relax": 0.2,
             "error_threshold": 1e-08,
-            "t_init": 0.25
+            "t_init": 0.75
+          }
+        ]
+      }
+    },
+    {
+      "solver": "heat_steady_2d",
+      "target_parameter": "dx",
+      "profile": "p4",
+      "precision_config": {
+        "tolerance_rmse": 0.0005
+      },
+      "target_config": {
+        "initial_value": 0.08,
+        "multiplication_factor": 0.5,
+        "max_iteration_num": 5,
+        "search_range_min": null,
+        "search_range_max": null,
+        "search_range_slice_num": null
+      },
+      "non_target_parameters": {
+        "relax": 0.2,
+        "error_threshold": 1e-08,
+        "t_init": 1.0
+      },
+      "results": {
+        "converged": true,
+        "optimal_parameter_value": 0.01,
+        "total_computational_cost": 943905212,
+        "cost_history": [
+          311805,
+          4796220,
+          64785708,
+          874011479
+        ],
+        "parameter_history": [
+          {
+            "dx": 0.08,
+            "relax": 0.2,
+            "error_threshold": 1e-08,
+            "t_init": 1.0
+          },
+          {
+            "dx": 0.04,
+            "relax": 0.2,
+            "error_threshold": 1e-08,
+            "t_init": 1.0
+          },
+          {
+            "dx": 0.02,
+            "relax": 0.2,
+            "error_threshold": 1e-08,
+            "t_init": 1.0
+          },
+          {
+            "dx": 0.01,
+            "relax": 0.2,
+            "error_threshold": 1e-08,
+            "t_init": 1.0
           }
         ]
       }
@@ -45526,8 +45273,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -45617,8 +45364,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -45708,8 +45455,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -45799,8 +45546,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -45890,8 +45637,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -45981,8 +45728,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.0,
-        "search_range_max": 1.0,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 6
       },
       "non_target_parameters": {
@@ -46048,8 +45795,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.0,
-        "search_range_max": 1.0,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 6
       },
       "non_target_parameters": {
@@ -46115,8 +45862,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.0,
-        "search_range_max": 1.0,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 6
       },
       "non_target_parameters": {
@@ -47053,42 +46800,42 @@
       "non_target_parameters": {
         "relax": 0.6,
         "error_threshold": 1e-08,
-        "t_init": 0.5
+        "t_init": 0.0
       },
       "results": {
         "converged": true,
         "optimal_parameter_value": 0.01,
-        "total_computational_cost": 320090242,
+        "total_computational_cost": 326071264,
         "cost_history": [
-          104611,
-          1618344,
-          21916026,
-          296451261
+          105963,
+          1641328,
+          22272363,
+          302051610
         ],
         "parameter_history": [
           {
             "dx": 0.08,
             "relax": 0.6,
             "error_threshold": 1e-08,
-            "t_init": 0.5
+            "t_init": 0.0
           },
           {
             "dx": 0.04,
             "relax": 0.6,
             "error_threshold": 1e-08,
-            "t_init": 0.5
+            "t_init": 0.0
           },
           {
             "dx": 0.02,
             "relax": 0.6,
             "error_threshold": 1e-08,
-            "t_init": 0.5
+            "t_init": 0.0
           },
           {
             "dx": 0.01,
             "relax": 0.6,
             "error_threshold": 1e-08,
-            "t_init": 0.5
+            "t_init": 0.0
           }
         ]
       }
@@ -47111,100 +46858,42 @@
       "non_target_parameters": {
         "relax": 0.6,
         "error_threshold": 1e-08,
-        "t_init": 0.75
+        "t_init": 0.25
       },
       "results": {
         "converged": true,
         "optimal_parameter_value": 0.01,
-        "total_computational_cost": 347188815,
+        "total_computational_cost": 230723029,
         "cost_history": [
-          110695,
-          1723124,
-          23533848,
-          321821148
+          84838,
+          1271556,
+          16583976,
+          212782659
         ],
         "parameter_history": [
           {
             "dx": 0.08,
             "relax": 0.6,
             "error_threshold": 1e-08,
-            "t_init": 0.75
+            "t_init": 0.25
           },
           {
             "dx": 0.04,
             "relax": 0.6,
             "error_threshold": 1e-08,
-            "t_init": 0.75
+            "t_init": 0.25
           },
           {
             "dx": 0.02,
             "relax": 0.6,
             "error_threshold": 1e-08,
-            "t_init": 0.75
+            "t_init": 0.25
           },
           {
             "dx": 0.01,
             "relax": 0.6,
             "error_threshold": 1e-08,
-            "t_init": 0.75
-          }
-        ]
-      }
-    },
-    {
-      "solver": "heat_steady_2d",
-      "target_parameter": "dx",
-      "profile": "p5",
-      "precision_config": {
-        "tolerance_rmse": 0.0005
-      },
-      "target_config": {
-        "initial_value": 0.08,
-        "multiplication_factor": 0.5,
-        "max_iteration_num": 5,
-        "search_range_min": null,
-        "search_range_max": null,
-        "search_range_slice_num": null
-      },
-      "non_target_parameters": {
-        "relax": 0.6,
-        "error_threshold": 1e-08,
-        "t_init": 1.0
-      },
-      "results": {
-        "converged": true,
-        "optimal_parameter_value": 0.01,
-        "total_computational_cost": 362617053,
-        "cost_history": [
-          114075,
-          1782612,
-          24454602,
-          336265764
-        ],
-        "parameter_history": [
-          {
-            "dx": 0.08,
-            "relax": 0.6,
-            "error_threshold": 1e-08,
-            "t_init": 1.0
-          },
-          {
-            "dx": 0.04,
-            "relax": 0.6,
-            "error_threshold": 1e-08,
-            "t_init": 1.0
-          },
-          {
-            "dx": 0.02,
-            "relax": 0.6,
-            "error_threshold": 1e-08,
-            "t_init": 1.0
-          },
-          {
-            "dx": 0.01,
-            "relax": 0.6,
-            "error_threshold": 1e-08,
-            "t_init": 1.0
+            "t_init": 0.25
           }
         ]
       }
@@ -47327,180 +47016,6 @@
     },
     {
       "solver": "heat_steady_2d",
-      "target_parameter": "dx",
-      "profile": "p5",
-      "precision_config": {
-        "tolerance_rmse": 0.0005
-      },
-      "target_config": {
-        "initial_value": 0.08,
-        "multiplication_factor": 0.5,
-        "max_iteration_num": 5,
-        "search_range_min": null,
-        "search_range_max": null,
-        "search_range_slice_num": null
-      },
-      "non_target_parameters": {
-        "relax": 1.0,
-        "error_threshold": 1e-08,
-        "t_init": 0.5
-      },
-      "results": {
-        "converged": true,
-        "optimal_parameter_value": 0.01,
-        "total_computational_cost": 203320004,
-        "cost_history": [
-          64896,
-          1013324,
-          13819113,
-          188422671
-        ],
-        "parameter_history": [
-          {
-            "dx": 0.08,
-            "relax": 1.0,
-            "error_threshold": 1e-08,
-            "t_init": 0.5
-          },
-          {
-            "dx": 0.04,
-            "relax": 1.0,
-            "error_threshold": 1e-08,
-            "t_init": 0.5
-          },
-          {
-            "dx": 0.02,
-            "relax": 1.0,
-            "error_threshold": 1e-08,
-            "t_init": 0.5
-          },
-          {
-            "dx": 0.01,
-            "relax": 1.0,
-            "error_threshold": 1e-08,
-            "t_init": 0.5
-          }
-        ]
-      }
-    },
-    {
-      "solver": "heat_steady_2d",
-      "target_parameter": "dx",
-      "profile": "p5",
-      "precision_config": {
-        "tolerance_rmse": 0.0005
-      },
-      "target_config": {
-        "initial_value": 0.08,
-        "multiplication_factor": 0.5,
-        "max_iteration_num": 5,
-        "search_range_min": null,
-        "search_range_max": null,
-        "search_range_slice_num": null
-      },
-      "non_target_parameters": {
-        "relax": 1.0,
-        "error_threshold": 1e-08,
-        "t_init": 0.75
-      },
-      "results": {
-        "converged": true,
-        "optimal_parameter_value": 0.01,
-        "total_computational_cost": 219566285,
-        "cost_history": [
-          68445,
-          1076192,
-          14789286,
-          203632362
-        ],
-        "parameter_history": [
-          {
-            "dx": 0.08,
-            "relax": 1.0,
-            "error_threshold": 1e-08,
-            "t_init": 0.75
-          },
-          {
-            "dx": 0.04,
-            "relax": 1.0,
-            "error_threshold": 1e-08,
-            "t_init": 0.75
-          },
-          {
-            "dx": 0.02,
-            "relax": 1.0,
-            "error_threshold": 1e-08,
-            "t_init": 0.75
-          },
-          {
-            "dx": 0.01,
-            "relax": 1.0,
-            "error_threshold": 1e-08,
-            "t_init": 0.75
-          }
-        ]
-      }
-    },
-    {
-      "solver": "heat_steady_2d",
-      "target_parameter": "dx",
-      "profile": "p5",
-      "precision_config": {
-        "tolerance_rmse": 0.0005
-      },
-      "target_config": {
-        "initial_value": 0.08,
-        "multiplication_factor": 0.5,
-        "max_iteration_num": 5,
-        "search_range_min": null,
-        "search_range_max": null,
-        "search_range_slice_num": null
-      },
-      "non_target_parameters": {
-        "relax": 1.0,
-        "error_threshold": 1e-08,
-        "t_init": 1.0
-      },
-      "results": {
-        "converged": true,
-        "optimal_parameter_value": 0.01,
-        "total_computational_cost": 228826572,
-        "cost_history": [
-          70642,
-          1112020,
-          15340698,
-          212303212
-        ],
-        "parameter_history": [
-          {
-            "dx": 0.08,
-            "relax": 1.0,
-            "error_threshold": 1e-08,
-            "t_init": 1.0
-          },
-          {
-            "dx": 0.04,
-            "relax": 1.0,
-            "error_threshold": 1e-08,
-            "t_init": 1.0
-          },
-          {
-            "dx": 0.02,
-            "relax": 1.0,
-            "error_threshold": 1e-08,
-            "t_init": 1.0
-          },
-          {
-            "dx": 0.01,
-            "relax": 1.0,
-            "error_threshold": 1e-08,
-            "t_init": 1.0
-          }
-        ]
-      }
-    },
-    {
-      "solver": "heat_steady_2d",
       "target_parameter": "relax",
       "profile": "p5",
       "precision_config": {
@@ -47510,8 +47025,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -47601,8 +47116,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -47692,8 +47207,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -47783,8 +47298,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -47874,8 +47389,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -47965,8 +47480,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.0,
-        "search_range_max": 1.0,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 6
       },
       "non_target_parameters": {
@@ -48032,8 +47547,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.0,
-        "search_range_max": 1.0,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 6
       },
       "non_target_parameters": {
@@ -48099,8 +47614,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.0,
-        "search_range_max": 1.0,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 6
       },
       "non_target_parameters": {
@@ -49106,8 +48621,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -49197,8 +48712,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -49288,8 +48803,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -49379,8 +48894,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -49470,8 +48985,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -49561,8 +49076,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.0,
-        "search_range_max": 1.0,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 6
       },
       "non_target_parameters": {
@@ -49628,8 +49143,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.0,
-        "search_range_max": 1.0,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 6
       },
       "non_target_parameters": {
@@ -49695,8 +49210,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.0,
-        "search_range_max": 1.0,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 6
       },
       "non_target_parameters": {
@@ -50473,354 +49988,6 @@
     },
     {
       "solver": "heat_steady_2d",
-      "target_parameter": "dx",
-      "profile": "p7",
-      "precision_config": {
-        "tolerance_rmse": 0.0005
-      },
-      "target_config": {
-        "initial_value": 0.08,
-        "multiplication_factor": 0.5,
-        "max_iteration_num": 5,
-        "search_range_min": null,
-        "search_range_max": null,
-        "search_range_slice_num": null
-      },
-      "non_target_parameters": {
-        "relax": 0.6,
-        "error_threshold": 1e-08,
-        "t_init": 0.5
-      },
-      "results": {
-        "converged": true,
-        "optimal_parameter_value": 0.01,
-        "total_computational_cost": 282292764,
-        "cost_history": [
-          96161,
-          1471652,
-          19660959,
-          261063992
-        ],
-        "parameter_history": [
-          {
-            "dx": 0.08,
-            "relax": 0.6,
-            "error_threshold": 1e-08,
-            "t_init": 0.5
-          },
-          {
-            "dx": 0.04,
-            "relax": 0.6,
-            "error_threshold": 1e-08,
-            "t_init": 0.5
-          },
-          {
-            "dx": 0.02,
-            "relax": 0.6,
-            "error_threshold": 1e-08,
-            "t_init": 0.5
-          },
-          {
-            "dx": 0.01,
-            "relax": 0.6,
-            "error_threshold": 1e-08,
-            "t_init": 0.5
-          }
-        ]
-      }
-    },
-    {
-      "solver": "heat_steady_2d",
-      "target_parameter": "dx",
-      "profile": "p7",
-      "precision_config": {
-        "tolerance_rmse": 0.0005
-      },
-      "target_config": {
-        "initial_value": 0.08,
-        "multiplication_factor": 0.5,
-        "max_iteration_num": 5,
-        "search_range_min": null,
-        "search_range_max": null,
-        "search_range_slice_num": null
-      },
-      "non_target_parameters": {
-        "relax": 0.6,
-        "error_threshold": 1e-08,
-        "t_init": 0.75
-      },
-      "results": {
-        "converged": true,
-        "optimal_parameter_value": 0.01,
-        "total_computational_cost": 333667294,
-        "cost_history": [
-          107653,
-          1670396,
-          22727538,
-          309161707
-        ],
-        "parameter_history": [
-          {
-            "dx": 0.08,
-            "relax": 0.6,
-            "error_threshold": 1e-08,
-            "t_init": 0.75
-          },
-          {
-            "dx": 0.04,
-            "relax": 0.6,
-            "error_threshold": 1e-08,
-            "t_init": 0.75
-          },
-          {
-            "dx": 0.02,
-            "relax": 0.6,
-            "error_threshold": 1e-08,
-            "t_init": 0.75
-          },
-          {
-            "dx": 0.01,
-            "relax": 0.6,
-            "error_threshold": 1e-08,
-            "t_init": 0.75
-          }
-        ]
-      }
-    },
-    {
-      "solver": "heat_steady_2d",
-      "target_parameter": "dx",
-      "profile": "p7",
-      "precision_config": {
-        "tolerance_rmse": 0.0005
-      },
-      "target_config": {
-        "initial_value": 0.08,
-        "multiplication_factor": 0.5,
-        "max_iteration_num": 5,
-        "search_range_min": null,
-        "search_range_max": null,
-        "search_range_slice_num": null
-      },
-      "non_target_parameters": {
-        "relax": 0.6,
-        "error_threshold": 1e-08,
-        "t_init": 1.0
-      },
-      "results": {
-        "converged": true,
-        "optimal_parameter_value": 0.01,
-        "total_computational_cost": 354313469,
-        "cost_history": [
-          112216,
-          1750840,
-          23957811,
-          328492602
-        ],
-        "parameter_history": [
-          {
-            "dx": 0.08,
-            "relax": 0.6,
-            "error_threshold": 1e-08,
-            "t_init": 1.0
-          },
-          {
-            "dx": 0.04,
-            "relax": 0.6,
-            "error_threshold": 1e-08,
-            "t_init": 1.0
-          },
-          {
-            "dx": 0.02,
-            "relax": 0.6,
-            "error_threshold": 1e-08,
-            "t_init": 1.0
-          },
-          {
-            "dx": 0.01,
-            "relax": 0.6,
-            "error_threshold": 1e-08,
-            "t_init": 1.0
-          }
-        ]
-      }
-    },
-    {
-      "solver": "heat_steady_2d",
-      "target_parameter": "dx",
-      "profile": "p7",
-      "precision_config": {
-        "tolerance_rmse": 0.0005
-      },
-      "target_config": {
-        "initial_value": 0.08,
-        "multiplication_factor": 0.5,
-        "max_iteration_num": 5,
-        "search_range_min": null,
-        "search_range_max": null,
-        "search_range_slice_num": null
-      },
-      "non_target_parameters": {
-        "relax": 1.0,
-        "error_threshold": 1e-08,
-        "t_init": 0.5
-      },
-      "results": {
-        "converged": true,
-        "optimal_parameter_value": 0.01,
-        "total_computational_cost": 180636221,
-        "cost_history": [
-          59995,
-          925444,
-          12466593,
-          167184189
-        ],
-        "parameter_history": [
-          {
-            "dx": 0.08,
-            "relax": 1.0,
-            "error_threshold": 1e-08,
-            "t_init": 0.5
-          },
-          {
-            "dx": 0.04,
-            "relax": 1.0,
-            "error_threshold": 1e-08,
-            "t_init": 0.5
-          },
-          {
-            "dx": 0.02,
-            "relax": 1.0,
-            "error_threshold": 1e-08,
-            "t_init": 0.5
-          },
-          {
-            "dx": 0.01,
-            "relax": 1.0,
-            "error_threshold": 1e-08,
-            "t_init": 0.5
-          }
-        ]
-      }
-    },
-    {
-      "solver": "heat_steady_2d",
-      "target_parameter": "dx",
-      "profile": "p7",
-      "precision_config": {
-        "tolerance_rmse": 0.0005
-      },
-      "target_config": {
-        "initial_value": 0.08,
-        "multiplication_factor": 0.5,
-        "max_iteration_num": 5,
-        "search_range_min": null,
-        "search_range_max": null,
-        "search_range_slice_num": null
-      },
-      "non_target_parameters": {
-        "relax": 1.0,
-        "error_threshold": 1e-08,
-        "t_init": 0.75
-      },
-      "results": {
-        "converged": true,
-        "optimal_parameter_value": 0.01,
-        "total_computational_cost": 211460169,
-        "cost_history": [
-          66755,
-          1045096,
-          14305500,
-          196042818
-        ],
-        "parameter_history": [
-          {
-            "dx": 0.08,
-            "relax": 1.0,
-            "error_threshold": 1e-08,
-            "t_init": 0.75
-          },
-          {
-            "dx": 0.04,
-            "relax": 1.0,
-            "error_threshold": 1e-08,
-            "t_init": 0.75
-          },
-          {
-            "dx": 0.02,
-            "relax": 1.0,
-            "error_threshold": 1e-08,
-            "t_init": 0.75
-          },
-          {
-            "dx": 0.01,
-            "relax": 1.0,
-            "error_threshold": 1e-08,
-            "t_init": 0.75
-          }
-        ]
-      }
-    },
-    {
-      "solver": "heat_steady_2d",
-      "target_parameter": "dx",
-      "profile": "p7",
-      "precision_config": {
-        "tolerance_rmse": 0.0005
-      },
-      "target_config": {
-        "initial_value": 0.08,
-        "multiplication_factor": 0.5,
-        "max_iteration_num": 5,
-        "search_range_min": null,
-        "search_range_max": null,
-        "search_range_slice_num": null
-      },
-      "non_target_parameters": {
-        "relax": 1.0,
-        "error_threshold": 1e-08,
-        "t_init": 1.0
-      },
-      "results": {
-        "converged": true,
-        "optimal_parameter_value": 0.01,
-        "total_computational_cost": 223847414,
-        "cost_history": [
-          69459,
-          1092416,
-          15044184,
-          207641355
-        ],
-        "parameter_history": [
-          {
-            "dx": 0.08,
-            "relax": 1.0,
-            "error_threshold": 1e-08,
-            "t_init": 1.0
-          },
-          {
-            "dx": 0.04,
-            "relax": 1.0,
-            "error_threshold": 1e-08,
-            "t_init": 1.0
-          },
-          {
-            "dx": 0.02,
-            "relax": 1.0,
-            "error_threshold": 1e-08,
-            "t_init": 1.0
-          },
-          {
-            "dx": 0.01,
-            "relax": 1.0,
-            "error_threshold": 1e-08,
-            "t_init": 1.0
-          }
-        ]
-      }
-    },
-    {
-      "solver": "heat_steady_2d",
       "target_parameter": "relax",
       "profile": "p7",
       "precision_config": {
@@ -50830,8 +49997,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -50921,8 +50088,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -51012,8 +50179,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -51103,8 +50270,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -51194,8 +50361,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -51285,8 +50452,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.0,
-        "search_range_max": 1.0,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 6
       },
       "non_target_parameters": {
@@ -51352,8 +50519,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.0,
-        "search_range_max": 1.0,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 6
       },
       "non_target_parameters": {
@@ -51419,8 +50586,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.0,
-        "search_range_max": 1.0,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 6
       },
       "non_target_parameters": {
@@ -52426,8 +51593,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -52517,8 +51684,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -52608,8 +51775,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -52699,8 +51866,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -52790,8 +51957,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.1,
-        "search_range_max": 1.9,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 10
       },
       "non_target_parameters": {
@@ -52881,8 +52048,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.0,
-        "search_range_max": 1.0,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 6
       },
       "non_target_parameters": {
@@ -52948,8 +52115,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.0,
-        "search_range_max": 1.0,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 6
       },
       "non_target_parameters": {
@@ -53015,8 +52182,8 @@
         "initial_value": null,
         "multiplication_factor": null,
         "max_iteration_num": null,
-        "search_range_min": 0.0,
-        "search_range_max": 1.0,
+        "search_range_min": null,
+        "search_range_max": null,
         "search_range_slice_num": 6
       },
       "non_target_parameters": {
