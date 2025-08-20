@@ -341,14 +341,15 @@ def main():
                             statistics["optimal_error_threshold_values"].append(best_param)
 
                     elif target_param == "relax":
+                        # print(target_config)
                         is_converged, best_param, cost_history, param_history = find_optimal_relax(
                             profile=profile,
                             dx=task_params["dx"],
                             error_threshold=task_params["error_threshold"],
                             t_init=task_params["t_init"],
                             tolerance_rmse=precision_vals["tolerance_rmse"],
-                            search_range_min=target_config["search_range_min"],
-                            search_range_max=target_config["search_range_max"],
+                            search_range_min=target_config["search_range"][0],
+                            search_range_max=target_config["search_range"][1],
                             search_range_slice_num=target_config["search_range_slice_num"],
                         )
                         if is_converged and best_param is not None:
@@ -361,8 +362,8 @@ def main():
                             relax=task_params["relax"],
                             error_threshold=task_params["error_threshold"],
                             tolerance_rmse=precision_vals["tolerance_rmse"],
-                            search_range_min=target_config["search_range_min"],
-                            search_range_max=target_config["search_range_max"],
+                            search_range_min=target_config["search_range"][0],
+                            search_range_max=target_config["search_range"][1],
                             search_range_slice_num=target_config["search_range_slice_num"],
                         )
                         if is_converged and best_param is not None:

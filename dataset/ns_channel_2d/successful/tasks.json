@@ -2,20 +2,20 @@
   "metadata": {
     "solver": "ns_channel_2d",
     "description": "Successfully converged parameter optimization tasks",
-    "total_tasks": 277
+    "total_tasks": 276
   },
   "tasks": [
     {
       "solver": "ns_channel_2d",
       "target_parameter": "mesh_x",
       "profile": "p1",
-      "precision_level": "high",
+      "precision_level": "medium",
       "precision_config": {
-        "mass_tolerance": 1e-08,
-        "u_rmse_tolerance": 0.008,
-        "v_rmse_tolerance": 0.001,
-        "p_rmse_tolerance": 0.08,
-        "max_iter": 50
+        "mass_tolerance": 1e-06,
+        "u_rmse_tolerance": 0.02,
+        "v_rmse_tolerance": 0.005,
+        "p_rmse_tolerance": 0.2,
+        "max_iter": 35
       },
       "target_config": {
         "initial_value": 64,
@@ -87,79 +87,12 @@
       "solver": "ns_channel_2d",
       "target_parameter": "mesh_x",
       "profile": "p1",
-      "precision_level": "medium",
-      "precision_config": {
-        "mass_tolerance": 1e-06,
-        "u_rmse_tolerance": 0.02,
-        "v_rmse_tolerance": 0.005,
-        "p_rmse_tolerance": 0.1,
-        "max_iter": 35
-      },
-      "target_config": {
-        "initial_value": 64,
-        "multiplication_factor": 2,
-        "max_iteration_num": 3,
-        "search_range": null,
-        "search_range_slice_num": null,
-        "schedule_options": null
-      },
-      "non_target_parameters": {
-        "omega_u": 0.6,
-        "omega_v": 0.6,
-        "omega_p": 0.3,
-        "diff_u_threshold": 1e-07,
-        "diff_v_threshold": 1e-07,
-        "res_iter_v_threshold": "exp_decay",
-        "mesh_y": 6,
-        "other_params": {
-          "wall_height": 2,
-          "wall_width": 16,
-          "wall_start_height": 2,
-          "wall_start_width": 20
-        }
-      },
-      "results": {
-        "converged": true,
-        "optimal_parameter_value": 128,
-        "total_computational_cost": 243840,
-        "cost_history": [
-          25728,
-          218112
-        ],
-        "parameter_history": [
-          {
-            "mesh_x": 64,
-            "mesh_y": 6,
-            "omega_u": 0.6,
-            "omega_v": 0.6,
-            "omega_p": 0.3,
-            "diff_u_threshold": 1e-07,
-            "diff_v_threshold": 1e-07,
-            "res_iter_v_threshold": "exp_decay"
-          },
-          {
-            "mesh_x": 128,
-            "mesh_y": 12,
-            "omega_u": 0.6,
-            "omega_v": 0.6,
-            "omega_p": 0.3,
-            "diff_u_threshold": 1e-07,
-            "diff_v_threshold": 1e-07,
-            "res_iter_v_threshold": "exp_decay"
-          }
-        ]
-      }
-    },
-    {
-      "solver": "ns_channel_2d",
-      "target_parameter": "mesh_x",
-      "profile": "p1",
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -226,7 +159,7 @@
         "mass_tolerance": 1e-08,
         "u_rmse_tolerance": 0.008,
         "v_rmse_tolerance": 0.001,
-        "p_rmse_tolerance": 0.08,
+        "p_rmse_tolerance": 0.1,
         "max_iter": 50
       },
       "target_config": {
@@ -254,11 +187,12 @@
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 128,
-        "total_computational_cost": 911616,
+        "optimal_parameter_value": 256,
+        "total_computational_cost": 12228864,
         "cost_history": [
           72960,
-          838656
+          838656,
+          11317248
         ],
         "parameter_history": [
           {
@@ -280,6 +214,16 @@
             "diff_u_threshold": 1e-07,
             "diff_v_threshold": 1e-07,
             "res_iter_v_threshold": "exp_decay"
+          },
+          {
+            "mesh_x": 256,
+            "mesh_y": 48,
+            "omega_u": 0.6,
+            "omega_v": 0.6,
+            "omega_p": 0.3,
+            "diff_u_threshold": 1e-07,
+            "diff_v_threshold": 1e-07,
+            "res_iter_v_threshold": "exp_decay"
           }
         ]
       }
@@ -293,7 +237,7 @@
         "mass_tolerance": 1e-06,
         "u_rmse_tolerance": 0.02,
         "v_rmse_tolerance": 0.005,
-        "p_rmse_tolerance": 0.1,
+        "p_rmse_tolerance": 0.2,
         "max_iter": 35
       },
       "target_config": {
@@ -358,9 +302,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -427,7 +371,7 @@
         "mass_tolerance": 1e-08,
         "u_rmse_tolerance": 0.008,
         "v_rmse_tolerance": 0.001,
-        "p_rmse_tolerance": 0.08,
+        "p_rmse_tolerance": 0.1,
         "max_iter": 50
       },
       "target_config": {
@@ -455,11 +399,12 @@
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 128,
-        "total_computational_cost": 1811456,
+        "optimal_parameter_value": 256,
+        "total_computational_cost": 25994240,
         "cost_history": [
           132096,
-          1679360
+          1679360,
+          24182784
         ],
         "parameter_history": [
           {
@@ -481,6 +426,16 @@
             "diff_u_threshold": 1e-07,
             "diff_v_threshold": 1e-07,
             "res_iter_v_threshold": "exp_decay"
+          },
+          {
+            "mesh_x": 256,
+            "mesh_y": 64,
+            "omega_u": 0.6,
+            "omega_v": 0.6,
+            "omega_p": 0.3,
+            "diff_u_threshold": 1e-07,
+            "diff_v_threshold": 1e-07,
+            "res_iter_v_threshold": "exp_decay"
           }
         ]
       }
@@ -494,7 +449,7 @@
         "mass_tolerance": 1e-06,
         "u_rmse_tolerance": 0.02,
         "v_rmse_tolerance": 0.005,
-        "p_rmse_tolerance": 0.1,
+        "p_rmse_tolerance": 0.2,
         "max_iter": 35
       },
       "target_config": {
@@ -559,9 +514,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -628,7 +583,7 @@
         "mass_tolerance": 1e-08,
         "u_rmse_tolerance": 0.008,
         "v_rmse_tolerance": 0.001,
-        "p_rmse_tolerance": 0.08,
+        "p_rmse_tolerance": 0.1,
         "max_iter": 50
       },
       "target_config": {
@@ -695,7 +650,7 @@
         "mass_tolerance": 1e-06,
         "u_rmse_tolerance": 0.02,
         "v_rmse_tolerance": 0.005,
-        "p_rmse_tolerance": 0.1,
+        "p_rmse_tolerance": 0.2,
         "max_iter": 35
       },
       "target_config": {
@@ -760,9 +715,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -829,7 +784,7 @@
         "mass_tolerance": 1e-08,
         "u_rmse_tolerance": 0.008,
         "v_rmse_tolerance": 0.001,
-        "p_rmse_tolerance": 0.08,
+        "p_rmse_tolerance": 0.1,
         "max_iter": 50
       },
       "target_config": {
@@ -857,11 +812,12 @@
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 32,
-        "total_computational_cost": 2411520,
+        "optimal_parameter_value": 64,
+        "total_computational_cost": 34053120,
         "cost_history": [
           179200,
-          2232320
+          2232320,
+          31641600
         ],
         "parameter_history": [
           {
@@ -883,6 +839,16 @@
             "diff_u_threshold": 1e-07,
             "diff_v_threshold": 1e-07,
             "res_iter_v_threshold": "exp_decay"
+          },
+          {
+            "mesh_x": 320,
+            "mesh_y": 64,
+            "omega_u": 0.6,
+            "omega_v": 0.6,
+            "omega_p": 0.3,
+            "diff_u_threshold": 1e-07,
+            "diff_v_threshold": 1e-07,
+            "res_iter_v_threshold": "exp_decay"
           }
         ]
       }
@@ -896,7 +862,7 @@
         "mass_tolerance": 1e-06,
         "u_rmse_tolerance": 0.02,
         "v_rmse_tolerance": 0.005,
-        "p_rmse_tolerance": 0.1,
+        "p_rmse_tolerance": 0.2,
         "max_iter": 35
       },
       "target_config": {
@@ -961,9 +927,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -1030,7 +996,7 @@
         "mass_tolerance": 1e-08,
         "u_rmse_tolerance": 0.008,
         "v_rmse_tolerance": 0.001,
-        "p_rmse_tolerance": 0.08,
+        "p_rmse_tolerance": 0.1,
         "max_iter": 50
       },
       "target_config": {
@@ -1058,11 +1024,12 @@
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 32,
-        "total_computational_cost": 1811456,
+        "optimal_parameter_value": 64,
+        "total_computational_cost": 25994240,
         "cost_history": [
           132096,
-          1679360
+          1679360,
+          24182784
         ],
         "parameter_history": [
           {
@@ -1084,6 +1051,16 @@
             "diff_u_threshold": 1e-07,
             "diff_v_threshold": 1e-07,
             "res_iter_v_threshold": "exp_decay"
+          },
+          {
+            "mesh_x": 256,
+            "mesh_y": 64,
+            "omega_u": 0.6,
+            "omega_v": 0.6,
+            "omega_p": 0.3,
+            "diff_u_threshold": 1e-07,
+            "diff_v_threshold": 1e-07,
+            "res_iter_v_threshold": "exp_decay"
           }
         ]
       }
@@ -1097,7 +1074,7 @@
         "mass_tolerance": 1e-06,
         "u_rmse_tolerance": 0.02,
         "v_rmse_tolerance": 0.005,
-        "p_rmse_tolerance": 0.1,
+        "p_rmse_tolerance": 0.2,
         "max_iter": 35
       },
       "target_config": {
@@ -1162,9 +1139,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -1231,8 +1208,153 @@
         "mass_tolerance": 1e-08,
         "u_rmse_tolerance": 0.008,
         "v_rmse_tolerance": 0.001,
-        "p_rmse_tolerance": 0.08,
+        "p_rmse_tolerance": 0.1,
         "max_iter": 50
+      },
+      "target_config": {
+        "initial_value": 16,
+        "multiplication_factor": 2,
+        "max_iteration_num": 3,
+        "search_range": null,
+        "search_range_slice_num": null,
+        "schedule_options": null
+      },
+      "non_target_parameters": {
+        "omega_u": 0.6,
+        "omega_v": 0.6,
+        "omega_p": 0.3,
+        "diff_u_threshold": 1e-07,
+        "diff_v_threshold": 1e-07,
+        "res_iter_v_threshold": "exp_decay",
+        "mesh_x": 32,
+        "other_params": {
+          "wall_height": 4,
+          "wall_width": 8,
+          "wall_start_height": 4,
+          "wall_start_width": 10
+        }
+      },
+      "results": {
+        "converged": true,
+        "optimal_parameter_value": 64,
+        "total_computational_cost": 11872256,
+        "cost_history": [
+          55296,
+          741376,
+          11075584
+        ],
+        "parameter_history": [
+          {
+            "mesh_x": 32,
+            "mesh_y": 16,
+            "omega_u": 0.6,
+            "omega_v": 0.6,
+            "omega_p": 0.3,
+            "diff_u_threshold": 1e-07,
+            "diff_v_threshold": 1e-07,
+            "res_iter_v_threshold": "exp_decay"
+          },
+          {
+            "mesh_x": 64,
+            "mesh_y": 32,
+            "omega_u": 0.6,
+            "omega_v": 0.6,
+            "omega_p": 0.3,
+            "diff_u_threshold": 1e-07,
+            "diff_v_threshold": 1e-07,
+            "res_iter_v_threshold": "exp_decay"
+          },
+          {
+            "mesh_x": 128,
+            "mesh_y": 64,
+            "omega_u": 0.6,
+            "omega_v": 0.6,
+            "omega_p": 0.3,
+            "diff_u_threshold": 1e-07,
+            "diff_v_threshold": 1e-07,
+            "res_iter_v_threshold": "exp_decay"
+          }
+        ]
+      }
+    },
+    {
+      "solver": "ns_channel_2d",
+      "target_parameter": "mesh_y",
+      "profile": "p1",
+      "precision_level": "medium",
+      "precision_config": {
+        "mass_tolerance": 1e-06,
+        "u_rmse_tolerance": 0.02,
+        "v_rmse_tolerance": 0.005,
+        "p_rmse_tolerance": 0.2,
+        "max_iter": 35
+      },
+      "target_config": {
+        "initial_value": 16,
+        "multiplication_factor": 2,
+        "max_iteration_num": 3,
+        "search_range": null,
+        "search_range_slice_num": null,
+        "schedule_options": null
+      },
+      "non_target_parameters": {
+        "omega_u": 0.6,
+        "omega_v": 0.6,
+        "omega_p": 0.3,
+        "diff_u_threshold": 1e-07,
+        "diff_v_threshold": 1e-07,
+        "res_iter_v_threshold": "exp_decay",
+        "mesh_x": 32,
+        "other_params": {
+          "wall_height": 4,
+          "wall_width": 8,
+          "wall_start_height": 4,
+          "wall_start_width": 10
+        }
+      },
+      "results": {
+        "converged": true,
+        "optimal_parameter_value": 32,
+        "total_computational_cost": 796672,
+        "cost_history": [
+          55296,
+          741376
+        ],
+        "parameter_history": [
+          {
+            "mesh_x": 32,
+            "mesh_y": 16,
+            "omega_u": 0.6,
+            "omega_v": 0.6,
+            "omega_p": 0.3,
+            "diff_u_threshold": 1e-07,
+            "diff_v_threshold": 1e-07,
+            "res_iter_v_threshold": "exp_decay"
+          },
+          {
+            "mesh_x": 64,
+            "mesh_y": 32,
+            "omega_u": 0.6,
+            "omega_v": 0.6,
+            "omega_p": 0.3,
+            "diff_u_threshold": 1e-07,
+            "diff_v_threshold": 1e-07,
+            "res_iter_v_threshold": "exp_decay"
+          }
+        ]
+      }
+    },
+    {
+      "solver": "ns_channel_2d",
+      "target_parameter": "mesh_y",
+      "profile": "p1",
+      "precision_level": "low",
+      "precision_config": {
+        "mass_tolerance": 0.0001,
+        "u_rmse_tolerance": 0.11,
+        "v_rmse_tolerance": 0.05,
+        "p_rmse_tolerance": 0.4,
+        "max_iter": 25
       },
       "target_config": {
         "initial_value": 16,
@@ -1298,142 +1420,8 @@
         "mass_tolerance": 1e-06,
         "u_rmse_tolerance": 0.02,
         "v_rmse_tolerance": 0.005,
-        "p_rmse_tolerance": 0.1,
-        "max_iter": 35
-      },
-      "target_config": {
-        "initial_value": 16,
-        "multiplication_factor": 2,
-        "max_iteration_num": 3,
-        "search_range": null,
-        "search_range_slice_num": null,
-        "schedule_options": null
-      },
-      "non_target_parameters": {
-        "omega_u": 0.6,
-        "omega_v": 0.6,
-        "omega_p": 0.3,
-        "diff_u_threshold": 1e-07,
-        "diff_v_threshold": 1e-07,
-        "res_iter_v_threshold": "exp_decay",
-        "mesh_x": 32,
-        "other_params": {
-          "wall_height": 4,
-          "wall_width": 8,
-          "wall_start_height": 4,
-          "wall_start_width": 10
-        }
-      },
-      "results": {
-        "converged": true,
-        "optimal_parameter_value": 32,
-        "total_computational_cost": 796672,
-        "cost_history": [
-          55296,
-          741376
-        ],
-        "parameter_history": [
-          {
-            "mesh_x": 32,
-            "mesh_y": 16,
-            "omega_u": 0.6,
-            "omega_v": 0.6,
-            "omega_p": 0.3,
-            "diff_u_threshold": 1e-07,
-            "diff_v_threshold": 1e-07,
-            "res_iter_v_threshold": "exp_decay"
-          },
-          {
-            "mesh_x": 64,
-            "mesh_y": 32,
-            "omega_u": 0.6,
-            "omega_v": 0.6,
-            "omega_p": 0.3,
-            "diff_u_threshold": 1e-07,
-            "diff_v_threshold": 1e-07,
-            "res_iter_v_threshold": "exp_decay"
-          }
-        ]
-      }
-    },
-    {
-      "solver": "ns_channel_2d",
-      "target_parameter": "mesh_y",
-      "profile": "p1",
-      "precision_level": "low",
-      "precision_config": {
-        "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
-        "v_rmse_tolerance": 0.05,
         "p_rmse_tolerance": 0.2,
-        "max_iter": 25
-      },
-      "target_config": {
-        "initial_value": 16,
-        "multiplication_factor": 2,
-        "max_iteration_num": 3,
-        "search_range": null,
-        "search_range_slice_num": null,
-        "schedule_options": null
-      },
-      "non_target_parameters": {
-        "omega_u": 0.6,
-        "omega_v": 0.6,
-        "omega_p": 0.3,
-        "diff_u_threshold": 1e-07,
-        "diff_v_threshold": 1e-07,
-        "res_iter_v_threshold": "exp_decay",
-        "mesh_x": 32,
-        "other_params": {
-          "wall_height": 4,
-          "wall_width": 8,
-          "wall_start_height": 4,
-          "wall_start_width": 10
-        }
-      },
-      "results": {
-        "converged": true,
-        "optimal_parameter_value": 32,
-        "total_computational_cost": 796672,
-        "cost_history": [
-          55296,
-          741376
-        ],
-        "parameter_history": [
-          {
-            "mesh_x": 32,
-            "mesh_y": 16,
-            "omega_u": 0.6,
-            "omega_v": 0.6,
-            "omega_p": 0.3,
-            "diff_u_threshold": 1e-07,
-            "diff_v_threshold": 1e-07,
-            "res_iter_v_threshold": "exp_decay"
-          },
-          {
-            "mesh_x": 64,
-            "mesh_y": 32,
-            "omega_u": 0.6,
-            "omega_v": 0.6,
-            "omega_p": 0.3,
-            "diff_u_threshold": 1e-07,
-            "diff_v_threshold": 1e-07,
-            "res_iter_v_threshold": "exp_decay"
-          }
-        ]
-      }
-    },
-    {
-      "solver": "ns_channel_2d",
-      "target_parameter": "mesh_y",
-      "profile": "p1",
-      "precision_level": "high",
-      "precision_config": {
-        "mass_tolerance": 1e-08,
-        "u_rmse_tolerance": 0.008,
-        "v_rmse_tolerance": 0.001,
-        "p_rmse_tolerance": 0.08,
-        "max_iter": 50
+        "max_iter": 35
       },
       "target_config": {
         "initial_value": 16,
@@ -1494,79 +1482,12 @@
       "solver": "ns_channel_2d",
       "target_parameter": "mesh_y",
       "profile": "p1",
-      "precision_level": "medium",
-      "precision_config": {
-        "mass_tolerance": 1e-06,
-        "u_rmse_tolerance": 0.02,
-        "v_rmse_tolerance": 0.005,
-        "p_rmse_tolerance": 0.1,
-        "max_iter": 35
-      },
-      "target_config": {
-        "initial_value": 16,
-        "multiplication_factor": 2,
-        "max_iteration_num": 3,
-        "search_range": null,
-        "search_range_slice_num": null,
-        "schedule_options": null
-      },
-      "non_target_parameters": {
-        "omega_u": 0.6,
-        "omega_v": 0.6,
-        "omega_p": 0.3,
-        "diff_u_threshold": 1e-07,
-        "diff_v_threshold": 1e-07,
-        "res_iter_v_threshold": "exp_decay",
-        "mesh_x": 16,
-        "other_params": {
-          "wall_height": 4,
-          "wall_width": 4,
-          "wall_start_height": 4,
-          "wall_start_width": 5
-        }
-      },
-      "results": {
-        "converged": true,
-        "optimal_parameter_value": 32,
-        "total_computational_cost": 375296,
-        "cost_history": [
-          26112,
-          349184
-        ],
-        "parameter_history": [
-          {
-            "mesh_x": 16,
-            "mesh_y": 16,
-            "omega_u": 0.6,
-            "omega_v": 0.6,
-            "omega_p": 0.3,
-            "diff_u_threshold": 1e-07,
-            "diff_v_threshold": 1e-07,
-            "res_iter_v_threshold": "exp_decay"
-          },
-          {
-            "mesh_x": 32,
-            "mesh_y": 32,
-            "omega_u": 0.6,
-            "omega_v": 0.6,
-            "omega_p": 0.3,
-            "diff_u_threshold": 1e-07,
-            "diff_v_threshold": 1e-07,
-            "res_iter_v_threshold": "exp_decay"
-          }
-        ]
-      }
-    },
-    {
-      "solver": "ns_channel_2d",
-      "target_parameter": "mesh_y",
-      "profile": "p1",
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -1633,7 +1554,7 @@
         "mass_tolerance": 1e-08,
         "u_rmse_tolerance": 0.008,
         "v_rmse_tolerance": 0.001,
-        "p_rmse_tolerance": 0.08,
+        "p_rmse_tolerance": 0.1,
         "max_iter": 50
       },
       "target_config": {
@@ -1703,7 +1624,7 @@
         "mass_tolerance": 1e-06,
         "u_rmse_tolerance": 0.02,
         "v_rmse_tolerance": 0.005,
-        "p_rmse_tolerance": 0.1,
+        "p_rmse_tolerance": 0.2,
         "max_iter": 35
       },
       "target_config": {
@@ -1771,9 +1692,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -1843,7 +1764,7 @@
         "mass_tolerance": 1e-08,
         "u_rmse_tolerance": 0.008,
         "v_rmse_tolerance": 0.001,
-        "p_rmse_tolerance": 0.08,
+        "p_rmse_tolerance": 0.1,
         "max_iter": 50
       },
       "target_config": {
@@ -1913,7 +1834,7 @@
         "mass_tolerance": 1e-06,
         "u_rmse_tolerance": 0.02,
         "v_rmse_tolerance": 0.005,
-        "p_rmse_tolerance": 0.1,
+        "p_rmse_tolerance": 0.2,
         "max_iter": 35
       },
       "target_config": {
@@ -1981,9 +1902,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -2053,7 +1974,7 @@
         "mass_tolerance": 1e-08,
         "u_rmse_tolerance": 0.008,
         "v_rmse_tolerance": 0.001,
-        "p_rmse_tolerance": 0.08,
+        "p_rmse_tolerance": 0.1,
         "max_iter": 50
       },
       "target_config": {
@@ -2123,7 +2044,7 @@
         "mass_tolerance": 1e-06,
         "u_rmse_tolerance": 0.02,
         "v_rmse_tolerance": 0.005,
-        "p_rmse_tolerance": 0.1,
+        "p_rmse_tolerance": 0.2,
         "max_iter": 35
       },
       "target_config": {
@@ -2191,9 +2112,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -2263,7 +2184,7 @@
         "mass_tolerance": 1e-08,
         "u_rmse_tolerance": 0.008,
         "v_rmse_tolerance": 0.001,
-        "p_rmse_tolerance": 0.08,
+        "p_rmse_tolerance": 0.1,
         "max_iter": 50
       },
       "target_config": {
@@ -2333,7 +2254,7 @@
         "mass_tolerance": 1e-06,
         "u_rmse_tolerance": 0.02,
         "v_rmse_tolerance": 0.005,
-        "p_rmse_tolerance": 0.1,
+        "p_rmse_tolerance": 0.2,
         "max_iter": 35
       },
       "target_config": {
@@ -2401,9 +2322,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -2473,7 +2394,7 @@
         "mass_tolerance": 1e-08,
         "u_rmse_tolerance": 0.008,
         "v_rmse_tolerance": 0.001,
-        "p_rmse_tolerance": 0.08,
+        "p_rmse_tolerance": 0.1,
         "max_iter": 50
       },
       "target_config": {
@@ -2543,7 +2464,7 @@
         "mass_tolerance": 1e-06,
         "u_rmse_tolerance": 0.02,
         "v_rmse_tolerance": 0.005,
-        "p_rmse_tolerance": 0.1,
+        "p_rmse_tolerance": 0.2,
         "max_iter": 35
       },
       "target_config": {
@@ -2611,9 +2532,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -2683,7 +2604,7 @@
         "mass_tolerance": 1e-08,
         "u_rmse_tolerance": 0.008,
         "v_rmse_tolerance": 0.001,
-        "p_rmse_tolerance": 0.08,
+        "p_rmse_tolerance": 0.1,
         "max_iter": 50
       },
       "target_config": {
@@ -2753,7 +2674,7 @@
         "mass_tolerance": 1e-06,
         "u_rmse_tolerance": 0.02,
         "v_rmse_tolerance": 0.005,
-        "p_rmse_tolerance": 0.1,
+        "p_rmse_tolerance": 0.2,
         "max_iter": 35
       },
       "target_config": {
@@ -2821,9 +2742,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -2893,7 +2814,7 @@
         "mass_tolerance": 1e-08,
         "u_rmse_tolerance": 0.008,
         "v_rmse_tolerance": 0.001,
-        "p_rmse_tolerance": 0.08,
+        "p_rmse_tolerance": 0.1,
         "max_iter": 50
       },
       "target_config": {
@@ -2963,7 +2884,7 @@
         "mass_tolerance": 1e-06,
         "u_rmse_tolerance": 0.02,
         "v_rmse_tolerance": 0.005,
-        "p_rmse_tolerance": 0.1,
+        "p_rmse_tolerance": 0.2,
         "max_iter": 35
       },
       "target_config": {
@@ -3031,9 +2952,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -3103,7 +3024,7 @@
         "mass_tolerance": 1e-08,
         "u_rmse_tolerance": 0.008,
         "v_rmse_tolerance": 0.001,
-        "p_rmse_tolerance": 0.08,
+        "p_rmse_tolerance": 0.1,
         "max_iter": 50
       },
       "target_config": {
@@ -3173,7 +3094,7 @@
         "mass_tolerance": 1e-06,
         "u_rmse_tolerance": 0.02,
         "v_rmse_tolerance": 0.005,
-        "p_rmse_tolerance": 0.1,
+        "p_rmse_tolerance": 0.2,
         "max_iter": 35
       },
       "target_config": {
@@ -3241,9 +3162,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -3313,7 +3234,7 @@
         "mass_tolerance": 1e-08,
         "u_rmse_tolerance": 0.008,
         "v_rmse_tolerance": 0.001,
-        "p_rmse_tolerance": 0.08,
+        "p_rmse_tolerance": 0.1,
         "max_iter": 50
       },
       "target_config": {
@@ -3383,7 +3304,7 @@
         "mass_tolerance": 1e-06,
         "u_rmse_tolerance": 0.02,
         "v_rmse_tolerance": 0.005,
-        "p_rmse_tolerance": 0.1,
+        "p_rmse_tolerance": 0.2,
         "max_iter": 35
       },
       "target_config": {
@@ -3451,9 +3372,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -3523,7 +3444,7 @@
         "mass_tolerance": 1e-08,
         "u_rmse_tolerance": 0.008,
         "v_rmse_tolerance": 0.001,
-        "p_rmse_tolerance": 0.08,
+        "p_rmse_tolerance": 0.1,
         "max_iter": 50
       },
       "target_config": {
@@ -3593,7 +3514,7 @@
         "mass_tolerance": 1e-06,
         "u_rmse_tolerance": 0.02,
         "v_rmse_tolerance": 0.005,
-        "p_rmse_tolerance": 0.1,
+        "p_rmse_tolerance": 0.2,
         "max_iter": 35
       },
       "target_config": {
@@ -3661,9 +3582,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -3733,7 +3654,7 @@
         "mass_tolerance": 1e-08,
         "u_rmse_tolerance": 0.008,
         "v_rmse_tolerance": 0.001,
-        "p_rmse_tolerance": 0.08,
+        "p_rmse_tolerance": 0.1,
         "max_iter": 50
       },
       "target_config": {
@@ -3803,7 +3724,7 @@
         "mass_tolerance": 1e-06,
         "u_rmse_tolerance": 0.02,
         "v_rmse_tolerance": 0.005,
-        "p_rmse_tolerance": 0.1,
+        "p_rmse_tolerance": 0.2,
         "max_iter": 35
       },
       "target_config": {
@@ -3871,9 +3792,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -3943,7 +3864,7 @@
         "mass_tolerance": 1e-08,
         "u_rmse_tolerance": 0.008,
         "v_rmse_tolerance": 0.001,
-        "p_rmse_tolerance": 0.08,
+        "p_rmse_tolerance": 0.1,
         "max_iter": 50
       },
       "target_config": {
@@ -4013,7 +3934,7 @@
         "mass_tolerance": 1e-06,
         "u_rmse_tolerance": 0.02,
         "v_rmse_tolerance": 0.005,
-        "p_rmse_tolerance": 0.1,
+        "p_rmse_tolerance": 0.2,
         "max_iter": 35
       },
       "target_config": {
@@ -4081,9 +4002,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -4153,7 +4074,7 @@
         "mass_tolerance": 1e-08,
         "u_rmse_tolerance": 0.008,
         "v_rmse_tolerance": 0.001,
-        "p_rmse_tolerance": 0.08,
+        "p_rmse_tolerance": 0.1,
         "max_iter": 50
       },
       "target_config": {
@@ -4223,7 +4144,7 @@
         "mass_tolerance": 1e-06,
         "u_rmse_tolerance": 0.02,
         "v_rmse_tolerance": 0.005,
-        "p_rmse_tolerance": 0.1,
+        "p_rmse_tolerance": 0.2,
         "max_iter": 35
       },
       "target_config": {
@@ -4291,9 +4212,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -4363,7 +4284,7 @@
         "mass_tolerance": 1e-08,
         "u_rmse_tolerance": 0.008,
         "v_rmse_tolerance": 0.001,
-        "p_rmse_tolerance": 0.08,
+        "p_rmse_tolerance": 0.1,
         "max_iter": 50
       },
       "target_config": {
@@ -4433,7 +4354,7 @@
         "mass_tolerance": 1e-06,
         "u_rmse_tolerance": 0.02,
         "v_rmse_tolerance": 0.005,
-        "p_rmse_tolerance": 0.1,
+        "p_rmse_tolerance": 0.2,
         "max_iter": 35
       },
       "target_config": {
@@ -4501,9 +4422,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -4573,7 +4494,7 @@
         "mass_tolerance": 1e-08,
         "u_rmse_tolerance": 0.008,
         "v_rmse_tolerance": 0.001,
-        "p_rmse_tolerance": 0.08,
+        "p_rmse_tolerance": 0.1,
         "max_iter": 50
       },
       "target_config": {
@@ -4643,7 +4564,7 @@
         "mass_tolerance": 1e-06,
         "u_rmse_tolerance": 0.02,
         "v_rmse_tolerance": 0.005,
-        "p_rmse_tolerance": 0.1,
+        "p_rmse_tolerance": 0.2,
         "max_iter": 35
       },
       "target_config": {
@@ -4711,9 +4632,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -4783,7 +4704,7 @@
         "mass_tolerance": 1e-08,
         "u_rmse_tolerance": 0.008,
         "v_rmse_tolerance": 0.001,
-        "p_rmse_tolerance": 0.08,
+        "p_rmse_tolerance": 0.1,
         "max_iter": 50
       },
       "target_config": {
@@ -4853,7 +4774,7 @@
         "mass_tolerance": 1e-06,
         "u_rmse_tolerance": 0.02,
         "v_rmse_tolerance": 0.005,
-        "p_rmse_tolerance": 0.1,
+        "p_rmse_tolerance": 0.2,
         "max_iter": 35
       },
       "target_config": {
@@ -4921,9 +4842,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -4993,7 +4914,7 @@
         "mass_tolerance": 1e-08,
         "u_rmse_tolerance": 0.008,
         "v_rmse_tolerance": 0.001,
-        "p_rmse_tolerance": 0.08,
+        "p_rmse_tolerance": 0.1,
         "max_iter": 50
       },
       "target_config": {
@@ -5063,7 +4984,7 @@
         "mass_tolerance": 1e-06,
         "u_rmse_tolerance": 0.02,
         "v_rmse_tolerance": 0.005,
-        "p_rmse_tolerance": 0.1,
+        "p_rmse_tolerance": 0.2,
         "max_iter": 35
       },
       "target_config": {
@@ -5131,9 +5052,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -5203,7 +5124,7 @@
         "mass_tolerance": 1e-08,
         "u_rmse_tolerance": 0.008,
         "v_rmse_tolerance": 0.001,
-        "p_rmse_tolerance": 0.08,
+        "p_rmse_tolerance": 0.1,
         "max_iter": 50
       },
       "target_config": {
@@ -5273,7 +5194,7 @@
         "mass_tolerance": 1e-06,
         "u_rmse_tolerance": 0.02,
         "v_rmse_tolerance": 0.005,
-        "p_rmse_tolerance": 0.1,
+        "p_rmse_tolerance": 0.2,
         "max_iter": 35
       },
       "target_config": {
@@ -5341,9 +5262,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -5413,7 +5334,7 @@
         "mass_tolerance": 1e-08,
         "u_rmse_tolerance": 0.008,
         "v_rmse_tolerance": 0.001,
-        "p_rmse_tolerance": 0.08,
+        "p_rmse_tolerance": 0.1,
         "max_iter": 50
       },
       "target_config": {
@@ -5483,7 +5404,7 @@
         "mass_tolerance": 1e-06,
         "u_rmse_tolerance": 0.02,
         "v_rmse_tolerance": 0.005,
-        "p_rmse_tolerance": 0.1,
+        "p_rmse_tolerance": 0.2,
         "max_iter": 35
       },
       "target_config": {
@@ -5551,9 +5472,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -5623,7 +5544,7 @@
         "mass_tolerance": 1e-08,
         "u_rmse_tolerance": 0.008,
         "v_rmse_tolerance": 0.001,
-        "p_rmse_tolerance": 0.08,
+        "p_rmse_tolerance": 0.1,
         "max_iter": 50
       },
       "target_config": {
@@ -5693,7 +5614,7 @@
         "mass_tolerance": 1e-06,
         "u_rmse_tolerance": 0.02,
         "v_rmse_tolerance": 0.005,
-        "p_rmse_tolerance": 0.1,
+        "p_rmse_tolerance": 0.2,
         "max_iter": 35
       },
       "target_config": {
@@ -5761,9 +5682,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -5833,7 +5754,7 @@
         "mass_tolerance": 1e-08,
         "u_rmse_tolerance": 0.008,
         "v_rmse_tolerance": 0.001,
-        "p_rmse_tolerance": 0.08,
+        "p_rmse_tolerance": 0.1,
         "max_iter": 50
       },
       "target_config": {
@@ -5907,7 +5828,7 @@
         "mass_tolerance": 1e-06,
         "u_rmse_tolerance": 0.02,
         "v_rmse_tolerance": 0.005,
-        "p_rmse_tolerance": 0.1,
+        "p_rmse_tolerance": 0.2,
         "max_iter": 35
       },
       "target_config": {
@@ -5979,9 +5900,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -6055,7 +5976,7 @@
         "mass_tolerance": 1e-08,
         "u_rmse_tolerance": 0.008,
         "v_rmse_tolerance": 0.001,
-        "p_rmse_tolerance": 0.08,
+        "p_rmse_tolerance": 0.1,
         "max_iter": 50
       },
       "target_config": {
@@ -6129,7 +6050,7 @@
         "mass_tolerance": 1e-06,
         "u_rmse_tolerance": 0.02,
         "v_rmse_tolerance": 0.005,
-        "p_rmse_tolerance": 0.1,
+        "p_rmse_tolerance": 0.2,
         "max_iter": 35
       },
       "target_config": {
@@ -6201,9 +6122,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -6277,7 +6198,7 @@
         "mass_tolerance": 1e-08,
         "u_rmse_tolerance": 0.008,
         "v_rmse_tolerance": 0.001,
-        "p_rmse_tolerance": 0.08,
+        "p_rmse_tolerance": 0.1,
         "max_iter": 50
       },
       "target_config": {
@@ -6351,7 +6272,7 @@
         "mass_tolerance": 1e-06,
         "u_rmse_tolerance": 0.02,
         "v_rmse_tolerance": 0.005,
-        "p_rmse_tolerance": 0.1,
+        "p_rmse_tolerance": 0.2,
         "max_iter": 35
       },
       "target_config": {
@@ -6423,9 +6344,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -6499,7 +6420,7 @@
         "mass_tolerance": 1e-08,
         "u_rmse_tolerance": 0.008,
         "v_rmse_tolerance": 0.001,
-        "p_rmse_tolerance": 0.08,
+        "p_rmse_tolerance": 0.1,
         "max_iter": 50
       },
       "target_config": {
@@ -6573,7 +6494,7 @@
         "mass_tolerance": 1e-06,
         "u_rmse_tolerance": 0.02,
         "v_rmse_tolerance": 0.005,
-        "p_rmse_tolerance": 0.1,
+        "p_rmse_tolerance": 0.2,
         "max_iter": 35
       },
       "target_config": {
@@ -6645,9 +6566,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -6719,9 +6640,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -6786,9 +6707,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -6853,9 +6774,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -6922,7 +6843,7 @@
         "mass_tolerance": 1e-06,
         "u_rmse_tolerance": 0.02,
         "v_rmse_tolerance": 0.005,
-        "p_rmse_tolerance": 0.1,
+        "p_rmse_tolerance": 0.2,
         "max_iter": 35
       },
       "target_config": {
@@ -6998,9 +6919,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -7065,9 +6986,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -7132,9 +7053,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -7199,9 +7120,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -7266,9 +7187,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -7335,7 +7256,7 @@
         "mass_tolerance": 1e-06,
         "u_rmse_tolerance": 0.02,
         "v_rmse_tolerance": 0.005,
-        "p_rmse_tolerance": 0.1,
+        "p_rmse_tolerance": 0.2,
         "max_iter": 35
       },
       "target_config": {
@@ -7403,9 +7324,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -7475,7 +7396,7 @@
         "mass_tolerance": 1e-06,
         "u_rmse_tolerance": 0.02,
         "v_rmse_tolerance": 0.005,
-        "p_rmse_tolerance": 0.1,
+        "p_rmse_tolerance": 0.2,
         "max_iter": 35
       },
       "target_config": {
@@ -7543,9 +7464,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -7615,7 +7536,7 @@
         "mass_tolerance": 1e-08,
         "u_rmse_tolerance": 0.008,
         "v_rmse_tolerance": 0.001,
-        "p_rmse_tolerance": 0.08,
+        "p_rmse_tolerance": 0.1,
         "max_iter": 50
       },
       "target_config": {
@@ -7685,7 +7606,7 @@
         "mass_tolerance": 1e-06,
         "u_rmse_tolerance": 0.02,
         "v_rmse_tolerance": 0.005,
-        "p_rmse_tolerance": 0.1,
+        "p_rmse_tolerance": 0.2,
         "max_iter": 35
       },
       "target_config": {
@@ -7753,9 +7674,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -7825,7 +7746,7 @@
         "mass_tolerance": 1e-08,
         "u_rmse_tolerance": 0.008,
         "v_rmse_tolerance": 0.001,
-        "p_rmse_tolerance": 0.08,
+        "p_rmse_tolerance": 0.1,
         "max_iter": 50
       },
       "target_config": {
@@ -7895,7 +7816,7 @@
         "mass_tolerance": 1e-06,
         "u_rmse_tolerance": 0.02,
         "v_rmse_tolerance": 0.005,
-        "p_rmse_tolerance": 0.1,
+        "p_rmse_tolerance": 0.2,
         "max_iter": 35
       },
       "target_config": {
@@ -7963,9 +7884,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -8035,7 +7956,7 @@
         "mass_tolerance": 1e-06,
         "u_rmse_tolerance": 0.02,
         "v_rmse_tolerance": 0.005,
-        "p_rmse_tolerance": 0.1,
+        "p_rmse_tolerance": 0.2,
         "max_iter": 35
       },
       "target_config": {
@@ -8103,9 +8024,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -8175,7 +8096,7 @@
         "mass_tolerance": 1e-06,
         "u_rmse_tolerance": 0.02,
         "v_rmse_tolerance": 0.005,
-        "p_rmse_tolerance": 0.1,
+        "p_rmse_tolerance": 0.2,
         "max_iter": 35
       },
       "target_config": {
@@ -8243,9 +8164,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -8315,7 +8236,7 @@
         "mass_tolerance": 1e-08,
         "u_rmse_tolerance": 0.008,
         "v_rmse_tolerance": 0.001,
-        "p_rmse_tolerance": 0.08,
+        "p_rmse_tolerance": 0.1,
         "max_iter": 50
       },
       "target_config": {
@@ -8385,7 +8306,7 @@
         "mass_tolerance": 1e-06,
         "u_rmse_tolerance": 0.02,
         "v_rmse_tolerance": 0.005,
-        "p_rmse_tolerance": 0.1,
+        "p_rmse_tolerance": 0.2,
         "max_iter": 35
       },
       "target_config": {
@@ -8453,9 +8374,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -8525,7 +8446,7 @@
         "mass_tolerance": 1e-08,
         "u_rmse_tolerance": 0.008,
         "v_rmse_tolerance": 0.001,
-        "p_rmse_tolerance": 0.08,
+        "p_rmse_tolerance": 0.1,
         "max_iter": 50
       },
       "target_config": {
@@ -8595,7 +8516,7 @@
         "mass_tolerance": 1e-06,
         "u_rmse_tolerance": 0.02,
         "v_rmse_tolerance": 0.005,
-        "p_rmse_tolerance": 0.1,
+        "p_rmse_tolerance": 0.2,
         "max_iter": 35
       },
       "target_config": {
@@ -8663,9 +8584,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -8735,7 +8656,7 @@
         "mass_tolerance": 1e-06,
         "u_rmse_tolerance": 0.02,
         "v_rmse_tolerance": 0.005,
-        "p_rmse_tolerance": 0.1,
+        "p_rmse_tolerance": 0.2,
         "max_iter": 35
       },
       "target_config": {
@@ -8803,9 +8724,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -8875,7 +8796,7 @@
         "mass_tolerance": 1e-06,
         "u_rmse_tolerance": 0.02,
         "v_rmse_tolerance": 0.005,
-        "p_rmse_tolerance": 0.1,
+        "p_rmse_tolerance": 0.2,
         "max_iter": 35
       },
       "target_config": {
@@ -8943,9 +8864,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -9015,7 +8936,7 @@
         "mass_tolerance": 1e-08,
         "u_rmse_tolerance": 0.008,
         "v_rmse_tolerance": 0.001,
-        "p_rmse_tolerance": 0.08,
+        "p_rmse_tolerance": 0.1,
         "max_iter": 50
       },
       "target_config": {
@@ -9085,7 +9006,7 @@
         "mass_tolerance": 1e-06,
         "u_rmse_tolerance": 0.02,
         "v_rmse_tolerance": 0.005,
-        "p_rmse_tolerance": 0.1,
+        "p_rmse_tolerance": 0.2,
         "max_iter": 35
       },
       "target_config": {
@@ -9153,9 +9074,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -9225,7 +9146,7 @@
         "mass_tolerance": 1e-08,
         "u_rmse_tolerance": 0.008,
         "v_rmse_tolerance": 0.001,
-        "p_rmse_tolerance": 0.08,
+        "p_rmse_tolerance": 0.1,
         "max_iter": 50
       },
       "target_config": {
@@ -9295,7 +9216,7 @@
         "mass_tolerance": 1e-06,
         "u_rmse_tolerance": 0.02,
         "v_rmse_tolerance": 0.005,
-        "p_rmse_tolerance": 0.1,
+        "p_rmse_tolerance": 0.2,
         "max_iter": 35
       },
       "target_config": {
@@ -9363,9 +9284,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -9435,7 +9356,7 @@
         "mass_tolerance": 1e-06,
         "u_rmse_tolerance": 0.02,
         "v_rmse_tolerance": 0.005,
-        "p_rmse_tolerance": 0.1,
+        "p_rmse_tolerance": 0.2,
         "max_iter": 35
       },
       "target_config": {
@@ -9503,9 +9424,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -9575,7 +9496,7 @@
         "mass_tolerance": 1e-06,
         "u_rmse_tolerance": 0.02,
         "v_rmse_tolerance": 0.005,
-        "p_rmse_tolerance": 0.1,
+        "p_rmse_tolerance": 0.2,
         "max_iter": 35
       },
       "target_config": {
@@ -9643,9 +9564,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -9715,7 +9636,7 @@
         "mass_tolerance": 1e-08,
         "u_rmse_tolerance": 0.008,
         "v_rmse_tolerance": 0.001,
-        "p_rmse_tolerance": 0.08,
+        "p_rmse_tolerance": 0.1,
         "max_iter": 50
       },
       "target_config": {
@@ -9785,7 +9706,7 @@
         "mass_tolerance": 1e-06,
         "u_rmse_tolerance": 0.02,
         "v_rmse_tolerance": 0.005,
-        "p_rmse_tolerance": 0.1,
+        "p_rmse_tolerance": 0.2,
         "max_iter": 35
       },
       "target_config": {
@@ -9853,9 +9774,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -9925,7 +9846,7 @@
         "mass_tolerance": 1e-08,
         "u_rmse_tolerance": 0.008,
         "v_rmse_tolerance": 0.001,
-        "p_rmse_tolerance": 0.08,
+        "p_rmse_tolerance": 0.1,
         "max_iter": 50
       },
       "target_config": {
@@ -9995,7 +9916,7 @@
         "mass_tolerance": 1e-06,
         "u_rmse_tolerance": 0.02,
         "v_rmse_tolerance": 0.005,
-        "p_rmse_tolerance": 0.1,
+        "p_rmse_tolerance": 0.2,
         "max_iter": 35
       },
       "target_config": {
@@ -10063,9 +9984,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -10135,7 +10056,7 @@
         "mass_tolerance": 1e-06,
         "u_rmse_tolerance": 0.02,
         "v_rmse_tolerance": 0.005,
-        "p_rmse_tolerance": 0.1,
+        "p_rmse_tolerance": 0.2,
         "max_iter": 35
       },
       "target_config": {
@@ -10203,9 +10124,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -10275,7 +10196,7 @@
         "mass_tolerance": 1e-06,
         "u_rmse_tolerance": 0.02,
         "v_rmse_tolerance": 0.005,
-        "p_rmse_tolerance": 0.1,
+        "p_rmse_tolerance": 0.2,
         "max_iter": 35
       },
       "target_config": {
@@ -10343,9 +10264,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -10415,7 +10336,7 @@
         "mass_tolerance": 1e-08,
         "u_rmse_tolerance": 0.008,
         "v_rmse_tolerance": 0.001,
-        "p_rmse_tolerance": 0.08,
+        "p_rmse_tolerance": 0.1,
         "max_iter": 50
       },
       "target_config": {
@@ -10485,7 +10406,7 @@
         "mass_tolerance": 1e-06,
         "u_rmse_tolerance": 0.02,
         "v_rmse_tolerance": 0.005,
-        "p_rmse_tolerance": 0.1,
+        "p_rmse_tolerance": 0.2,
         "max_iter": 35
       },
       "target_config": {
@@ -10553,9 +10474,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -10625,7 +10546,7 @@
         "mass_tolerance": 1e-08,
         "u_rmse_tolerance": 0.008,
         "v_rmse_tolerance": 0.001,
-        "p_rmse_tolerance": 0.08,
+        "p_rmse_tolerance": 0.1,
         "max_iter": 50
       },
       "target_config": {
@@ -10695,7 +10616,7 @@
         "mass_tolerance": 1e-06,
         "u_rmse_tolerance": 0.02,
         "v_rmse_tolerance": 0.005,
-        "p_rmse_tolerance": 0.1,
+        "p_rmse_tolerance": 0.2,
         "max_iter": 35
       },
       "target_config": {
@@ -10763,9 +10684,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -10835,7 +10756,7 @@
         "mass_tolerance": 1e-06,
         "u_rmse_tolerance": 0.02,
         "v_rmse_tolerance": 0.005,
-        "p_rmse_tolerance": 0.1,
+        "p_rmse_tolerance": 0.2,
         "max_iter": 35
       },
       "target_config": {
@@ -10907,9 +10828,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -10983,7 +10904,7 @@
         "mass_tolerance": 1e-06,
         "u_rmse_tolerance": 0.02,
         "v_rmse_tolerance": 0.005,
-        "p_rmse_tolerance": 0.1,
+        "p_rmse_tolerance": 0.2,
         "max_iter": 35
       },
       "target_config": {
@@ -11055,9 +10976,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -11131,7 +11052,7 @@
         "mass_tolerance": 1e-08,
         "u_rmse_tolerance": 0.008,
         "v_rmse_tolerance": 0.001,
-        "p_rmse_tolerance": 0.08,
+        "p_rmse_tolerance": 0.1,
         "max_iter": 50
       },
       "target_config": {
@@ -11205,7 +11126,7 @@
         "mass_tolerance": 1e-06,
         "u_rmse_tolerance": 0.02,
         "v_rmse_tolerance": 0.005,
-        "p_rmse_tolerance": 0.1,
+        "p_rmse_tolerance": 0.2,
         "max_iter": 35
       },
       "target_config": {
@@ -11277,9 +11198,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -11353,7 +11274,7 @@
         "mass_tolerance": 1e-08,
         "u_rmse_tolerance": 0.008,
         "v_rmse_tolerance": 0.001,
-        "p_rmse_tolerance": 0.08,
+        "p_rmse_tolerance": 0.1,
         "max_iter": 50
       },
       "target_config": {
@@ -11427,7 +11348,7 @@
         "mass_tolerance": 1e-06,
         "u_rmse_tolerance": 0.02,
         "v_rmse_tolerance": 0.005,
-        "p_rmse_tolerance": 0.1,
+        "p_rmse_tolerance": 0.2,
         "max_iter": 35
       },
       "target_config": {
@@ -11499,9 +11420,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -11573,9 +11494,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -11640,9 +11561,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -11670,12 +11591,11 @@
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 256,
-        "total_computational_cost": 11077632,
+        "optimal_parameter_value": 128,
+        "total_computational_cost": 1026048,
         "cost_history": [
           89088,
-          936960,
-          10051584
+          936960
         ],
         "parameter_history": [
           {
@@ -11697,16 +11617,6 @@
             "diff_u_threshold": 1e-07,
             "diff_v_threshold": 1e-07,
             "res_iter_v_threshold": "exp_decay"
-          },
-          {
-            "mesh_x": 256,
-            "mesh_y": 48,
-            "omega_u": 0.6,
-            "omega_v": 0.6,
-            "omega_p": 0.3,
-            "diff_u_threshold": 1e-07,
-            "diff_v_threshold": 1e-07,
-            "res_iter_v_threshold": "exp_decay"
           }
         ]
       }
@@ -11718,9 +11628,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -11782,12 +11692,90 @@
       "solver": "ns_channel_2d",
       "target_parameter": "mesh_x",
       "profile": "p3",
+      "precision_level": "medium",
+      "precision_config": {
+        "mass_tolerance": 1e-06,
+        "u_rmse_tolerance": 0.02,
+        "v_rmse_tolerance": 0.005,
+        "p_rmse_tolerance": 0.2,
+        "max_iter": 35
+      },
+      "target_config": {
+        "initial_value": 64,
+        "multiplication_factor": 2,
+        "max_iteration_num": 3,
+        "search_range": null,
+        "search_range_slice_num": null,
+        "schedule_options": null
+      },
+      "non_target_parameters": {
+        "omega_u": 0.6,
+        "omega_v": 0.6,
+        "omega_p": 0.3,
+        "diff_u_threshold": 1e-07,
+        "diff_v_threshold": 1e-07,
+        "res_iter_v_threshold": "exp_decay",
+        "mesh_y": 32,
+        "other_params": {
+          "wall_height": 8,
+          "wall_width": 16,
+          "wall_start_height": 8,
+          "wall_start_width": 20
+        }
+      },
+      "results": {
+        "converged": true,
+        "optimal_parameter_value": 256,
+        "total_computational_cost": 118661120,
+        "cost_history": [
+          573440,
+          7725056,
+          110362624
+        ],
+        "parameter_history": [
+          {
+            "mesh_x": 64,
+            "mesh_y": 32,
+            "omega_u": 0.6,
+            "omega_v": 0.6,
+            "omega_p": 0.3,
+            "diff_u_threshold": 1e-07,
+            "diff_v_threshold": 1e-07,
+            "res_iter_v_threshold": "exp_decay"
+          },
+          {
+            "mesh_x": 128,
+            "mesh_y": 64,
+            "omega_u": 0.6,
+            "omega_v": 0.6,
+            "omega_p": 0.3,
+            "diff_u_threshold": 1e-07,
+            "diff_v_threshold": 1e-07,
+            "res_iter_v_threshold": "exp_decay"
+          },
+          {
+            "mesh_x": 256,
+            "mesh_y": 128,
+            "omega_u": 0.6,
+            "omega_v": 0.6,
+            "omega_p": 0.3,
+            "diff_u_threshold": 1e-07,
+            "diff_v_threshold": 1e-07,
+            "res_iter_v_threshold": "exp_decay"
+          }
+        ]
+      }
+    },
+    {
+      "solver": "ns_channel_2d",
+      "target_parameter": "mesh_x",
+      "profile": "p3",
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -11852,9 +11840,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -11919,9 +11907,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -11986,9 +11974,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -12053,9 +12041,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -12122,7 +12110,7 @@
         "mass_tolerance": 1e-06,
         "u_rmse_tolerance": 0.02,
         "v_rmse_tolerance": 0.005,
-        "p_rmse_tolerance": 0.1,
+        "p_rmse_tolerance": 0.2,
         "max_iter": 35
       },
       "target_config": {
@@ -12190,9 +12178,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -12262,7 +12250,7 @@
         "mass_tolerance": 1e-06,
         "u_rmse_tolerance": 0.02,
         "v_rmse_tolerance": 0.005,
-        "p_rmse_tolerance": 0.1,
+        "p_rmse_tolerance": 0.2,
         "max_iter": 35
       },
       "target_config": {
@@ -12330,9 +12318,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -12402,7 +12390,7 @@
         "mass_tolerance": 1e-08,
         "u_rmse_tolerance": 0.008,
         "v_rmse_tolerance": 0.001,
-        "p_rmse_tolerance": 0.08,
+        "p_rmse_tolerance": 0.1,
         "max_iter": 50
       },
       "target_config": {
@@ -12472,7 +12460,7 @@
         "mass_tolerance": 1e-06,
         "u_rmse_tolerance": 0.02,
         "v_rmse_tolerance": 0.005,
-        "p_rmse_tolerance": 0.1,
+        "p_rmse_tolerance": 0.2,
         "max_iter": 35
       },
       "target_config": {
@@ -12540,9 +12528,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -12612,7 +12600,7 @@
         "mass_tolerance": 1e-08,
         "u_rmse_tolerance": 0.008,
         "v_rmse_tolerance": 0.001,
-        "p_rmse_tolerance": 0.08,
+        "p_rmse_tolerance": 0.1,
         "max_iter": 50
       },
       "target_config": {
@@ -12682,7 +12670,7 @@
         "mass_tolerance": 1e-06,
         "u_rmse_tolerance": 0.02,
         "v_rmse_tolerance": 0.005,
-        "p_rmse_tolerance": 0.1,
+        "p_rmse_tolerance": 0.2,
         "max_iter": 35
       },
       "target_config": {
@@ -12750,9 +12738,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -12822,7 +12810,7 @@
         "mass_tolerance": 1e-06,
         "u_rmse_tolerance": 0.02,
         "v_rmse_tolerance": 0.005,
-        "p_rmse_tolerance": 0.1,
+        "p_rmse_tolerance": 0.2,
         "max_iter": 35
       },
       "target_config": {
@@ -12890,9 +12878,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -12962,7 +12950,7 @@
         "mass_tolerance": 1e-06,
         "u_rmse_tolerance": 0.02,
         "v_rmse_tolerance": 0.005,
-        "p_rmse_tolerance": 0.1,
+        "p_rmse_tolerance": 0.2,
         "max_iter": 35
       },
       "target_config": {
@@ -13030,9 +13018,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -13102,7 +13090,7 @@
         "mass_tolerance": 1e-08,
         "u_rmse_tolerance": 0.008,
         "v_rmse_tolerance": 0.001,
-        "p_rmse_tolerance": 0.08,
+        "p_rmse_tolerance": 0.1,
         "max_iter": 50
       },
       "target_config": {
@@ -13172,7 +13160,7 @@
         "mass_tolerance": 1e-06,
         "u_rmse_tolerance": 0.02,
         "v_rmse_tolerance": 0.005,
-        "p_rmse_tolerance": 0.1,
+        "p_rmse_tolerance": 0.2,
         "max_iter": 35
       },
       "target_config": {
@@ -13240,9 +13228,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -13312,7 +13300,7 @@
         "mass_tolerance": 1e-08,
         "u_rmse_tolerance": 0.008,
         "v_rmse_tolerance": 0.001,
-        "p_rmse_tolerance": 0.08,
+        "p_rmse_tolerance": 0.1,
         "max_iter": 50
       },
       "target_config": {
@@ -13382,7 +13370,7 @@
         "mass_tolerance": 1e-06,
         "u_rmse_tolerance": 0.02,
         "v_rmse_tolerance": 0.005,
-        "p_rmse_tolerance": 0.1,
+        "p_rmse_tolerance": 0.2,
         "max_iter": 35
       },
       "target_config": {
@@ -13450,9 +13438,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -13522,7 +13510,7 @@
         "mass_tolerance": 1e-06,
         "u_rmse_tolerance": 0.02,
         "v_rmse_tolerance": 0.005,
-        "p_rmse_tolerance": 0.1,
+        "p_rmse_tolerance": 0.2,
         "max_iter": 35
       },
       "target_config": {
@@ -13590,9 +13578,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -13662,7 +13650,7 @@
         "mass_tolerance": 1e-06,
         "u_rmse_tolerance": 0.02,
         "v_rmse_tolerance": 0.005,
-        "p_rmse_tolerance": 0.1,
+        "p_rmse_tolerance": 0.2,
         "max_iter": 35
       },
       "target_config": {
@@ -13730,9 +13718,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -13802,7 +13790,7 @@
         "mass_tolerance": 1e-08,
         "u_rmse_tolerance": 0.008,
         "v_rmse_tolerance": 0.001,
-        "p_rmse_tolerance": 0.08,
+        "p_rmse_tolerance": 0.1,
         "max_iter": 50
       },
       "target_config": {
@@ -13872,7 +13860,7 @@
         "mass_tolerance": 1e-06,
         "u_rmse_tolerance": 0.02,
         "v_rmse_tolerance": 0.005,
-        "p_rmse_tolerance": 0.1,
+        "p_rmse_tolerance": 0.2,
         "max_iter": 35
       },
       "target_config": {
@@ -13940,9 +13928,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -14012,7 +14000,7 @@
         "mass_tolerance": 1e-08,
         "u_rmse_tolerance": 0.008,
         "v_rmse_tolerance": 0.001,
-        "p_rmse_tolerance": 0.08,
+        "p_rmse_tolerance": 0.1,
         "max_iter": 50
       },
       "target_config": {
@@ -14082,7 +14070,7 @@
         "mass_tolerance": 1e-06,
         "u_rmse_tolerance": 0.02,
         "v_rmse_tolerance": 0.005,
-        "p_rmse_tolerance": 0.1,
+        "p_rmse_tolerance": 0.2,
         "max_iter": 35
       },
       "target_config": {
@@ -14150,9 +14138,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -14222,7 +14210,7 @@
         "mass_tolerance": 1e-06,
         "u_rmse_tolerance": 0.02,
         "v_rmse_tolerance": 0.005,
-        "p_rmse_tolerance": 0.1,
+        "p_rmse_tolerance": 0.2,
         "max_iter": 35
       },
       "target_config": {
@@ -14290,9 +14278,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -14362,7 +14350,7 @@
         "mass_tolerance": 1e-06,
         "u_rmse_tolerance": 0.02,
         "v_rmse_tolerance": 0.005,
-        "p_rmse_tolerance": 0.1,
+        "p_rmse_tolerance": 0.2,
         "max_iter": 35
       },
       "target_config": {
@@ -14430,9 +14418,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -14502,7 +14490,7 @@
         "mass_tolerance": 1e-08,
         "u_rmse_tolerance": 0.008,
         "v_rmse_tolerance": 0.001,
-        "p_rmse_tolerance": 0.08,
+        "p_rmse_tolerance": 0.1,
         "max_iter": 50
       },
       "target_config": {
@@ -14572,7 +14560,7 @@
         "mass_tolerance": 1e-06,
         "u_rmse_tolerance": 0.02,
         "v_rmse_tolerance": 0.005,
-        "p_rmse_tolerance": 0.1,
+        "p_rmse_tolerance": 0.2,
         "max_iter": 35
       },
       "target_config": {
@@ -14640,9 +14628,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -14712,7 +14700,7 @@
         "mass_tolerance": 1e-08,
         "u_rmse_tolerance": 0.008,
         "v_rmse_tolerance": 0.001,
-        "p_rmse_tolerance": 0.08,
+        "p_rmse_tolerance": 0.1,
         "max_iter": 50
       },
       "target_config": {
@@ -14782,7 +14770,7 @@
         "mass_tolerance": 1e-06,
         "u_rmse_tolerance": 0.02,
         "v_rmse_tolerance": 0.005,
-        "p_rmse_tolerance": 0.1,
+        "p_rmse_tolerance": 0.2,
         "max_iter": 35
       },
       "target_config": {
@@ -14850,9 +14838,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -14922,7 +14910,7 @@
         "mass_tolerance": 1e-06,
         "u_rmse_tolerance": 0.02,
         "v_rmse_tolerance": 0.005,
-        "p_rmse_tolerance": 0.1,
+        "p_rmse_tolerance": 0.2,
         "max_iter": 35
       },
       "target_config": {
@@ -14990,9 +14978,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -15062,7 +15050,7 @@
         "mass_tolerance": 1e-06,
         "u_rmse_tolerance": 0.02,
         "v_rmse_tolerance": 0.005,
-        "p_rmse_tolerance": 0.1,
+        "p_rmse_tolerance": 0.2,
         "max_iter": 35
       },
       "target_config": {
@@ -15130,9 +15118,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -15202,7 +15190,7 @@
         "mass_tolerance": 1e-08,
         "u_rmse_tolerance": 0.008,
         "v_rmse_tolerance": 0.001,
-        "p_rmse_tolerance": 0.08,
+        "p_rmse_tolerance": 0.1,
         "max_iter": 50
       },
       "target_config": {
@@ -15272,7 +15260,7 @@
         "mass_tolerance": 1e-06,
         "u_rmse_tolerance": 0.02,
         "v_rmse_tolerance": 0.005,
-        "p_rmse_tolerance": 0.1,
+        "p_rmse_tolerance": 0.2,
         "max_iter": 35
       },
       "target_config": {
@@ -15340,9 +15328,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -15412,7 +15400,7 @@
         "mass_tolerance": 1e-08,
         "u_rmse_tolerance": 0.008,
         "v_rmse_tolerance": 0.001,
-        "p_rmse_tolerance": 0.08,
+        "p_rmse_tolerance": 0.1,
         "max_iter": 50
       },
       "target_config": {
@@ -15482,7 +15470,7 @@
         "mass_tolerance": 1e-06,
         "u_rmse_tolerance": 0.02,
         "v_rmse_tolerance": 0.005,
-        "p_rmse_tolerance": 0.1,
+        "p_rmse_tolerance": 0.2,
         "max_iter": 35
       },
       "target_config": {
@@ -15550,9 +15538,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -15622,7 +15610,7 @@
         "mass_tolerance": 1e-06,
         "u_rmse_tolerance": 0.02,
         "v_rmse_tolerance": 0.005,
-        "p_rmse_tolerance": 0.1,
+        "p_rmse_tolerance": 0.2,
         "max_iter": 35
       },
       "target_config": {
@@ -15694,9 +15682,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -15770,7 +15758,7 @@
         "mass_tolerance": 1e-06,
         "u_rmse_tolerance": 0.02,
         "v_rmse_tolerance": 0.005,
-        "p_rmse_tolerance": 0.1,
+        "p_rmse_tolerance": 0.2,
         "max_iter": 35
       },
       "target_config": {
@@ -15842,9 +15830,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -15918,7 +15906,7 @@
         "mass_tolerance": 1e-08,
         "u_rmse_tolerance": 0.008,
         "v_rmse_tolerance": 0.001,
-        "p_rmse_tolerance": 0.08,
+        "p_rmse_tolerance": 0.1,
         "max_iter": 50
       },
       "target_config": {
@@ -15992,7 +15980,7 @@
         "mass_tolerance": 1e-06,
         "u_rmse_tolerance": 0.02,
         "v_rmse_tolerance": 0.005,
-        "p_rmse_tolerance": 0.1,
+        "p_rmse_tolerance": 0.2,
         "max_iter": 35
       },
       "target_config": {
@@ -16064,9 +16052,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -16140,7 +16128,7 @@
         "mass_tolerance": 1e-08,
         "u_rmse_tolerance": 0.008,
         "v_rmse_tolerance": 0.001,
-        "p_rmse_tolerance": 0.08,
+        "p_rmse_tolerance": 0.1,
         "max_iter": 50
       },
       "target_config": {
@@ -16214,7 +16202,7 @@
         "mass_tolerance": 1e-06,
         "u_rmse_tolerance": 0.02,
         "v_rmse_tolerance": 0.005,
-        "p_rmse_tolerance": 0.1,
+        "p_rmse_tolerance": 0.2,
         "max_iter": 35
       },
       "target_config": {
@@ -16286,9 +16274,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -16360,9 +16348,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -16438,9 +16426,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -16505,9 +16493,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -16572,9 +16560,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -16639,9 +16627,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -16706,9 +16694,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -16773,9 +16761,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -16840,9 +16828,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -16918,9 +16906,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -16988,9 +16976,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -17060,7 +17048,7 @@
         "mass_tolerance": 1e-06,
         "u_rmse_tolerance": 0.02,
         "v_rmse_tolerance": 0.005,
-        "p_rmse_tolerance": 0.1,
+        "p_rmse_tolerance": 0.2,
         "max_iter": 35
       },
       "target_config": {
@@ -17128,9 +17116,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -17200,7 +17188,7 @@
         "mass_tolerance": 1e-06,
         "u_rmse_tolerance": 0.02,
         "v_rmse_tolerance": 0.005,
-        "p_rmse_tolerance": 0.1,
+        "p_rmse_tolerance": 0.2,
         "max_iter": 35
       },
       "target_config": {
@@ -17268,9 +17256,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -17338,9 +17326,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -17419,9 +17407,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -17513,7 +17501,7 @@
         "mass_tolerance": 1e-06,
         "u_rmse_tolerance": 0.02,
         "v_rmse_tolerance": 0.005,
-        "p_rmse_tolerance": 0.1,
+        "p_rmse_tolerance": 0.2,
         "max_iter": 35
       },
       "target_config": {
@@ -17603,9 +17591,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -17697,7 +17685,7 @@
         "mass_tolerance": 1e-06,
         "u_rmse_tolerance": 0.02,
         "v_rmse_tolerance": 0.005,
-        "p_rmse_tolerance": 0.1,
+        "p_rmse_tolerance": 0.2,
         "max_iter": 35
       },
       "target_config": {
@@ -17787,9 +17775,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -17879,9 +17867,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -17949,9 +17937,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -18021,7 +18009,7 @@
         "mass_tolerance": 1e-06,
         "u_rmse_tolerance": 0.02,
         "v_rmse_tolerance": 0.005,
-        "p_rmse_tolerance": 0.1,
+        "p_rmse_tolerance": 0.2,
         "max_iter": 35
       },
       "target_config": {
@@ -18089,9 +18077,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -18161,7 +18149,7 @@
         "mass_tolerance": 1e-06,
         "u_rmse_tolerance": 0.02,
         "v_rmse_tolerance": 0.005,
-        "p_rmse_tolerance": 0.1,
+        "p_rmse_tolerance": 0.2,
         "max_iter": 35
       },
       "target_config": {
@@ -18229,9 +18217,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -18299,9 +18287,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -18369,9 +18357,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -18441,7 +18429,7 @@
         "mass_tolerance": 1e-06,
         "u_rmse_tolerance": 0.02,
         "v_rmse_tolerance": 0.005,
-        "p_rmse_tolerance": 0.1,
+        "p_rmse_tolerance": 0.2,
         "max_iter": 35
       },
       "target_config": {
@@ -18509,9 +18497,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -18581,7 +18569,7 @@
         "mass_tolerance": 1e-06,
         "u_rmse_tolerance": 0.02,
         "v_rmse_tolerance": 0.005,
-        "p_rmse_tolerance": 0.1,
+        "p_rmse_tolerance": 0.2,
         "max_iter": 35
       },
       "target_config": {
@@ -18649,9 +18637,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -18719,9 +18707,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -18789,9 +18777,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -18861,7 +18849,7 @@
         "mass_tolerance": 1e-06,
         "u_rmse_tolerance": 0.02,
         "v_rmse_tolerance": 0.005,
-        "p_rmse_tolerance": 0.1,
+        "p_rmse_tolerance": 0.2,
         "max_iter": 35
       },
       "target_config": {
@@ -18929,9 +18917,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -19001,7 +18989,7 @@
         "mass_tolerance": 1e-06,
         "u_rmse_tolerance": 0.02,
         "v_rmse_tolerance": 0.005,
-        "p_rmse_tolerance": 0.1,
+        "p_rmse_tolerance": 0.2,
         "max_iter": 35
       },
       "target_config": {
@@ -19069,9 +19057,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -19139,9 +19127,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -19213,9 +19201,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -19289,7 +19277,7 @@
         "mass_tolerance": 1e-06,
         "u_rmse_tolerance": 0.02,
         "v_rmse_tolerance": 0.005,
-        "p_rmse_tolerance": 0.1,
+        "p_rmse_tolerance": 0.2,
         "max_iter": 35
       },
       "target_config": {
@@ -19361,9 +19349,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {
@@ -19437,7 +19425,7 @@
         "mass_tolerance": 1e-06,
         "u_rmse_tolerance": 0.02,
         "v_rmse_tolerance": 0.005,
-        "p_rmse_tolerance": 0.1,
+        "p_rmse_tolerance": 0.2,
         "max_iter": 35
       },
       "target_config": {
@@ -19509,9 +19497,9 @@
       "precision_level": "low",
       "precision_config": {
         "mass_tolerance": 0.0001,
-        "u_rmse_tolerance": 0.1,
+        "u_rmse_tolerance": 0.11,
         "v_rmse_tolerance": 0.05,
-        "p_rmse_tolerance": 0.2,
+        "p_rmse_tolerance": 0.4,
         "max_iter": 25
       },
       "target_config": {

@@ -27,7 +27,7 @@ def run_sim_heat_steady_2d(profile, dx, relax, error_threshold, t_init):
     print(
         f"Running new simulation with parameters: dx={dx}, relax={relax}, error_threshold={error_threshold}, T_init={t_init}"
     )
-    cmd = f"python costsci_tools/runners/heat_steady_2d.py --config-name={profile} dx={dx} relax={relax} error_threshold={error_threshold} T_init={t_init}"
+    cmd = f"python runners/heat_steady_2d.py --config-name={profile} dx={dx} relax={relax} error_threshold={error_threshold} T_init={t_init}"
     subprocess.run(cmd, shell=True, check=True)
 
     # Load the cost and num_steps from the meta.json file
@@ -131,8 +131,8 @@ def compare_res_heat_steady_2d(
     T_line1 = res1[idx1, :]
     T_line2 = res2[idx2, :]
 
-    # Interpolate the higher-resolution line to the lower-resolution y-coordinates
-    if len(y1) < len(y2):
+    # Interpolate by upsampling
+    if len(y1) > len(y2):
         interpolator = RegularGridInterpolator((y2,), T_line2)
         T_line2_interp = interpolator(y1)
         T_line2 = T_line2_interp

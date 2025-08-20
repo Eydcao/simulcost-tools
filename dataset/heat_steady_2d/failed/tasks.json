@@ -2,7 +2,7 @@
   "metadata": {
     "solver": "heat_steady_2d",
     "description": "Failed to converge parameter optimization tasks",
-    "total_tasks": 81
+    "total_tasks": 95
   },
   "tasks": [
     {
@@ -23,17 +23,17 @@
       "non_target_parameters": {
         "relax": 0.2,
         "error_threshold": 1e-08,
-        "t_init": 0.5
+        "t_init": 0.0
       },
       "results": {
         "converged": false,
         "optimal_parameter_value": 0.005,
-        "total_computational_cost": 4873758382,
+        "total_computational_cost": 4901500702,
         "cost_history": [
-          287131,
-          4368312,
-          58205178,
-          770797761,
+          293384,
+          4475796,
+          59862015,
+          796769507,
           4040100000
         ],
         "parameter_history": [
@@ -41,31 +41,31 @@
             "dx": 0.08,
             "relax": 0.2,
             "error_threshold": 1e-08,
-            "t_init": 0.5
+            "t_init": 0.0
           },
           {
             "dx": 0.04,
             "relax": 0.2,
             "error_threshold": 1e-08,
-            "t_init": 0.5
+            "t_init": 0.0
           },
           {
             "dx": 0.02,
             "relax": 0.2,
             "error_threshold": 1e-08,
-            "t_init": 0.5
+            "t_init": 0.0
           },
           {
             "dx": 0.01,
             "relax": 0.2,
             "error_threshold": 1e-08,
-            "t_init": 0.5
+            "t_init": 0.0
           },
           {
             "dx": 0.005,
             "relax": 0.2,
             "error_threshold": 1e-08,
-            "t_init": 0.5
+            "t_init": 0.0
           }
         ]
       }
@@ -88,17 +88,17 @@
       "non_target_parameters": {
         "relax": 0.2,
         "error_threshold": 1e-08,
-        "t_init": 0.75
+        "t_init": 0.25
       },
       "results": {
         "converged": false,
         "optimal_parameter_value": 0.005,
-        "total_computational_cost": 4957898471,
+        "total_computational_cost": 4658923432,
         "cost_history": [
-          306059,
-          4694820,
-          63227709,
-          849569883,
+          239135,
+          3534804,
+          45384849,
+          569664644,
           4040100000
         ],
         "parameter_history": [
@@ -106,96 +106,31 @@
             "dx": 0.08,
             "relax": 0.2,
             "error_threshold": 1e-08,
-            "t_init": 0.75
+            "t_init": 0.25
           },
           {
             "dx": 0.04,
             "relax": 0.2,
             "error_threshold": 1e-08,
-            "t_init": 0.75
+            "t_init": 0.25
           },
           {
             "dx": 0.02,
             "relax": 0.2,
             "error_threshold": 1e-08,
-            "t_init": 0.75
+            "t_init": 0.25
           },
           {
             "dx": 0.01,
             "relax": 0.2,
             "error_threshold": 1e-08,
-            "t_init": 0.75
+            "t_init": 0.25
           },
           {
             "dx": 0.005,
             "relax": 0.2,
             "error_threshold": 1e-08,
-            "t_init": 0.75
-          }
-        ]
-      }
-    },
-    {
-      "solver": "heat_steady_2d",
-      "target_parameter": "dx",
-      "profile": "p2",
-      "precision_config": {
-        "tolerance_rmse": 0.0005
-      },
-      "target_config": {
-        "initial_value": 0.08,
-        "multiplication_factor": 0.5,
-        "max_iteration_num": 5,
-        "search_range_min": null,
-        "search_range_max": null,
-        "search_range_slice_num": null
-      },
-      "non_target_parameters": {
-        "relax": 0.2,
-        "error_threshold": 1e-08,
-        "t_init": 1.0
-      },
-      "results": {
-        "converged": false,
-        "optimal_parameter_value": 0.005,
-        "total_computational_cost": 5005089559,
-        "cost_history": [
-          316537,
-          4878016,
-          66044592,
-          893750414,
-          4040100000
-        ],
-        "parameter_history": [
-          {
-            "dx": 0.08,
-            "relax": 0.2,
-            "error_threshold": 1e-08,
-            "t_init": 1.0
-          },
-          {
-            "dx": 0.04,
-            "relax": 0.2,
-            "error_threshold": 1e-08,
-            "t_init": 1.0
-          },
-          {
-            "dx": 0.02,
-            "relax": 0.2,
-            "error_threshold": 1e-08,
-            "t_init": 1.0
-          },
-          {
-            "dx": 0.01,
-            "relax": 0.2,
-            "error_threshold": 1e-08,
-            "t_init": 1.0
-          },
-          {
-            "dx": 0.005,
-            "relax": 0.2,
-            "error_threshold": 1e-08,
-            "t_init": 1.0
+            "t_init": 0.25
           }
         ]
       }
@@ -815,6 +750,201 @@
         "search_range_slice_num": null
       },
       "non_target_parameters": {
+        "relax": 0.6,
+        "error_threshold": 1e-08,
+        "t_init": 0.5
+      },
+      "results": {
+        "converged": false,
+        "optimal_parameter_value": 0.005,
+        "total_computational_cost": 4144368870,
+        "cost_history": [
+          102921,
+          1589276,
+          21471255,
+          289453375,
+          3831752043
+        ],
+        "parameter_history": [
+          {
+            "dx": 0.08,
+            "relax": 0.6,
+            "error_threshold": 1e-08,
+            "t_init": 0.5
+          },
+          {
+            "dx": 0.04,
+            "relax": 0.6,
+            "error_threshold": 1e-08,
+            "t_init": 0.5
+          },
+          {
+            "dx": 0.02,
+            "relax": 0.6,
+            "error_threshold": 1e-08,
+            "t_init": 0.5
+          },
+          {
+            "dx": 0.01,
+            "relax": 0.6,
+            "error_threshold": 1e-08,
+            "t_init": 0.5
+          },
+          {
+            "dx": 0.005,
+            "relax": 0.6,
+            "error_threshold": 1e-08,
+            "t_init": 0.5
+          }
+        ]
+      }
+    },
+    {
+      "solver": "heat_steady_2d",
+      "target_parameter": "dx",
+      "profile": "p3",
+      "precision_config": {
+        "tolerance_rmse": 0.0005
+      },
+      "target_config": {
+        "initial_value": 0.08,
+        "multiplication_factor": 0.5,
+        "max_iteration_num": 5,
+        "search_range_min": null,
+        "search_range_max": null,
+        "search_range_slice_num": null
+      },
+      "non_target_parameters": {
+        "relax": 0.6,
+        "error_threshold": 1e-08,
+        "t_init": 0.75
+      },
+      "results": {
+        "converged": false,
+        "optimal_parameter_value": 0.005,
+        "total_computational_cost": 4383899061,
+        "cost_history": [
+          109850,
+          1709604,
+          23330970,
+          318648637,
+          4040100000
+        ],
+        "parameter_history": [
+          {
+            "dx": 0.08,
+            "relax": 0.6,
+            "error_threshold": 1e-08,
+            "t_init": 0.75
+          },
+          {
+            "dx": 0.04,
+            "relax": 0.6,
+            "error_threshold": 1e-08,
+            "t_init": 0.75
+          },
+          {
+            "dx": 0.02,
+            "relax": 0.6,
+            "error_threshold": 1e-08,
+            "t_init": 0.75
+          },
+          {
+            "dx": 0.01,
+            "relax": 0.6,
+            "error_threshold": 1e-08,
+            "t_init": 0.75
+          },
+          {
+            "dx": 0.005,
+            "relax": 0.6,
+            "error_threshold": 1e-08,
+            "t_init": 0.75
+          }
+        ]
+      }
+    },
+    {
+      "solver": "heat_steady_2d",
+      "target_parameter": "dx",
+      "profile": "p3",
+      "precision_config": {
+        "tolerance_rmse": 0.0005
+      },
+      "target_config": {
+        "initial_value": 0.08,
+        "multiplication_factor": 0.5,
+        "max_iteration_num": 5,
+        "search_range_min": null,
+        "search_range_max": null,
+        "search_range_slice_num": null
+      },
+      "non_target_parameters": {
+        "relax": 0.6,
+        "error_threshold": 1e-08,
+        "t_init": 1.0
+      },
+      "results": {
+        "converged": false,
+        "optimal_parameter_value": 0.005,
+        "total_computational_cost": 4400527983,
+        "cost_history": [
+          113568,
+          1774500,
+          24324552,
+          334215363,
+          4040100000
+        ],
+        "parameter_history": [
+          {
+            "dx": 0.08,
+            "relax": 0.6,
+            "error_threshold": 1e-08,
+            "t_init": 1.0
+          },
+          {
+            "dx": 0.04,
+            "relax": 0.6,
+            "error_threshold": 1e-08,
+            "t_init": 1.0
+          },
+          {
+            "dx": 0.02,
+            "relax": 0.6,
+            "error_threshold": 1e-08,
+            "t_init": 1.0
+          },
+          {
+            "dx": 0.01,
+            "relax": 0.6,
+            "error_threshold": 1e-08,
+            "t_init": 1.0
+          },
+          {
+            "dx": 0.005,
+            "relax": 0.6,
+            "error_threshold": 1e-08,
+            "t_init": 1.0
+          }
+        ]
+      }
+    },
+    {
+      "solver": "heat_steady_2d",
+      "target_parameter": "dx",
+      "profile": "p3",
+      "precision_config": {
+        "tolerance_rmse": 0.0005
+      },
+      "target_config": {
+        "initial_value": 0.08,
+        "multiplication_factor": 0.5,
+        "max_iteration_num": 5,
+        "search_range_min": null,
+        "search_range_max": null,
+        "search_range_slice_num": null
+      },
+      "non_target_parameters": {
         "relax": 1.0,
         "error_threshold": 1e-08,
         "t_init": 0.0
@@ -925,6 +1055,201 @@
             "relax": 1.0,
             "error_threshold": 1e-08,
             "t_init": 0.25
+          }
+        ]
+      }
+    },
+    {
+      "solver": "heat_steady_2d",
+      "target_parameter": "dx",
+      "profile": "p3",
+      "precision_config": {
+        "tolerance_rmse": 0.0005
+      },
+      "target_config": {
+        "initial_value": 0.08,
+        "multiplication_factor": 0.5,
+        "max_iteration_num": 5,
+        "search_range_min": null,
+        "search_range_max": null,
+        "search_range_slice_num": null
+      },
+      "non_target_parameters": {
+        "relax": 1.0,
+        "error_threshold": 1e-08,
+        "t_init": 0.5
+      },
+      "results": {
+        "converged": false,
+        "optimal_parameter_value": 0.005,
+        "total_computational_cost": 2665150145,
+        "cost_history": [
+          63882,
+          995748,
+          13551210,
+          184219859,
+          2466319446
+        ],
+        "parameter_history": [
+          {
+            "dx": 0.08,
+            "relax": 1.0,
+            "error_threshold": 1e-08,
+            "t_init": 0.5
+          },
+          {
+            "dx": 0.04,
+            "relax": 1.0,
+            "error_threshold": 1e-08,
+            "t_init": 0.5
+          },
+          {
+            "dx": 0.02,
+            "relax": 1.0,
+            "error_threshold": 1e-08,
+            "t_init": 0.5
+          },
+          {
+            "dx": 0.01,
+            "relax": 1.0,
+            "error_threshold": 1e-08,
+            "t_init": 0.5
+          },
+          {
+            "dx": 0.005,
+            "relax": 1.0,
+            "error_threshold": 1e-08,
+            "t_init": 0.5
+          }
+        ]
+      }
+    },
+    {
+      "solver": "heat_steady_2d",
+      "target_parameter": "dx",
+      "profile": "p3",
+      "precision_config": {
+        "tolerance_rmse": 0.0005
+      },
+      "target_config": {
+        "initial_value": 0.08,
+        "multiplication_factor": 0.5,
+        "max_iteration_num": 5,
+        "search_range_min": null,
+        "search_range_max": null,
+        "search_range_slice_num": null
+      },
+      "non_target_parameters": {
+        "relax": 1.0,
+        "error_threshold": 1e-08,
+        "t_init": 0.75
+      },
+      "results": {
+        "converged": false,
+        "optimal_parameter_value": 0.005,
+        "total_computational_cost": 2961291315,
+        "cost_history": [
+          68107,
+          1068080,
+          14667039,
+          201734976,
+          2743753113
+        ],
+        "parameter_history": [
+          {
+            "dx": 0.08,
+            "relax": 1.0,
+            "error_threshold": 1e-08,
+            "t_init": 0.75
+          },
+          {
+            "dx": 0.04,
+            "relax": 1.0,
+            "error_threshold": 1e-08,
+            "t_init": 0.75
+          },
+          {
+            "dx": 0.02,
+            "relax": 1.0,
+            "error_threshold": 1e-08,
+            "t_init": 0.75
+          },
+          {
+            "dx": 0.01,
+            "relax": 1.0,
+            "error_threshold": 1e-08,
+            "t_init": 0.75
+          },
+          {
+            "dx": 0.005,
+            "relax": 1.0,
+            "error_threshold": 1e-08,
+            "t_init": 0.75
+          }
+        ]
+      }
+    },
+    {
+      "solver": "heat_steady_2d",
+      "target_parameter": "dx",
+      "profile": "p3",
+      "precision_config": {
+        "tolerance_rmse": 0.0005
+      },
+      "target_config": {
+        "initial_value": 0.08,
+        "multiplication_factor": 0.5,
+        "max_iteration_num": 5,
+        "search_range_min": null,
+        "search_range_max": null,
+        "search_range_slice_num": null
+      },
+      "non_target_parameters": {
+        "relax": 1.0,
+        "error_threshold": 1e-08,
+        "t_init": 1.0
+      },
+      "results": {
+        "converged": false,
+        "optimal_parameter_value": 0.005,
+        "total_computational_cost": 3119290852,
+        "cost_history": [
+          70304,
+          1106612,
+          15262668,
+          211068891,
+          2891782377
+        ],
+        "parameter_history": [
+          {
+            "dx": 0.08,
+            "relax": 1.0,
+            "error_threshold": 1e-08,
+            "t_init": 1.0
+          },
+          {
+            "dx": 0.04,
+            "relax": 1.0,
+            "error_threshold": 1e-08,
+            "t_init": 1.0
+          },
+          {
+            "dx": 0.02,
+            "relax": 1.0,
+            "error_threshold": 1e-08,
+            "t_init": 1.0
+          },
+          {
+            "dx": 0.01,
+            "relax": 1.0,
+            "error_threshold": 1e-08,
+            "t_init": 1.0
+          },
+          {
+            "dx": 0.005,
+            "relax": 1.0,
+            "error_threshold": 1e-08,
+            "t_init": 1.0
           }
         ]
       }
@@ -1307,17 +1632,17 @@
       "non_target_parameters": {
         "relax": 0.2,
         "error_threshold": 1e-08,
-        "t_init": 0.5
+        "t_init": 0.0
       },
       "results": {
         "converged": false,
         "optimal_parameter_value": 0.005,
-        "total_computational_cost": 4780217252,
+        "total_computational_cost": 4942100394,
         "cost_history": [
-          266344,
-          4005300,
-          52623432,
-          683222176,
+          302510,
+          4633304,
+          62286147,
+          834778433,
           4040100000
         ],
         "parameter_history": [
@@ -1325,31 +1650,31 @@
             "dx": 0.08,
             "relax": 0.2,
             "error_threshold": 1e-08,
-            "t_init": 0.5
+            "t_init": 0.0
           },
           {
             "dx": 0.04,
             "relax": 0.2,
             "error_threshold": 1e-08,
-            "t_init": 0.5
+            "t_init": 0.0
           },
           {
             "dx": 0.02,
             "relax": 0.2,
             "error_threshold": 1e-08,
-            "t_init": 0.5
+            "t_init": 0.0
           },
           {
             "dx": 0.01,
             "relax": 0.2,
             "error_threshold": 1e-08,
-            "t_init": 0.5
+            "t_init": 0.0
           },
           {
             "dx": 0.005,
             "relax": 0.2,
             "error_threshold": 1e-08,
-            "t_init": 0.5
+            "t_init": 0.0
           }
         ]
       }
@@ -1372,17 +1697,17 @@
       "non_target_parameters": {
         "relax": 0.2,
         "error_threshold": 1e-08,
-        "t_init": 0.75
+        "t_init": 0.25
       },
       "results": {
         "converged": false,
         "optimal_parameter_value": 0.005,
-        "total_computational_cost": 4923661766,
+        "total_computational_cost": 4836614852,
         "cost_history": [
-          298454,
-          4561648,
-          61183323,
-          817518341,
+          278850,
+          4224324,
+          55989126,
+          736022552,
           4040100000
         ],
         "parameter_history": [
@@ -1390,96 +1715,31 @@
             "dx": 0.08,
             "relax": 0.2,
             "error_threshold": 1e-08,
-            "t_init": 0.75
+            "t_init": 0.25
           },
           {
             "dx": 0.04,
             "relax": 0.2,
             "error_threshold": 1e-08,
-            "t_init": 0.75
+            "t_init": 0.25
           },
           {
             "dx": 0.02,
             "relax": 0.2,
             "error_threshold": 1e-08,
-            "t_init": 0.75
+            "t_init": 0.25
           },
           {
             "dx": 0.01,
             "relax": 0.2,
             "error_threshold": 1e-08,
-            "t_init": 0.75
+            "t_init": 0.25
           },
           {
             "dx": 0.005,
             "relax": 0.2,
             "error_threshold": 1e-08,
-            "t_init": 0.75
-          }
-        ]
-      }
-    },
-    {
-      "solver": "heat_steady_2d",
-      "target_parameter": "dx",
-      "profile": "p4",
-      "precision_config": {
-        "tolerance_rmse": 0.0005
-      },
-      "target_config": {
-        "initial_value": 0.08,
-        "multiplication_factor": 0.5,
-        "max_iteration_num": 5,
-        "search_range_min": null,
-        "search_range_max": null,
-        "search_range_slice_num": null
-      },
-      "non_target_parameters": {
-        "relax": 0.2,
-        "error_threshold": 1e-08,
-        "t_init": 1.0
-      },
-      "results": {
-        "converged": false,
-        "optimal_parameter_value": 0.005,
-        "total_computational_cost": 4984005212,
-        "cost_history": [
-          311805,
-          4796220,
-          64785708,
-          874011479,
-          4040100000
-        ],
-        "parameter_history": [
-          {
-            "dx": 0.08,
-            "relax": 0.2,
-            "error_threshold": 1e-08,
-            "t_init": 1.0
-          },
-          {
-            "dx": 0.04,
-            "relax": 0.2,
-            "error_threshold": 1e-08,
-            "t_init": 1.0
-          },
-          {
-            "dx": 0.02,
-            "relax": 0.2,
-            "error_threshold": 1e-08,
-            "t_init": 1.0
-          },
-          {
-            "dx": 0.01,
-            "relax": 0.2,
-            "error_threshold": 1e-08,
-            "t_init": 1.0
-          },
-          {
-            "dx": 0.005,
-            "relax": 0.2,
-            "error_threshold": 1e-08,
-            "t_init": 1.0
+            "t_init": 0.25
           }
         ]
       }
@@ -2043,49 +2303,49 @@
       "non_target_parameters": {
         "relax": 0.6,
         "error_threshold": 1e-08,
-        "t_init": 0.0
+        "t_init": 0.5
       },
       "results": {
         "converged": false,
         "optimal_parameter_value": 0.005,
-        "total_computational_cost": 4357363846,
+        "total_computational_cost": 4262743030,
         "cost_history": [
-          105963,
-          1641328,
-          22272363,
-          302051610,
-          4031292582
+          104611,
+          1618344,
+          21916026,
+          296451261,
+          3942652788
         ],
         "parameter_history": [
           {
             "dx": 0.08,
             "relax": 0.6,
             "error_threshold": 1e-08,
-            "t_init": 0.0
+            "t_init": 0.5
           },
           {
             "dx": 0.04,
             "relax": 0.6,
             "error_threshold": 1e-08,
-            "t_init": 0.0
+            "t_init": 0.5
           },
           {
             "dx": 0.02,
             "relax": 0.6,
             "error_threshold": 1e-08,
-            "t_init": 0.0
+            "t_init": 0.5
           },
           {
             "dx": 0.01,
             "relax": 0.6,
             "error_threshold": 1e-08,
-            "t_init": 0.0
+            "t_init": 0.5
           },
           {
             "dx": 0.005,
             "relax": 0.6,
             "error_threshold": 1e-08,
-            "t_init": 0.0
+            "t_init": 0.5
           }
         ]
       }
@@ -2108,49 +2368,309 @@
       "non_target_parameters": {
         "relax": 0.6,
         "error_threshold": 1e-08,
-        "t_init": 0.25
+        "t_init": 0.75
       },
       "results": {
         "converged": false,
         "optimal_parameter_value": 0.005,
-        "total_computational_cost": 2847819007,
+        "total_computational_cost": 4387288815,
         "cost_history": [
-          84838,
-          1271556,
-          16583976,
-          212782659,
-          2617095978
+          110695,
+          1723124,
+          23533848,
+          321821148,
+          4040100000
         ],
         "parameter_history": [
           {
             "dx": 0.08,
             "relax": 0.6,
             "error_threshold": 1e-08,
-            "t_init": 0.25
+            "t_init": 0.75
           },
           {
             "dx": 0.04,
             "relax": 0.6,
             "error_threshold": 1e-08,
-            "t_init": 0.25
+            "t_init": 0.75
           },
           {
             "dx": 0.02,
             "relax": 0.6,
             "error_threshold": 1e-08,
-            "t_init": 0.25
+            "t_init": 0.75
           },
           {
             "dx": 0.01,
             "relax": 0.6,
             "error_threshold": 1e-08,
-            "t_init": 0.25
+            "t_init": 0.75
           },
           {
             "dx": 0.005,
             "relax": 0.6,
             "error_threshold": 1e-08,
-            "t_init": 0.25
+            "t_init": 0.75
+          }
+        ]
+      }
+    },
+    {
+      "solver": "heat_steady_2d",
+      "target_parameter": "dx",
+      "profile": "p5",
+      "precision_config": {
+        "tolerance_rmse": 0.0005
+      },
+      "target_config": {
+        "initial_value": 0.08,
+        "multiplication_factor": 0.5,
+        "max_iteration_num": 5,
+        "search_range_min": null,
+        "search_range_max": null,
+        "search_range_slice_num": null
+      },
+      "non_target_parameters": {
+        "relax": 0.6,
+        "error_threshold": 1e-08,
+        "t_init": 1.0
+      },
+      "results": {
+        "converged": false,
+        "optimal_parameter_value": 0.005,
+        "total_computational_cost": 4402717053,
+        "cost_history": [
+          114075,
+          1782612,
+          24454602,
+          336265764,
+          4040100000
+        ],
+        "parameter_history": [
+          {
+            "dx": 0.08,
+            "relax": 0.6,
+            "error_threshold": 1e-08,
+            "t_init": 1.0
+          },
+          {
+            "dx": 0.04,
+            "relax": 0.6,
+            "error_threshold": 1e-08,
+            "t_init": 1.0
+          },
+          {
+            "dx": 0.02,
+            "relax": 0.6,
+            "error_threshold": 1e-08,
+            "t_init": 1.0
+          },
+          {
+            "dx": 0.01,
+            "relax": 0.6,
+            "error_threshold": 1e-08,
+            "t_init": 1.0
+          },
+          {
+            "dx": 0.005,
+            "relax": 0.6,
+            "error_threshold": 1e-08,
+            "t_init": 1.0
+          }
+        ]
+      }
+    },
+    {
+      "solver": "heat_steady_2d",
+      "target_parameter": "dx",
+      "profile": "p5",
+      "precision_config": {
+        "tolerance_rmse": 0.0005
+      },
+      "target_config": {
+        "initial_value": 0.08,
+        "multiplication_factor": 0.5,
+        "max_iteration_num": 5,
+        "search_range_min": null,
+        "search_range_max": null,
+        "search_range_slice_num": null
+      },
+      "non_target_parameters": {
+        "relax": 1.0,
+        "error_threshold": 1e-08,
+        "t_init": 0.5
+      },
+      "results": {
+        "converged": false,
+        "optimal_parameter_value": 0.005,
+        "total_computational_cost": 2736179897,
+        "cost_history": [
+          64896,
+          1013324,
+          13819113,
+          188422671,
+          2532859893
+        ],
+        "parameter_history": [
+          {
+            "dx": 0.08,
+            "relax": 1.0,
+            "error_threshold": 1e-08,
+            "t_init": 0.5
+          },
+          {
+            "dx": 0.04,
+            "relax": 1.0,
+            "error_threshold": 1e-08,
+            "t_init": 0.5
+          },
+          {
+            "dx": 0.02,
+            "relax": 1.0,
+            "error_threshold": 1e-08,
+            "t_init": 0.5
+          },
+          {
+            "dx": 0.01,
+            "relax": 1.0,
+            "error_threshold": 1e-08,
+            "t_init": 0.5
+          },
+          {
+            "dx": 0.005,
+            "relax": 1.0,
+            "error_threshold": 1e-08,
+            "t_init": 0.5
+          }
+        ]
+      }
+    },
+    {
+      "solver": "heat_steady_2d",
+      "target_parameter": "dx",
+      "profile": "p5",
+      "precision_config": {
+        "tolerance_rmse": 0.0005
+      },
+      "target_config": {
+        "initial_value": 0.08,
+        "multiplication_factor": 0.5,
+        "max_iteration_num": 5,
+        "search_range_min": null,
+        "search_range_max": null,
+        "search_range_slice_num": null
+      },
+      "non_target_parameters": {
+        "relax": 1.0,
+        "error_threshold": 1e-08,
+        "t_init": 0.75
+      },
+      "results": {
+        "converged": false,
+        "optimal_parameter_value": 0.005,
+        "total_computational_cost": 2993498945,
+        "cost_history": [
+          68445,
+          1076192,
+          14789286,
+          203632362,
+          2773932660
+        ],
+        "parameter_history": [
+          {
+            "dx": 0.08,
+            "relax": 1.0,
+            "error_threshold": 1e-08,
+            "t_init": 0.75
+          },
+          {
+            "dx": 0.04,
+            "relax": 1.0,
+            "error_threshold": 1e-08,
+            "t_init": 0.75
+          },
+          {
+            "dx": 0.02,
+            "relax": 1.0,
+            "error_threshold": 1e-08,
+            "t_init": 0.75
+          },
+          {
+            "dx": 0.01,
+            "relax": 1.0,
+            "error_threshold": 1e-08,
+            "t_init": 0.75
+          },
+          {
+            "dx": 0.005,
+            "relax": 1.0,
+            "error_threshold": 1e-08,
+            "t_init": 0.75
+          }
+        ]
+      }
+    },
+    {
+      "solver": "heat_steady_2d",
+      "target_parameter": "dx",
+      "profile": "p5",
+      "precision_config": {
+        "tolerance_rmse": 0.0005
+      },
+      "target_config": {
+        "initial_value": 0.08,
+        "multiplication_factor": 0.5,
+        "max_iteration_num": 5,
+        "search_range_min": null,
+        "search_range_max": null,
+        "search_range_slice_num": null
+      },
+      "non_target_parameters": {
+        "relax": 1.0,
+        "error_threshold": 1e-08,
+        "t_init": 1.0
+      },
+      "results": {
+        "converged": false,
+        "optimal_parameter_value": 0.005,
+        "total_computational_cost": 3140122632,
+        "cost_history": [
+          70642,
+          1112020,
+          15340698,
+          212303212,
+          2911296060
+        ],
+        "parameter_history": [
+          {
+            "dx": 0.08,
+            "relax": 1.0,
+            "error_threshold": 1e-08,
+            "t_init": 1.0
+          },
+          {
+            "dx": 0.04,
+            "relax": 1.0,
+            "error_threshold": 1e-08,
+            "t_init": 1.0
+          },
+          {
+            "dx": 0.02,
+            "relax": 1.0,
+            "error_threshold": 1e-08,
+            "t_init": 1.0
+          },
+          {
+            "dx": 0.01,
+            "relax": 1.0,
+            "error_threshold": 1e-08,
+            "t_init": 1.0
+          },
+          {
+            "dx": 0.005,
+            "relax": 1.0,
+            "error_threshold": 1e-08,
+            "t_init": 1.0
           }
         ]
       }
@@ -4031,6 +4551,201 @@
         "search_range_slice_num": null
       },
       "non_target_parameters": {
+        "relax": 0.6,
+        "error_threshold": 1e-08,
+        "t_init": 0.5
+      },
+      "results": {
+        "converged": false,
+        "optimal_parameter_value": 0.005,
+        "total_computational_cost": 3664300875,
+        "cost_history": [
+          96161,
+          1471652,
+          19660959,
+          261063992,
+          3382008111
+        ],
+        "parameter_history": [
+          {
+            "dx": 0.08,
+            "relax": 0.6,
+            "error_threshold": 1e-08,
+            "t_init": 0.5
+          },
+          {
+            "dx": 0.04,
+            "relax": 0.6,
+            "error_threshold": 1e-08,
+            "t_init": 0.5
+          },
+          {
+            "dx": 0.02,
+            "relax": 0.6,
+            "error_threshold": 1e-08,
+            "t_init": 0.5
+          },
+          {
+            "dx": 0.01,
+            "relax": 0.6,
+            "error_threshold": 1e-08,
+            "t_init": 0.5
+          },
+          {
+            "dx": 0.005,
+            "relax": 0.6,
+            "error_threshold": 1e-08,
+            "t_init": 0.5
+          }
+        ]
+      }
+    },
+    {
+      "solver": "heat_steady_2d",
+      "target_parameter": "dx",
+      "profile": "p7",
+      "precision_config": {
+        "tolerance_rmse": 0.0005
+      },
+      "target_config": {
+        "initial_value": 0.08,
+        "multiplication_factor": 0.5,
+        "max_iteration_num": 5,
+        "search_range_min": null,
+        "search_range_max": null,
+        "search_range_slice_num": null
+      },
+      "non_target_parameters": {
+        "relax": 0.6,
+        "error_threshold": 1e-08,
+        "t_init": 0.75
+      },
+      "results": {
+        "converged": false,
+        "optimal_parameter_value": 0.005,
+        "total_computational_cost": 4373767294,
+        "cost_history": [
+          107653,
+          1670396,
+          22727538,
+          309161707,
+          4040100000
+        ],
+        "parameter_history": [
+          {
+            "dx": 0.08,
+            "relax": 0.6,
+            "error_threshold": 1e-08,
+            "t_init": 0.75
+          },
+          {
+            "dx": 0.04,
+            "relax": 0.6,
+            "error_threshold": 1e-08,
+            "t_init": 0.75
+          },
+          {
+            "dx": 0.02,
+            "relax": 0.6,
+            "error_threshold": 1e-08,
+            "t_init": 0.75
+          },
+          {
+            "dx": 0.01,
+            "relax": 0.6,
+            "error_threshold": 1e-08,
+            "t_init": 0.75
+          },
+          {
+            "dx": 0.005,
+            "relax": 0.6,
+            "error_threshold": 1e-08,
+            "t_init": 0.75
+          }
+        ]
+      }
+    },
+    {
+      "solver": "heat_steady_2d",
+      "target_parameter": "dx",
+      "profile": "p7",
+      "precision_config": {
+        "tolerance_rmse": 0.0005
+      },
+      "target_config": {
+        "initial_value": 0.08,
+        "multiplication_factor": 0.5,
+        "max_iteration_num": 5,
+        "search_range_min": null,
+        "search_range_max": null,
+        "search_range_slice_num": null
+      },
+      "non_target_parameters": {
+        "relax": 0.6,
+        "error_threshold": 1e-08,
+        "t_init": 1.0
+      },
+      "results": {
+        "converged": false,
+        "optimal_parameter_value": 0.005,
+        "total_computational_cost": 4394413469,
+        "cost_history": [
+          112216,
+          1750840,
+          23957811,
+          328492602,
+          4040100000
+        ],
+        "parameter_history": [
+          {
+            "dx": 0.08,
+            "relax": 0.6,
+            "error_threshold": 1e-08,
+            "t_init": 1.0
+          },
+          {
+            "dx": 0.04,
+            "relax": 0.6,
+            "error_threshold": 1e-08,
+            "t_init": 1.0
+          },
+          {
+            "dx": 0.02,
+            "relax": 0.6,
+            "error_threshold": 1e-08,
+            "t_init": 1.0
+          },
+          {
+            "dx": 0.01,
+            "relax": 0.6,
+            "error_threshold": 1e-08,
+            "t_init": 1.0
+          },
+          {
+            "dx": 0.005,
+            "relax": 0.6,
+            "error_threshold": 1e-08,
+            "t_init": 1.0
+          }
+        ]
+      }
+    },
+    {
+      "solver": "heat_steady_2d",
+      "target_parameter": "dx",
+      "profile": "p7",
+      "precision_config": {
+        "tolerance_rmse": 0.0005
+      },
+      "target_config": {
+        "initial_value": 0.08,
+        "multiplication_factor": 0.5,
+        "max_iteration_num": 5,
+        "search_range_min": null,
+        "search_range_max": null,
+        "search_range_slice_num": null
+      },
+      "non_target_parameters": {
         "relax": 1.0,
         "error_threshold": 1e-08,
         "t_init": 0.0
@@ -4141,6 +4856,201 @@
             "relax": 1.0,
             "error_threshold": 1e-08,
             "t_init": 0.25
+          }
+        ]
+      }
+    },
+    {
+      "solver": "heat_steady_2d",
+      "target_parameter": "dx",
+      "profile": "p7",
+      "precision_config": {
+        "tolerance_rmse": 0.0005
+      },
+      "target_config": {
+        "initial_value": 0.08,
+        "multiplication_factor": 0.5,
+        "max_iteration_num": 5,
+        "search_range_min": null,
+        "search_range_max": null,
+        "search_range_slice_num": null
+      },
+      "non_target_parameters": {
+        "relax": 1.0,
+        "error_threshold": 1e-08,
+        "t_init": 0.5
+      },
+      "results": {
+        "converged": false,
+        "optimal_parameter_value": 0.005,
+        "total_computational_cost": 2377117388,
+        "cost_history": [
+          59995,
+          925444,
+          12466593,
+          167184189,
+          2196481167
+        ],
+        "parameter_history": [
+          {
+            "dx": 0.08,
+            "relax": 1.0,
+            "error_threshold": 1e-08,
+            "t_init": 0.5
+          },
+          {
+            "dx": 0.04,
+            "relax": 1.0,
+            "error_threshold": 1e-08,
+            "t_init": 0.5
+          },
+          {
+            "dx": 0.02,
+            "relax": 1.0,
+            "error_threshold": 1e-08,
+            "t_init": 0.5
+          },
+          {
+            "dx": 0.01,
+            "relax": 1.0,
+            "error_threshold": 1e-08,
+            "t_init": 0.5
+          },
+          {
+            "dx": 0.005,
+            "relax": 1.0,
+            "error_threshold": 1e-08,
+            "t_init": 0.5
+          }
+        ]
+      }
+    },
+    {
+      "solver": "heat_steady_2d",
+      "target_parameter": "dx",
+      "profile": "p7",
+      "precision_config": {
+        "tolerance_rmse": 0.0005
+      },
+      "target_config": {
+        "initial_value": 0.08,
+        "multiplication_factor": 0.5,
+        "max_iteration_num": 5,
+        "search_range_min": null,
+        "search_range_max": null,
+        "search_range_slice_num": null
+      },
+      "non_target_parameters": {
+        "relax": 1.0,
+        "error_threshold": 1e-08,
+        "t_init": 0.75
+      },
+      "results": {
+        "converged": false,
+        "optimal_parameter_value": 0.005,
+        "total_computational_cost": 2865119052,
+        "cost_history": [
+          66755,
+          1045096,
+          14305500,
+          196042818,
+          2653658883
+        ],
+        "parameter_history": [
+          {
+            "dx": 0.08,
+            "relax": 1.0,
+            "error_threshold": 1e-08,
+            "t_init": 0.75
+          },
+          {
+            "dx": 0.04,
+            "relax": 1.0,
+            "error_threshold": 1e-08,
+            "t_init": 0.75
+          },
+          {
+            "dx": 0.02,
+            "relax": 1.0,
+            "error_threshold": 1e-08,
+            "t_init": 0.75
+          },
+          {
+            "dx": 0.01,
+            "relax": 1.0,
+            "error_threshold": 1e-08,
+            "t_init": 0.75
+          },
+          {
+            "dx": 0.005,
+            "relax": 1.0,
+            "error_threshold": 1e-08,
+            "t_init": 0.75
+          }
+        ]
+      }
+    },
+    {
+      "solver": "heat_steady_2d",
+      "target_parameter": "dx",
+      "profile": "p7",
+      "precision_config": {
+        "tolerance_rmse": 0.0005
+      },
+      "target_config": {
+        "initial_value": 0.08,
+        "multiplication_factor": 0.5,
+        "max_iteration_num": 5,
+        "search_range_min": null,
+        "search_range_max": null,
+        "search_range_slice_num": null
+      },
+      "non_target_parameters": {
+        "relax": 1.0,
+        "error_threshold": 1e-08,
+        "t_init": 1.0
+      },
+      "results": {
+        "converged": false,
+        "optimal_parameter_value": 0.005,
+        "total_computational_cost": 3061209644,
+        "cost_history": [
+          69459,
+          1092416,
+          15044184,
+          207641355,
+          2837362230
+        ],
+        "parameter_history": [
+          {
+            "dx": 0.08,
+            "relax": 1.0,
+            "error_threshold": 1e-08,
+            "t_init": 1.0
+          },
+          {
+            "dx": 0.04,
+            "relax": 1.0,
+            "error_threshold": 1e-08,
+            "t_init": 1.0
+          },
+          {
+            "dx": 0.02,
+            "relax": 1.0,
+            "error_threshold": 1e-08,
+            "t_init": 1.0
+          },
+          {
+            "dx": 0.01,
+            "relax": 1.0,
+            "error_threshold": 1e-08,
+            "t_init": 1.0
+          },
+          {
+            "dx": 0.005,
+            "relax": 1.0,
+            "error_threshold": 1e-08,
+            "t_init": 1.0
           }
         ]
       }
