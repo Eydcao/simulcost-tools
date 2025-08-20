@@ -131,8 +131,8 @@ def compare_res_heat_steady_2d(
     T_line1 = res1[idx1, :]
     T_line2 = res2[idx2, :]
 
-    # Interpolate the higher-resolution line to the lower-resolution y-coordinates
-    if len(y1) < len(y2):
+    # Interpolate by upsampling
+    if len(y1) > len(y2):
         interpolator = RegularGridInterpolator((y2,), T_line2)
         T_line2_interp = interpolator(y1)
         T_line2 = T_line2_interp

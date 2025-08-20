@@ -126,10 +126,9 @@ def compare_res_euler_1d(profile1, cfl1, beta1, k1, profile2, cfl2, beta2, k2, r
     res1, x1 = get_res_euler_1d(profile1, cfl1, beta1, k1, n_space1)
     res2, x2 = get_res_euler_1d(profile2, cfl2, beta2, k2, n_space2)
 
-    # Handle different grids by downsampling to the coarser grid
+    # Handle different grids by upsampling to the finer grid
     if len(x1) != len(x2) or not np.allclose(x1, x2):
-        if len(x1) > len(x2):
-            # x1 is finer, downsample x1 to x2's coarser grid
+        if len(x1) < len(x2):
             from scipy.interpolate import interp1d
 
             final1_interp = {}
@@ -141,7 +140,6 @@ def compare_res_euler_1d(profile1, cfl1, beta1, k1, profile2, cfl2, beta2, k2, r
             final2 = res2[sorted(res2.keys())[-1]]
             x_common = x2
         else:
-            # x2 is finer, downsample x2 to x1's coarser grid
             from scipy.interpolate import interp1d
 
             final2_interp = {}
