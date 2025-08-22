@@ -38,7 +38,8 @@
           "wall_width": 16,
           "wall_start_height": 2,
           "wall_start_width": 20
-        }
+        },
+        "aspect_ratio": 0.1
       },
       "results": {
         "converged": false,
@@ -116,7 +117,8 @@
           "wall_width": 4,
           "wall_start_height": 4,
           "wall_start_width": 5
-        }
+        },
+        "aspect_ratio": 1.0
       },
       "results": {
         "converged": false,
@@ -194,7 +196,8 @@
           "wall_width": 16,
           "wall_start_height": 2,
           "wall_start_width": 20
-        }
+        },
+        "aspect_ratio": 0.1
       },
       "results": {
         "converged": false,
@@ -272,7 +275,8 @@
           "wall_width": 16,
           "wall_start_height": 2,
           "wall_start_width": 20
-        }
+        },
+        "aspect_ratio": 0.1
       },
       "results": {
         "converged": false,
@@ -350,7 +354,8 @@
           "wall_width": 16,
           "wall_start_height": 3,
           "wall_start_width": 20
-        }
+        },
+        "aspect_ratio": 0.2
       },
       "results": {
         "converged": false,
@@ -428,7 +433,8 @@
           "wall_width": 16,
           "wall_start_height": 3,
           "wall_start_width": 20
-        }
+        },
+        "aspect_ratio": 0.2
       },
       "results": {
         "converged": false,
@@ -506,7 +512,8 @@
           "wall_width": 16,
           "wall_start_height": 4,
           "wall_start_width": 20
-        }
+        },
+        "aspect_ratio": 0.25
       },
       "results": {
         "converged": false,
@@ -584,7 +591,8 @@
           "wall_width": 16,
           "wall_start_height": 4,
           "wall_start_width": 20
-        }
+        },
+        "aspect_ratio": 0.25
       },
       "results": {
         "converged": false,
@@ -662,7 +670,8 @@
           "wall_width": 16,
           "wall_start_height": 8,
           "wall_start_width": 20
-        }
+        },
+        "aspect_ratio": 0.5
       },
       "results": {
         "converged": false,
@@ -740,7 +749,8 @@
           "wall_width": 20,
           "wall_start_height": 4,
           "wall_start_width": 25
-        }
+        },
+        "aspect_ratio": 0.2
       },
       "results": {
         "converged": false,
@@ -818,7 +828,8 @@
           "wall_width": 20,
           "wall_start_height": 4,
           "wall_start_width": 25
-        }
+        },
+        "aspect_ratio": 0.2
       },
       "results": {
         "converged": false,
@@ -896,7 +907,8 @@
           "wall_width": 16,
           "wall_start_height": 4,
           "wall_start_width": 20
-        }
+        },
+        "aspect_ratio": 0.25
       },
       "results": {
         "converged": false,
@@ -974,7 +986,8 @@
           "wall_width": 16,
           "wall_start_height": 4,
           "wall_start_width": 20
-        }
+        },
+        "aspect_ratio": 0.25
       },
       "results": {
         "converged": false,
@@ -1052,7 +1065,8 @@
           "wall_width": 8,
           "wall_start_height": 4,
           "wall_start_width": 10
-        }
+        },
+        "aspect_ratio": 0.5
       },
       "results": {
         "converged": false,
@@ -1130,7 +1144,8 @@
           "wall_width": 8,
           "wall_start_height": 4,
           "wall_start_width": 10
-        }
+        },
+        "aspect_ratio": 0.5
       },
       "results": {
         "converged": false,
@@ -1208,7 +1223,8 @@
           "wall_width": 4,
           "wall_start_height": 4,
           "wall_start_width": 5
-        }
+        },
+        "aspect_ratio": 1.0
       },
       "results": {
         "converged": false,
@@ -1286,7 +1302,8 @@
           "wall_width": 4,
           "wall_start_height": 4,
           "wall_start_width": 5
-        }
+        },
+        "aspect_ratio": 1.0
       },
       "results": {
         "converged": false,
@@ -1355,6 +1372,7 @@
         "schedule_options": null
       },
       "non_target_parameters": {
+        "mesh_combination": 0,
         "omega_v": 0.6,
         "omega_p": 0.3,
         "diff_u_threshold": 1e-07,
@@ -1513,6 +1531,7 @@
         "schedule_options": null
       },
       "non_target_parameters": {
+        "mesh_combination": 1,
         "omega_v": 0.6,
         "omega_p": 0.3,
         "diff_u_threshold": 1e-07,
@@ -1671,6 +1690,7 @@
         "schedule_options": null
       },
       "non_target_parameters": {
+        "mesh_combination": 0,
         "omega_u": 0.6,
         "omega_p": 0.3,
         "diff_u_threshold": 1e-07,
@@ -1829,6 +1849,7 @@
         "schedule_options": null
       },
       "non_target_parameters": {
+        "mesh_combination": 1,
         "omega_u": 0.6,
         "omega_p": 0.3,
         "diff_u_threshold": 1e-07,
@@ -1987,6 +2008,7 @@
         "schedule_options": null
       },
       "non_target_parameters": {
+        "mesh_combination": 0,
         "omega_u": 0.6,
         "omega_v": 0.6,
         "diff_u_threshold": 1e-07,
@@ -2123,6 +2145,7 @@
         "schedule_options": null
       },
       "non_target_parameters": {
+        "mesh_combination": 1,
         "omega_u": 0.6,
         "omega_v": 0.6,
         "diff_u_threshold": 1e-07,
@@ -2259,6 +2282,7 @@
         "schedule_options": null
       },
       "non_target_parameters": {
+        "mesh_combination": 0,
         "omega_u": 0.6,
         "omega_v": 0.6,
         "omega_p": 0.3,
@@ -2362,6 +2386,7 @@
         "schedule_options": null
       },
       "non_target_parameters": {
+        "mesh_combination": 1,
         "omega_u": 0.6,
         "omega_v": 0.6,
         "omega_p": 0.3,
@@ -2465,6 +2490,7 @@
         "schedule_options": null
       },
       "non_target_parameters": {
+        "mesh_combination": 0,
         "omega_u": 0.6,
         "omega_v": 0.6,
         "omega_p": 0.3,
@@ -2568,6 +2594,7 @@
         "schedule_options": null
       },
       "non_target_parameters": {
+        "mesh_combination": 1,
         "omega_u": 0.6,
         "omega_v": 0.6,
         "omega_p": 0.3,
@@ -2675,6 +2702,7 @@
         ]
       },
       "non_target_parameters": {
+        "mesh_combination": 0,
         "omega_u": 0.6,
         "omega_v": 0.6,
         "omega_p": 0.3,
@@ -2815,6 +2843,7 @@
         ]
       },
       "non_target_parameters": {
+        "mesh_combination": 1,
         "omega_u": 0.6,
         "omega_v": 0.6,
         "omega_p": 0.3,
@@ -2960,7 +2989,8 @@
           "wall_width": 16,
           "wall_start_height": 2,
           "wall_start_width": 20
-        }
+        },
+        "aspect_ratio": 0.1
       },
       "results": {
         "converged": false,
@@ -3038,7 +3068,8 @@
           "wall_width": 16,
           "wall_start_height": 2,
           "wall_start_width": 20
-        }
+        },
+        "aspect_ratio": 0.1
       },
       "results": {
         "converged": false,
@@ -3116,7 +3147,8 @@
           "wall_width": 16,
           "wall_start_height": 3,
           "wall_start_width": 20
-        }
+        },
+        "aspect_ratio": 0.2
       },
       "results": {
         "converged": false,
@@ -3194,7 +3226,8 @@
           "wall_width": 16,
           "wall_start_height": 3,
           "wall_start_width": 20
-        }
+        },
+        "aspect_ratio": 0.2
       },
       "results": {
         "converged": false,
@@ -3272,7 +3305,8 @@
           "wall_width": 16,
           "wall_start_height": 4,
           "wall_start_width": 20
-        }
+        },
+        "aspect_ratio": 0.25
       },
       "results": {
         "converged": false,
@@ -3350,7 +3384,8 @@
           "wall_width": 16,
           "wall_start_height": 4,
           "wall_start_width": 20
-        }
+        },
+        "aspect_ratio": 0.25
       },
       "results": {
         "converged": false,
@@ -3428,7 +3463,8 @@
           "wall_width": 16,
           "wall_start_height": 8,
           "wall_start_width": 20
-        }
+        },
+        "aspect_ratio": 0.5
       },
       "results": {
         "converged": false,
@@ -3506,7 +3542,8 @@
           "wall_width": 20,
           "wall_start_height": 4,
           "wall_start_width": 25
-        }
+        },
+        "aspect_ratio": 0.2
       },
       "results": {
         "converged": false,
@@ -3584,7 +3621,8 @@
           "wall_width": 20,
           "wall_start_height": 4,
           "wall_start_width": 25
-        }
+        },
+        "aspect_ratio": 0.2
       },
       "results": {
         "converged": false,
@@ -3662,7 +3700,8 @@
           "wall_width": 16,
           "wall_start_height": 4,
           "wall_start_width": 20
-        }
+        },
+        "aspect_ratio": 0.25
       },
       "results": {
         "converged": false,
@@ -3740,7 +3779,8 @@
           "wall_width": 16,
           "wall_start_height": 4,
           "wall_start_width": 20
-        }
+        },
+        "aspect_ratio": 0.25
       },
       "results": {
         "converged": false,
@@ -3818,7 +3858,8 @@
           "wall_width": 8,
           "wall_start_height": 4,
           "wall_start_width": 10
-        }
+        },
+        "aspect_ratio": 0.5
       },
       "results": {
         "converged": false,
@@ -3896,7 +3937,8 @@
           "wall_width": 8,
           "wall_start_height": 4,
           "wall_start_width": 10
-        }
+        },
+        "aspect_ratio": 0.5
       },
       "results": {
         "converged": false,
@@ -3974,7 +4016,8 @@
           "wall_width": 4,
           "wall_start_height": 4,
           "wall_start_width": 5
-        }
+        },
+        "aspect_ratio": 1.0
       },
       "results": {
         "converged": false,
@@ -4052,7 +4095,8 @@
           "wall_width": 4,
           "wall_start_height": 4,
           "wall_start_width": 5
-        }
+        },
+        "aspect_ratio": 1.0
       },
       "results": {
         "converged": false,
@@ -4121,6 +4165,7 @@
         "schedule_options": null
       },
       "non_target_parameters": {
+        "mesh_combination": 0,
         "omega_v": 0.6,
         "omega_p": 0.3,
         "diff_u_threshold": 1e-07,
@@ -4279,6 +4324,7 @@
         "schedule_options": null
       },
       "non_target_parameters": {
+        "mesh_combination": 1,
         "omega_v": 0.6,
         "omega_p": 0.3,
         "diff_u_threshold": 1e-07,
@@ -4437,6 +4483,7 @@
         "schedule_options": null
       },
       "non_target_parameters": {
+        "mesh_combination": 0,
         "omega_u": 0.6,
         "omega_p": 0.3,
         "diff_u_threshold": 1e-07,
@@ -4595,6 +4642,7 @@
         "schedule_options": null
       },
       "non_target_parameters": {
+        "mesh_combination": 1,
         "omega_u": 0.6,
         "omega_p": 0.3,
         "diff_u_threshold": 1e-07,
@@ -4753,6 +4801,7 @@
         "schedule_options": null
       },
       "non_target_parameters": {
+        "mesh_combination": 0,
         "omega_u": 0.6,
         "omega_v": 0.6,
         "diff_u_threshold": 1e-07,
@@ -4889,6 +4938,7 @@
         "schedule_options": null
       },
       "non_target_parameters": {
+        "mesh_combination": 1,
         "omega_u": 0.6,
         "omega_v": 0.6,
         "diff_u_threshold": 1e-07,
@@ -5025,6 +5075,7 @@
         "schedule_options": null
       },
       "non_target_parameters": {
+        "mesh_combination": 0,
         "omega_u": 0.6,
         "omega_v": 0.6,
         "omega_p": 0.3,
@@ -5128,6 +5179,7 @@
         "schedule_options": null
       },
       "non_target_parameters": {
+        "mesh_combination": 1,
         "omega_u": 0.6,
         "omega_v": 0.6,
         "omega_p": 0.3,
@@ -5231,6 +5283,7 @@
         "schedule_options": null
       },
       "non_target_parameters": {
+        "mesh_combination": 0,
         "omega_u": 0.6,
         "omega_v": 0.6,
         "omega_p": 0.3,
@@ -5334,6 +5387,7 @@
         "schedule_options": null
       },
       "non_target_parameters": {
+        "mesh_combination": 1,
         "omega_u": 0.6,
         "omega_v": 0.6,
         "omega_p": 0.3,
@@ -5441,6 +5495,7 @@
         ]
       },
       "non_target_parameters": {
+        "mesh_combination": 0,
         "omega_u": 0.6,
         "omega_v": 0.6,
         "omega_p": 0.3,
@@ -5581,6 +5636,7 @@
         ]
       },
       "non_target_parameters": {
+        "mesh_combination": 1,
         "omega_u": 0.6,
         "omega_v": 0.6,
         "omega_p": 0.3,
@@ -5726,7 +5782,8 @@
           "wall_width": 16,
           "wall_start_height": 2,
           "wall_start_width": 20
-        }
+        },
+        "aspect_ratio": 0.1
       },
       "results": {
         "converged": false,
@@ -5804,7 +5861,8 @@
           "wall_width": 16,
           "wall_start_height": 2,
           "wall_start_width": 20
-        }
+        },
+        "aspect_ratio": 0.1
       },
       "results": {
         "converged": false,
@@ -5882,7 +5940,8 @@
           "wall_width": 16,
           "wall_start_height": 3,
           "wall_start_width": 20
-        }
+        },
+        "aspect_ratio": 0.2
       },
       "results": {
         "converged": false,
@@ -5960,7 +6019,8 @@
           "wall_width": 16,
           "wall_start_height": 3,
           "wall_start_width": 20
-        }
+        },
+        "aspect_ratio": 0.2
       },
       "results": {
         "converged": false,
@@ -6038,7 +6098,8 @@
           "wall_width": 16,
           "wall_start_height": 4,
           "wall_start_width": 20
-        }
+        },
+        "aspect_ratio": 0.25
       },
       "results": {
         "converged": false,
@@ -6116,7 +6177,8 @@
           "wall_width": 16,
           "wall_start_height": 4,
           "wall_start_width": 20
-        }
+        },
+        "aspect_ratio": 0.25
       },
       "results": {
         "converged": false,
@@ -6194,7 +6256,8 @@
           "wall_width": 16,
           "wall_start_height": 8,
           "wall_start_width": 20
-        }
+        },
+        "aspect_ratio": 0.5
       },
       "results": {
         "converged": false,
@@ -6272,7 +6335,8 @@
           "wall_width": 16,
           "wall_start_height": 8,
           "wall_start_width": 20
-        }
+        },
+        "aspect_ratio": 0.5
       },
       "results": {
         "converged": false,
@@ -6350,7 +6414,8 @@
           "wall_width": 20,
           "wall_start_height": 4,
           "wall_start_width": 25
-        }
+        },
+        "aspect_ratio": 0.2
       },
       "results": {
         "converged": false,
@@ -6428,7 +6493,8 @@
           "wall_width": 20,
           "wall_start_height": 4,
           "wall_start_width": 25
-        }
+        },
+        "aspect_ratio": 0.2
       },
       "results": {
         "converged": false,
@@ -6506,7 +6572,8 @@
           "wall_width": 16,
           "wall_start_height": 4,
           "wall_start_width": 20
-        }
+        },
+        "aspect_ratio": 0.25
       },
       "results": {
         "converged": false,
@@ -6584,7 +6651,8 @@
           "wall_width": 16,
           "wall_start_height": 4,
           "wall_start_width": 20
-        }
+        },
+        "aspect_ratio": 0.25
       },
       "results": {
         "converged": false,
@@ -6662,7 +6730,8 @@
           "wall_width": 8,
           "wall_start_height": 4,
           "wall_start_width": 10
-        }
+        },
+        "aspect_ratio": 0.5
       },
       "results": {
         "converged": false,
@@ -6740,7 +6809,8 @@
           "wall_width": 8,
           "wall_start_height": 4,
           "wall_start_width": 10
-        }
+        },
+        "aspect_ratio": 0.5
       },
       "results": {
         "converged": false,
@@ -6818,7 +6888,8 @@
           "wall_width": 4,
           "wall_start_height": 4,
           "wall_start_width": 5
-        }
+        },
+        "aspect_ratio": 1.0
       },
       "results": {
         "converged": false,
@@ -6896,7 +6967,8 @@
           "wall_width": 4,
           "wall_start_height": 4,
           "wall_start_width": 5
-        }
+        },
+        "aspect_ratio": 1.0
       },
       "results": {
         "converged": false,
@@ -6965,6 +7037,7 @@
         "schedule_options": null
       },
       "non_target_parameters": {
+        "mesh_combination": 0,
         "omega_v": 0.6,
         "omega_p": 0.3,
         "diff_u_threshold": 1e-07,
@@ -7123,6 +7196,7 @@
         "schedule_options": null
       },
       "non_target_parameters": {
+        "mesh_combination": 0,
         "omega_v": 0.6,
         "omega_p": 0.3,
         "diff_u_threshold": 1e-07,
@@ -7281,6 +7355,7 @@
         "schedule_options": null
       },
       "non_target_parameters": {
+        "mesh_combination": 1,
         "omega_v": 0.6,
         "omega_p": 0.3,
         "diff_u_threshold": 1e-07,
@@ -7439,6 +7514,7 @@
         "schedule_options": null
       },
       "non_target_parameters": {
+        "mesh_combination": 1,
         "omega_v": 0.6,
         "omega_p": 0.3,
         "diff_u_threshold": 1e-07,
@@ -7597,6 +7673,7 @@
         "schedule_options": null
       },
       "non_target_parameters": {
+        "mesh_combination": 2,
         "omega_v": 0.6,
         "omega_p": 0.3,
         "diff_u_threshold": 1e-07,
@@ -7755,6 +7832,7 @@
         "schedule_options": null
       },
       "non_target_parameters": {
+        "mesh_combination": 3,
         "omega_v": 0.6,
         "omega_p": 0.3,
         "diff_u_threshold": 1e-07,
@@ -7913,6 +7991,7 @@
         "schedule_options": null
       },
       "non_target_parameters": {
+        "mesh_combination": 0,
         "omega_u": 0.6,
         "omega_p": 0.3,
         "diff_u_threshold": 1e-07,
@@ -8071,6 +8150,7 @@
         "schedule_options": null
       },
       "non_target_parameters": {
+        "mesh_combination": 0,
         "omega_u": 0.6,
         "omega_p": 0.3,
         "diff_u_threshold": 1e-07,
@@ -8229,6 +8309,7 @@
         "schedule_options": null
       },
       "non_target_parameters": {
+        "mesh_combination": 1,
         "omega_u": 0.6,
         "omega_p": 0.3,
         "diff_u_threshold": 1e-07,
@@ -8387,6 +8468,7 @@
         "schedule_options": null
       },
       "non_target_parameters": {
+        "mesh_combination": 1,
         "omega_u": 0.6,
         "omega_p": 0.3,
         "diff_u_threshold": 1e-07,
@@ -8545,6 +8627,7 @@
         "schedule_options": null
       },
       "non_target_parameters": {
+        "mesh_combination": 2,
         "omega_u": 0.6,
         "omega_p": 0.3,
         "diff_u_threshold": 1e-07,
@@ -8703,6 +8786,7 @@
         "schedule_options": null
       },
       "non_target_parameters": {
+        "mesh_combination": 3,
         "omega_u": 0.6,
         "omega_p": 0.3,
         "diff_u_threshold": 1e-07,
@@ -8861,6 +8945,7 @@
         "schedule_options": null
       },
       "non_target_parameters": {
+        "mesh_combination": 0,
         "omega_u": 0.6,
         "omega_v": 0.6,
         "diff_u_threshold": 1e-07,
@@ -8997,6 +9082,7 @@
         "schedule_options": null
       },
       "non_target_parameters": {
+        "mesh_combination": 0,
         "omega_u": 0.6,
         "omega_v": 0.6,
         "diff_u_threshold": 1e-07,
@@ -9133,6 +9219,7 @@
         "schedule_options": null
       },
       "non_target_parameters": {
+        "mesh_combination": 1,
         "omega_u": 0.6,
         "omega_v": 0.6,
         "diff_u_threshold": 1e-07,
@@ -9269,6 +9356,7 @@
         "schedule_options": null
       },
       "non_target_parameters": {
+        "mesh_combination": 1,
         "omega_u": 0.6,
         "omega_v": 0.6,
         "diff_u_threshold": 1e-07,
@@ -9405,6 +9493,7 @@
         "schedule_options": null
       },
       "non_target_parameters": {
+        "mesh_combination": 2,
         "omega_u": 0.6,
         "omega_v": 0.6,
         "diff_u_threshold": 1e-07,
@@ -9541,6 +9630,7 @@
         "schedule_options": null
       },
       "non_target_parameters": {
+        "mesh_combination": 3,
         "omega_u": 0.6,
         "omega_v": 0.6,
         "diff_u_threshold": 1e-07,
@@ -9677,6 +9767,7 @@
         "schedule_options": null
       },
       "non_target_parameters": {
+        "mesh_combination": 0,
         "omega_u": 0.6,
         "omega_v": 0.6,
         "omega_p": 0.3,
@@ -9780,6 +9871,7 @@
         "schedule_options": null
       },
       "non_target_parameters": {
+        "mesh_combination": 0,
         "omega_u": 0.6,
         "omega_v": 0.6,
         "omega_p": 0.3,
@@ -9883,6 +9975,7 @@
         "schedule_options": null
       },
       "non_target_parameters": {
+        "mesh_combination": 1,
         "omega_u": 0.6,
         "omega_v": 0.6,
         "omega_p": 0.3,
@@ -9986,6 +10079,7 @@
         "schedule_options": null
       },
       "non_target_parameters": {
+        "mesh_combination": 1,
         "omega_u": 0.6,
         "omega_v": 0.6,
         "omega_p": 0.3,
@@ -10089,6 +10183,7 @@
         "schedule_options": null
       },
       "non_target_parameters": {
+        "mesh_combination": 2,
         "omega_u": 0.6,
         "omega_v": 0.6,
         "omega_p": 0.3,
@@ -10192,6 +10287,7 @@
         "schedule_options": null
       },
       "non_target_parameters": {
+        "mesh_combination": 3,
         "omega_u": 0.6,
         "omega_v": 0.6,
         "omega_p": 0.3,
@@ -10295,6 +10391,7 @@
         "schedule_options": null
       },
       "non_target_parameters": {
+        "mesh_combination": 0,
         "omega_u": 0.6,
         "omega_v": 0.6,
         "omega_p": 0.3,
@@ -10398,6 +10495,7 @@
         "schedule_options": null
       },
       "non_target_parameters": {
+        "mesh_combination": 0,
         "omega_u": 0.6,
         "omega_v": 0.6,
         "omega_p": 0.3,
@@ -10501,6 +10599,7 @@
         "schedule_options": null
       },
       "non_target_parameters": {
+        "mesh_combination": 1,
         "omega_u": 0.6,
         "omega_v": 0.6,
         "omega_p": 0.3,
@@ -10604,6 +10703,7 @@
         "schedule_options": null
       },
       "non_target_parameters": {
+        "mesh_combination": 1,
         "omega_u": 0.6,
         "omega_v": 0.6,
         "omega_p": 0.3,
@@ -10707,6 +10807,7 @@
         "schedule_options": null
       },
       "non_target_parameters": {
+        "mesh_combination": 2,
         "omega_u": 0.6,
         "omega_v": 0.6,
         "omega_p": 0.3,
@@ -10810,6 +10911,7 @@
         "schedule_options": null
       },
       "non_target_parameters": {
+        "mesh_combination": 3,
         "omega_u": 0.6,
         "omega_v": 0.6,
         "omega_p": 0.3,
@@ -10917,6 +11019,7 @@
         ]
       },
       "non_target_parameters": {
+        "mesh_combination": 0,
         "omega_u": 0.6,
         "omega_v": 0.6,
         "omega_p": 0.3,
@@ -11057,6 +11160,7 @@
         ]
       },
       "non_target_parameters": {
+        "mesh_combination": 0,
         "omega_u": 0.6,
         "omega_v": 0.6,
         "omega_p": 0.3,
@@ -11197,6 +11301,7 @@
         ]
       },
       "non_target_parameters": {
+        "mesh_combination": 1,
         "omega_u": 0.6,
         "omega_v": 0.6,
         "omega_p": 0.3,
@@ -11337,6 +11442,7 @@
         ]
       },
       "non_target_parameters": {
+        "mesh_combination": 1,
         "omega_u": 0.6,
         "omega_v": 0.6,
         "omega_p": 0.3,
@@ -11477,6 +11583,7 @@
         ]
       },
       "non_target_parameters": {
+        "mesh_combination": 2,
         "omega_u": 0.6,
         "omega_v": 0.6,
         "omega_p": 0.3,
@@ -11617,6 +11724,7 @@
         ]
       },
       "non_target_parameters": {
+        "mesh_combination": 3,
         "omega_u": 0.6,
         "omega_v": 0.6,
         "omega_p": 0.3,
