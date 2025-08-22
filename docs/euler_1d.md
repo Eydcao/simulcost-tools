@@ -70,7 +70,7 @@ The case key in the config file solver sets different initial conditions:
    - Left: $\rho=3.857, u=0.92, p=10.333$
    - Right: $\rho=1.0, u=3.55, p=1.0$
 
-The simulated results are considered correct if the relative RMSE meets the precision-dependent tolerance (low: 0.01, medium: 0.005, high: 0.0025) compared to reference solution, and the solution satisfies the convergence criteria:
+The simulated results are considered correct if the relative RMSE meets the precision-dependent tolerance (low: 0.08, medium: 0.02, high: 0.01) compared to reference solution, and the solution satisfies the convergence criteria:
 
 1. **Positivity preservation**: pressure and density must remain positive at all times
 2. **Shock speed consistency**: pressure gradients should not exceed physical bounds

@@ -40,6 +40,7 @@
           "wall_start_width": 20
         },
         "aspect_ratio": 0.1
+        }
       },
       "results": {
         "converged": false,
@@ -119,6 +120,7 @@
           "wall_start_width": 5
         },
         "aspect_ratio": 1.0
+        }
       },
       "results": {
         "converged": false,
