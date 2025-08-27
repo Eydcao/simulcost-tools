@@ -126,7 +126,7 @@ More Notes:
   - **p1**: Classic one-hot-side problem (top boundary heated)
   - **p2-p8**: Random boundary conditions
 - **Target Parameters**: 4 (dx, relax, error_threshold, t_init)
-- **Precision Levels**: 3 (low: 0.05, medium: 0.005, high: 0.0005)
+- **Precision Levels**: 3 (low: 0.005, medium: 0.0005, high: 0.0003)
 
 ### Task Distribution
 
