@@ -84,25 +84,27 @@ def compare_res_heat_1d(profile1, cfl1, n_space1, profile2, cfl2, n_space2, tole
 #     return interpolated_data
 
 
-# if __name__ == "__main__":
-#     # Example usage
-#     profile1 = "p1"
-#     cfl1 = 0.5
-#     n_space1 = 320
+if __name__ == "__main__":
+    # Example usage
+    profile1 = "p8"
+    cfl1 = 0.25
+    n_space1 = 75
 
-#     profile2 = "p1"
-#     cfl2 = 0.5
-#     n_space2 = 640
+    profile2 = "p8"
+    cfl2 = 0.25
+    n_space2 = 150
 
-#     tolerance = 1e-5
+    tolerance = 0.01
 
-#     res1, x1 = get_res_heat_1d(profile1, cfl1, n_space1)
-#     res2, x2 = get_res_heat_1d(profile2, cfl2, n_space2)
+    res1, x1 = get_res_heat_1d(profile1, cfl1, n_space1)
+    res2, x2 = get_res_heat_1d(profile2, cfl2, n_space2)
 
-#     # upsample res1 to match res2
-#     res1_interp = interpolate_to_finer_grid(res1, res2, x1, x2)
-#     # for each time step, compare the results
-#     for t in range(res1.shape[0]):
-#         diff = np.abs(res1_interp[t] - res2[t])
-#         mean_diff = np.mean(diff)
-#         print(f"Mean difference at time step {t}: {mean_diff}")
+    print(compare_res_heat_1d(profile1, cfl1, n_space1, profile2, cfl2, n_space2, tolerance))
+
+    # upsample res1 to match res2
+    # res1_interp = interpolate_to_finer_grid(res1, res2, x1, x2)
+    # for each time step, compare the results
+    # for t in range(res1.shape[0]):
+    #     diff = np.abs(res1_interp[t] - res2[t])
+    #     mean_diff = np.mean(diff)
+    #     print(f"Mean difference at time step {t}: {mean_diff}")
