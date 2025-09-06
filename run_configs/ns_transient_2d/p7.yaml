@@ -17,9 +17,6 @@ relaxation_factor: 1.3
 residual_threshold: 1e-2
 cfl: 0.05
 
-# -------- Output --------
-dump_dir: "sim_res/ns_transient_2d/p7"
-
 # -------- Profile Metadata --------
 profile_name: "p7"
 description: "Channel flow with dual inlet/outlet configuration, Re=1000, CIP scheme"

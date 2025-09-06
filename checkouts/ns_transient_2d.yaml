@@ -80,10 +80,10 @@ target_parameters:
   cfl:
     description: "Courant-Friedrichs-Lewy number - controls time step stability"
     search_type: "iterative+0-shot"
-    initial_value: 0.8
+    initial_value: 0.2
     multiplication_factor: 0.5
-    max_iteration_num: 5
-    exact_values: [0.8, 0.4, 0.2, 0.1, 0.05]
+    max_iteration_num: 3
+    exact_values: [0.2, 0.1, 0.05]
     # Note: Values are rounded to 3 decimal places to avoid floating-point precision issues
     non_target_parameters:
       resolution: [200, 400]

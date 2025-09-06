@@ -102,7 +102,7 @@ Each boundary condition is tested at two Reynolds numbers:
 
 2. **CFL Optimization (iterative+0-shot)**
    - **cfl**: Courant-Friedrichs-Lewy number controlling time step stability
-   - Uses iterative search starting from 0.8, dividing by 2 each iteration
+   - Uses iterative search starting from 0.2, dividing by 2 each iteration
    - Minimum value of 0.05 for stability
 
 3. **Relaxation Factor Optimization (0-shot)**
@@ -123,7 +123,7 @@ Each boundary condition is tested at two Reynolds numbers:
    - Tests spatial discretization convergence across all geometries
 
 2. **CFL Optimization (iterative+0-shot)**
-   - **cfl**: Use exact values [0.8, 0.4, 0.2, 0.1, 0.05] from YAML configuration
+   - **cfl**: Use exact values [0.2, 0.1, 0.05] from YAML configuration
    - **Non-target parameters**: resolution ∈ [200, 400], relaxation_factor=1.3, residual_threshold=1e-2
    - Tests temporal stability across different resolutions
 
@@ -144,7 +144,7 @@ Each boundary condition is tested at two Reynolds numbers:
 | Parameter | Description | Range | Search Type |
 |-----------|-------------|-------|-------------|
 | resolution | Grid resolution for spatial discretization | 50 ≤ resolution ≤ 800 | iterative+0-shot |
-| cfl | Courant-Friedrichs-Lewy number for time step | 0.05 ≤ cfl ≤ 0.8 | iterative+0-shot |
+| cfl | Courant-Friedrichs-Lewy number for time step | 0.05 ≤ cfl ≤ 0.2 | iterative+0-shot |
 | relaxation_factor | Pressure correction relaxation factor | 0.8 ≤ relaxation_factor ≤ 1.5 | 0-shot |
 | residual_threshold | Pressure solver convergence threshold | 1e-3 ≤ residual_threshold ≤ 1e-1 | 0-shot |
 
@@ -178,7 +178,7 @@ Each boundary condition is tested at two Reynolds numbers:
 - **Reynolds number pairs**: Each BC tested at Re=1000 (laminar) and Re=100000 (turbulent)
 - **Domain aspect ratio**: Fixed at 2.0 (width/height) for all simulations
 - **CFL calculation**: Simplified as dt = CFL × dx (assumes max velocity ≈ 1.0)
-- **CFL values**: Exact values [0.8, 0.4, 0.2, 0.1, 0.05] to avoid floating-point precision issues
+- **CFL values**: Exact values [0.2, 0.1, 0.05] to avoid floating-point precision issues
 - **Relaxation factors**: Exact values [0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5] for precision control
 - **Residual thresholds**: Specific values [1e-1, 1e-2, 5e-3] for targeted precision testing
 - **Transient behavior**: All simulations are time-dependent requiring careful time step control

@@ -17,9 +17,6 @@ relaxation_factor: 1.3
 residual_threshold: 1e-2
 cfl: 0.05
 
-# -------- Output --------
-dump_dir: "sim_res/ns_transient_2d/p6"
-
 # -------- Profile Metadata --------
 profile_name: "p6"
 description: "Channel flow with randomly placed circular obstacles, Re=100000, CIP scheme"
