@@ -66,6 +66,8 @@ def build_target_configs(config):
             "search_range_min": param_info.get("search_range_min"),
             "search_range_max": param_info.get("search_range_max"),
             "search_range_slice_num": param_info.get("search_range_slice_num"),
+            # Exact values for precise parameter control
+            "exact_values": param_info.get("exact_values"),
             # Additional parameters for different search types
             "schedule_options": param_info.get("schedule_options"),
         }

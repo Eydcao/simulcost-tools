@@ -1,0 +1,30 @@
+# Profile: Boundary Condition 4 with Reynolds Number 100000
+# Description: Channel flow with dual inlet/outlet configuration
+
+# -------- Environment Dependents --------
+boundary_condition: 4
+reynolds_num: 100000.0
+vorticity_confinement: 0.0
+total_runtime: 1.0
+no_dye: False
+cpu: False
+visualization: 0
+advection_scheme: "cip"
+
+# -------- Tunable Parameters --------
+resolution: 400
+relaxation_factor: 1.3
+residual_threshold: 1e-2
+cfl: 0.05
+
+# -------- Output --------
+dump_dir: "sim_res/ns_transient_2d/p8"
+
+# -------- Profile Metadata --------
+profile_name: "p8"
+description: "Channel flow with dual inlet/outlet configuration, Re=100000, CIP scheme"
+tags: ["channel_flow", "dual_inlet", "dual_outlet", "high_reynolds", "cip_scheme"]
+
+# -------- Output --------
+dump_dir: "sim_res/ns_transient_2d/p8"
+
