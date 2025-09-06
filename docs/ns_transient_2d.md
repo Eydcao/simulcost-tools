@@ -30,7 +30,7 @@ The simulation uses:
 
 ### Domain Configuration
 
-- **Aspect Ratio**: Fixed at 2.0 (y/x), meaning the domain is twice as wide as it is tall
+- **Aspect Ratio**: Fixed at 0.5 (y/x), meaning the domain is twice as wide as it is tall
 - **Domain Resolution**: x_resolution = 2 × resolution, y_resolution = resolution
 - **CFL Calculation**: $\Delta t = \text{CFL} \times \Delta x$ where $\Delta x = 1/\text{resolution}$
 - **Maximum Wall Time**: 1200 seconds (20 minutes) per simulation
@@ -165,7 +165,7 @@ Each boundary condition is tested at two Reynolds numbers:
 
 | Parameter | Description | Value |
 |-----------|-------------|-------|
-| aspect_ratio | Domain aspect ratio (y/x) | 2.0 (fixed) |
+| aspect_ratio | Domain aspect ratio (y/x) | 0.5 (fixed) |
 | x_resolution | Horizontal grid resolution | 2 × resolution |
 | y_resolution | Vertical grid resolution | resolution |
 | dx | Grid spacing | 1 / resolution |
@@ -176,7 +176,7 @@ Each boundary condition is tested at two Reynolds numbers:
 
 - **Boundary conditions**: 6 distinct geometries (BC1-BC6) with increasing complexity
 - **Reynolds number pairs**: Each BC tested at Re=1000 (laminar) and Re=100000 (turbulent)
-- **Domain aspect ratio**: Fixed at 2.0 (width/height) for all simulations
+- **Domain aspect ratio**: Fixed at 0.5 (y/x) for all simulations
 - **CFL calculation**: Simplified as dt = CFL × dx (assumes max velocity ≈ 1.0)
 - **CFL values**: Exact values [0.2, 0.1, 0.05] to avoid floating-point precision issues
 - **Relaxation factors**: Exact values [0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5] for precision control
@@ -190,7 +190,7 @@ Each boundary condition is tested at two Reynolds numbers:
 
 - **Profiles**: 12 (p1-p12 with varying geometries and Reynolds numbers)
 - **Target Parameters**: 4 (resolution, cfl, relaxation_factor, residual_threshold)
-- **Precision Levels**: 3 (high: 0.05, medium: 0.1, low: 0.5)
+- **Precision Levels**: 3 (high: 0.15, medium: 0.3, low: 0.6)
 
 ### Task Distribution
 

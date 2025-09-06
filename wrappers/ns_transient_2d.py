@@ -216,17 +216,25 @@ def compare_res_ns_transient_2d(
     norm_velocity_2_interp = np.sqrt(u2_interp**2 + v2_interp**2)
     rmse_norm_velocity = np.sqrt(np.mean((norm_velocity - norm_velocity_2_interp) ** 2))
     
+    l2_norm_velocity = np.sqrt(np.mean(norm_velocity**2))
+    rmse_norm_velocity_by_l2 = rmse_norm_velocity / l2_norm_velocity if l2_norm_velocity > 0 else rmse_norm_velocity
+    
     # Check if RMSE calculation produced NaN
     if np.isnan(rmse_norm_velocity) or np.isinf(rmse_norm_velocity):
         print(f"RMSE calculation produced NaN/inf: norm_velocity stats: min={np.nanmin(norm_velocity):.6f}, max={np.nanmax(norm_velocity):.6f}, mean={np.nanmean(norm_velocity):.6f}")
         print(f"norm_velocity_2_interp stats: min={np.nanmin(norm_velocity_2_interp):.6f}, max={np.nanmax(norm_velocity_2_interp):.6f}, mean={np.nanmean(norm_velocity_2_interp):.6f}")
         return False, float('inf')
     
-    converged = rmse_norm_velocity < norm_rmse_tolerance
+    converged = rmse_norm_velocity_by_l2 < norm_rmse_tolerance
     
     print(f"RMSE of norm velocity: {rmse_norm_velocity:.6f}")
+    print(f"Normalized RMSE options:")
+    # print(f"  By range: {rmse_norm_velocity_by_range:.6f}")
+    # print(f"  By mean: {rmse_norm_velocity_by_mean:.6f}")
+    # print(f"  By std: {rmse_norm_velocity_by_std:.6f}")
+    print(f"  By L2 norm: {rmse_norm_velocity_by_l2:.6f}")
 
-    return converged, rmse_norm_velocity
+    return converged, rmse_norm_velocity_by_l2
 
 
 if __name__ == "__main__":

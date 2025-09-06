@@ -8,7 +8,7 @@ import h5py
 from .ns_transient_2d_utils.fluid_simulator import DyeFluidSimulator, FluidSimulator
 import os
 
-ASPECT_RATIO = 2.0 # y/x
+ASPECT_RATIO = 0.5 # y/x
 MAXIMUM_WALL_TIME = 1200 # 20 minutes in seconds
 
 class NSTransient2D:
@@ -52,8 +52,12 @@ class NSTransient2D:
         if self.cpu:
             ti.init(arch=ti.cpu)
         else:
-            device_memory_GB = 2.0 if self.resolution > 1000 else 1.0
-            ti.init(arch=ti.gpu, device_memory_GB=device_memory_GB)
+            try:
+                device_memory_GB = 2.0 if self.resolution > 1000 else 1.0
+                ti.init(arch=ti.gpu, device_memory_GB=device_memory_GB)
+            except Exception as e:
+                print(f"Error initializing Taichi: {e}")
+                ti.init(arch=ti.cpu)
     
     def _initialize_simulator(self):
         """Initialize fluid simulator"""

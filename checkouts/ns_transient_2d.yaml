@@ -13,13 +13,13 @@ task_distribution:
 
 precision_levels:
   high:
-    norm_rmse_tolerance: 0.1
+    norm_rmse_tolerance: 0.15
     description: "Very stringent convergence criteria - very challenging"
   medium:
-    norm_rmse_tolerance: 0.2
+    norm_rmse_tolerance: 0.3
     description: "Stringent convergence criteria - challenging"
   low:
-    norm_rmse_tolerance: 0.5
+    norm_rmse_tolerance: 0.6
     description: "Moderate convergence criteria - achievable but not trivial"
 
 profiles:

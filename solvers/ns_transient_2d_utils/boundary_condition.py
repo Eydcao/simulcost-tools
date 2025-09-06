@@ -362,9 +362,17 @@ def create_boundary_condition4(resolution, no_dye=False):
         b = np.array([0.2, 0.2, 1.1])
         r = np.array([1.1, 0.2, 0.2])
         c = np.array([0.2, 1.1, 1.1])
-        color_map = create_color_map([c, r, b, y], y_res // 4 - 2)
-        bc_dye[:2, 3 * y_res // 4 : -2] = np.stack((color_map, color_map), axis=0)
-        bc_dye[:2, 2 : y_res // 4] = np.stack((color_map, color_map), axis=0)
+        
+        # Calculate the actual slice lengths
+        slice1_length = (y_res - 2) - (3 * y_res // 4)  # for 3 * y_res // 4 : -2
+        slice2_length = y_res // 4 - 2  # for 2 : y_res // 4
+        
+        # Create color maps with correct lengths
+        color_map1 = create_color_map([c, r, b, y], slice1_length)
+        color_map2 = create_color_map([c, r, b, y], slice2_length)
+        
+        bc_dye[:2, 3 * y_res // 4 : -2] = np.stack((color_map1, color_map1), axis=0)
+        bc_dye[:2, 2 : y_res // 4] = np.stack((color_map2, color_map2), axis=0)
 
         # 左上
         bc[:2, 3 * y_res // 4 : -2] = np.array([1.0, 0.0])
