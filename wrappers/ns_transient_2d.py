@@ -21,7 +21,7 @@ def run_sim_ns_transient_2d(profile, boundary_condition, resolution, reynolds_nu
                 return meta["cost"], meta["num_steps"]
 
     # Build command with parameters
-    cmd = f"python runners/ns_transient_2d.py --config-name={profile} boundary_condition={boundary_condition} resolution={resolution} reynolds_num={reynolds_num} cfl={cfl} advection_scheme={advection_scheme} vorticity_confinement={vorticity_confinement} relaxation_factor={relaxation_factor} residual_threshold={residual_threshold} total_runtime={total_runtime} no_dye={no_dye} cpu={cpu} visualization={visualization}"
+    cmd = f"python costsci_tools/runners/ns_transient_2d.py --config-name={profile} boundary_condition={boundary_condition} resolution={resolution} reynolds_num={reynolds_num} cfl={cfl} advection_scheme={advection_scheme} vorticity_confinement={vorticity_confinement} relaxation_factor={relaxation_factor} residual_threshold={residual_threshold} total_runtime={total_runtime} no_dye={no_dye} cpu={cpu} visualization={visualization}"
     
     # Add other parameters if provided
     if other_params:
