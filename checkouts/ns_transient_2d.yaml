@@ -1,0 +1,137 @@
+# NS Transient 2D Solver Checkout Configuration
+# This file centralizes all parameter settings for both documentation and dummy solution generation
+
+solver_info:
+  name: "NS Transient 2D"
+  numerical_method: "Transient incompressible Navier-Stokes with Taichi-based fluid simulation"
+  reference: "Taichi-based fluid simulation with configurable boundary conditions and schemes"
+
+task_distribution:
+  strategy: "benchmark"
+  total_individuals: 252
+  description: "12 profiles * 3 precision levels * (1 resolution + 2 cfl + 2 relaxation_factor + 2 residual_threshold) = 252 tasks"
+
+precision_levels:
+  high:
+    norm_rmse_tolerance: 0.15
+    description: "Very stringent convergence criteria - very challenging"
+  medium:
+    norm_rmse_tolerance: 0.3
+    description: "Stringent convergence criteria - challenging"
+  low:
+    norm_rmse_tolerance: 0.6
+    description: "Moderate convergence criteria - achievable but not trivial"
+
+profiles:
+  num_profiles: 12
+  active_profiles: ["p1", "p2", "p3", "p4", "p5", "p6", "p7", "p8", "p9", "p10", "p11", "p12"]
+  # Profile descriptions based on boundary conditions and parameters
+  # Profiles are loaded dynamically from run_configs/ns_transient_2d/{profile}.yaml
+  p1:
+    description: "Channel flow with circular obstacle, Re=1000, CIP scheme"
+    tags: ["channel_flow", "circular_obstacle", "low_reynolds", "cip_scheme"]
+  p2:
+    description: "Channel flow with circular obstacle, Re=100000, CIP scheme"
+    tags: ["channel_flow", "circular_obstacle", "high_reynolds", "cip_scheme"]
+  p3:
+    description: "Channel flow with multiple obstacles and steps, Re=1000, CIP scheme"
+    tags: ["channel_flow", "multiple_obstacles", "step_geometry", "low_reynolds", "cip_scheme"]
+  p4:
+    description: "Channel flow with multiple obstacles and steps, Re=100000, CIP scheme"
+    tags: ["channel_flow", "multiple_obstacles", "step_geometry", "high_reynolds", "cip_scheme"]
+  p5:
+    description: "Channel flow with randomly placed circular obstacles, Re=1000, CIP scheme"
+    tags: ["channel_flow", "random_obstacles", "low_reynolds", "cip_scheme"]
+  p6:
+    description: "Channel flow with randomly placed circular obstacles, Re=100000, CIP scheme"
+    tags: ["channel_flow", "random_obstacles", "high_reynolds", "cip_scheme"]
+  p7:
+    description: "Channel flow with dual inlet/outlet configuration, Re=1000, CIP scheme"
+    tags: ["channel_flow", "dual_inlet", "dual_outlet", "low_reynolds", "cip_scheme"]
+  p8:
+    description: "Channel flow with dual inlet/outlet configuration, Re=100000, CIP scheme"
+    tags: ["channel_flow", "dual_inlet", "dual_outlet", "high_reynolds", "cip_scheme"]
+  p9:
+    description: "Channel flow with complex obstacle array, Re=1000, CIP scheme"
+    tags: ["channel_flow", "complex_obstacles", "low_reynolds", "cip_scheme"]
+  p10:
+    description: "Channel flow with complex obstacle array, Re=100000, CIP scheme"
+    tags: ["channel_flow", "complex_obstacles", "high_reynolds", "cip_scheme"]
+  p11:
+    description: "Channel flow with dragon-shaped obstacle, Re=1000, CIP scheme"
+    tags: ["channel_flow", "dragon_obstacle", "low_reynolds", "cip_scheme"]
+  p12:
+    description: "Channel flow with dragon-shaped obstacle, Re=100000, CIP scheme"
+    tags: ["channel_flow", "dragon_obstacle", "high_reynolds", "cip_scheme"]
+
+# Parameter configurations for each target parameter
+target_parameters:
+  resolution:
+    description: "Grid resolution - determines spatial discretization quality"
+    search_type: "iterative+0-shot"
+    initial_value: 50
+    multiplication_factor: 2
+    max_iteration_num: 4
+    non_target_parameters:
+      cfl: 0.05
+      relaxation_factor: 1.3
+      residual_threshold: 1e-2
+
+  cfl:
+    description: "Courant-Friedrichs-Lewy number - controls time step stability"
+    search_type: "iterative+0-shot"
+    initial_value: 0.2
+    multiplication_factor: 0.5
+    max_iteration_num: 3
+    exact_values: [0.2, 0.1, 0.05]
+    # Note: Values are rounded to 3 decimal places to avoid floating-point precision issues
+    non_target_parameters:
+      resolution: [200, 400]
+      relaxation_factor: 1.3
+      residual_threshold: 1e-2
+
+  relaxation_factor:
+    description: "Relaxation factor for pressure correction - controls convergence rate"
+    search_type: "0-shot"
+    search_range: [0.8, 1.5]
+    search_range_slice_num: 8
+    exact_values: [0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5]
+    # Note: Values are rounded to 2 decimal places to avoid floating-point precision issues
+    non_target_parameters:
+      resolution: [200, 400]
+      cfl: 0.05
+      residual_threshold: 1e-2
+
+  residual_threshold:
+    description: "Residual threshold for pressure solver convergence"
+    search_type: "0-shot"
+    search_range: [1e-01, 1e-05]
+    search_range_slice_num: 5
+    exact_values: [1e-1, 1e-2, 5e-3]
+    # Note: Uses specific values instead of logspace for exact control
+    non_target_parameters:
+      resolution: [200, 400]
+      cfl: 0.05
+      relaxation_factor: 1.3
+
+# Additional metadata for analysis and documentation
+analysis_metadata:
+  convergence_criteria:
+    norm_velocity_rmse: "Primary convergence check based on normalized velocity field RMSE"
+    temporal_convergence: "Secondary convergence check for temporal evolution"
+  
+  parameter_importance:
+    critical: ["resolution", "cfl", "relaxation_factor"]
+    important: ["residual_threshold"]
+  
+  optimization_strategy:
+    resolution: "Iterative refinement for spatial convergence"
+    cfl: "Grid search for optimal time step stability"
+    relaxation_factor: "Grid search for optimal convergence rate"
+    residual_threshold: "Precision-based selection for accuracy vs. cost trade-off"
+  
+  expected_outcomes:
+    convergence_rate: "60-85% depending on precision level and profile"
+    computational_cost: "Varies from 10^4 to 10^7 operations per task"
+    parameter_sensitivity: "Resolution and CFL most sensitive, residual_threshold least sensitive"
+    temporal_behavior: "Transient simulations require careful time step and scheme selection"
