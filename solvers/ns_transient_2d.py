@@ -205,9 +205,8 @@ class NSTransient2D:
         h5_file = None  # H5 file for accumulating data
         converged = True  # Track convergence status
         
-        # Start timer for total runtime tracking
+        # Start timer for wall time tracking
         start_time = time.time()
-        max_runtime = 1200  # 20 minutes in seconds
         
         # Calculate total steps if runtime is specified
         total_steps = None
@@ -215,16 +214,12 @@ class NSTransient2D:
             total_steps = int(self.total_runtime / self.dt)
             print(f"Running for {total_steps} steps (runtime: {self.total_runtime:.3f}s, dt: {self.dt:.6f})")
         
-        print(f"Maximum wall time limit: {max_runtime}s ({max_runtime/60:.1f} minutes)")
+        # Time limit removed - simulations will run to completion
         
         # Main simulation loop
         while (total_steps is None or step < total_steps):
-            # Check if we've exceeded the maximum runtime
+            # Track elapsed time for reporting (timeout check removed)
             elapsed_time = time.time() - start_time
-            if elapsed_time > max_runtime:
-                print(f"\nSimulation timeout after {elapsed_time:.1f}s ({max_runtime}s limit)")
-                converged = False
-                break
             
             # Generate visualization frames every 5 steps
             if step % 5 == 0:
@@ -262,12 +257,7 @@ class NSTransient2D:
         
         # Print completion message
         elapsed_time = time.time() - start_time
-        if total_steps is not None and step >= total_steps:
-            print(f"\nSimulation completed after {step} steps (runtime: {step * self.dt:.3f}s, wall time: {elapsed_time:.1f}s)")
-        elif not converged:
-            print(f"\nSimulation timed out after {step} steps (runtime: {step * self.dt:.3f}s, wall time: {elapsed_time:.1f}s)")
-        else:
-            print(f"\nSimulation completed after {step} steps (runtime: {step * self.dt:.3f}s, wall time: {elapsed_time:.1f}s)")
+        print(f"\nSimulation completed after {step} steps (runtime: {step * self.dt:.3f}s, wall time: {elapsed_time:.1f}s)")
 
         # Save final state with all fields
         if h5_file is not None:
@@ -278,9 +268,14 @@ class NSTransient2D:
             print(f"Total time steps saved: {step // 5 + 1}")
             print(f"Final step includes all fields (vx, vy, pressure, vorticity, dye)")
 
-        video_manager.make_video(mp4=True)
+        # Generate video with error handling
+        try:
+            video_manager.make_video(mp4=True)
+        except Exception as e:
+            print(f"Warning: Video generation failed: {e}")
+            print("Continuing with post-processing...")
         
-        # Post-process simulation results
+        # Post-process simulation results (always executed)
         is_converged = self.post_process(step, converged, elapsed_time)
         return is_converged
     
