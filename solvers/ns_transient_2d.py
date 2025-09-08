@@ -205,8 +205,9 @@ class NSTransient2D:
         h5_file = None  # H5 file for accumulating data
         converged = True  # Track convergence status
         
-        # Start timer for wall time tracking
+        # Start timer for total runtime tracking
         start_time = time.time()
+        max_runtime = 1200  # 20 minutes in seconds
         
         # Calculate total steps if runtime is specified
         total_steps = None
@@ -214,12 +215,16 @@ class NSTransient2D:
             total_steps = int(self.total_runtime / self.dt)
             print(f"Running for {total_steps} steps (runtime: {self.total_runtime:.3f}s, dt: {self.dt:.6f})")
         
-        # Time limit removed - simulations will run to completion
+        print(f"Maximum wall time limit: {max_runtime}s ({max_runtime/60:.1f} minutes)")
         
         # Main simulation loop
         while (total_steps is None or step < total_steps):
-            # Track elapsed time for reporting (timeout check removed)
+            # Check if we've exceeded the maximum runtime
             elapsed_time = time.time() - start_time
+            if elapsed_time > max_runtime:
+                print(f"\nSimulation timeout after {elapsed_time:.1f}s ({max_runtime}s limit)")
+                converged = False
+                break
             
             # Generate visualization frames every 5 steps
             if step % 5 == 0:
@@ -257,7 +262,12 @@ class NSTransient2D:
         
         # Print completion message
         elapsed_time = time.time() - start_time
-        print(f"\nSimulation completed after {step} steps (runtime: {step * self.dt:.3f}s, wall time: {elapsed_time:.1f}s)")
+        if total_steps is not None and step >= total_steps:
+            print(f"\nSimulation completed after {step} steps (runtime: {step * self.dt:.3f}s, wall time: {elapsed_time:.1f}s)")
+        elif not converged:
+            print(f"\nSimulation timed out after {step} steps (runtime: {step * self.dt:.3f}s, wall time: {elapsed_time:.1f}s)")
+        else:
+            print(f"\nSimulation completed after {step} steps (runtime: {step * self.dt:.3f}s, wall time: {elapsed_time:.1f}s)")
 
         # Save final state with all fields
         if h5_file is not None:
