@@ -12,7 +12,7 @@ Intensity        = (1.37*10^18)*a0^2/((laser_lamada^2)*10^12)
 
 n_cr            = critical(laser_omega)
 
-n_target  = 8*n_cr
+n_target  = 5*n_cr
 
 end:constant
 
@@ -37,7 +37,7 @@ field_ionisation = T
 
 field_order = 2
 
-physics_table_location = /scratch/09994/robhakta/epoch2ndOrder/epoch/epoch1d/src/physics_packages/TABLES 
+physics_table_location = /home/ubuntu/work/epoch/epoch1d/src/physics_packages/TABLES/ 
 
 end:control
 
@@ -85,7 +85,7 @@ atomic_no       = 6
 
 ionise          = T
 
-npart_per_cell = 26
+npart_per_cell = 20
 
 density = if (x gt 50*micron and x lt 80*micron,n_target,0)
 

@@ -15,9 +15,9 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 env = os.environ.copy()
 env["PYTHONPATH"] = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
 
-path_epoch2ndOrder="/scratch/09994/robhakta/epoch2ndOrder/epoch/epoch1d/bin/epoch1d"
-path_epoch3rdOrder="/scratch/09994/robhakta/epoch3rdOrder/epoch/epoch1d/bin/epoch1d"
-path_epoch5thOrder="/scratch/09994/robhakta/epoch5thOrder/epoch/epoch1d/bin/epoch1d"
+path_epoch2ndOrder="/home/ubuntu/epoch_bin/2nd"
+path_epoch3rdOrder="/home/ubuntu/epoch_bin/3rd"
+path_epoch5thOrder="/home/ubuntu/epoch_bin/5th"
 
 
 @hydra.main(version_base=None, config_path="../run_configs/epoch", config_name="p1")
@@ -28,12 +28,12 @@ def main(cfg):
     updateInputDeck(cfg,input_path)
 
     if (cfg.particle_order==2):
-        cmd =  f"echo {script_dir} | ibrun {path_epoch2ndOrder}"
+        cmd =  f"echo {script_dir} | mpirun -np 12 {path_epoch2ndOrder}"
     elif (cfg.particle_order==3):
-        cmd =  f"echo {script_dir} | ibrun {path_epoch3rdOrder}"
+        cmd =  f"echo {script_dir} | mpirun -np 12 {path_epoch3rdOrder}"
     else:
-        cmd =  f"echo {script_dir} | ibrun {path_epoch5thOrder}"
-    
+        cmd =  f"echo {script_dir} | mpirun -np 12 {path_epoch5thOrder}"
+
   #  subprocess.run("rm *.sdf",shell=True,check=True,env=env)
 
  #   start_time=time.time()
