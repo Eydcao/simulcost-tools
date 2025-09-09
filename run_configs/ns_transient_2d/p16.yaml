@@ -1,9 +1,9 @@
-# Profile: Boundary Condition 4 with Reynolds Number 1000
+# Profile: Boundary Condition 4 with Reynolds Number 6000
 # Description: Channel flow with dual inlet/outlet configuration
 
 # -------- Environment Dependents --------
 boundary_condition: 4
-reynolds_num: 1000.0
+reynolds_num: 6000.0
 vorticity_confinement: 0.0
 total_runtime: 1.0
 no_dye: False
@@ -18,9 +18,9 @@ residual_threshold: 1e-2
 cfl: 0.05
 
 # -------- Profile Metadata --------
-profile_name: "p4"
-description: "Channel flow with dual inlet/outlet configuration, Re=1000, CIP scheme"
-tags: ["channel_flow", "dual_inlet", "dual_outlet", "low_reynolds", "cip_scheme"]
+profile_name: "p16"
+description: "Channel flow with dual inlet/outlet configuration, Re=6000, CIP scheme"
+tags: ["channel_flow", "dual_inlet", "dual_outlet", "high_reynolds", "cip_scheme"]
 
 # -------- Output --------
-dump_dir: "sim_res/ns_transient_2d/p4"
+dump_dir: "sim_res/ns_transient_2d/p16"

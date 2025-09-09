@@ -41,55 +41,70 @@ The solution is considered converged when:
 
 **Normalized velocity RMSE**: $\text{RMSE}(\|\vec{v}\|) < \text{norm\_rmse\_tolerance}$
 
+### Cost Calculation
+
+The computational cost is calculated as:
+
+**Cost = 2 × resolution² × (num_steps + total_pressure_iterations)**
+
+Where:
+- **resolution²**: Grid size (total number of grid points)
+- **num_steps**: Number of time steps taken during simulation
+- **total_pressure_iterations**: Total number of pressure solver iterations across all time steps
+- **Factor of 2**: Accounts for both velocity and pressure field updates per iteration
+
+This cost metric captures both the spatial discretization complexity (resolution²) and the temporal complexity (time steps + pressure solver convergence iterations), providing a comprehensive measure of computational effort.
+
 ## Test Cases
 
-The solver supports 12 profiles with 6 different boundary conditions, each tested at two Reynolds numbers (Re=1000 and Re=100000):
+The solver supports 18 profiles with 6 different boundary conditions, each tested at three Reynolds numbers (Re=1000, Re=3000, and Re=6000):
 
 ### Boundary Conditions
 
-**BC1 - Simple Circular Obstacle (p1, p2)**
+**BC1 - Simple Circular Obstacle (p1, p7, p13)**
 - Single circular obstacle in center of channel
 - Uniform inlet velocity, pressure outlet
 - Clean flow separation and wake formation
 
-**BC2 - Multiple Obstacles with Steps (p3, p4)**
+**BC2 - Multiple Obstacles with Steps (p2, p8, p14)**
 - Complex maze-like geometry with multiple rectangular obstacles
 - Stepped flow path with alternating obstacle placement
 - Tests flow through complex geometric constraints
 
-**BC3 - Random Circular Obstacles (p5, p6)**
+**BC3 - Random Circular Obstacles (p3, p9, p15)**
 - 100 randomly placed circular obstacles (seed=123 for reproducibility)
 - Dense obstacle field testing flow through irregular patterns
 - Tests robustness to geometric complexity
 
-**BC4 - Dual Inlet/Outlet Configuration (p7, p8)**
+**BC4 - Dual Inlet/Outlet Configuration (p4, p10, p16)**
 - Two separate inlet streams (top and bottom)
 - Single central outlet
 - Tests flow mixing and interaction between streams
 
-**BC5 - Complex Obstacle Array (p9, p10)**
+**BC5 - Complex Obstacle Array (p5, p11, p17)**
 - Dense array of rectangular obstacles in systematic pattern
 - Multiple flow paths with varying widths
 - Tests flow through highly constrained geometries
 
-**BC6 - Dragon-Shaped Obstacle (p11, p12)**
+**BC6 - Dragon-Shaped Obstacle (p6, p12, p18)**
 - Complex artistic obstacle loaded from PNG image file
 - Irregular, organic shape testing flow around complex boundaries
 - Tests numerical robustness with highly irregular geometry
 
 ### Profile Organization
 
-Each boundary condition is tested at two Reynolds numbers:
+Each boundary condition is tested at three Reynolds numbers:
 - **Low Reynolds (Re=1000)**: Laminar flow characteristics, smooth flow patterns
-- **High Reynolds (Re=100000)**: Turbulent flow characteristics, complex vortical structures
+- **Medium Reynolds (Re=3000)**: Transitional flow characteristics, moderate complexity
+- **High Reynolds (Re=6000)**: Turbulent flow characteristics, complex vortical structures
 
 **Profile Mapping:**
-- p1, p2: BC1 (circular obstacle)
-- p3, p4: BC2 (multiple obstacles with steps)  
-- p5, p6: BC3 (random circular obstacles)
-- p7, p8: BC4 (dual inlet/outlet)
-- p9, p10: BC5 (complex obstacle array)
-- p11, p12: BC6 (dragon-shaped obstacle)
+- p1, p7, p13: BC1 (circular obstacle)
+- p2, p8, p14: BC2 (multiple obstacles with steps)  
+- p3, p9, p15: BC3 (random circular obstacles)
+- p4, p10, p16: BC4 (dual inlet/outlet)
+- p5, p11, p17: BC5 (complex obstacle array)
+- p6, p12, p18: BC6 (dragon-shaped obstacle)
 
 ## Parameter Tuning Tasks and Dummy Strategy
 
@@ -153,7 +168,7 @@ Each boundary condition is tested at two Reynolds numbers:
 | Parameter | Description | Default Values by Profile |
 |-----------|-------------|---------------------------|
 | boundary_condition | Boundary condition type | 1-6 (varies by profile) |
-| reynolds_num | Reynolds number | 1000.0 or 100000.0 |
+| reynolds_num | Reynolds number | 1000.0, 3000.0, or 6000.0 |
 | advection_scheme | Advection scheme | "cip" |
 | vorticity_confinement | Vorticity confinement coefficient | 0.0 |
 | total_runtime | Total simulation time | 1.0 |
@@ -175,7 +190,7 @@ Each boundary condition is tested at two Reynolds numbers:
 ### Notes
 
 - **Boundary conditions**: 6 distinct geometries (BC1-BC6) with increasing complexity
-- **Reynolds number pairs**: Each BC tested at Re=1000 (laminar) and Re=100000 (turbulent)
+- **Reynolds number triplets**: Each BC tested at Re=1000 (laminar), Re=3000 (transitional), and Re=6000 (turbulent)
 - **Domain aspect ratio**: Fixed at 0.5 (y/x) for all simulations
 - **CFL calculation**: Simplified as dt = CFL × dx (assumes max velocity ≈ 1.0)
 - **CFL values**: Exact values [0.2, 0.1, 0.05] to avoid floating-point precision issues
@@ -188,7 +203,7 @@ Each boundary condition is tested at two Reynolds numbers:
 
 ### Summary
 
-- **Profiles**: 12 (p1-p12 with varying geometries and Reynolds numbers)
+- **Profiles**: 18 (p1-p18 with varying geometries and Reynolds numbers)
 - **Target Parameters**: 4 (resolution, cfl, relaxation_factor, residual_threshold)
 - **Precision Levels**: 3 (high: 0.15, medium: 0.3, low: 0.6)
 
@@ -196,12 +211,12 @@ Each boundary condition is tested at two Reynolds numbers:
 
 Current configuration generates:
 
-- **resolution** (iterative+0-shot): 12 profiles × 1 non-target combo = 12 tasks per precision
-- **cfl** (iterative+0-shot): 12 profiles × 2 non-target combos = 24 tasks per precision
-- **relaxation_factor** (0-shot): 12 profiles × 2 non-target combos = 24 tasks per precision
-- **residual_threshold** (0-shot): 12 profiles × 2 non-target combos = 24 tasks per precision
-- **Total per precision**: 84 tasks
-- **Total tasks**: 252 tasks (across 3 precision levels)
+- **resolution** (iterative+0-shot): 18 profiles × 1 non-target combo = 18 tasks per precision
+- **cfl** (iterative+0-shot): 18 profiles × 2 non-target combos = 36 tasks per precision
+- **relaxation_factor** (0-shot): 18 profiles × 2 non-target combos = 36 tasks per precision
+- **residual_threshold** (0-shot): 18 profiles × 2 non-target combos = 36 tasks per precision
+- **Total per precision**: 126 tasks
+- **Total tasks**: 378 tasks (across 3 precision levels)
 
 **Non-target parameter variations:**
 
@@ -218,9 +233,10 @@ Cache script: `checkouts/ns_transient_2d.py`
 ### Key Features
 
 1. **Transient Simulation**: Time-dependent flow evolution requiring careful time step control
-2. **Geometric Diversity**: 12 different geometries from simple to complex artistic shapes
-3. **Reynolds Number Range**: Both laminar (Re=1000) and turbulent (Re=100000) regimes
+2. **Geometric Diversity**: 18 different geometries from simple to complex artistic shapes across 6 boundary conditions
+3. **Reynolds Number Range**: Three regimes - laminar (Re=1000), transitional (Re=3000), and turbulent (Re=6000)
 4. **High-Performance Computing**: Taichi framework for GPU/CPU acceleration
 5. **Precision Control**: Exact parameter values to avoid floating-point precision issues
 6. **Convergence Optimization**: Multiple precision levels for accuracy vs. cost trade-off
 7. **Parameter Sensitivity**: Tests critical parameters (resolution, CFL) and secondary parameters (relaxation, thresholds)
+8. **Comprehensive Cost Tracking**: Includes both time steps and pressure solver iterations for accurate computational cost assessment

@@ -39,6 +39,22 @@ class NSTransient2D:
         self.relaxation_factor = args.relaxation_factor
         self.residual_threshold = args.residual_threshold
         
+        # Base solver attributes
+        self.verbose = True
+        self.current_time = 0.0
+        self.record_dt = 0.1  # Time interval between recordings
+        self.next_record_time = 0.0
+        self.end_time = self.total_runtime if self.total_runtime is not None else 1.0
+        self.record_frame = 0
+        self.num_steps = 0
+        
+        # Timeout tracking
+        self.start_time = None
+        self.max_runtime = MAXIMUM_WALL_TIME
+        
+        # Pressure solver iteration tracking
+        self.total_pressure_iterations = 0
+        
         # Initialize simulation components
         self._initialize_taichi()
         self._initialize_simulator()
@@ -74,11 +90,10 @@ class NSTransient2D:
     
     def _initialize_output(self, dump_dir):
         """Initialize output paths"""
-        self.output_path = (dump_dir + f"_bc{self.n_bc}_res{self.resolution}_re{self.re}_cfl{self.cfl}_scheme{self.scheme}_vor{self.vor_eps}_relax{self.relaxation_factor}_residual{self.residual_threshold}_runtime{self.total_runtime}_no_dye{self.no_dye}_cpu{self.cpu}_vis{self.vis_num}")
+        self.output_path = (dump_dir + f"_bc{self.n_bc}_res{self.resolution}_re{self.re}_cfl{self.cfl}_relax{self.relaxation_factor}_residual{self.residual_threshold}_runtime{self.total_runtime}")
         self.output_path = Path(self.output_path)
-        self.output_dir = f"{self.output_path}/videos"
-        if not os.path.exists(self.output_dir):
-            os.makedirs(self.output_dir)
+        if not os.path.exists(self.output_path):
+            os.makedirs(self.output_path)
     
     def _print_config(self):
         """Print simulation configuration"""
@@ -198,108 +213,111 @@ class NSTransient2D:
             return h5_file
     
     def run(self):
-        """Run the fluid simulation"""
-        video_manager = ti.tools.VideoManager(output_dir=self.output_dir, framerate=30, automatic_build=False)
-        
-        step = 0
-        h5_file = None  # H5 file for accumulating data
-        converged = True  # Track convergence status
-        
-        # Start timer for total runtime tracking
-        start_time = time.time()
-        max_runtime = 1200  # 20 minutes in seconds
-        
-        # Calculate total steps if runtime is specified
-        total_steps = None
-        if self.total_runtime is not None:
-            total_steps = int(self.total_runtime / self.dt)
-            print(f"Running for {total_steps} steps (runtime: {self.total_runtime:.3f}s, dt: {self.dt:.6f})")
-        
-        print(f"Maximum wall time limit: {max_runtime}s ({max_runtime/60:.1f} minutes)")
-        
-        # Main simulation loop
-        while (total_steps is None or step < total_steps):
-            # Check if we've exceeded the maximum runtime
-            elapsed_time = time.time() - start_time
-            if elapsed_time > max_runtime:
-                print(f"\nSimulation timeout after {elapsed_time:.1f}s ({max_runtime}s limit)")
-                converged = False
+        """Run the fluid simulation following base solver format"""
+        self.pre_process()
+
+        # Initial recording at time 0
+        self.dump()
+        self.call_back()
+        self.record_frame += 1
+        self.next_record_time = min(self.current_time + self.record_dt, self.end_time)
+
+        while self.current_time < self.end_time - 1e-10:
+            # Calculate base timestep
+            base_dt = self.cal_dt()
+
+            # Adjust timestep for recording if needed
+            dt, should_record = self.adjust_dt_for_recording(base_dt)
+
+            if self.verbose:
+                print(f"Time: {self.current_time:.6f}, dt: {dt:.6e}")
+
+            # Perform simulation step
+            self.step(dt)
+            self.current_time += dt
+            self.num_steps += 1
+
+            # Handle recording if we've reached a recording time
+            if should_record:
+                self.dump()
+                self.call_back()
+                self.record_frame += 1
+                self.next_record_time = min(self.current_time + self.record_dt, self.end_time)
+
+            if self.early_stop():
+                if self.verbose:
+                    print(f"Early stopping at time {self.current_time:.6f}")
                 break
-            
-            # Generate visualization frames every 5 steps
-            if step % 5 == 0:
-                if self.vis_num == 0:
-                    img = self.fluid_sim.get_norm_field()
-                elif self.vis_num == 1:
-                    img = self.fluid_sim.get_pressure_field()
-                elif self.vis_num == 2:
-                    img = self.fluid_sim.get_vorticity_field()
-                elif self.vis_num == 3:
-                    img = self.fluid_sim.get_dye_field()
-                else:
-                    raise NotImplementedError()
 
-                # Save frame to video
-                video_manager.write_frame(img)
-                
-                # Save screenshot every 100 steps
-                if step % 100 == 0:
-                    self.output_path.mkdir(exist_ok=True)
-                    ti.tools.imwrite(img, str(self.output_path / f"step_{step:06}.png"))
-                
-            # Save data every 0.01 time units
-            if step * self.dt % 0.01 == 0:
-                h5_file = self.save_simulation_data(step, h5_file, save_all_fields=False)
-
-            # Advance simulation
-            self.fluid_sim.step()
-            
-            step += 1
-            
-            # Print progress every 100 steps
-            if step % 100 == 0:
-                print(f"Step {step}/{total_steps if total_steps else '∞'}, Time: {step * self.dt:.3f}s")
-        
-        # Print completion message
-        elapsed_time = time.time() - start_time
-        if total_steps is not None and step >= total_steps:
-            print(f"\nSimulation completed after {step} steps (runtime: {step * self.dt:.3f}s, wall time: {elapsed_time:.1f}s)")
-        elif not converged:
-            print(f"\nSimulation timed out after {step} steps (runtime: {step * self.dt:.3f}s, wall time: {elapsed_time:.1f}s)")
-        else:
-            print(f"\nSimulation completed after {step} steps (runtime: {step * self.dt:.3f}s, wall time: {elapsed_time:.1f}s)")
-
-        # Save final state with all fields
-        if h5_file is not None:
-            # Save final step with all fields
-            self.save_simulation_data(step, h5_file, save_all_fields=True)
-            h5_file.close()
-            print(f"\nTemporal simulation data saved to: {self.output_path}/data/simulation_data.h5")
-            print(f"Total time steps saved: {step // 5 + 1}")
-            print(f"Final step includes all fields (vx, vy, pressure, vorticity, dye)")
-
-        video_manager.make_video(mp4=True)
-        
-        # Post-process simulation results
-        is_converged = self.post_process(step, converged, elapsed_time)
-        return is_converged
+        if self.verbose:
+            print(f"Simulation completed at time {self.current_time:.6f}, total steps: {self.num_steps}")
+        self.post_process()
+        return self.converged
     
-    def post_process(self, final_step, converged=True, elapsed_time=0.0):
+    def adjust_dt_for_recording(self, dt):
+        """
+        Adjust timestep to align with recording times.
+        Returns adjusted timestep and whether we should record after this step.
+        """
+        time_remaining = self.next_record_time - self.current_time
+
+        # If we've passed the recording time (shouldn't normally happen)
+        if time_remaining <= 1e-10:  # Small tolerance for floating point comparison
+            if self.verbose:
+                print(
+                    f"Warning: Current time {self.current_time:.6f} has passed the next recording time {self.next_record_time:.6f}."
+                )
+            return time_remaining, True
+
+        # Calculate how many base timesteps remain until recording
+        steps_to_record = time_remaining / dt
+
+        if steps_to_record >= 2:
+            # No adjustment needed
+            return dt, False
+        elif steps_to_record > 1:
+            # Halve the timestep to get closer to recording time
+            return dt / 2, False
+        else:
+            # Adjust timestep to exactly reach recording time
+            return time_remaining, True
+    
+    def pre_process(self):
+        """Initialize simulation before running"""
+        self.start_time = time.time()
+        self.h5_file = None
+        self.converged = True
+        print(f"Maximum wall time limit: {self.max_runtime}s ({self.max_runtime/60:.1f} minutes)")
+    
+    def cal_dt(self):
+        """Calculate and return the base timestep"""
+        return self.dt
+    
+    def call_back(self):
+        """Called after each recording"""
+        if self.verbose:
+            print(f"Recording at time {self.current_time:.6f} (frame {self.record_frame})")
+            print(f"Number of steps: {self.num_steps}")
+    
+    def post_process(self):
         """Post-process simulation results and save metadata"""
         import json
         
-        # Calculate cost: 2 * resolution^2 * total_steps * avg_pressure_iterations
-        # This accounts for velocity and pressure updates per step, with variable pressure solver iterations
-        # Note: Since we now use residual checking, the actual number of iterations varies
-        cost = 2 * (self.resolution ** 2) * final_step
+        # Calculate cost: 2 * resolution^2 * (total_steps + sum_iter_pressure_solver)
+        self.total_pressure_iterations = self.fluid_sim.get_total_pressure_iterations()
+        cost = 2 * (self.resolution ** 2) * (self.num_steps + self.total_pressure_iterations)
+        
+        # Calculate elapsed time
+        elapsed_time = time.time() - self.start_time if self.start_time else 0.0
         
         # Prepare metadata
         meta = {
             "cost": cost,
-            "num_steps": final_step,
-            "total_runtime": final_step * self.dt,
+            "num_steps": self.num_steps,
+            "total_pressure_iterations": self.total_pressure_iterations,
+            "total_runtime": self.current_time,
             "wall_time": elapsed_time,
-            "converged": converged,
+            "converged": self.converged,
             "parameters": {
                 "boundary_condition": self.n_bc,
                 "resolution": self.resolution,
@@ -322,9 +340,54 @@ class NSTransient2D:
         
         print(f"Post-processing completed:")
         print(f"  Cost: {cost}")
-        print(f"  Total steps: {final_step}")
-        print(f"  Total runtime: {final_step * self.dt:.3f}s")
+        print(f"  Total steps: {self.num_steps}")
+        print(f"  Total pressure iterations: {self.total_pressure_iterations}")
+        print(f"  Total runtime: {self.current_time:.3f}s")
         print(f"  Wall time: {elapsed_time:.1f}s")
-        print(f"  Converged: {converged}")
+        print(f"  Converged: {self.converged}")
         print(f"  Metadata saved to: {meta_file}")
-        return converged
+        
+        # Close H5 file if it exists
+        if self.h5_file is not None:
+            self.h5_file.close()
+            print(f"\nTemporal simulation data saved to: {self.output_path}/data/simulation_data.h5")
+            print(f"Total time steps saved: {self.record_frame}")
+            print(f"Final step includes all fields (vx, vy, pressure, vorticity, dye)")
+    
+    def dump(self):
+        """Save simulation state at current_time"""
+        # Save data with all fields for final step, basic fields for intermediate steps
+        save_all_fields = (self.current_time >= self.end_time - 1e-10)
+        self.h5_file = self.save_simulation_data(self.num_steps, self.h5_file, save_all_fields=save_all_fields)
+        
+        # Generate and save visualization image
+        if self.vis_num == 0:
+            img = self.fluid_sim.get_norm_field()
+        elif self.vis_num == 1:
+            img = self.fluid_sim.get_pressure_field()
+        elif self.vis_num == 2:
+            img = self.fluid_sim.get_vorticity_field()
+        elif self.vis_num == 3:
+            img = self.fluid_sim.get_dye_field()
+        else:
+            raise NotImplementedError()
+        
+        self.output_path.mkdir(exist_ok=True)
+        ti.tools.imwrite(img, str(self.output_path / f"step_{self.num_steps:06}.png"))
+    
+    def step(self, dt):
+        """Perform a simulation step"""
+        self.fluid_sim.step()
+    
+    def early_stop(self):
+        """Check if the simulation should stop early"""
+        if self.start_time is None:
+            return False
+        
+        elapsed_time = time.time() - self.start_time
+        if elapsed_time > self.max_runtime:
+            print(f"\nSimulation timeout after {elapsed_time:.1f}s ({self.max_runtime}s limit)")
+            self.converged = False
+            return True
+        
+        return False

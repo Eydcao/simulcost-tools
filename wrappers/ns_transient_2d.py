@@ -5,12 +5,10 @@ import numpy as np
 import json
 from scipy.interpolate import RegularGridInterpolator
 
-def run_sim_ns_transient_2d(profile, boundary_condition, resolution, reynolds_num, cfl, advection_scheme, 
-                            vorticity_confinement, relaxation_factor, residual_threshold, total_runtime, 
-                            no_dye, cpu, visualization, other_params=None):
+def run_sim_ns_transient_2d(profile, boundary_condition, resolution, reynolds_num, cfl, 
+                            relaxation_factor, residual_threshold, total_runtime, other_params=None):
     """Run the ns_transient_2d simulation with the given parameters."""
-    vor = None if vorticity_confinement == 0.0 else vorticity_confinement
-    dir_path = f"sim_res/ns_transient_2d/{profile}_bc{boundary_condition}_res{resolution}_re{reynolds_num}_cfl{cfl}_scheme{advection_scheme}_vor{vor}_relax{relaxation_factor}_residual{residual_threshold}_runtime{total_runtime}_no_dye{no_dye}_cpu{cpu}_vis{visualization}/"
+    dir_path = f"sim_res/ns_transient_2d/{profile}_bc{boundary_condition}_res{resolution}_re{reynolds_num}_cfl{cfl}_relax{relaxation_factor}_residual{residual_threshold}_runtime{total_runtime}/"
     meta_file_path = os.path.join(dir_path, "meta.json")
 
     # Check if the directory and meta.json file with the key of cost and num_steps exist
@@ -21,7 +19,7 @@ def run_sim_ns_transient_2d(profile, boundary_condition, resolution, reynolds_nu
                 return meta["cost"], meta["num_steps"]
 
     # Build command with parameters
-    cmd = f"python runners/ns_transient_2d.py --config-name={profile} boundary_condition={boundary_condition} resolution={resolution} reynolds_num={reynolds_num} cfl={cfl} advection_scheme={advection_scheme} vorticity_confinement={vorticity_confinement} relaxation_factor={relaxation_factor} residual_threshold={residual_threshold} total_runtime={total_runtime} no_dye={no_dye} cpu={cpu} visualization={visualization}"
+    cmd = f"python runners/ns_transient_2d.py --config-name={profile} boundary_condition={boundary_condition} resolution={resolution} reynolds_num={reynolds_num} cfl={cfl} relaxation_factor={relaxation_factor} residual_threshold={residual_threshold} total_runtime={total_runtime}"
     
     # Add other parameters if provided
     if other_params:
@@ -45,109 +43,83 @@ def run_sim_ns_transient_2d(profile, boundary_condition, resolution, reynolds_nu
         return float('inf'), 0
 
     # Load the cost from the meta.json file
-    try:
-        with open(meta_file_path, "r") as f:
-            meta = json.load(f)
+    with open(meta_file_path, "r") as f:
+        meta = json.load(f)
         
-        if "cost" not in meta or "num_steps" not in meta:
-            print(f"Warning: meta.json missing required keys at {meta_file_path}")
-            return float('inf'), 0
-            
-        return meta["cost"], meta["num_steps"]
-    except (json.JSONDecodeError, IOError) as e:
-        print(f"Error reading meta.json at {meta_file_path}: {e}")
-        return float('inf'), 0
+    return meta["cost"], meta["num_steps"]
 
 
-def get_res_ns_transient_2d(profile, boundary_condition, resolution, reynolds_num, cfl, advection_scheme, 
-                            vorticity_confinement, relaxation_factor, residual_threshold, total_runtime, 
-                            no_dye, cpu, visualization, other_params=None):
+def get_res_ns_transient_2d(profile, boundary_condition, resolution, reynolds_num, cfl, 
+                            relaxation_factor, residual_threshold, total_runtime, other_params=None):
     """Load final velocity and pressure fields for given parameters."""
-    vor = None if vorticity_confinement == 0.0 else vorticity_confinement
-    dir_path = f"sim_res/ns_transient_2d/{profile}_bc{boundary_condition}_res{resolution}_re{reynolds_num}_cfl{cfl}_scheme{advection_scheme}_vor{vor}_relax{relaxation_factor}_residual{residual_threshold}_runtime{total_runtime}_no_dye{no_dye}_cpu{cpu}_vis{visualization}/"
+    dir_path = f"sim_res/ns_transient_2d/{profile}_bc{boundary_condition}_res{resolution}_re{reynolds_num}_cfl{cfl}_relax{relaxation_factor}_residual{residual_threshold}_runtime{total_runtime}/"
 
     if not os.path.exists(dir_path):
         os.makedirs(dir_path)
     
     # Look for H5 data file first
     data_path = os.path.join(dir_path, "data", "simulation_data.h5")
-    if os.path.exists(data_path):
-        try:
-            with h5py.File(data_path, "r") as f:
-                # Get the last timestep data
-                fields = f['fields']
-                last_idx = -1
-                
-                U = np.array(fields['vx'][last_idx])  # x-velocity
-                V = np.array(fields['vy'][last_idx])  # y-velocity
-                P = np.array(fields['pressure'][last_idx])  # pressure
-                
-                # Get additional fields if available
-                dye = None
-                vorticity = None
-                if 'dye' in fields:
-                    dye = np.array(fields['dye'][last_idx])
-                if 'vorticity' in fields:
-                    vorticity = np.array(fields['vorticity'][last_idx])
-                
-                return U, V, P, dye, vorticity
-        except Exception as e:
-            print(f"Error reading H5 data file {data_path}: {e}")
+    meta_file_path = os.path.join(dir_path, "meta.json")
+    if os.path.exists(data_path) and os.path.exists(meta_file_path):
+        with h5py.File(data_path, "r") as f:
+            # Get the last timestep data
+            fields = f['fields']
+            last_idx = -1
+            
+            U = np.array(fields['vx'][last_idx])  # x-velocity
+            V = np.array(fields['vy'][last_idx])  # y-velocity
+            P = np.array(fields['pressure'][last_idx])  # pressure
+            
+            with open(meta_file_path, "r") as f:
+                meta = json.load(f)
+                if meta["converged"] == False:
+                    return None, None, None
+            
+            return U, V, P
     
     # Fallback: look for NPZ files
     files = [f for f in os.listdir(dir_path) if f.startswith("step_") and f.endswith(".npz")]
     if not files:
         # Trigger a simulation run if no result files are found
-        cost, num_steps = run_sim_ns_transient_2d(profile, boundary_condition, resolution, reynolds_num, cfl, advection_scheme, vorticity_confinement, relaxation_factor, residual_threshold, total_runtime, no_dye, cpu, visualization, other_params)
+        cost, num_steps = run_sim_ns_transient_2d(profile, boundary_condition, resolution, reynolds_num, cfl, relaxation_factor, residual_threshold, total_runtime, other_params)
         if cost == float('inf'):
             # Simulation failed, return None to indicate failure
-            return None, None, None, None, None
+            return None, None, None
         
         # Check again for H5 file after simulation
         if os.path.exists(data_path):
-            try:
-                with h5py.File(data_path, "r") as f:
-                    fields = f['fields']
-                    last_idx = -1
-                    
-                    U = np.array(fields['vx'][last_idx])
-                    V = np.array(fields['vy'][last_idx])
-                    P = np.array(fields['pressure'][last_idx])
-                    
-                    dye = None
-                    vorticity = None
-                    if 'dye' in fields:
-                        dye = np.array(fields['dye'][last_idx])
-                    if 'vorticity' in fields:
-                        vorticity = np.array(fields['vorticity'][last_idx])
-                    
-                    return U, V, P, dye, vorticity
-            except Exception as e:
-                print(f"Error reading H5 data file {data_path} after simulation: {e}")
-        
+            with h5py.File(data_path, "r") as f:
+                fields = f['fields']
+                last_idx = -1
+                
+                U = np.array(fields['vx'][last_idx])
+                V = np.array(fields['vy'][last_idx])
+                P = np.array(fields['pressure'][last_idx])
+                
+                with open(meta_file_path, "r") as f:
+                    meta = json.load(f)
+                    if meta["converged"] == False:
+                        return None, None, None
+                
+                return U, V, P
+            
         # Check for NPZ files after simulation
         files = [f for f in os.listdir(dir_path) if f.startswith("step_") and f.endswith(".npz")]
         if not files:
             print(f"Warning: No result files found in {dir_path} after triggering a simulation run.")
-            return None, None, None, None, None
+            return None, None, None
 
     # Load from NPZ file
     files.sort(key=lambda x: int(x.split("_")[1].split(".")[0]))
     latest_file = files[-1]
 
     file_path = os.path.join(dir_path, latest_file)
-    try:
-        data = np.load(file_path)
-        U = data['u'] if 'u' in data else data['vx'] if 'vx' in data else None
-        V = data['v'] if 'v' in data else data['vy'] if 'vy' in data else None
-        P = data['p'] if 'p' in data else data['pressure'] if 'pressure' in data else None
-        dye = data['dye'] if 'dye' in data else None
-        vorticity = data['vorticity'] if 'vorticity' in data else None
-        
-        return U, V, P, dye, vorticity
-    except Exception as e:
-        print(f"Error reading result file {file_path}: {e}")
-        return None, None, None, None, None
+    data = np.load(file_path)
+    U = data['u'] if 'u' in data else data['vx'] if 'vx' in data else None
+    V = data['v'] if 'v' in data else data['vy'] if 'vy' in data else None
+    P = data['p'] if 'p' in data else data['pressure'] if 'pressure' in data else None
+    
+    return U, V, P
 
 
 def interpolate_field(field_src, src_shape, tgt_shape, axis_offsets=(0, 0)):
@@ -173,16 +145,16 @@ def interpolate_field(field_src, src_shape, tgt_shape, axis_offsets=(0, 0)):
 
 
 def compare_res_ns_transient_2d(
-    profile1, boundary_condition1, resolution1, reynolds_num1, cfl1, advection_scheme1, vorticity_confinement1, relaxation_factor1, residual_threshold1, total_runtime1, no_dye1, cpu1, visualization1,
-    profile2, boundary_condition2, resolution2, reynolds_num2, cfl2, advection_scheme2, vorticity_confinement2, relaxation_factor2, residual_threshold2, total_runtime2, no_dye2, cpu2, visualization2,
+    profile1, boundary_condition1, resolution1, reynolds_num1, cfl1, relaxation_factor1, residual_threshold1, total_runtime1,
+    profile2, boundary_condition2, resolution2, reynolds_num2, cfl2, relaxation_factor2, residual_threshold2, total_runtime2,
     norm_rmse_tolerance,
     other_params1=None, other_params2=None
 ):
     """
     Compare two sets of results.
     """
-    u1, v1, p1, dye1, vorticity1 = get_res_ns_transient_2d(profile1, boundary_condition1, resolution1, reynolds_num1, cfl1, advection_scheme1, vorticity_confinement1, relaxation_factor1, residual_threshold1, total_runtime1, no_dye1, cpu1, visualization1, other_params1)
-    u2, v2, p2, dye2, vorticity2 = get_res_ns_transient_2d(profile2, boundary_condition2, resolution2, reynolds_num2, cfl2, advection_scheme2, vorticity_confinement2, relaxation_factor2, residual_threshold2, total_runtime2, no_dye2, cpu2, visualization2, other_params2)
+    u1, v1, p1 = get_res_ns_transient_2d(profile1, boundary_condition1, resolution1, reynolds_num1, cfl1, relaxation_factor1, residual_threshold1, total_runtime1, other_params1)
+    u2, v2, p2 = get_res_ns_transient_2d(profile2, boundary_condition2, resolution2, reynolds_num2, cfl2, relaxation_factor2, residual_threshold2, total_runtime2, other_params2)
     
     # Check if either simulation failed
     if u1 is None or u2 is None:
@@ -245,23 +217,18 @@ if __name__ == "__main__":
     resolution2 = 400
     reynolds_num = 1000.0
     cfl = 0.05
-    advection_scheme = "cip"
-    vorticity_confinement = 0.0
     relaxation_factor = 1.3
     residual_threshold = 1e-2
     total_runtime = 1.0
-    no_dye = False
-    cpu = True
-    visualization = 0
     
     length = 20.0
     breadth = 1.0
     norm_rmse_tolerance = 0.2
 
     # Compare results
-    is_converged, _, _, _ = compare_res_ns_transient_2d(
-        profile, boundary_condition, resolution1, reynolds_num, cfl, advection_scheme, vorticity_confinement, relaxation_factor, residual_threshold, total_runtime, no_dye, cpu, visualization,
-        profile, boundary_condition, resolution2, reynolds_num, cfl, advection_scheme, vorticity_confinement, relaxation_factor, residual_threshold, total_runtime, no_dye, cpu, visualization,
+    is_converged, _ = compare_res_ns_transient_2d(
+        profile, boundary_condition, resolution1, reynolds_num, cfl, relaxation_factor, residual_threshold, total_runtime,
+        profile, boundary_condition, resolution2, reynolds_num, cfl, relaxation_factor, residual_threshold, total_runtime,
         norm_rmse_tolerance
     )
     print(f"Convergence achieved: {is_converged}")

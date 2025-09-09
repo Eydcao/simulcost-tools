@@ -422,14 +422,9 @@ def process_task(target_param, target_config, task_params, profile, precision_na
             resolution_values=resolution_values,
             reynolds_num=env_params["reynolds_num"],
             cfl=task_params["cfl"],
-            advection_scheme=env_params["advection_scheme"],
-            vorticity_confinement=env_params["vorticity_confinement"],
             relaxation_factor=task_params["relaxation_factor"],
             residual_threshold=task_params["residual_threshold"],
             total_runtime=env_params["total_runtime"],
-            no_dye=env_params["no_dye"],
-            cpu=env_params["cpu"],
-            visualization=env_params["visualization"],
             norm_rmse_tolerance=precision_vals["norm_rmse_tolerance"],
             other_params=task_params.get("other_params")
         )
@@ -463,14 +458,9 @@ def process_task(target_param, target_config, task_params, profile, precision_na
             resolution=task_params["resolution"],
             reynolds_num=env_params["reynolds_num"],
             cfl_values=cfl_values,
-            advection_scheme=env_params["advection_scheme"],
-            vorticity_confinement=env_params["vorticity_confinement"],
             relaxation_factor=task_params["relaxation_factor"],
             residual_threshold=task_params["residual_threshold"],
             total_runtime=env_params["total_runtime"],
-            no_dye=env_params["no_dye"],
-            cpu=env_params["cpu"],
-            visualization=env_params["visualization"],
             norm_rmse_tolerance=precision_vals["norm_rmse_tolerance"],
             other_params=task_params.get("other_params")
         )
@@ -500,14 +490,9 @@ def process_task(target_param, target_config, task_params, profile, precision_na
             resolution=task_params["resolution"],
             reynolds_num=env_params["reynolds_num"],
             cfl=task_params["cfl"],
-            advection_scheme=env_params["advection_scheme"],
-            vorticity_confinement=env_params["vorticity_confinement"],
             relaxation_factor_values=relaxation_factor_values,
             residual_threshold=task_params["residual_threshold"],
             total_runtime=env_params["total_runtime"],
-            no_dye=env_params["no_dye"],
-            cpu=env_params["cpu"],
-            visualization=env_params["visualization"],
             norm_rmse_tolerance=precision_vals["norm_rmse_tolerance"],
             other_params=task_params.get("other_params")
         )
@@ -537,14 +522,9 @@ def process_task(target_param, target_config, task_params, profile, precision_na
             resolution=task_params["resolution"],
             reynolds_num=env_params["reynolds_num"],
             cfl=task_params["cfl"],
-            advection_scheme=env_params["advection_scheme"],
-            vorticity_confinement=env_params["vorticity_confinement"],
             relaxation_factor=task_params["relaxation_factor"],
             residual_threshold_values=residual_threshold_values,
             total_runtime=env_params["total_runtime"],
-            no_dye=env_params["no_dye"],
-            cpu=env_params["cpu"],
-            visualization=env_params["visualization"],
             norm_rmse_tolerance=precision_vals["norm_rmse_tolerance"],
             other_params=task_params.get("other_params")
         )

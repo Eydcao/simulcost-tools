@@ -51,6 +51,7 @@ class JacobiPressureUpdater(PressureUpdater):
             self._bc.set_pressure_boundary_condition(p.current)
             self._update(p.next, p.current, v_current)
             p.swap()
+        return self._n_iter
 
     @ti.kernel
     def _update(self, p_next: ti.template(), p_current: ti.template(), v_current: ti.template()):
@@ -74,6 +75,7 @@ class RedBlackSorPressureUpdater(PressureUpdater):
             self._bc.set_pressure_boundary_condition(p.current)
             self._update(p.next, p.current, v_current)
             p.swap()
+        return self._n_iter
 
     def _update(self, p_next, p_current, v_current):
         # 圧力のFieldは1つでも良いがインターフェイスの統一のために2つ受け取るようにしている
@@ -130,6 +132,8 @@ class ResidualBasedSorPressureUpdater(PressureUpdater):
             residual = np.linalg.norm(p_current_np - p_prev) / (np.linalg.norm(p_current_np) + 1e-12)
             
             iteration += 1
+        
+        return iteration
 
     def _update(self, p_next, p_current, v_current):
         # Red-Black SOR update

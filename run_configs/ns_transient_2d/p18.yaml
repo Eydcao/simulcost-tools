@@ -1,9 +1,9 @@
-# Profile: Boundary Condition 6 with Reynolds Number 3000
+# Profile: Boundary Condition 6 with Reynolds Number 6000
 # Description: Channel flow with dragon-shaped obstacle
 
 # -------- Environment Dependents --------
 boundary_condition: 6
-reynolds_num: 3000.0
+reynolds_num: 6000.0
 vorticity_confinement: 0.0
 total_runtime: 1.0
 no_dye: False
@@ -18,9 +18,9 @@ residual_threshold: 1e-2
 cfl: 0.05
 
 # -------- Profile Metadata --------
-profile_name: "p12"
-description: "Channel flow with dragon-shaped obstacle, Re=3000, CIP scheme"
-tags: ["channel_flow", "dragon_obstacle", "medium_reynolds", "cip_scheme"]
+profile_name: "p18"
+description: "Channel flow with dragon-shaped obstacle, Re=6000, CIP scheme"
+tags: ["channel_flow", "dragon_obstacle", "high_reynolds", "cip_scheme"]
 
 # -------- Output --------
-dump_dir: "sim_res/ns_transient_2d/p12"
+dump_dir: "sim_res/ns_transient_2d/p18"
