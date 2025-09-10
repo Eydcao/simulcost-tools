@@ -6,6 +6,58 @@ import json
 from scipy.interpolate import RegularGridInterpolator
 
 
+def _find_runner_path():
+    """Automatically find the correct path to ns_transient_2d.py runner."""
+    # Get current working directory
+    cwd = os.getcwd()
+    
+    # List of possible runner paths relative to different working directories
+    possible_paths = []
+    
+    # If working from project root (SimulCost-Bench/)
+    if cwd.endswith('SimulCost-Bench'):
+        possible_paths.extend([
+            "costsci_tools/runners/ns_transient_2d.py",
+            "runners/ns_transient_2d.py"
+        ])
+    # If working from costsci_tools/ subdirectory
+    elif cwd.endswith('costsci_tools') or 'costsci_tools' in cwd:
+        possible_paths.extend([
+            "runners/ns_transient_2d.py",
+            "../runners/ns_transient_2d.py",
+            "costsci_tools/runners/ns_transient_2d.py"
+        ])
+    
+    # Add generic fallback paths
+    possible_paths.extend([
+        "runners/ns_transient_2d.py",
+        "costsci_tools/runners/ns_transient_2d.py",
+        "./runners/ns_transient_2d.py",
+        "../runners/ns_transient_2d.py",
+        "../../runners/ns_transient_2d.py"
+    ])
+    
+    # Remove duplicates while preserving order
+    seen = set()
+    unique_paths = []
+    for path in possible_paths:
+        if path not in seen:
+            seen.add(path)
+            unique_paths.append(path)
+    
+    for path in unique_paths:
+        if os.path.exists(path):
+            return path
+    
+    # If none found, raise an error with helpful information
+    raise FileNotFoundError(
+        f"Could not find ns_transient_2d.py runner in any expected location.\n"
+        f"Current working directory: {cwd}\n"
+        f"Searched paths: {unique_paths}\n"
+        f"Please ensure the runner exists or update the search paths."
+    )
+
+
 def run_sim_ns_transient_2d(
     profile,
     boundary_condition,
@@ -28,8 +80,9 @@ def run_sim_ns_transient_2d(
             if "cost" in meta and "num_steps" in meta:
                 return meta["cost"], meta["num_steps"]
 
-    # Build command with parameters
-    cmd = f"python runners/ns_transient_2d.py --config-name={profile} boundary_condition={boundary_condition} resolution={resolution} reynolds_num={reynolds_num} cfl={cfl} relaxation_factor={relaxation_factor} residual_threshold={residual_threshold} total_runtime={total_runtime}"
+    # Build command with parameters using auto-detected runner path
+    runner_path = _find_runner_path()
+    cmd = f"python {runner_path} --config-name={profile} boundary_condition={boundary_condition} resolution={resolution} reynolds_num={reynolds_num} cfl={cfl} relaxation_factor={relaxation_factor} residual_threshold={residual_threshold} total_runtime={total_runtime}"
 
     # Add other parameters if provided
     if other_params:

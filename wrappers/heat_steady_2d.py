@@ -10,6 +10,58 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from solvers.utils import format_param_for_path
 
 
+def _find_runner_path():
+    """Automatically find the correct path to heat_steady_2d.py runner."""
+    # Get current working directory
+    cwd = os.getcwd()
+    
+    # List of possible runner paths relative to different working directories
+    possible_paths = []
+    
+    # If working from project root (SimulCost-Bench/)
+    if cwd.endswith('SimulCost-Bench'):
+        possible_paths.extend([
+            "costsci_tools/runners/heat_steady_2d.py",
+            "runners/heat_steady_2d.py"
+        ])
+    # If working from costsci_tools/ subdirectory
+    elif cwd.endswith('costsci_tools') or 'costsci_tools' in cwd:
+        possible_paths.extend([
+            "runners/heat_steady_2d.py",
+            "../runners/heat_steady_2d.py",
+            "costsci_tools/runners/heat_steady_2d.py"
+        ])
+    
+    # Add generic fallback paths
+    possible_paths.extend([
+        "runners/heat_steady_2d.py",
+        "costsci_tools/runners/heat_steady_2d.py",
+        "./runners/heat_steady_2d.py",
+        "../runners/heat_steady_2d.py",
+        "../../runners/heat_steady_2d.py"
+    ])
+    
+    # Remove duplicates while preserving order
+    seen = set()
+    unique_paths = []
+    for path in possible_paths:
+        if path not in seen:
+            seen.add(path)
+            unique_paths.append(path)
+    
+    for path in unique_paths:
+        if os.path.exists(path):
+            return path
+    
+    # If none found, raise an error with helpful information
+    raise FileNotFoundError(
+        f"Could not find heat_steady_2d.py runner in any expected location.\n"
+        f"Current working directory: {cwd}\n"
+        f"Searched paths: {unique_paths}\n"
+        f"Please ensure the runner exists or update the search paths."
+    )
+
+
 def run_sim_heat_steady_2d(profile, dx, relax, error_threshold, t_init):
     """Run the heat_steady_2d simulation with the given parameters if not already simulated."""
     dir_path = f"sim_res/heat_steady_2d/{profile}_dx_{format_param_for_path(dx)}_relax_{format_param_for_path(relax)}_Tinit_{format_param_for_path(t_init)}_error_{format_param_for_path(error_threshold)}/"
@@ -27,7 +79,8 @@ def run_sim_heat_steady_2d(profile, dx, relax, error_threshold, t_init):
     print(
         f"Running new simulation with parameters: dx={dx}, relax={relax}, error_threshold={error_threshold}, T_init={t_init}"
     )
-    cmd = f"python costsci_tools/runners/heat_steady_2d.py --config-name={profile} dx={dx} relax={relax} error_threshold={error_threshold} T_init={t_init}"
+    runner_path = _find_runner_path()
+    cmd = f"python {runner_path} --config-name={profile} dx={dx} relax={relax} error_threshold={error_threshold} T_init={t_init}"
     subprocess.run(cmd, shell=True, check=True)
 
     # Load the cost and num_steps from the meta.json file
