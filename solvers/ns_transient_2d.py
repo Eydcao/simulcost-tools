@@ -6,12 +6,13 @@ import taichi as ti
 import h5py
 
 from .ns_transient_2d_utils.fluid_simulator import DyeFluidSimulator, FluidSimulator
+from .base_solver import SIMULATOR
 import os
 
 ASPECT_RATIO = 0.5 # y/x
-MAXIMUM_WALL_TIME = 1200 # 20 minutes in seconds
+MAXIMUM_WALL_TIME = 600 # 10 minutes in seconds
 
-class NSTransient2D:
+class NSTransient2D(SIMULATOR):
     """2D Fluid Simulation with configurable parameters"""
     
     def __init__(self, args):
@@ -42,7 +43,7 @@ class NSTransient2D:
         # Base solver attributes
         self.verbose = True
         self.current_time = 0.0
-        self.record_dt = 0.1  # Time interval between recordings
+        self.record_dt = self.total_runtime / 10 if self.total_runtime is not None else 0.1 # Time interval between recordings
         self.next_record_time = 0.0
         self.end_time = self.total_runtime if self.total_runtime is not None else 1.0
         self.record_frame = 0
@@ -109,8 +110,8 @@ class NSTransient2D:
             f"Residual threshold: {self.residual_threshold}"
         )
     
-    def save_simulation_data(self, step, h5_file=None, save_all_fields=False):
-        """Save simulation data to H5 file"""
+    def save_simulation_data(self, frame_number):
+        """Save simulation data to H5 file for a single frame"""
         
         # Get solver for direct field access
         solver = self.fluid_sim._solver
@@ -124,180 +125,56 @@ class NSTransient2D:
         vy = v_field[:, :, 1]  # y-velocity
         pressure = p_field[:, :, 0] if p_field.ndim == 3 else p_field
         
-        # Calculate additional fields only if needed
-        vorticity = None
+        # Calculate vorticity (curl of velocity)
+        dx = solver.dx
+        vorticity = np.zeros_like(pressure)
+        for i in range(1, v_field.shape[0]-1):
+            for j in range(1, v_field.shape[1]-1):
+                # ∂v_y/∂x - ∂v_x/∂y
+                dvydx = (v_field[i+1, j, 1] - v_field[i-1, j, 1]) / (2 * dx)
+                dvxdy = (v_field[i, j+1, 0] - v_field[i, j-1, 0]) / (2 * dx)
+                vorticity[i, j] = dvydx - dvxdy
+        
+        # Get dye data if available
         dye = None
-        if save_all_fields:
-            # Calculate vorticity (curl of velocity)
-            dx = solver.dx
-            vorticity = np.zeros_like(pressure)
-            for i in range(1, v_field.shape[0]-1):
-                for j in range(1, v_field.shape[1]-1):
-                    # ∂v_y/∂x - ∂v_x/∂y
-                    dvydx = (v_field[i+1, j, 1] - v_field[i-1, j, 1]) / (2 * dx)
-                    dvxdy = (v_field[i, j+1, 0] - v_field[i, j-1, 0]) / (2 * dx)
-                    vorticity[i, j] = dvydx - dvxdy
-            
-            # Get dye data if available
-            if not self.no_dye and hasattr(solver, 'dye'):
-                dye = solver.dye.current.to_numpy()
+        if not self.no_dye and hasattr(solver, 'dye'):
+            dye = solver.dye.current.to_numpy()
+        
+        # Create filename for this frame
+        data_path = self.output_path / "data"
+        data_path.mkdir(exist_ok=True)
+        h5_filename = data_path / f"res_{frame_number:06d}.h5"
         
         # Save to H5 file
-        if h5_file is None:
-            # Create new H5 file
-            data_path = self.output_path / "data"
-            data_path.mkdir(exist_ok=True)
-            h5_filename = data_path / f"simulation_data.h5"
-            h5_file = h5py.File(h5_filename, 'w')
+        with h5py.File(h5_filename, "w") as f:
+            # Save field data
+            f.create_dataset("vx", data=vx, compression='gzip', compression_opts=9)
+            f.create_dataset("vy", data=vy, compression='gzip', compression_opts=9)
+            f.create_dataset("pressure", data=pressure, compression='gzip', compression_opts=9)
+            f.create_dataset("vorticity", data=vorticity, compression='gzip', compression_opts=9)
+            
+            # Save dye if available
+            if dye is not None:
+                f.create_dataset("dye", data=dye, compression='gzip', compression_opts=9)
             
             # Save metadata
-            metadata = h5_file.create_group('metadata')
-            metadata.attrs['dt'] = self.dt
-            metadata.attrs['cfl'] = self.cfl
-            metadata.attrs['resolution'] = solver._resolution
-            metadata.attrs['dx'] = solver.dx
-            metadata.attrs['re'] = solver.Re
-            
-            # Create datasets for temporal data
-            fields = h5_file.create_group('fields')
-            fields.create_dataset('steps', data=[step], maxshape=(None,), dtype=int)
-            fields.create_dataset('times', data=[step * self.dt], maxshape=(None,), dtype=float)
-            fields.create_dataset('vx', data=[vx], maxshape=(None, vx.shape[0], vx.shape[1]), compression='gzip', compression_opts=9)
-            fields.create_dataset('vy', data=[vy], maxshape=(None, vy.shape[0], vy.shape[1]), compression='gzip', compression_opts=9)
-            fields.create_dataset('pressure', data=[pressure], maxshape=(None, pressure.shape[0], pressure.shape[1]), compression='gzip', compression_opts=9)
-            
-            # Add additional fields if saving all
-            if save_all_fields:
-                fields.create_dataset('vorticity', data=[vorticity], maxshape=(None, vorticity.shape[0], vorticity.shape[1]), compression='gzip', compression_opts=9)
-                if dye is not None:
-                    fields.create_dataset('dye', data=[dye], maxshape=(None, dye.shape[0], dye.shape[1], dye.shape[2]), compression='gzip', compression_opts=9)
-            
-            print(f"Created H5 file: {h5_filename}")
-            return h5_file
-        else:
-            # Append to existing H5 file
-            fields = h5_file['fields']
-            
-            # Resize datasets
-            current_size = fields['steps'].shape[0]
-            new_size = current_size + 1
-            
-            fields['steps'].resize((new_size,))
-            fields['times'].resize((new_size,))
-            fields['vx'].resize((new_size, vx.shape[0], vx.shape[1]))
-            fields['vy'].resize((new_size, vy.shape[0], vy.shape[1]))
-            fields['pressure'].resize((new_size, pressure.shape[0], pressure.shape[1]))
-            
-            # Add new data
-            fields['steps'][current_size] = step
-            fields['times'][current_size] = step * self.dt
-            fields['vx'][current_size] = vx
-            fields['vy'][current_size] = vy
-            fields['pressure'][current_size] = pressure
-            
-            # Add additional fields if saving all
-            if save_all_fields:
-                if 'vorticity' in fields:
-                    fields['vorticity'].resize((new_size, vorticity.shape[0], vorticity.shape[1]))
-                    fields['vorticity'][current_size] = vorticity
-                else:
-                    fields.create_dataset('vorticity', data=[vorticity], maxshape=(None, vorticity.shape[0], vorticity.shape[1]), compression='gzip', compression_opts=9)
-                
-                if dye is not None:
-                    if 'dye' in fields:
-                        fields['dye'].resize((new_size, dye.shape[0], dye.shape[1], dye.shape[2]))
-                        fields['dye'][current_size] = dye
-                    else:
-                        fields.create_dataset('dye', data=[dye], maxshape=(None, dye.shape[0], dye.shape[1], dye.shape[2]), compression='gzip', compression_opts=9)
-            
-            return h5_file
-    
-    def run(self):
-        """Run the fluid simulation following base solver format"""
-        self.pre_process()
-
-        # Initial recording at time 0
-        self.dump()
-        self.call_back()
-        self.record_frame += 1
-        self.next_record_time = min(self.current_time + self.record_dt, self.end_time)
-
-        while self.current_time < self.end_time - 1e-10:
-            # Calculate base timestep
-            base_dt = self.cal_dt()
-
-            # Adjust timestep for recording if needed
-            dt, should_record = self.adjust_dt_for_recording(base_dt)
-
-            if self.verbose:
-                print(f"Time: {self.current_time:.6f}, dt: {dt:.6e}")
-
-            # Perform simulation step
-            self.step(dt)
-            self.current_time += dt
-            self.num_steps += 1
-
-            # Handle recording if we've reached a recording time
-            if should_record:
-                self.dump()
-                self.call_back()
-                self.record_frame += 1
-                self.next_record_time = min(self.current_time + self.record_dt, self.end_time)
-
-            if self.early_stop():
-                if self.verbose:
-                    print(f"Early stopping at time {self.current_time:.6f}")
-                break
-
-        if self.verbose:
-            print(f"Simulation completed at time {self.current_time:.6f}, total steps: {self.num_steps}")
-        self.post_process()
-        return self.converged
-    
-    def adjust_dt_for_recording(self, dt):
-        """
-        Adjust timestep to align with recording times.
-        Returns adjusted timestep and whether we should record after this step.
-        """
-        time_remaining = self.next_record_time - self.current_time
-
-        # If we've passed the recording time (shouldn't normally happen)
-        if time_remaining <= 1e-10:  # Small tolerance for floating point comparison
-            if self.verbose:
-                print(
-                    f"Warning: Current time {self.current_time:.6f} has passed the next recording time {self.next_record_time:.6f}."
-                )
-            return time_remaining, True
-
-        # Calculate how many base timesteps remain until recording
-        steps_to_record = time_remaining / dt
-
-        if steps_to_record >= 2:
-            # No adjustment needed
-            return dt, False
-        elif steps_to_record > 1:
-            # Halve the timestep to get closer to recording time
-            return dt / 2, False
-        else:
-            # Adjust timestep to exactly reach recording time
-            return time_remaining, True
+            f.attrs['time'] = self.current_time
+            f.attrs['step'] = self.num_steps
+            f.attrs['dt'] = self.dt
+            f.attrs['cfl'] = self.cfl
+            f.attrs['resolution'] = solver._resolution
+            f.attrs['dx'] = solver.dx
+            f.attrs['re'] = solver.Re
     
     def pre_process(self):
         """Initialize simulation before running"""
         self.start_time = time.time()
-        self.h5_file = None
         self.converged = True
         print(f"Maximum wall time limit: {self.max_runtime}s ({self.max_runtime/60:.1f} minutes)")
     
     def cal_dt(self):
         """Calculate and return the base timestep"""
         return self.dt
-    
-    def call_back(self):
-        """Called after each recording"""
-        if self.verbose:
-            print(f"Recording at time {self.current_time:.6f} (frame {self.record_frame})")
-            print(f"Number of steps: {self.num_steps}")
     
     def post_process(self):
         """Post-process simulation results and save metadata"""
@@ -347,18 +224,15 @@ class NSTransient2D:
         print(f"  Converged: {self.converged}")
         print(f"  Metadata saved to: {meta_file}")
         
-        # Close H5 file if it exists
-        if self.h5_file is not None:
-            self.h5_file.close()
-            print(f"\nTemporal simulation data saved to: {self.output_path}/data/simulation_data.h5")
-            print(f"Total time steps saved: {self.record_frame}")
-            print(f"Final step includes all fields (vx, vy, pressure, vorticity, dye)")
+        # Print info about saved data files
+        print(f"\nTemporal simulation data saved to: {self.output_path}/data/")
+        print(f"Total time steps saved: {self.record_frame}")
+        print(f"Each frame saved as: res_XXXXXX.h5 with all fields (vx, vy, pressure, vorticity, dye)")
     
     def dump(self):
         """Save simulation state at current_time"""
-        # Save data with all fields for final step, basic fields for intermediate steps
-        save_all_fields = (self.current_time >= self.end_time - 1e-10)
-        self.h5_file = self.save_simulation_data(self.num_steps, self.h5_file, save_all_fields=save_all_fields)
+        # Save H5 data file for this frame
+        self.save_simulation_data(self.record_frame)
         
         # Generate and save visualization image
         if self.vis_num == 0:

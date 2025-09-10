@@ -57,25 +57,31 @@ def get_res_ns_transient_2d(profile, boundary_condition, resolution, reynolds_nu
     if not os.path.exists(dir_path):
         os.makedirs(dir_path)
     
-    # Look for H5 data file first
-    data_path = os.path.join(dir_path, "data", "simulation_data.h5")
+    # Look for H5 data files first (new format: res_XXXXXX.h5)
+    data_dir = os.path.join(dir_path, "data")
     meta_file_path = os.path.join(dir_path, "meta.json")
-    if os.path.exists(data_path) and os.path.exists(meta_file_path):
-        with h5py.File(data_path, "r") as f:
-            # Get the last timestep data
-            fields = f['fields']
-            last_idx = -1
+    
+    if os.path.exists(data_dir) and os.path.exists(meta_file_path):
+        # Find all res_*.h5 files
+        h5_files = [f for f in os.listdir(data_dir) if f.startswith("res_") and f.endswith(".h5")]
+        
+        if h5_files:
+            # Sort by frame number and get the last one
+            h5_files.sort(key=lambda x: int(x.split("_")[1].split(".")[0]))
+            latest_h5_file = h5_files[-1]
+            latest_h5_path = os.path.join(data_dir, latest_h5_file)
             
-            U = np.array(fields['vx'][last_idx])  # x-velocity
-            V = np.array(fields['vy'][last_idx])  # y-velocity
-            P = np.array(fields['pressure'][last_idx])  # pressure
-            
-            with open(meta_file_path, "r") as f:
-                meta = json.load(f)
-                if meta["converged"] == False:
-                    return None, None, None
-            
-            return U, V, P
+            with h5py.File(latest_h5_path, "r") as f:
+                U = np.array(f['vx'])  # x-velocity
+                V = np.array(f['vy'])  # y-velocity
+                P = np.array(f['pressure'])  # pressure
+                
+                with open(meta_file_path, "r") as f:
+                    meta = json.load(f)
+                    if meta["converged"] == False:
+                        return None, None, None
+                
+                return U, V, P
     
     # Fallback: look for NPZ files
     files = [f for f in os.listdir(dir_path) if f.startswith("step_") and f.endswith(".npz")]
@@ -86,22 +92,27 @@ def get_res_ns_transient_2d(profile, boundary_condition, resolution, reynolds_nu
             # Simulation failed, return None to indicate failure
             return None, None, None
         
-        # Check again for H5 file after simulation
-        if os.path.exists(data_path):
-            with h5py.File(data_path, "r") as f:
-                fields = f['fields']
-                last_idx = -1
+        # Check again for H5 files after simulation
+        if os.path.exists(data_dir):
+            h5_files = [f for f in os.listdir(data_dir) if f.startswith("res_") and f.endswith(".h5")]
+            
+            if h5_files:
+                # Sort by frame number and get the last one
+                h5_files.sort(key=lambda x: int(x.split("_")[1].split(".")[0]))
+                latest_h5_file = h5_files[-1]
+                latest_h5_path = os.path.join(data_dir, latest_h5_file)
                 
-                U = np.array(fields['vx'][last_idx])
-                V = np.array(fields['vy'][last_idx])
-                P = np.array(fields['pressure'][last_idx])
-                
-                with open(meta_file_path, "r") as f:
-                    meta = json.load(f)
-                    if meta["converged"] == False:
-                        return None, None, None
-                
-                return U, V, P
+                with h5py.File(latest_h5_path, "r") as f:
+                    U = np.array(f['vx'])
+                    V = np.array(f['vy'])
+                    P = np.array(f['pressure'])
+                    
+                    with open(meta_file_path, "r") as f:
+                        meta = json.load(f)
+                        if meta["converged"] == False:
+                            return None, None, None
+                    
+                    return U, V, P
             
         # Check for NPZ files after simulation
         files = [f for f in os.listdir(dir_path) if f.startswith("step_") and f.endswith(".npz")]

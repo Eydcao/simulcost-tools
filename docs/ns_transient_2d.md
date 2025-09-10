@@ -1,8 +1,8 @@
-# Navier-Stokes Transient 2D Equations with Taichi-based Fluid Simulation
+# Navier–Stokes Transient 2D (Incompressible)
 
 ## Introduction
 
-This simulation solves the 2D transient incompressible Navier-Stokes equations using a Taichi-based fluid simulation framework with configurable boundary conditions and numerical schemes:
+This simulation solves the 2D transient incompressible Navier–Stokes equations with configurable boundary conditions and numerical schemes:
 
 **Continuity equation:**
 $$\frac{\partial u}{\partial x} + \frac{\partial v}{\partial y} = 0$$
@@ -21,19 +21,17 @@ Where:
 ### Numerical Method
 
 The simulation uses:
-1. **Taichi framework**: High-performance GPU/CPU computation with automatic differentiation
-2. **Staggered grid**: Pressure at cell centers, velocities at cell faces
-3. **CIP (Constrained Interpolation Profile) scheme**: High-order advection scheme for stability
-4. **Pressure correction**: SIMPLE-like algorithm with configurable relaxation factor
-5. **Time stepping**: CFL-controlled time step for temporal stability
-6. **Vorticity confinement**: Optional artificial viscosity for numerical stability
+1. **Staggered grid**: Pressure at cell centers, velocities at cell faces
+2. **CIP (Constrained Interpolation Profile) scheme** for advection
+3. **Pressure correction**: Projection into the divergence-free (incompressible) space by solving a Poisson equation for pressure
+4. **Time stepping**: CFL-controlled time step for stability
 
 ### Domain Configuration
 
-- **Aspect Ratio**: Fixed at 0.5 (y/x), meaning the domain is twice as wide as it is tall
+- **Aspect ratio (y/x)**: Fixed at 0.5 — the domain is half as tall as it is wide
 - **Domain Resolution**: x_resolution = 2 × resolution, y_resolution = resolution
 - **CFL Calculation**: $\Delta t = \text{CFL} \times \Delta x$ where $\Delta x = 1/\text{resolution}$
-- **Maximum Wall Time**: 1200 seconds (20 minutes) per simulation
+- **Maximum Wall Time**: 600 seconds (10 minutes) per simulation
 
 ### Convergence Criteria
 
@@ -48,12 +46,10 @@ The computational cost is calculated as:
 **Cost = 2 × resolution² × (num_steps + total_pressure_iterations)**
 
 Where:
-- **resolution²**: Grid size (total number of grid points)
+- **resolution²**: Base grid scale (proportional to total cells)
 - **num_steps**: Number of time steps taken during simulation
 - **total_pressure_iterations**: Total number of pressure solver iterations across all time steps
-- **Factor of 2**: Accounts for both velocity and pressure field updates per iteration
-
-This cost metric captures both the spatial discretization complexity (resolution²) and the temporal complexity (time steps + pressure solver convergence iterations), providing a comprehensive measure of computational effort.
+- **Factor of 2**: From the domain aspect ratio setup where `x_resolution = 2 × resolution` (i.e., Nx = 2 × N_res)
 
 ## Test Cases
 
@@ -97,14 +93,6 @@ Each boundary condition is tested at three Reynolds numbers:
 - **Low Reynolds (Re=1000)**: Laminar flow characteristics, smooth flow patterns
 - **Medium Reynolds (Re=3000)**: Transitional flow characteristics, moderate complexity
 - **High Reynolds (Re=6000)**: Turbulent flow characteristics, complex vortical structures
-
-**Profile Mapping:**
-- p1, p7, p13: BC1 (circular obstacle)
-- p2, p8, p14: BC2 (multiple obstacles with steps)  
-- p3, p9, p15: BC3 (random circular obstacles)
-- p4, p10, p16: BC4 (dual inlet/outlet)
-- p5, p11, p17: BC5 (complex obstacle array)
-- p6, p12, p18: BC6 (dragon-shaped obstacle)
 
 ## Parameter Tuning Tasks and Dummy Strategy
 
@@ -185,7 +173,7 @@ Each boundary condition is tested at three Reynolds numbers:
 | y_resolution | Vertical grid resolution | resolution |
 | dx | Grid spacing | 1 / resolution |
 | dt | Time step | CFL × dx |
-| max_wall_time | Maximum simulation time | 1200 seconds |
+| max_wall_time | Maximum simulation time | 600 seconds |
 
 ### Notes
 
@@ -197,7 +185,7 @@ Each boundary condition is tested at three Reynolds numbers:
 - **Relaxation factors**: Exact values [0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5] for precision control
 - **Residual thresholds**: Specific values [1e-1, 1e-2, 5e-3] for targeted precision testing
 - **Transient behavior**: All simulations are time-dependent requiring careful time step control
-- **Maximum runtime**: 20 minutes wall time limit per simulation
+- **Maximum runtime**: 10 minutes wall time limit per simulation
 
 ## Checkout
 
@@ -230,13 +218,3 @@ Current configuration generates:
 Config for dummy solution cache: `checkouts/ns_transient_2d.yaml`
 Cache script: `checkouts/ns_transient_2d.py`
 
-### Key Features
-
-1. **Transient Simulation**: Time-dependent flow evolution requiring careful time step control
-2. **Geometric Diversity**: 18 different geometries from simple to complex artistic shapes across 6 boundary conditions
-3. **Reynolds Number Range**: Three regimes - laminar (Re=1000), transitional (Re=3000), and turbulent (Re=6000)
-4. **High-Performance Computing**: Taichi framework for GPU/CPU acceleration
-5. **Precision Control**: Exact parameter values to avoid floating-point precision issues
-6. **Convergence Optimization**: Multiple precision levels for accuracy vs. cost trade-off
-7. **Parameter Sensitivity**: Tests critical parameters (resolution, CFL) and secondary parameters (relaxation, thresholds)
-8. **Comprehensive Cost Tracking**: Includes both time steps and pressure solver iterations for accurate computational cost assessment
