@@ -1,9 +1,9 @@
-# Profile: Boundary Condition 5 with Reynolds Number 100000
-# Description: Channel flow with complex obstacle array
+# Profile: Boundary Condition 4 with Reynolds Number 3000
+# Description: Channel flow with dual inlet/outlet configuration
 
 # -------- Environment Dependents --------
-boundary_condition: 5
-reynolds_num: 100000.0
+boundary_condition: 4
+reynolds_num: 3000.0
 vorticity_confinement: 0.0
 total_runtime: 1.0
 no_dye: False
@@ -19,8 +19,8 @@ cfl: 0.05
 
 # -------- Profile Metadata --------
 profile_name: "p10"
-description: "Channel flow with complex obstacle array, Re=100000, CIP scheme"
-tags: ["channel_flow", "complex_obstacles", "high_reynolds", "cip_scheme"]
+description: "Channel flow with dual inlet/outlet configuration, Re=3000, CIP scheme"
+tags: ["channel_flow", "dual_inlet", "dual_outlet", "medium_reynolds", "cip_scheme"]
 
 # -------- Output --------
 dump_dir: "sim_res/ns_transient_2d/p10"

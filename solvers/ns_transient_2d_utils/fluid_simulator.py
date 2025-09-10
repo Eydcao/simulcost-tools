@@ -18,6 +18,10 @@ class FluidSimulator:
 
     def step(self):
         self._solver.update()
+    
+    def get_total_pressure_iterations(self):
+        """Get total pressure iterations from the solver"""
+        return getattr(self._solver, 'total_pressure_iterations', 0)
 
     def get_norm_field(self):
         self._to_norm(self.rgb_buf, *self._solver.get_fields()[:2])

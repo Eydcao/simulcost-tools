@@ -85,6 +85,7 @@ class MacSolver(Solver):
 
         self.pressure_updater = pressure_updater
         self.vorticity_confinement = vorticity_confinement
+        self.total_pressure_iterations = 0
 
         self.v = DoubleBuffers(self._resolution, 2)  # velocity
         self.p = DoubleBuffers(self._resolution, 1)  # pressure
@@ -97,7 +98,9 @@ class MacSolver(Solver):
         if self.vorticity_confinement is not None:
             self.vorticity_confinement.apply(self.v)
             self.v.swap()
-        self.pressure_updater.update(self.p, self.v.current)
+        
+        pressure_iterations = self.pressure_updater.update(self.p, self.v.current)
+        self.total_pressure_iterations += pressure_iterations
 
         limit_field(self.v.current, VELOCITY_LIMIT)
 
@@ -145,6 +148,7 @@ class DyeMacSolver(MacSolver):
         )
 
         self.dye = DoubleBuffers(self._resolution, 3)  # dye
+        self.total_pressure_iterations = 0
 
     def update(self):
         self._bc.set_velocity_boundary_condition(self.v.current)
@@ -155,7 +159,8 @@ class DyeMacSolver(MacSolver):
             self.vorticity_confinement.apply(self.v)
             self.v.swap()
 
-        self.pressure_updater.update(self.p, self.v.current)
+        pressure_iterations = self.pressure_updater.update(self.p, self.v.current)
+        self.total_pressure_iterations += pressure_iterations
 
         limit_field(self.v.current, VELOCITY_LIMIT)
 
@@ -188,6 +193,7 @@ class CipMacSolver(Solver):
 
         self.pressure_updater = pressure_updater
         self.vorticity_confinement = vorticity_confinement
+        self.total_pressure_iterations = 0
 
         self.v = DoubleBuffers(self._resolution, 2)  # velocity
         self.vx = DoubleBuffers(self._resolution, 2)  # velocity gradient x
@@ -215,7 +221,8 @@ class CipMacSolver(Solver):
             self.vorticity_confinement.apply(self.v)
             self.v.swap()
 
-        self.pressure_updater.update(self.p, self.v.current)
+        pressure_iterations = self.pressure_updater.update(self.p, self.v.current)
+        self.total_pressure_iterations += pressure_iterations
 
         limit_field(self.v.current, VELOCITY_LIMIT)
 
@@ -353,6 +360,7 @@ class DyeCipMacSolver(CipMacSolver):
         self.dyex = DoubleBuffers(boundary_condition.get_resolution(), 3)  # dye gradient x
         self.dyey = DoubleBuffers(boundary_condition.get_resolution(), 3)  # dye gradient y
         self._set_grad(self.dyex.current, self.dyey.current, self.dye.current)
+        self.total_pressure_iterations = 0
 
     def update(self):
         self._bc.set_velocity_boundary_condition(self.v.current)
@@ -362,7 +370,8 @@ class DyeCipMacSolver(CipMacSolver):
             self.vorticity_confinement.apply(self.v)
             self.v.swap()
 
-        self.pressure_updater.update(self.p, self.v.current)
+        pressure_iterations = self.pressure_updater.update(self.p, self.v.current)
+        self.total_pressure_iterations += pressure_iterations
 
         # 発散しないように流速を制限する。精度が低下する。
         limit_field(self.v.current, VELOCITY_LIMIT)
