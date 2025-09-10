@@ -5,8 +5,18 @@ import numpy as np
 import json
 from scipy.interpolate import RegularGridInterpolator
 
-def run_sim_ns_transient_2d(profile, boundary_condition, resolution, reynolds_num, cfl, 
-                            relaxation_factor, residual_threshold, total_runtime, other_params=None):
+
+def run_sim_ns_transient_2d(
+    profile,
+    boundary_condition,
+    resolution,
+    reynolds_num,
+    cfl,
+    relaxation_factor,
+    residual_threshold,
+    total_runtime,
+    other_params=None,
+):
     """Run the ns_transient_2d simulation with the given parameters."""
     dir_path = f"sim_res/ns_transient_2d/{profile}_bc{boundary_condition}_res{resolution}_re{reynolds_num}_cfl{cfl}_relax{relaxation_factor}_residual{residual_threshold}_runtime{total_runtime}/"
     meta_file_path = os.path.join(dir_path, "meta.json")
@@ -20,100 +30,119 @@ def run_sim_ns_transient_2d(profile, boundary_condition, resolution, reynolds_nu
 
     # Build command with parameters
     cmd = f"python runners/ns_transient_2d.py --config-name={profile} boundary_condition={boundary_condition} resolution={resolution} reynolds_num={reynolds_num} cfl={cfl} relaxation_factor={relaxation_factor} residual_threshold={residual_threshold} total_runtime={total_runtime}"
-    
+
     # Add other parameters if provided
     if other_params:
         for key, value in other_params.items():
             cmd += f" {key}={value}"
     print(f"Running simulation with command: {cmd}")
-    
+
     result = subprocess.run(cmd, shell=True, capture_output=True, text=True)
-    
+
     # Check if simulation failed
     if result.returncode != 0:
         print(f"Simulation failed with return code {result.returncode}")
         print(f"Error output: {result.stderr}")
         # Return a high cost to indicate failure
-        return float('inf'), 0
+        return float("inf"), 0
 
     # Check if meta.json file was created after simulation
     if not os.path.exists(meta_file_path):
         print(f"Warning: meta.json not found at {meta_file_path} after simulation")
         # Return a high cost to indicate failure
-        return float('inf'), 0
+        return float("inf"), 0
 
     # Load the cost from the meta.json file
     with open(meta_file_path, "r") as f:
         meta = json.load(f)
-        
+
     return meta["cost"], meta["num_steps"]
 
 
-def get_res_ns_transient_2d(profile, boundary_condition, resolution, reynolds_num, cfl, 
-                            relaxation_factor, residual_threshold, total_runtime, other_params=None):
+def get_res_ns_transient_2d(
+    profile,
+    boundary_condition,
+    resolution,
+    reynolds_num,
+    cfl,
+    relaxation_factor,
+    residual_threshold,
+    total_runtime,
+    other_params=None,
+):
     """Load final velocity and pressure fields for given parameters."""
     dir_path = f"sim_res/ns_transient_2d/{profile}_bc{boundary_condition}_res{resolution}_re{reynolds_num}_cfl{cfl}_relax{relaxation_factor}_residual{residual_threshold}_runtime{total_runtime}/"
 
     if not os.path.exists(dir_path):
         os.makedirs(dir_path)
-    
+
     # Look for H5 data files first (new format: res_XXXXXX.h5)
     data_dir = os.path.join(dir_path, "data")
     meta_file_path = os.path.join(dir_path, "meta.json")
-    
+
     if os.path.exists(data_dir) and os.path.exists(meta_file_path):
         # Find all res_*.h5 files
         h5_files = [f for f in os.listdir(data_dir) if f.startswith("res_") and f.endswith(".h5")]
-        
+
         if h5_files:
             # Sort by frame number and get the last one
             h5_files.sort(key=lambda x: int(x.split("_")[1].split(".")[0]))
             latest_h5_file = h5_files[-1]
             latest_h5_path = os.path.join(data_dir, latest_h5_file)
-            
+
             with h5py.File(latest_h5_path, "r") as f:
-                U = np.array(f['vx'])  # x-velocity
-                V = np.array(f['vy'])  # y-velocity
-                P = np.array(f['pressure'])  # pressure
-                
+                U = np.array(f["vx"])  # x-velocity
+                V = np.array(f["vy"])  # y-velocity
+                P = np.array(f["pressure"])  # pressure
+
                 with open(meta_file_path, "r") as f:
                     meta = json.load(f)
                     if meta["converged"] == False:
                         return None, None, None
-                
+
                 return U, V, P
-    
+
     # Fallback: look for NPZ files
     files = [f for f in os.listdir(dir_path) if f.startswith("step_") and f.endswith(".npz")]
     if not files:
         # Trigger a simulation run if no result files are found
-        cost, num_steps = run_sim_ns_transient_2d(profile, boundary_condition, resolution, reynolds_num, cfl, relaxation_factor, residual_threshold, total_runtime, other_params)
-        if cost == float('inf'):
+        cost, num_steps = run_sim_ns_transient_2d(
+            profile,
+            boundary_condition,
+            resolution,
+            reynolds_num,
+            cfl,
+            relaxation_factor,
+            residual_threshold,
+            total_runtime,
+            other_params,
+        )
+        if cost == float("inf"):
             # Simulation failed, return None to indicate failure
             return None, None, None
-        
+
         # Check again for H5 files after simulation
         if os.path.exists(data_dir):
             h5_files = [f for f in os.listdir(data_dir) if f.startswith("res_") and f.endswith(".h5")]
-            
+
             if h5_files:
                 # Sort by frame number and get the last one
                 h5_files.sort(key=lambda x: int(x.split("_")[1].split(".")[0]))
                 latest_h5_file = h5_files[-1]
                 latest_h5_path = os.path.join(data_dir, latest_h5_file)
-                
+
                 with h5py.File(latest_h5_path, "r") as f:
-                    U = np.array(f['vx'])
-                    V = np.array(f['vy'])
-                    P = np.array(f['pressure'])
-                    
+                    U = np.array(f["vx"])
+                    V = np.array(f["vy"])
+                    P = np.array(f["pressure"])
+
                     with open(meta_file_path, "r") as f:
                         meta = json.load(f)
                         if meta["converged"] == False:
                             return None, None, None
-                    
+
                     return U, V, P
-            
+
         # Check for NPZ files after simulation
         files = [f for f in os.listdir(dir_path) if f.startswith("step_") and f.endswith(".npz")]
         if not files:
@@ -126,10 +155,10 @@ def get_res_ns_transient_2d(profile, boundary_condition, resolution, reynolds_nu
 
     file_path = os.path.join(dir_path, latest_file)
     data = np.load(file_path)
-    U = data['u'] if 'u' in data else data['vx'] if 'vx' in data else None
-    V = data['v'] if 'v' in data else data['vy'] if 'vy' in data else None
-    P = data['p'] if 'p' in data else data['pressure'] if 'pressure' in data else None
-    
+    U = data["u"] if "u" in data else data["vx"] if "vx" in data else None
+    V = data["v"] if "v" in data else data["vy"] if "vy" in data else None
+    P = data["p"] if "p" in data else data["pressure"] if "pressure" in data else None
+
     return U, V, P
 
 
@@ -149,67 +178,106 @@ def interpolate_field(field_src, src_shape, tgt_shape, axis_offsets=(0, 0)):
 
     interp = RegularGridInterpolator((y_src, x_src), field_src, bounds_error=False, fill_value=0.0)
 
-    yy, xx = np.meshgrid(y_tgt, x_tgt, indexing='ij')
+    yy, xx = np.meshgrid(y_tgt, x_tgt, indexing="ij")
     points = np.stack([yy.ravel(), xx.ravel()], axis=-1)
 
     return interp(points).reshape(ny_tgt, nx_tgt)
 
 
 def compare_res_ns_transient_2d(
-    profile1, boundary_condition1, resolution1, reynolds_num1, cfl1, relaxation_factor1, residual_threshold1, total_runtime1,
-    profile2, boundary_condition2, resolution2, reynolds_num2, cfl2, relaxation_factor2, residual_threshold2, total_runtime2,
+    profile1,
+    boundary_condition1,
+    resolution1,
+    reynolds_num1,
+    cfl1,
+    relaxation_factor1,
+    residual_threshold1,
+    total_runtime1,
+    profile2,
+    boundary_condition2,
+    resolution2,
+    reynolds_num2,
+    cfl2,
+    relaxation_factor2,
+    residual_threshold2,
+    total_runtime2,
     norm_rmse_tolerance,
-    other_params1=None, other_params2=None
+    other_params1=None,
+    other_params2=None,
 ):
     """
     Compare two sets of results.
     """
-    u1, v1, p1 = get_res_ns_transient_2d(profile1, boundary_condition1, resolution1, reynolds_num1, cfl1, relaxation_factor1, residual_threshold1, total_runtime1, other_params1)
-    u2, v2, p2 = get_res_ns_transient_2d(profile2, boundary_condition2, resolution2, reynolds_num2, cfl2, relaxation_factor2, residual_threshold2, total_runtime2, other_params2)
-    
+    u1, v1, p1 = get_res_ns_transient_2d(
+        profile1,
+        boundary_condition1,
+        resolution1,
+        reynolds_num1,
+        cfl1,
+        relaxation_factor1,
+        residual_threshold1,
+        total_runtime1,
+        other_params1,
+    )
+    u2, v2, p2 = get_res_ns_transient_2d(
+        profile2,
+        boundary_condition2,
+        resolution2,
+        reynolds_num2,
+        cfl2,
+        relaxation_factor2,
+        residual_threshold2,
+        total_runtime2,
+        other_params2,
+    )
+
     # Check if either simulation failed
     if u1 is None or u2 is None:
         print("One or both simulations failed, cannot compare results")
-        return False, float('inf')
+        return False, float("inf")
 
     # Check for NaN or infinite values in velocity fields
     if np.any(np.isnan(u1)) or np.any(np.isinf(u1)) or np.any(np.isnan(v1)) or np.any(np.isinf(v1)):
         print("First simulation contains NaN or infinite values in velocity fields")
-        return False, float('inf')
-    
+        return False, float("inf")
+
     if np.any(np.isnan(u2)) or np.any(np.isinf(u2)) or np.any(np.isnan(v2)) or np.any(np.isinf(v2)):
         print("Second simulation contains NaN or infinite values in velocity fields")
-        return False, float('inf')
+        return False, float("inf")
 
     # Compute RMSE for velocity and pressure
     u2_interp = interpolate_field(u2, u2.shape, u1.shape, axis_offsets=(0.0, 0.5))
     v2_interp = interpolate_field(v2, v2.shape, v1.shape, axis_offsets=(0.5, 0.0))
     p2_interp = interpolate_field(p2, p2.shape, p1.shape, axis_offsets=(0.0, 0.0))
-    
+
     # Check if interpolation produced NaN values
     if np.any(np.isnan(u2_interp)) or np.any(np.isnan(v2_interp)) or np.any(np.isnan(p2_interp)):
         print("Interpolation produced NaN values")
-        return False, float('inf')
-    
+        return False, float("inf")
+
     rmse_u = np.sqrt(np.mean((u1 - u2_interp) ** 2))
     rmse_v = np.sqrt(np.mean((v1 - v2_interp) ** 2))
     rmse_p = np.sqrt(np.mean((p1 - p2_interp) ** 2))
-    
+
     norm_velocity = np.sqrt(u1**2 + v1**2)
     norm_velocity_2_interp = np.sqrt(u2_interp**2 + v2_interp**2)
     rmse_norm_velocity = np.sqrt(np.mean((norm_velocity - norm_velocity_2_interp) ** 2))
-    
+
     l2_norm_velocity = np.sqrt(np.mean(norm_velocity**2))
     rmse_norm_velocity_by_l2 = rmse_norm_velocity / l2_norm_velocity if l2_norm_velocity > 0 else rmse_norm_velocity
-    
+
     # Check if RMSE calculation produced NaN
     if np.isnan(rmse_norm_velocity) or np.isinf(rmse_norm_velocity):
-        print(f"RMSE calculation produced NaN/inf: norm_velocity stats: min={np.nanmin(norm_velocity):.6f}, max={np.nanmax(norm_velocity):.6f}, mean={np.nanmean(norm_velocity):.6f}")
-        print(f"norm_velocity_2_interp stats: min={np.nanmin(norm_velocity_2_interp):.6f}, max={np.nanmax(norm_velocity_2_interp):.6f}, mean={np.nanmean(norm_velocity_2_interp):.6f}")
-        return False, float('inf')
-    
+        print(
+            f"RMSE calculation produced NaN/inf: norm_velocity stats: min={np.nanmin(norm_velocity):.6f}, max={np.nanmax(norm_velocity):.6f}, mean={np.nanmean(norm_velocity):.6f}"
+        )
+        print(
+            f"norm_velocity_2_interp stats: min={np.nanmin(norm_velocity_2_interp):.6f}, max={np.nanmax(norm_velocity_2_interp):.6f}, mean={np.nanmean(norm_velocity_2_interp):.6f}"
+        )
+        return False, float("inf")
+
     converged = rmse_norm_velocity_by_l2 < norm_rmse_tolerance
-    
+
     print(f"RMSE of norm velocity: {rmse_norm_velocity:.6f}")
     print(f"Normalized RMSE options:")
     # print(f"  By range: {rmse_norm_velocity_by_range:.6f}")
@@ -231,15 +299,29 @@ if __name__ == "__main__":
     relaxation_factor = 1.3
     residual_threshold = 1e-2
     total_runtime = 1.0
-    
+
     length = 20.0
     breadth = 1.0
     norm_rmse_tolerance = 0.2
 
     # Compare results
     is_converged, _ = compare_res_ns_transient_2d(
-        profile, boundary_condition, resolution1, reynolds_num, cfl, relaxation_factor, residual_threshold, total_runtime,
-        profile, boundary_condition, resolution2, reynolds_num, cfl, relaxation_factor, residual_threshold, total_runtime,
-        norm_rmse_tolerance
+        profile,
+        boundary_condition,
+        resolution1,
+        reynolds_num,
+        cfl,
+        relaxation_factor,
+        residual_threshold,
+        total_runtime,
+        profile,
+        boundary_condition,
+        resolution2,
+        reynolds_num,
+        cfl,
+        relaxation_factor,
+        residual_threshold,
+        total_runtime,
+        norm_rmse_tolerance,
     )
     print(f"Convergence achieved: {is_converged}")
