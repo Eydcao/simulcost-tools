@@ -19,7 +19,7 @@ end:constant
 
 begin:control
 
-nx= 3200
+nx= 800
 
 t_end = 800*femto
 
@@ -37,7 +37,7 @@ field_ionisation = T
 
 field_order = 2
 
-physics_table_location = /home/ubuntu/work/epoch/epoch1d/src/physics_packages/TABLES/ 
+physics_table_location = solvers/epoch/epoch1d/src/physics_packages/TABLES/ 
 
 end:control
 

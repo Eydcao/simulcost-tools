@@ -15,9 +15,9 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 env = os.environ.copy()
 env["PYTHONPATH"] = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
 
-path_epoch2ndOrder="/home/ubuntu/epoch_bin/2nd"
-path_epoch3rdOrder="/home/ubuntu/epoch_bin/3rd"
-path_epoch5thOrder="/home/ubuntu/epoch_bin/5th"
+path_epoch2ndOrder="solvers/epoch/epoch_bin/2nd"
+path_epoch3rdOrder="solvers/epoch/epoch_bin/3rd"
+path_epoch5thOrder="solvers/epoch/epoch_bin/5th"
 
 
 @hydra.main(version_base=None, config_path="../run_configs/epoch", config_name="p1")
