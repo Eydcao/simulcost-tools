@@ -1,0 +1,3647 @@
+{
+  "metadata": {
+    "solver": "epoch",
+    "description": "Failed to converge parameter optimization tasks",
+    "total_tasks": 24
+  },
+  "tasks": [
+    {
+      "solver": "epoch",
+      "target_parameter": "nx",
+      "profile": "p1",
+      "precision_config": {
+        "tolerance_rmse": 0.33
+      },
+      "target_config": {
+        "initial_value": 400,
+        "multiplication_factor": 1.2,
+        "max_iteration_num": 7,
+        "search_range_min": null,
+        "search_range_max": null,
+        "search_range_slice_num": null
+      },
+      "non_target_parameters": {
+        "npart": 20,
+        "field_order": 4,
+        "particle_order": 3,
+        "dt_multipler": 0.95
+      },
+      "results": {
+        "converged": false,
+        "optimal_parameter_value": 1192,
+        "total_computational_cost": 11.939427978,
+        "cost_history": [
+          0.619594289,
+          0.62540705,
+          1.135545573,
+          1.421155913,
+          1.9972674929999998,
+          2.5653906049999997,
+          3.575067055
+        ],
+        "parameter_history": [
+          {
+            "nx": 400,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 4,
+            "particle_order": 3
+          },
+          {
+            "nx": 480,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 4,
+            "particle_order": 3
+          },
+          {
+            "nx": 576,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 4,
+            "particle_order": 3
+          },
+          {
+            "nx": 691,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 4,
+            "particle_order": 3
+          },
+          {
+            "nx": 829,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 4,
+            "particle_order": 3
+          },
+          {
+            "nx": 994,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 4,
+            "particle_order": 3
+          },
+          {
+            "nx": 1192,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 4,
+            "particle_order": 3
+          }
+        ]
+      }
+    },
+    {
+      "solver": "epoch",
+      "target_parameter": "nx",
+      "profile": "p1",
+      "precision_config": {
+        "tolerance_rmse": 0.33
+      },
+      "target_config": {
+        "initial_value": 400,
+        "multiplication_factor": 1.2,
+        "max_iteration_num": 7,
+        "search_range_min": null,
+        "search_range_max": null,
+        "search_range_slice_num": null
+      },
+      "non_target_parameters": {
+        "npart": 20,
+        "field_order": 4,
+        "particle_order": 5,
+        "dt_multipler": 0.95
+      },
+      "results": {
+        "converged": false,
+        "optimal_parameter_value": 1192,
+        "total_computational_cost": 12.042439154,
+        "cost_history": [
+          0.6811278709999999,
+          0.6501350130000001,
+          1.1331222330000001,
+          1.1863143159999998,
+          2.175123406,
+          2.280780754,
+          3.935835561
+        ],
+        "parameter_history": [
+          {
+            "nx": 400,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 4,
+            "particle_order": 5
+          },
+          {
+            "nx": 480,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 4,
+            "particle_order": 5
+          },
+          {
+            "nx": 576,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 4,
+            "particle_order": 5
+          },
+          {
+            "nx": 691,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 4,
+            "particle_order": 5
+          },
+          {
+            "nx": 829,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 4,
+            "particle_order": 5
+          },
+          {
+            "nx": 994,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 4,
+            "particle_order": 5
+          },
+          {
+            "nx": 1192,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 4,
+            "particle_order": 5
+          }
+        ]
+      }
+    },
+    {
+      "solver": "epoch",
+      "target_parameter": "nx",
+      "profile": "p1",
+      "precision_config": {
+        "tolerance_rmse": 0.33
+      },
+      "target_config": {
+        "initial_value": 400,
+        "multiplication_factor": 1.2,
+        "max_iteration_num": 7,
+        "search_range_min": null,
+        "search_range_max": null,
+        "search_range_slice_num": null
+      },
+      "non_target_parameters": {
+        "npart": 20,
+        "field_order": 6,
+        "particle_order": 2,
+        "dt_multipler": 0.95
+      },
+      "results": {
+        "converged": false,
+        "optimal_parameter_value": 1192,
+        "total_computational_cost": 10.908977549,
+        "cost_history": [
+          0.600252221,
+          0.6576351239999999,
+          1.0825437,
+          1.458431959,
+          1.774142027,
+          1.911876837,
+          3.424095681
+        ],
+        "parameter_history": [
+          {
+            "nx": 400,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 6,
+            "particle_order": 2
+          },
+          {
+            "nx": 480,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 6,
+            "particle_order": 2
+          },
+          {
+            "nx": 576,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 6,
+            "particle_order": 2
+          },
+          {
+            "nx": 691,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 6,
+            "particle_order": 2
+          },
+          {
+            "nx": 829,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 6,
+            "particle_order": 2
+          },
+          {
+            "nx": 994,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 6,
+            "particle_order": 2
+          },
+          {
+            "nx": 1192,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 6,
+            "particle_order": 2
+          }
+        ]
+      }
+    },
+    {
+      "solver": "epoch",
+      "target_parameter": "nx",
+      "profile": "p1",
+      "precision_config": {
+        "tolerance_rmse": 0.33
+      },
+      "target_config": {
+        "initial_value": 400,
+        "multiplication_factor": 1.2,
+        "max_iteration_num": 7,
+        "search_range_min": null,
+        "search_range_max": null,
+        "search_range_slice_num": null
+      },
+      "non_target_parameters": {
+        "npart": 20,
+        "field_order": 6,
+        "particle_order": 3,
+        "dt_multipler": 0.95
+      },
+      "results": {
+        "converged": false,
+        "optimal_parameter_value": 1192,
+        "total_computational_cost": 12.400640987,
+        "cost_history": [
+          0.5521913890000001,
+          0.906786707,
+          0.914850811,
+          1.5631510659999999,
+          2.119791074,
+          2.833509179,
+          3.5103607610000003
+        ],
+        "parameter_history": [
+          {
+            "nx": 400,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 6,
+            "particle_order": 3
+          },
+          {
+            "nx": 480,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 6,
+            "particle_order": 3
+          },
+          {
+            "nx": 576,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 6,
+            "particle_order": 3
+          },
+          {
+            "nx": 691,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 6,
+            "particle_order": 3
+          },
+          {
+            "nx": 829,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 6,
+            "particle_order": 3
+          },
+          {
+            "nx": 994,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 6,
+            "particle_order": 3
+          },
+          {
+            "nx": 1192,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 6,
+            "particle_order": 3
+          }
+        ]
+      }
+    },
+    {
+      "solver": "epoch",
+      "target_parameter": "nx",
+      "profile": "p1",
+      "precision_config": {
+        "tolerance_rmse": 0.33
+      },
+      "target_config": {
+        "initial_value": 400,
+        "multiplication_factor": 1.2,
+        "max_iteration_num": 7,
+        "search_range_min": null,
+        "search_range_max": null,
+        "search_range_slice_num": null
+      },
+      "non_target_parameters": {
+        "npart": 20,
+        "field_order": 6,
+        "particle_order": 5,
+        "dt_multipler": 0.95
+      },
+      "results": {
+        "converged": false,
+        "optimal_parameter_value": 1192,
+        "total_computational_cost": 12.539619151,
+        "cost_history": [
+          0.5739334669999999,
+          0.905590059,
+          1.158606768,
+          1.340099129,
+          1.807573335,
+          2.442040651,
+          4.311775742
+        ],
+        "parameter_history": [
+          {
+            "nx": 400,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 6,
+            "particle_order": 5
+          },
+          {
+            "nx": 480,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 6,
+            "particle_order": 5
+          },
+          {
+            "nx": 576,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 6,
+            "particle_order": 5
+          },
+          {
+            "nx": 691,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 6,
+            "particle_order": 5
+          },
+          {
+            "nx": 829,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 6,
+            "particle_order": 5
+          },
+          {
+            "nx": 994,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 6,
+            "particle_order": 5
+          },
+          {
+            "nx": 1192,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 6,
+            "particle_order": 5
+          }
+        ]
+      }
+    },
+    {
+      "solver": "epoch",
+      "target_parameter": "particle_order",
+      "profile": "p1",
+      "precision_config": {
+        "tolerance_rmse": 0.33
+      },
+      "target_config": {
+        "initial_value": null,
+        "multiplication_factor": 1.2,
+        "max_iteration_num": 7,
+        "search_range_min": null,
+        "search_range_max": null,
+        "search_range_slice_num": null
+      },
+      "non_target_parameters": {
+        "npart": 20,
+        "dt_multipler": 0.95,
+        "field_order": 6,
+        "nx": 400
+      },
+      "results": {
+        "converged": false,
+        "optimal_parameter_value": 2,
+        "total_computational_cost": 10.908977549,
+        "cost_history": [
+          0.600252221,
+          0.6576351239999999,
+          1.0825437,
+          1.458431959,
+          1.774142027,
+          1.911876837,
+          3.424095681
+        ],
+        "parameter_history": [
+          [
+            {
+              "nx": 400,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 2
+            },
+            {
+              "nx": 480,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 2
+            },
+            {
+              "nx": 576,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 2
+            },
+            {
+              "nx": 691,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 2
+            },
+            {
+              "nx": 829,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 2
+            },
+            {
+              "nx": 994,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 2
+            },
+            {
+              "nx": 1192,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 2
+            }
+          ],
+          [
+            {
+              "nx": 400,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 4
+            },
+            {
+              "nx": 480,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 4
+            },
+            {
+              "nx": 576,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 4
+            },
+            {
+              "nx": 691,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 4
+            },
+            {
+              "nx": 829,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 4
+            },
+            {
+              "nx": 994,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 4
+            },
+            {
+              "nx": 1192,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 4
+            }
+          ],
+          [
+            {
+              "nx": 400,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 480,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 576,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 691,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 829,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 994,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 1192,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            }
+          ]
+        ]
+      }
+    },
+    {
+      "solver": "epoch",
+      "target_parameter": "dt_multipler",
+      "profile": "p1",
+      "precision_config": {
+        "tolerance_rmse": 0.3
+      },
+      "target_config": {
+        "initial_value": null,
+        "multiplication_factor": 1.2,
+        "max_iteration_num": 7,
+        "search_range_min": 0.8,
+        "search_range_max": 0.99,
+        "search_range_slice_num": 11
+      },
+      "non_target_parameters": {
+        "npart": 20,
+        "field_order": 6,
+        "particle_order": 5,
+        "nx": 400
+      },
+      "results": {
+        "converged": false,
+        "optimal_parameter_value": [
+          0.95,
+          1192
+        ],
+        "total_computational_cost": 12.539619151,
+        "cost_history": [
+          0.5739334669999999,
+          0.905590059,
+          1.158606768,
+          1.340099129,
+          1.807573335,
+          2.442040651,
+          4.311775742
+        ],
+        "parameter_history": [
+          [
+            {
+              "nx": 400,
+              "dt_mult": 0.8,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 480,
+              "dt_mult": 0.8,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 576,
+              "dt_mult": 0.8,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 691,
+              "dt_mult": 0.8,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 829,
+              "dt_mult": 0.8,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 994,
+              "dt_mult": 0.8,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 1192,
+              "dt_mult": 0.8,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            }
+          ],
+          [
+            {
+              "nx": 400,
+              "dt_mult": 0.82,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 480,
+              "dt_mult": 0.82,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 576,
+              "dt_mult": 0.82,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 691,
+              "dt_mult": 0.82,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 829,
+              "dt_mult": 0.82,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 994,
+              "dt_mult": 0.82,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 1192,
+              "dt_mult": 0.82,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            }
+          ],
+          [
+            {
+              "nx": 400,
+              "dt_mult": 0.84,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 480,
+              "dt_mult": 0.84,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 576,
+              "dt_mult": 0.84,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 691,
+              "dt_mult": 0.84,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 829,
+              "dt_mult": 0.84,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 994,
+              "dt_mult": 0.84,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 1192,
+              "dt_mult": 0.84,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            }
+          ],
+          [
+            {
+              "nx": 400,
+              "dt_mult": 0.86,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 480,
+              "dt_mult": 0.86,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 576,
+              "dt_mult": 0.86,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 691,
+              "dt_mult": 0.86,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 829,
+              "dt_mult": 0.86,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 994,
+              "dt_mult": 0.86,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 1192,
+              "dt_mult": 0.86,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            }
+          ],
+          [
+            {
+              "nx": 400,
+              "dt_mult": 0.88,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 480,
+              "dt_mult": 0.88,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 576,
+              "dt_mult": 0.88,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 691,
+              "dt_mult": 0.88,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 829,
+              "dt_mult": 0.88,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 994,
+              "dt_mult": 0.88,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 1192,
+              "dt_mult": 0.88,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            }
+          ],
+          [
+            {
+              "nx": 400,
+              "dt_mult": 0.9,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 480,
+              "dt_mult": 0.9,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 576,
+              "dt_mult": 0.9,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 691,
+              "dt_mult": 0.9,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 829,
+              "dt_mult": 0.9,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 994,
+              "dt_mult": 0.9,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 1192,
+              "dt_mult": 0.9,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            }
+          ],
+          [
+            {
+              "nx": 400,
+              "dt_mult": 0.91,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 480,
+              "dt_mult": 0.91,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 576,
+              "dt_mult": 0.91,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 691,
+              "dt_mult": 0.91,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 829,
+              "dt_mult": 0.91,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 994,
+              "dt_mult": 0.91,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 1192,
+              "dt_mult": 0.91,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            }
+          ],
+          [
+            {
+              "nx": 400,
+              "dt_mult": 0.93,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 480,
+              "dt_mult": 0.93,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 576,
+              "dt_mult": 0.93,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 691,
+              "dt_mult": 0.93,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 829,
+              "dt_mult": 0.93,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 994,
+              "dt_mult": 0.93,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 1192,
+              "dt_mult": 0.93,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            }
+          ],
+          [
+            {
+              "nx": 400,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 480,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 576,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 691,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 829,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 994,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 1192,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            }
+          ],
+          [
+            {
+              "nx": 400,
+              "dt_mult": 0.97,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 480,
+              "dt_mult": 0.97,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 576,
+              "dt_mult": 0.97,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 691,
+              "dt_mult": 0.97,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 829,
+              "dt_mult": 0.97,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 994,
+              "dt_mult": 0.97,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 1192,
+              "dt_mult": 0.97,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            }
+          ],
+          [
+            {
+              "nx": 400,
+              "dt_mult": 0.99,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 480,
+              "dt_mult": 0.99,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 576,
+              "dt_mult": 0.99,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 691,
+              "dt_mult": 0.99,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 829,
+              "dt_mult": 0.99,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 994,
+              "dt_mult": 0.99,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 1192,
+              "dt_mult": 0.99,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            }
+          ]
+        ]
+      }
+    },
+    {
+      "solver": "epoch",
+      "target_parameter": "nx",
+      "profile": "p1",
+      "precision_config": {
+        "tolerance_rmse": 0.3
+      },
+      "target_config": {
+        "initial_value": 400,
+        "multiplication_factor": 1.2,
+        "max_iteration_num": 7,
+        "search_range_min": null,
+        "search_range_max": null,
+        "search_range_slice_num": null
+      },
+      "non_target_parameters": {
+        "npart": 20,
+        "field_order": 4,
+        "particle_order": 2,
+        "dt_multipler": 0.95
+      },
+      "results": {
+        "converged": false,
+        "optimal_parameter_value": 1192,
+        "total_computational_cost": 9.621030175,
+        "cost_history": [
+          0.5657550250000001,
+          0.698353829,
+          0.877491932,
+          1.269634422,
+          1.2766147120000002,
+          1.811175189,
+          3.1220050660000003
+        ],
+        "parameter_history": [
+          {
+            "nx": 400,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 4,
+            "particle_order": 2
+          },
+          {
+            "nx": 480,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 4,
+            "particle_order": 2
+          },
+          {
+            "nx": 576,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 4,
+            "particle_order": 2
+          },
+          {
+            "nx": 691,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 4,
+            "particle_order": 2
+          },
+          {
+            "nx": 829,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 4,
+            "particle_order": 2
+          },
+          {
+            "nx": 994,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 4,
+            "particle_order": 2
+          },
+          {
+            "nx": 1192,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 4,
+            "particle_order": 2
+          }
+        ]
+      }
+    },
+    {
+      "solver": "epoch",
+      "target_parameter": "nx",
+      "profile": "p1",
+      "precision_config": {
+        "tolerance_rmse": 0.3
+      },
+      "target_config": {
+        "initial_value": 400,
+        "multiplication_factor": 1.2,
+        "max_iteration_num": 7,
+        "search_range_min": null,
+        "search_range_max": null,
+        "search_range_slice_num": null
+      },
+      "non_target_parameters": {
+        "npart": 20,
+        "field_order": 4,
+        "particle_order": 3,
+        "dt_multipler": 0.95
+      },
+      "results": {
+        "converged": false,
+        "optimal_parameter_value": 1192,
+        "total_computational_cost": 11.939427978,
+        "cost_history": [
+          0.619594289,
+          0.62540705,
+          1.135545573,
+          1.421155913,
+          1.9972674929999998,
+          2.5653906049999997,
+          3.575067055
+        ],
+        "parameter_history": [
+          {
+            "nx": 400,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 4,
+            "particle_order": 3
+          },
+          {
+            "nx": 480,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 4,
+            "particle_order": 3
+          },
+          {
+            "nx": 576,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 4,
+            "particle_order": 3
+          },
+          {
+            "nx": 691,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 4,
+            "particle_order": 3
+          },
+          {
+            "nx": 829,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 4,
+            "particle_order": 3
+          },
+          {
+            "nx": 994,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 4,
+            "particle_order": 3
+          },
+          {
+            "nx": 1192,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 4,
+            "particle_order": 3
+          }
+        ]
+      }
+    },
+    {
+      "solver": "epoch",
+      "target_parameter": "nx",
+      "profile": "p1",
+      "precision_config": {
+        "tolerance_rmse": 0.3
+      },
+      "target_config": {
+        "initial_value": 400,
+        "multiplication_factor": 1.2,
+        "max_iteration_num": 7,
+        "search_range_min": null,
+        "search_range_max": null,
+        "search_range_slice_num": null
+      },
+      "non_target_parameters": {
+        "npart": 20,
+        "field_order": 4,
+        "particle_order": 5,
+        "dt_multipler": 0.95
+      },
+      "results": {
+        "converged": false,
+        "optimal_parameter_value": 1192,
+        "total_computational_cost": 12.042439154,
+        "cost_history": [
+          0.6811278709999999,
+          0.6501350130000001,
+          1.1331222330000001,
+          1.1863143159999998,
+          2.175123406,
+          2.280780754,
+          3.935835561
+        ],
+        "parameter_history": [
+          {
+            "nx": 400,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 4,
+            "particle_order": 5
+          },
+          {
+            "nx": 480,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 4,
+            "particle_order": 5
+          },
+          {
+            "nx": 576,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 4,
+            "particle_order": 5
+          },
+          {
+            "nx": 691,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 4,
+            "particle_order": 5
+          },
+          {
+            "nx": 829,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 4,
+            "particle_order": 5
+          },
+          {
+            "nx": 994,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 4,
+            "particle_order": 5
+          },
+          {
+            "nx": 1192,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 4,
+            "particle_order": 5
+          }
+        ]
+      }
+    },
+    {
+      "solver": "epoch",
+      "target_parameter": "nx",
+      "profile": "p1",
+      "precision_config": {
+        "tolerance_rmse": 0.3
+      },
+      "target_config": {
+        "initial_value": 400,
+        "multiplication_factor": 1.2,
+        "max_iteration_num": 7,
+        "search_range_min": null,
+        "search_range_max": null,
+        "search_range_slice_num": null
+      },
+      "non_target_parameters": {
+        "npart": 20,
+        "field_order": 6,
+        "particle_order": 2,
+        "dt_multipler": 0.95
+      },
+      "results": {
+        "converged": false,
+        "optimal_parameter_value": 1192,
+        "total_computational_cost": 10.908977549,
+        "cost_history": [
+          0.600252221,
+          0.6576351239999999,
+          1.0825437,
+          1.458431959,
+          1.774142027,
+          1.911876837,
+          3.424095681
+        ],
+        "parameter_history": [
+          {
+            "nx": 400,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 6,
+            "particle_order": 2
+          },
+          {
+            "nx": 480,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 6,
+            "particle_order": 2
+          },
+          {
+            "nx": 576,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 6,
+            "particle_order": 2
+          },
+          {
+            "nx": 691,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 6,
+            "particle_order": 2
+          },
+          {
+            "nx": 829,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 6,
+            "particle_order": 2
+          },
+          {
+            "nx": 994,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 6,
+            "particle_order": 2
+          },
+          {
+            "nx": 1192,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 6,
+            "particle_order": 2
+          }
+        ]
+      }
+    },
+    {
+      "solver": "epoch",
+      "target_parameter": "nx",
+      "profile": "p1",
+      "precision_config": {
+        "tolerance_rmse": 0.3
+      },
+      "target_config": {
+        "initial_value": 400,
+        "multiplication_factor": 1.2,
+        "max_iteration_num": 7,
+        "search_range_min": null,
+        "search_range_max": null,
+        "search_range_slice_num": null
+      },
+      "non_target_parameters": {
+        "npart": 20,
+        "field_order": 6,
+        "particle_order": 3,
+        "dt_multipler": 0.95
+      },
+      "results": {
+        "converged": false,
+        "optimal_parameter_value": 1192,
+        "total_computational_cost": 12.400640987,
+        "cost_history": [
+          0.5521913890000001,
+          0.906786707,
+          0.914850811,
+          1.5631510659999999,
+          2.119791074,
+          2.833509179,
+          3.5103607610000003
+        ],
+        "parameter_history": [
+          {
+            "nx": 400,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 6,
+            "particle_order": 3
+          },
+          {
+            "nx": 480,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 6,
+            "particle_order": 3
+          },
+          {
+            "nx": 576,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 6,
+            "particle_order": 3
+          },
+          {
+            "nx": 691,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 6,
+            "particle_order": 3
+          },
+          {
+            "nx": 829,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 6,
+            "particle_order": 3
+          },
+          {
+            "nx": 994,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 6,
+            "particle_order": 3
+          },
+          {
+            "nx": 1192,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 6,
+            "particle_order": 3
+          }
+        ]
+      }
+    },
+    {
+      "solver": "epoch",
+      "target_parameter": "nx",
+      "profile": "p1",
+      "precision_config": {
+        "tolerance_rmse": 0.3
+      },
+      "target_config": {
+        "initial_value": 400,
+        "multiplication_factor": 1.2,
+        "max_iteration_num": 7,
+        "search_range_min": null,
+        "search_range_max": null,
+        "search_range_slice_num": null
+      },
+      "non_target_parameters": {
+        "npart": 20,
+        "field_order": 6,
+        "particle_order": 5,
+        "dt_multipler": 0.95
+      },
+      "results": {
+        "converged": false,
+        "optimal_parameter_value": 1192,
+        "total_computational_cost": 12.539619151,
+        "cost_history": [
+          0.5739334669999999,
+          0.905590059,
+          1.158606768,
+          1.340099129,
+          1.807573335,
+          2.442040651,
+          4.311775742
+        ],
+        "parameter_history": [
+          {
+            "nx": 400,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 6,
+            "particle_order": 5
+          },
+          {
+            "nx": 480,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 6,
+            "particle_order": 5
+          },
+          {
+            "nx": 576,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 6,
+            "particle_order": 5
+          },
+          {
+            "nx": 691,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 6,
+            "particle_order": 5
+          },
+          {
+            "nx": 829,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 6,
+            "particle_order": 5
+          },
+          {
+            "nx": 994,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 6,
+            "particle_order": 5
+          },
+          {
+            "nx": 1192,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 6,
+            "particle_order": 5
+          }
+        ]
+      }
+    },
+    {
+      "solver": "epoch",
+      "target_parameter": "particle_order",
+      "profile": "p1",
+      "precision_config": {
+        "tolerance_rmse": 0.3
+      },
+      "target_config": {
+        "initial_value": null,
+        "multiplication_factor": 1.2,
+        "max_iteration_num": 7,
+        "search_range_min": null,
+        "search_range_max": null,
+        "search_range_slice_num": null
+      },
+      "non_target_parameters": {
+        "npart": 20,
+        "dt_multipler": 0.95,
+        "field_order": 4,
+        "nx": 400
+      },
+      "results": {
+        "converged": false,
+        "optimal_parameter_value": 2,
+        "total_computational_cost": 9.621030175,
+        "cost_history": [
+          0.5657550250000001,
+          0.698353829,
+          0.877491932,
+          1.269634422,
+          1.2766147120000002,
+          1.811175189,
+          3.1220050660000003
+        ],
+        "parameter_history": [
+          [
+            {
+              "nx": 400,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 4,
+              "particle_order": 2
+            },
+            {
+              "nx": 480,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 4,
+              "particle_order": 2
+            },
+            {
+              "nx": 576,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 4,
+              "particle_order": 2
+            },
+            {
+              "nx": 691,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 4,
+              "particle_order": 2
+            },
+            {
+              "nx": 829,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 4,
+              "particle_order": 2
+            },
+            {
+              "nx": 994,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 4,
+              "particle_order": 2
+            },
+            {
+              "nx": 1192,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 4,
+              "particle_order": 2
+            }
+          ],
+          [
+            {
+              "nx": 400,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 4,
+              "particle_order": 4
+            },
+            {
+              "nx": 480,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 4,
+              "particle_order": 4
+            },
+            {
+              "nx": 576,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 4,
+              "particle_order": 4
+            },
+            {
+              "nx": 691,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 4,
+              "particle_order": 4
+            },
+            {
+              "nx": 829,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 4,
+              "particle_order": 4
+            },
+            {
+              "nx": 994,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 4,
+              "particle_order": 4
+            },
+            {
+              "nx": 1192,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 4,
+              "particle_order": 4
+            }
+          ],
+          [
+            {
+              "nx": 400,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 4,
+              "particle_order": 5
+            },
+            {
+              "nx": 480,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 4,
+              "particle_order": 5
+            },
+            {
+              "nx": 576,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 4,
+              "particle_order": 5
+            },
+            {
+              "nx": 691,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 4,
+              "particle_order": 5
+            },
+            {
+              "nx": 829,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 4,
+              "particle_order": 5
+            },
+            {
+              "nx": 994,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 4,
+              "particle_order": 5
+            },
+            {
+              "nx": 1192,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 4,
+              "particle_order": 5
+            }
+          ]
+        ]
+      }
+    },
+    {
+      "solver": "epoch",
+      "target_parameter": "particle_order",
+      "profile": "p1",
+      "precision_config": {
+        "tolerance_rmse": 0.3
+      },
+      "target_config": {
+        "initial_value": null,
+        "multiplication_factor": 1.2,
+        "max_iteration_num": 7,
+        "search_range_min": null,
+        "search_range_max": null,
+        "search_range_slice_num": null
+      },
+      "non_target_parameters": {
+        "npart": 20,
+        "dt_multipler": 0.95,
+        "field_order": 6,
+        "nx": 400
+      },
+      "results": {
+        "converged": false,
+        "optimal_parameter_value": 2,
+        "total_computational_cost": 10.908977549,
+        "cost_history": [
+          0.600252221,
+          0.6576351239999999,
+          1.0825437,
+          1.458431959,
+          1.774142027,
+          1.911876837,
+          3.424095681
+        ],
+        "parameter_history": [
+          [
+            {
+              "nx": 400,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 2
+            },
+            {
+              "nx": 480,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 2
+            },
+            {
+              "nx": 576,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 2
+            },
+            {
+              "nx": 691,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 2
+            },
+            {
+              "nx": 829,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 2
+            },
+            {
+              "nx": 994,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 2
+            },
+            {
+              "nx": 1192,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 2
+            }
+          ],
+          [
+            {
+              "nx": 400,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 4
+            },
+            {
+              "nx": 480,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 4
+            },
+            {
+              "nx": 576,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 4
+            },
+            {
+              "nx": 691,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 4
+            },
+            {
+              "nx": 829,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 4
+            },
+            {
+              "nx": 994,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 4
+            },
+            {
+              "nx": 1192,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 4
+            }
+          ],
+          [
+            {
+              "nx": 400,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 480,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 576,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 691,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 829,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 994,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 1192,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            }
+          ]
+        ]
+      }
+    },
+    {
+      "solver": "epoch",
+      "target_parameter": "dt_multipler",
+      "profile": "p2",
+      "precision_config": {
+        "tolerance_rmse": 0.3
+      },
+      "target_config": {
+        "initial_value": null,
+        "multiplication_factor": 1.2,
+        "max_iteration_num": 7,
+        "search_range_min": 0.8,
+        "search_range_max": 0.99,
+        "search_range_slice_num": 11
+      },
+      "non_target_parameters": {
+        "npart": 20,
+        "field_order": 6,
+        "particle_order": 5,
+        "nx": 400
+      },
+      "results": {
+        "converged": false,
+        "optimal_parameter_value": [
+          0.97,
+          1192
+        ],
+        "total_computational_cost": 11.421183648,
+        "cost_history": [
+          0.604864035,
+          0.816288334,
+          1.137857436,
+          1.495092125,
+          1.71926057,
+          2.669906944,
+          2.977914204
+        ],
+        "parameter_history": [
+          [
+            {
+              "nx": 400,
+              "dt_mult": 0.8,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 480,
+              "dt_mult": 0.8,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 576,
+              "dt_mult": 0.8,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 691,
+              "dt_mult": 0.8,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 829,
+              "dt_mult": 0.8,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 994,
+              "dt_mult": 0.8,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 1192,
+              "dt_mult": 0.8,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            }
+          ],
+          [
+            {
+              "nx": 400,
+              "dt_mult": 0.82,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 480,
+              "dt_mult": 0.82,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 576,
+              "dt_mult": 0.82,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 691,
+              "dt_mult": 0.82,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 829,
+              "dt_mult": 0.82,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 994,
+              "dt_mult": 0.82,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 1192,
+              "dt_mult": 0.82,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            }
+          ],
+          [
+            {
+              "nx": 400,
+              "dt_mult": 0.84,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 480,
+              "dt_mult": 0.84,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 576,
+              "dt_mult": 0.84,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 691,
+              "dt_mult": 0.84,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 829,
+              "dt_mult": 0.84,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 994,
+              "dt_mult": 0.84,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 1192,
+              "dt_mult": 0.84,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            }
+          ],
+          [
+            {
+              "nx": 400,
+              "dt_mult": 0.86,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 480,
+              "dt_mult": 0.86,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 576,
+              "dt_mult": 0.86,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 691,
+              "dt_mult": 0.86,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 829,
+              "dt_mult": 0.86,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 994,
+              "dt_mult": 0.86,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 1192,
+              "dt_mult": 0.86,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            }
+          ],
+          [
+            {
+              "nx": 400,
+              "dt_mult": 0.88,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 480,
+              "dt_mult": 0.88,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 576,
+              "dt_mult": 0.88,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 691,
+              "dt_mult": 0.88,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 829,
+              "dt_mult": 0.88,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 994,
+              "dt_mult": 0.88,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 1192,
+              "dt_mult": 0.88,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            }
+          ],
+          [
+            {
+              "nx": 400,
+              "dt_mult": 0.9,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 480,
+              "dt_mult": 0.9,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 576,
+              "dt_mult": 0.9,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 691,
+              "dt_mult": 0.9,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 829,
+              "dt_mult": 0.9,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 994,
+              "dt_mult": 0.9,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 1192,
+              "dt_mult": 0.9,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            }
+          ],
+          [
+            {
+              "nx": 400,
+              "dt_mult": 0.91,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 480,
+              "dt_mult": 0.91,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 576,
+              "dt_mult": 0.91,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 691,
+              "dt_mult": 0.91,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 829,
+              "dt_mult": 0.91,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 994,
+              "dt_mult": 0.91,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 1192,
+              "dt_mult": 0.91,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            }
+          ],
+          [
+            {
+              "nx": 400,
+              "dt_mult": 0.93,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 480,
+              "dt_mult": 0.93,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 576,
+              "dt_mult": 0.93,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 691,
+              "dt_mult": 0.93,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 829,
+              "dt_mult": 0.93,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 994,
+              "dt_mult": 0.93,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 1192,
+              "dt_mult": 0.93,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            }
+          ],
+          [
+            {
+              "nx": 400,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 480,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 576,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 691,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 829,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 994,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 1192,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            }
+          ],
+          [
+            {
+              "nx": 400,
+              "dt_mult": 0.97,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 480,
+              "dt_mult": 0.97,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 576,
+              "dt_mult": 0.97,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 691,
+              "dt_mult": 0.97,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 829,
+              "dt_mult": 0.97,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 994,
+              "dt_mult": 0.97,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 1192,
+              "dt_mult": 0.97,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            }
+          ],
+          [
+            {
+              "nx": 400,
+              "dt_mult": 0.99,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 480,
+              "dt_mult": 0.99,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 576,
+              "dt_mult": 0.99,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 691,
+              "dt_mult": 0.99,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 829,
+              "dt_mult": 0.99,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 994,
+              "dt_mult": 0.99,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 1192,
+              "dt_mult": 0.99,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            }
+          ]
+        ]
+      }
+    },
+    {
+      "solver": "epoch",
+      "target_parameter": "nx",
+      "profile": "p2",
+      "precision_config": {
+        "tolerance_rmse": 0.3
+      },
+      "target_config": {
+        "initial_value": 400,
+        "multiplication_factor": 1.2,
+        "max_iteration_num": 7,
+        "search_range_min": null,
+        "search_range_max": null,
+        "search_range_slice_num": null
+      },
+      "non_target_parameters": {
+        "npart": 20,
+        "field_order": 4,
+        "particle_order": 2,
+        "dt_multipler": 0.95
+      },
+      "results": {
+        "converged": false,
+        "optimal_parameter_value": 1192,
+        "total_computational_cost": 9.609205818,
+        "cost_history": [
+          0.561557296,
+          0.753835996,
+          0.909343432,
+          1.175481569,
+          1.615987869,
+          1.658984865,
+          2.9340147909999996
+        ],
+        "parameter_history": [
+          {
+            "nx": 400,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 4,
+            "particle_order": 2
+          },
+          {
+            "nx": 480,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 4,
+            "particle_order": 2
+          },
+          {
+            "nx": 576,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 4,
+            "particle_order": 2
+          },
+          {
+            "nx": 691,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 4,
+            "particle_order": 2
+          },
+          {
+            "nx": 829,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 4,
+            "particle_order": 2
+          },
+          {
+            "nx": 994,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 4,
+            "particle_order": 2
+          },
+          {
+            "nx": 1192,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 4,
+            "particle_order": 2
+          }
+        ]
+      }
+    },
+    {
+      "solver": "epoch",
+      "target_parameter": "nx",
+      "profile": "p2",
+      "precision_config": {
+        "tolerance_rmse": 0.3
+      },
+      "target_config": {
+        "initial_value": 400,
+        "multiplication_factor": 1.2,
+        "max_iteration_num": 7,
+        "search_range_min": null,
+        "search_range_max": null,
+        "search_range_slice_num": null
+      },
+      "non_target_parameters": {
+        "npart": 20,
+        "field_order": 4,
+        "particle_order": 3,
+        "dt_multipler": 0.95
+      },
+      "results": {
+        "converged": false,
+        "optimal_parameter_value": 1192,
+        "total_computational_cost": 10.439434966,
+        "cost_history": [
+          0.573359274,
+          0.828969658,
+          0.964251735,
+          1.3934092809999998,
+          1.7572272519999999,
+          1.840881781,
+          3.0813359850000004
+        ],
+        "parameter_history": [
+          {
+            "nx": 400,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 4,
+            "particle_order": 3
+          },
+          {
+            "nx": 480,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 4,
+            "particle_order": 3
+          },
+          {
+            "nx": 576,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 4,
+            "particle_order": 3
+          },
+          {
+            "nx": 691,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 4,
+            "particle_order": 3
+          },
+          {
+            "nx": 829,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 4,
+            "particle_order": 3
+          },
+          {
+            "nx": 994,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 4,
+            "particle_order": 3
+          },
+          {
+            "nx": 1192,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 4,
+            "particle_order": 3
+          }
+        ]
+      }
+    },
+    {
+      "solver": "epoch",
+      "target_parameter": "nx",
+      "profile": "p2",
+      "precision_config": {
+        "tolerance_rmse": 0.3
+      },
+      "target_config": {
+        "initial_value": 400,
+        "multiplication_factor": 1.2,
+        "max_iteration_num": 7,
+        "search_range_min": null,
+        "search_range_max": null,
+        "search_range_slice_num": null
+      },
+      "non_target_parameters": {
+        "npart": 20,
+        "field_order": 4,
+        "particle_order": 5,
+        "dt_multipler": 0.95
+      },
+      "results": {
+        "converged": false,
+        "optimal_parameter_value": 1192,
+        "total_computational_cost": 11.271982072,
+        "cost_history": [
+          0.59434409,
+          0.831822731,
+          0.931165441,
+          1.280344133,
+          1.947771711,
+          2.6755701000000003,
+          3.010963866
+        ],
+        "parameter_history": [
+          {
+            "nx": 400,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 4,
+            "particle_order": 5
+          },
+          {
+            "nx": 480,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 4,
+            "particle_order": 5
+          },
+          {
+            "nx": 576,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 4,
+            "particle_order": 5
+          },
+          {
+            "nx": 691,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 4,
+            "particle_order": 5
+          },
+          {
+            "nx": 829,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 4,
+            "particle_order": 5
+          },
+          {
+            "nx": 994,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 4,
+            "particle_order": 5
+          },
+          {
+            "nx": 1192,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 4,
+            "particle_order": 5
+          }
+        ]
+      }
+    },
+    {
+      "solver": "epoch",
+      "target_parameter": "nx",
+      "profile": "p2",
+      "precision_config": {
+        "tolerance_rmse": 0.3
+      },
+      "target_config": {
+        "initial_value": 400,
+        "multiplication_factor": 1.2,
+        "max_iteration_num": 7,
+        "search_range_min": null,
+        "search_range_max": null,
+        "search_range_slice_num": null
+      },
+      "non_target_parameters": {
+        "npart": 20,
+        "field_order": 6,
+        "particle_order": 2,
+        "dt_multipler": 0.95
+      },
+      "results": {
+        "converged": false,
+        "optimal_parameter_value": 1192,
+        "total_computational_cost": 9.876588392,
+        "cost_history": [
+          0.563736452,
+          0.8130088489999999,
+          1.0080324920000001,
+          1.2813539680000001,
+          1.786690094,
+          2.064661168,
+          2.359105369
+        ],
+        "parameter_history": [
+          {
+            "nx": 400,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 6,
+            "particle_order": 2
+          },
+          {
+            "nx": 480,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 6,
+            "particle_order": 2
+          },
+          {
+            "nx": 576,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 6,
+            "particle_order": 2
+          },
+          {
+            "nx": 691,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 6,
+            "particle_order": 2
+          },
+          {
+            "nx": 829,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 6,
+            "particle_order": 2
+          },
+          {
+            "nx": 994,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 6,
+            "particle_order": 2
+          },
+          {
+            "nx": 1192,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 6,
+            "particle_order": 2
+          }
+        ]
+      }
+    },
+    {
+      "solver": "epoch",
+      "target_parameter": "nx",
+      "profile": "p2",
+      "precision_config": {
+        "tolerance_rmse": 0.3
+      },
+      "target_config": {
+        "initial_value": 400,
+        "multiplication_factor": 1.2,
+        "max_iteration_num": 7,
+        "search_range_min": null,
+        "search_range_max": null,
+        "search_range_slice_num": null
+      },
+      "non_target_parameters": {
+        "npart": 20,
+        "field_order": 6,
+        "particle_order": 3,
+        "dt_multipler": 0.95
+      },
+      "results": {
+        "converged": false,
+        "optimal_parameter_value": 1192,
+        "total_computational_cost": 10.483757349,
+        "cost_history": [
+          0.6063561359999999,
+          0.684844304,
+          1.136639064,
+          1.4464921830000002,
+          1.9030388239999998,
+          2.1097253289999998,
+          2.596661509
+        ],
+        "parameter_history": [
+          {
+            "nx": 400,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 6,
+            "particle_order": 3
+          },
+          {
+            "nx": 480,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 6,
+            "particle_order": 3
+          },
+          {
+            "nx": 576,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 6,
+            "particle_order": 3
+          },
+          {
+            "nx": 691,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 6,
+            "particle_order": 3
+          },
+          {
+            "nx": 829,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 6,
+            "particle_order": 3
+          },
+          {
+            "nx": 994,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 6,
+            "particle_order": 3
+          },
+          {
+            "nx": 1192,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 6,
+            "particle_order": 3
+          }
+        ]
+      }
+    },
+    {
+      "solver": "epoch",
+      "target_parameter": "nx",
+      "profile": "p2",
+      "precision_config": {
+        "tolerance_rmse": 0.3
+      },
+      "target_config": {
+        "initial_value": 400,
+        "multiplication_factor": 1.2,
+        "max_iteration_num": 7,
+        "search_range_min": null,
+        "search_range_max": null,
+        "search_range_slice_num": null
+      },
+      "non_target_parameters": {
+        "npart": 20,
+        "field_order": 6,
+        "particle_order": 5,
+        "dt_multipler": 0.95
+      },
+      "results": {
+        "converged": false,
+        "optimal_parameter_value": 1192,
+        "total_computational_cost": 11.917077233,
+        "cost_history": [
+          0.6199446260000001,
+          0.843334579,
+          0.9990102910000002,
+          1.557361486,
+          1.7281780949999999,
+          2.261789871,
+          3.907458285
+        ],
+        "parameter_history": [
+          {
+            "nx": 400,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 6,
+            "particle_order": 5
+          },
+          {
+            "nx": 480,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 6,
+            "particle_order": 5
+          },
+          {
+            "nx": 576,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 6,
+            "particle_order": 5
+          },
+          {
+            "nx": 691,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 6,
+            "particle_order": 5
+          },
+          {
+            "nx": 829,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 6,
+            "particle_order": 5
+          },
+          {
+            "nx": 994,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 6,
+            "particle_order": 5
+          },
+          {
+            "nx": 1192,
+            "dt_mult": 0.95,
+            "npart": 20,
+            "field_Order": 6,
+            "particle_order": 5
+          }
+        ]
+      }
+    },
+    {
+      "solver": "epoch",
+      "target_parameter": "particle_order",
+      "profile": "p2",
+      "precision_config": {
+        "tolerance_rmse": 0.3
+      },
+      "target_config": {
+        "initial_value": null,
+        "multiplication_factor": 1.2,
+        "max_iteration_num": 7,
+        "search_range_min": null,
+        "search_range_max": null,
+        "search_range_slice_num": null
+      },
+      "non_target_parameters": {
+        "npart": 20,
+        "dt_multipler": 0.95,
+        "field_order": 4,
+        "nx": 400
+      },
+      "results": {
+        "converged": false,
+        "optimal_parameter_value": 2,
+        "total_computational_cost": 9.609205818,
+        "cost_history": [
+          0.561557296,
+          0.753835996,
+          0.909343432,
+          1.175481569,
+          1.615987869,
+          1.658984865,
+          2.9340147909999996
+        ],
+        "parameter_history": [
+          [
+            {
+              "nx": 400,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 4,
+              "particle_order": 2
+            },
+            {
+              "nx": 480,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 4,
+              "particle_order": 2
+            },
+            {
+              "nx": 576,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 4,
+              "particle_order": 2
+            },
+            {
+              "nx": 691,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 4,
+              "particle_order": 2
+            },
+            {
+              "nx": 829,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 4,
+              "particle_order": 2
+            },
+            {
+              "nx": 994,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 4,
+              "particle_order": 2
+            },
+            {
+              "nx": 1192,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 4,
+              "particle_order": 2
+            }
+          ],
+          [
+            {
+              "nx": 400,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 4,
+              "particle_order": 4
+            },
+            {
+              "nx": 480,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 4,
+              "particle_order": 4
+            },
+            {
+              "nx": 576,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 4,
+              "particle_order": 4
+            },
+            {
+              "nx": 691,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 4,
+              "particle_order": 4
+            },
+            {
+              "nx": 829,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 4,
+              "particle_order": 4
+            },
+            {
+              "nx": 994,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 4,
+              "particle_order": 4
+            },
+            {
+              "nx": 1192,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 4,
+              "particle_order": 4
+            }
+          ],
+          [
+            {
+              "nx": 400,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 4,
+              "particle_order": 5
+            },
+            {
+              "nx": 480,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 4,
+              "particle_order": 5
+            },
+            {
+              "nx": 576,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 4,
+              "particle_order": 5
+            },
+            {
+              "nx": 691,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 4,
+              "particle_order": 5
+            },
+            {
+              "nx": 829,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 4,
+              "particle_order": 5
+            },
+            {
+              "nx": 994,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 4,
+              "particle_order": 5
+            },
+            {
+              "nx": 1192,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 4,
+              "particle_order": 5
+            }
+          ]
+        ]
+      }
+    },
+    {
+      "solver": "epoch",
+      "target_parameter": "particle_order",
+      "profile": "p2",
+      "precision_config": {
+        "tolerance_rmse": 0.3
+      },
+      "target_config": {
+        "initial_value": null,
+        "multiplication_factor": 1.2,
+        "max_iteration_num": 7,
+        "search_range_min": null,
+        "search_range_max": null,
+        "search_range_slice_num": null
+      },
+      "non_target_parameters": {
+        "npart": 20,
+        "dt_multipler": 0.95,
+        "field_order": 6,
+        "nx": 400
+      },
+      "results": {
+        "converged": false,
+        "optimal_parameter_value": 2,
+        "total_computational_cost": 9.876588392,
+        "cost_history": [
+          0.563736452,
+          0.8130088489999999,
+          1.0080324920000001,
+          1.2813539680000001,
+          1.786690094,
+          2.064661168,
+          2.359105369
+        ],
+        "parameter_history": [
+          [
+            {
+              "nx": 400,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 2
+            },
+            {
+              "nx": 480,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 2
+            },
+            {
+              "nx": 576,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 2
+            },
+            {
+              "nx": 691,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 2
+            },
+            {
+              "nx": 829,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 2
+            },
+            {
+              "nx": 994,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 2
+            },
+            {
+              "nx": 1192,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 2
+            }
+          ],
+          [
+            {
+              "nx": 400,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 4
+            },
+            {
+              "nx": 480,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 4
+            },
+            {
+              "nx": 576,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 4
+            },
+            {
+              "nx": 691,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 4
+            },
+            {
+              "nx": 829,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 4
+            },
+            {
+              "nx": 994,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 4
+            },
+            {
+              "nx": 1192,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 4
+            }
+          ],
+          [
+            {
+              "nx": 400,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 480,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 576,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 691,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 829,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 994,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            },
+            {
+              "nx": 1192,
+              "dt_mult": 0.95,
+              "npart": 20,
+              "field_Order": 6,
+              "particle_order": 5
+            }
+          ]
+        ]
+      }
+    }
+  ]
+}
