@@ -5,6 +5,7 @@ This guide provides instructions for setting up EPOCH (Extendable PIC Open Colla
 ## Overview
 
 EPOCH is a 1D Particle-in-Cell (PIC) code for laser-plasma interaction simulations. The CostSci-Tools integration requires:
+
 - **Linux environment** (required for EPOCH compilation)
 - **3 separate EPOCH binaries** compiled for different particle-weighting orders (2nd, 3rd, 5th)
 - **Proper directory organization** within the solvers/ folder
@@ -14,6 +15,7 @@ EPOCH is a 1D Particle-in-Cell (PIC) code for laser-plasma interaction simulatio
 ### Prerequisites
 
 Install the required dependencies:
+
 ```bash
 sudo apt update
 sudo apt install gfortran openmpi-bin libopenmpi-dev
@@ -22,12 +24,14 @@ sudo apt install gfortran openmpi-bin libopenmpi-dev
 ### Run Setup Script
 
 Execute the automated setup script from the repository root:
+
 ```bash
 cd /path/to/costsci-tools
 python solvers/setup_epoch.py
 ```
 
 The script will automatically:
+
 1. Initialize the existing EPOCH git submodule in `solvers/epoch/`
 2. Configure Makefiles for different particle-weighting orders
 3. Compile 3 separate binaries (2nd, 3rd, 5th order)
@@ -67,6 +71,7 @@ cd solvers/epoch/epoch1d
 ### 2. Compile Different Particle Orders
 
 **For 3rd Order (Default):**
+
 ```bash
 make clean
 make COMPILER=gfortran
@@ -75,10 +80,13 @@ cp bin/epoch1d bin/epoch1d_3rd
 
 **For 2nd Order:**
 Edit `Makefile` to uncomment:
+
 ```makefile
 DEFINES += $(D)PARTICLE_SHAPE_TOPHAT
 ```
+
 Then compile:
+
 ```bash
 make clean
 make COMPILER=gfortran
@@ -87,10 +95,13 @@ cp bin/epoch1d bin/epoch1d_2nd
 
 **For 5th Order:**
 Edit `Makefile` to uncomment:
+
 ```makefile
 DEFINES += $(D)PARTICLE_SHAPE_BSPLINE3
 ```
+
 Then compile:
+
 ```bash
 make clean
 make COMPILER=gfortran
@@ -100,6 +111,7 @@ cp bin/epoch1d bin/epoch1d_5th
 ### 3. Update Runner Paths
 
 Edit `runners/epoch.py` to update binary paths:
+
 ```python
 path_epoch2ndOrder = "solvers/epoch/epoch1d/bin/epoch1d_2nd"
 path_epoch3rdOrder = "solvers/epoch/epoch1d/bin/epoch1d_3rd"
@@ -109,6 +121,7 @@ path_epoch5thOrder = "solvers/epoch/epoch1d/bin/epoch1d_5th"
 ### 4. Update Physics Table Path
 
 Edit `runners/input.deck` line 40:
+
 ```
 physics_table_location = solvers/epoch/epoch1d/src/physics_packages/TABLES/
 ```
@@ -116,6 +129,7 @@ physics_table_location = solvers/epoch/epoch1d/src/physics_packages/TABLES/
 ### 5. Verify Setup
 
 Check that all binaries are different:
+
 ```bash
 cd solvers/epoch/epoch1d/bin
 cmp epoch1d_2nd epoch1d_3rd && echo "ERROR: 2nd and 3rd are identical" || echo "✅ 2nd and 3rd differ"
@@ -126,23 +140,27 @@ cmp epoch1d_3rd epoch1d_5th && echo "ERROR: 3rd and 5th are identical" || echo "
 ## Usage
 
 Once set up, EPOCH simulations will automatically use the appropriate binary based on the `particle_order` parameter:
+
 - `particle_order: 2` → uses `solvers/epoch/epoch1d/bin/epoch1d_2nd`
-- `particle_order: 3` → uses `solvers/epoch/epoch1d/bin/epoch1d_3rd` 
+- `particle_order: 3` → uses `solvers/epoch/epoch1d/bin/epoch1d_3rd`
 - `particle_order: 5` → uses `solvers/epoch/epoch1d/bin/epoch1d_5th`
 
 ## Troubleshooting
 
 ### Compilation Errors
+
 - Ensure gfortran and OpenMPI are properly installed
 - Check that you're on a Linux system (EPOCH requires Linux)
 - Verify git submodule was initialized correctly
 
 ### Binary Issues
+
 - If binaries are identical, the Makefile modifications didn't work
 - Re-run the setup script or manually edit Makefiles
 - Ensure `make clean` was run between compilations
 
 ### Runtime Errors
+
 - Check that binary paths in `runners/epoch.py` are correct
 - Verify physics table path in `runners/input.deck`
 - Ensure binaries have execute permissions (`chmod +x`)
@@ -150,6 +168,7 @@ Once set up, EPOCH simulations will automatically use the appropriate binary bas
 ## Parameter Optimization
 
 EPOCH supports optimization of 5 parameters:
+
 - **`dt_multipler`**: Controls temporal discretization [0.80-0.99]
 - **`nx`**: Spatial grid resolution [400→]
 - **`npart`**: Particles per cell [10→]
