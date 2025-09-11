@@ -28,7 +28,7 @@ python solvers/setup_epoch.py
 ```
 
 The script will automatically:
-1. Clone EPOCH as a git submodule in `solvers/epoch/`
+1. Initialize the existing EPOCH git submodule in `solvers/epoch/`
 2. Configure Makefiles for different particle-weighting orders
 3. Compile 3 separate binaries (2nd, 3rd, 5th order)
 4. Update runner paths to use the new binary locations
@@ -43,26 +43,25 @@ solvers/epoch/                    # Git submodule
 │   ├── src/
 │   │   └── physics_packages/
 │   │       └── TABLES/           # Physics tables directory
-│   ├── bin/
-│   │   └── epoch1d               # Temporary compilation output
+│   ├── bin/                      # Binary directory
+│   │   ├── epoch1d               # Latest compiled binary
+│   │   ├── epoch1d_2nd           # 2nd order particle weighting
+│   │   ├── epoch1d_3rd           # 3rd order particle weighting
+│   │   └── epoch1d_5th           # 5th order particle weighting
 │   └── Makefile                  # Modified for each compilation
-└── epoch_bin/                    # Final binary locations
-    ├── 2nd                       # 2nd order particle weighting
-    ├── 3rd                       # 3rd order particle weighting (default)
-    └── 5th                       # 5th order particle weighting
 ```
 
 ## Manual Setup (For Reference)
 
 If you need to set up EPOCH manually or troubleshoot the automated script:
 
-### 1. Clone EPOCH Repository
+### 1. Initialize EPOCH Submodule
+
+Since EPOCH is already included as a git submodule in this repository:
 
 ```bash
-cd solvers/
-git submodule add https://github.com/Warwick-Plasma/epoch.git epoch
 git submodule update --init --recursive
-cd epoch/epoch1d
+cd solvers/epoch/epoch1d
 ```
 
 ### 2. Compile Different Particle Orders
@@ -71,8 +70,7 @@ cd epoch/epoch1d
 ```bash
 make clean
 make COMPILER=gfortran
-mkdir -p ../epoch_bin
-cp bin/epoch1d ../epoch_bin/3rd
+cp bin/epoch1d bin/epoch1d_3rd
 ```
 
 **For 2nd Order:**
@@ -84,7 +82,7 @@ Then compile:
 ```bash
 make clean
 make COMPILER=gfortran
-cp bin/epoch1d ../epoch_bin/2nd
+cp bin/epoch1d bin/epoch1d_2nd
 ```
 
 **For 5th Order:**
@@ -96,16 +94,16 @@ Then compile:
 ```bash
 make clean
 make COMPILER=gfortran
-cp bin/epoch1d ../epoch_bin/5th
+cp bin/epoch1d bin/epoch1d_5th
 ```
 
 ### 3. Update Runner Paths
 
 Edit `runners/epoch.py` to update binary paths:
 ```python
-path_epoch2ndOrder = "solvers/epoch/epoch_bin/2nd"
-path_epoch3rdOrder = "solvers/epoch/epoch_bin/3rd"
-path_epoch5thOrder = "solvers/epoch/epoch_bin/5th"
+path_epoch2ndOrder = "solvers/epoch/epoch1d/bin/epoch1d_2nd"
+path_epoch3rdOrder = "solvers/epoch/epoch1d/bin/epoch1d_3rd"
+path_epoch5thOrder = "solvers/epoch/epoch1d/bin/epoch1d_5th"
 ```
 
 ### 4. Update Physics Table Path
@@ -119,18 +117,18 @@ physics_table_location = solvers/epoch/epoch1d/src/physics_packages/TABLES/
 
 Check that all binaries are different:
 ```bash
-cd solvers/epoch/epoch_bin
-cmp 2nd 3rd && echo "ERROR: 2nd and 3rd are identical" || echo "✅ 2nd and 3rd differ"
-cmp 2nd 5th && echo "ERROR: 2nd and 5th are identical" || echo "✅ 2nd and 5th differ"
-cmp 3rd 5th && echo "ERROR: 3rd and 5th are identical" || echo "✅ 3rd and 5th differ"
+cd solvers/epoch/epoch1d/bin
+cmp epoch1d_2nd epoch1d_3rd && echo "ERROR: 2nd and 3rd are identical" || echo "✅ 2nd and 3rd differ"
+cmp epoch1d_2nd epoch1d_5th && echo "ERROR: 2nd and 5th are identical" || echo "✅ 2nd and 5th differ"
+cmp epoch1d_3rd epoch1d_5th && echo "ERROR: 3rd and 5th are identical" || echo "✅ 3rd and 5th differ"
 ```
 
 ## Usage
 
 Once set up, EPOCH simulations will automatically use the appropriate binary based on the `particle_order` parameter:
-- `particle_order: 2` → uses `solvers/epoch/epoch_bin/2nd`
-- `particle_order: 3` → uses `solvers/epoch/epoch_bin/3rd` 
-- `particle_order: 5` → uses `solvers/epoch/epoch_bin/5th`
+- `particle_order: 2` → uses `solvers/epoch/epoch1d/bin/epoch1d_2nd`
+- `particle_order: 3` → uses `solvers/epoch/epoch1d/bin/epoch1d_3rd` 
+- `particle_order: 5` → uses `solvers/epoch/epoch1d/bin/epoch1d_5th`
 
 ## Troubleshooting
 

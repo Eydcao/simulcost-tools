@@ -9,7 +9,17 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from wrappers.epoch import runEpoch, compare_res_epoch
 
 
-def find_convergent_npart(profile, dt_multipler, nx, npart, field_order,particle_order, tolerance_rmse, multiplication_factor, max_iteration_num):
+def find_convergent_npart(
+    profile,
+    dt_multipler,
+    nx,
+    npart,
+    field_order,
+    particle_order,
+    tolerance_rmse,
+    multiplication_factor,
+    max_iteration_num,
+):
     """Iteratively increase npart (number pseudoparticles) until convergence is achieved with fixed parameters."""
     npart_history = []
     cost_history = []
@@ -20,13 +30,23 @@ def find_convergent_npart(profile, dt_multipler, nx, npart, field_order,particle
     best_npart = None
 
     for i in range(max_iteration_num):
-        print(f"\nRunning simulation with npart = {current_npart}, nx = {nx}, dt_mult = {dt_multipler}, field_Order = {field_order}, particle_order = {particle_order} ")
+        print(
+            f"\nRunning simulation with npart = {current_npart}, nx = {nx}, dt_mult = {dt_multipler}, field_Order = {field_order}, particle_order = {particle_order} "
+        )
 
         # Run simulation with fixed CFL
-        cost_i = runEpoch(profile, nx, dt_multipler, current_npart,field_order,particle_order)
+        cost_i = runEpoch(profile, nx, dt_multipler, current_npart, field_order, particle_order)
         cost_history.append(cost_i)
         npart_history.append(current_npart)
-        param_history.append({"nx": nx, "dt_mult":  dt_multipler, "npart": current_npart, "field_Order" : field_order, "particle_order" : particle_order})
+        param_history.append(
+            {
+                "nx": nx,
+                "dt_mult": dt_multipler,
+                "npart": current_npart,
+                "field_Order": field_order,
+                "particle_order": particle_order,
+            }
+        )
 
         # If we have previous results to compare with
         if len(npart_history) > 1:
@@ -46,7 +66,7 @@ def find_convergent_npart(profile, dt_multipler, nx, npart, field_order,particle
                 current_npart,
                 field_order,
                 particle_order,
-                tolerance_rmse
+                tolerance_rmse,
             )
 
             if is_converged:
@@ -77,9 +97,9 @@ def find_convergent_npart(profile, dt_multipler, nx, npart, field_order,particle
 
 
 def find_optimal_dt_multipler(
-    profile, 
-    nx, 
-    npart, 
+    profile,
+    nx,
+    npart,
     field_order,
     particle_order,
     tolerance_rmse,
@@ -114,7 +134,15 @@ def find_optimal_dt_multipler(
         print(f"\n=== Testing dt_multipler = {dt_multipler} ===")
 
         is_converged, best_nx, cost_history, one_param_history = find_convergent_nx(
-            profile, dt_multipler, nx,npart, field_order, particle_order, tolerance_rmse, multiplication_factor, max_iteration_num
+            profile,
+            dt_multipler,
+            nx,
+            npart,
+            field_order,
+            particle_order,
+            tolerance_rmse,
+            multiplication_factor,
+            max_iteration_num,
         )
 
         # Record n_space exploration trajectory for each dt_multipler
@@ -165,10 +193,10 @@ def find_optimal_dt_multipler(
 
 
 def find_optimal_field_order(
-    profile, 
-    nx, 
+    profile,
+    nx,
     dt_multipler,
-    npart, 
+    npart,
     particle_order,
     tolerance_rmse,
     possibleOrders,
@@ -200,7 +228,15 @@ def find_optimal_field_order(
         print(f"\n=== Testing field_order = {field_order} ===")
 
         is_converged, best_nx, cost_history, one_param_history = find_convergent_nx(
-            profile, dt_multipler, nx,npart, field_order, particle_order, tolerance_rmse, multiplication_factor, max_iteration_num
+            profile,
+            dt_multipler,
+            nx,
+            npart,
+            field_order,
+            particle_order,
+            tolerance_rmse,
+            multiplication_factor,
+            max_iteration_num,
         )
 
         # Record n_space exploration trajectory for each field_order
@@ -251,10 +287,10 @@ def find_optimal_field_order(
 
 
 def find_optimal_particle_order(
-    profile, 
-    nx, 
+    profile,
+    nx,
     dt_multipler,
-    npart, 
+    npart,
     field_order,
     tolerance_rmse,
     possibleOrders,
@@ -286,7 +322,15 @@ def find_optimal_particle_order(
         print(f"\n=== Testing particle_order = {particle_order} ===")
 
         is_converged, best_nx, cost_history, one_param_history = find_convergent_nx(
-            profile, dt_multipler, nx,npart, field_order, particle_order, tolerance_rmse, multiplication_factor, max_iteration_num
+            profile,
+            dt_multipler,
+            nx,
+            npart,
+            field_order,
+            particle_order,
+            tolerance_rmse,
+            multiplication_factor,
+            max_iteration_num,
         )
 
         # Record n_space exploration trajectory for each particle_order
@@ -335,8 +379,19 @@ def find_optimal_particle_order(
         param_history,
     )
 
-#dt_multipler, nx, npart, field_order,particle_order,
-def find_convergent_nx(profile, dt_multipler, nx, npart, field_order,particle_order, tolerance_rmse, multiplication_factor, max_iteration_num):
+
+# dt_multipler, nx, npart, field_order,particle_order,
+def find_convergent_nx(
+    profile,
+    dt_multipler,
+    nx,
+    npart,
+    field_order,
+    particle_order,
+    tolerance_rmse,
+    multiplication_factor,
+    max_iteration_num,
+):
     """Iteratively increase nx (decrease dx) until convergence is achieved with fixed parameters."""
     nx_history = []
     cost_history = []
@@ -347,13 +402,23 @@ def find_convergent_nx(profile, dt_multipler, nx, npart, field_order,particle_or
     best_nx = None
 
     for i in range(max_iteration_num):
-        print(f"\nRunning simulation with nx = {current_nx}, dt_mult = {dt_multipler}, npart = {npart}, field_Order = {field_order}, particle_order = {particle_order} ")
+        print(
+            f"\nRunning simulation with nx = {current_nx}, dt_mult = {dt_multipler}, npart = {npart}, field_Order = {field_order}, particle_order = {particle_order} "
+        )
 
         # Run simulation with fixed CFL
-        cost_i = runEpoch(profile, current_nx, dt_multipler, npart,field_order,particle_order)
+        cost_i = runEpoch(profile, current_nx, dt_multipler, npart, field_order, particle_order)
         cost_history.append(cost_i)
         nx_history.append(current_nx)
-        param_history.append({"nx": current_nx, "dt_mult":  dt_multipler, "npart": npart, "field_Order" : field_order, "particle_order" : particle_order})
+        param_history.append(
+            {
+                "nx": current_nx,
+                "dt_mult": dt_multipler,
+                "npart": npart,
+                "field_Order": field_order,
+                "particle_order": particle_order,
+            }
+        )
 
         # If we have previous results to compare with
         if len(nx_history) > 1:
@@ -373,7 +438,7 @@ def find_convergent_nx(profile, dt_multipler, nx, npart, field_order,particle_or
                 npart,
                 field_order,
                 particle_order,
-                tolerance_rmse
+                tolerance_rmse,
             )
 
             if is_converged:
@@ -410,7 +475,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--task",
         type=str,
-        choices=["nx", "npart", "dt_multipler", "field_order","particle_order"],
+        choices=["nx", "npart", "dt_multipler", "field_order", "particle_order"],
         required=True,
         help="Choose which parameter to search: 'nx', 'npart', 'dt_multipler', 'field_order','particle_order'",
     )
@@ -421,15 +486,11 @@ if __name__ == "__main__":
     # Controllable parameters
     parser.add_argument("--nx", type=int, default=3200, help="Initial nx (spatial discretation)")
     parser.add_argument("--npart", type=int, default=20, help="Initial npart (number pseudoparticles)")
+    parser.add_argument("--dt_multipler", type=float, default=0.95, help="Initial dt_multipler (temporal discretation)")
     parser.add_argument(
-        "--dt_multipler", type=float, default=0.95, help="Initial dt_multipler (temporal discretation)"
+        "--field_order", type=int, default=2, choices=[2, 4, 6], help="Finite-Difference order to solve field eqns"
     )
-    parser.add_argument(
-        "--field_order", type=int, default=2, choices=[2,4,6], help="Finite-Difference order to solve field eqns"
-    )
-    parser.add_argument(
-        "--particle_order", type=int, default=3, choices=[2,3,5], help="Particle Weighting Order"
-    )
+    parser.add_argument("--particle_order", type=int, default=3, choices=[2, 3, 5], help="Particle Weighting Order")
 
     # Tolerance parameters
     parser.add_argument("--tolerance_rmse", type=float, default=0.02, help="RMSE tolerance for convergence checking")
@@ -456,9 +517,7 @@ if __name__ == "__main__":
         "--search_range_slice_num", type=int, default=11, help="Number of slices for 0-shot parameter search range"
     )
 
-
     args = parser.parse_args()
-    
 
     if args.task == "nx":
         print("\n=== Starting nx convergence search ===")
@@ -530,7 +589,7 @@ if __name__ == "__main__":
             dt_multipler=args.dt_multipler,
             particle_order=args.particle_order,
             tolerance_rmse=args.tolerance_rmse,
-            possibleOrders=[2,4,6],
+            possibleOrders=[2, 4, 6],
             multiplication_factor=args.multiplication_factor,
             max_iteration_num=args.max_iteration_num,
         )
@@ -550,7 +609,7 @@ if __name__ == "__main__":
             dt_multipler=args.dt_multipler,
             field_order=args.field_order,
             tolerance_rmse=args.tolerance_rmse,
-            possibleOrders=[2,3,5],
+            possibleOrders=[2, 3, 5],
             multiplication_factor=args.multiplication_factor,
             max_iteration_num=args.max_iteration_num,
         )

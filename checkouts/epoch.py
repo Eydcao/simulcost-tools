@@ -9,7 +9,13 @@ from collections import defaultdict
 
 # Add paths for imports
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from dummy_sols.epoch import find_convergent_npart, find_convergent_nx, find_optimal_dt_multipler, find_optimal_field_order, find_optimal_particle_order
+from dummy_sols.epoch import (
+    find_convergent_npart,
+    find_convergent_nx,
+    find_optimal_dt_multipler,
+    find_optimal_field_order,
+    find_optimal_particle_order,
+)
 from checkouts.config_utils import load_config, build_target_configs
 
 
@@ -20,34 +26,42 @@ def save_datasets(successful_tasks, failed_tasks, output_dir):
     failed_dir = os.path.join(output_dir, "epoch", "failed")
     os.makedirs(success_dir, exist_ok=True)
     os.makedirs(failed_dir, exist_ok=True)
-    
+
     # Save successful tasks (overwrite existing file)
     success_file = os.path.join(success_dir, "tasks.json")
     with open(success_file, "w") as f:  # "w" mode overwrites existing file
-        json.dump({
-            "metadata": {
-                "solver": "epoch",
-                "description": "Successfully converged parameter optimization tasks",
-                "total_tasks": len(successful_tasks)
+        json.dump(
+            {
+                "metadata": {
+                    "solver": "epoch",
+                    "description": "Successfully converged parameter optimization tasks",
+                    "total_tasks": len(successful_tasks),
+                },
+                "tasks": successful_tasks,
             },
-            "tasks": successful_tasks
-        }, f, indent=2)
-    
+            f,
+            indent=2,
+        )
+
     # Save failed tasks (overwrite existing file)
     failed_file = os.path.join(failed_dir, "tasks.json")
     with open(failed_file, "w") as f:  # "w" mode overwrites existing file
-        json.dump({
-            "metadata": {
-                "solver": "epoch", 
-                "description": "Failed to converge parameter optimization tasks",
-                "total_tasks": len(failed_tasks)
+        json.dump(
+            {
+                "metadata": {
+                    "solver": "epoch",
+                    "description": "Failed to converge parameter optimization tasks",
+                    "total_tasks": len(failed_tasks),
+                },
+                "tasks": failed_tasks,
             },
-            "tasks": failed_tasks
-        }, f, indent=2)
-    
+            f,
+            indent=2,
+        )
+
     print(f"✅ Saved {len(successful_tasks)} successful tasks to {success_file}")
     print(f"❌ Saved {len(failed_tasks)} failed tasks to {failed_file}")
-    
+
     return success_file, failed_file
 
 
@@ -69,7 +83,7 @@ def plot_statistics(statistics, output_dir):
         rate = (converged / total * 100) if total > 0 else 0
         convergence_rates.append(rate)
 
-    ax.bar(precision_levels, convergence_rates, color=["red", "orange", "green"]) # 3 percision levels
+    ax.bar(precision_levels, convergence_rates, color=["red", "orange", "green"])  # 3 percision levels
     ax.set_ylabel("Convergence Rate (%)")
     ax.set_title("Convergence Rate by Precision Level")
     ax.set_ylim(0, 100)
@@ -88,7 +102,7 @@ def plot_statistics(statistics, output_dir):
         rate = (converged / total * 100) if total > 0 else 0
         target_rates.append(rate)
 
-    ax.bar(target_params, target_rates, color=["blue", "cyan", "purple", "magenta", "orange"]) # 5 parameters
+    ax.bar(target_params, target_rates, color=["blue", "cyan", "purple", "magenta", "orange"])  # 5 parameters
     ax.set_ylabel("Convergence Rate (%)")
     ax.set_title("Convergence Rate by Target Parameter")
     ax.set_ylim(0, 100)
@@ -105,7 +119,7 @@ def plot_statistics(statistics, output_dir):
 
     if statistics["optimal_dt_multipler_values"]:
 
-        dt_1st_values= [t[0] for t in list(statistics["optimal_dt_multipler_values"])]
+        dt_1st_values = [t[0] for t in list(statistics["optimal_dt_multipler_values"])]
 
         dt_values, dt_counts = np.unique(dt_1st_values, return_counts=True)
         ax.bar(
@@ -131,7 +145,11 @@ def plot_statistics(statistics, output_dir):
     if statistics["optimal_npart_values"]:
         npart_values, npart_counts = np.unique(list(statistics["optimal_npart_values"]), return_counts=True)
         ax.bar(
-            [str(p) for p in npart_values], npart_counts, alpha=0.7, label="npart parameter", color=colors[color_idx % len(colors)]
+            [str(p) for p in npart_values],
+            npart_counts,
+            alpha=0.7,
+            label="npart parameter",
+            color=colors[color_idx % len(colors)],
         )
         color_idx += 1
 
@@ -147,7 +165,9 @@ def plot_statistics(statistics, output_dir):
         color_idx += 1
 
     if statistics["optimal_particle_order_values"]:
-        particle_values, particle_counts = np.unique(list(statistics["optimal_particle_order_values"]), return_counts=True)
+        particle_values, particle_counts = np.unique(
+            list(statistics["optimal_particle_order_values"]), return_counts=True
+        )
         ax.bar(
             [str(p) for p in particle_values],
             particle_counts,
@@ -211,7 +231,7 @@ def plot_statistics(statistics, output_dir):
 
         f.write("5. Optimal Parameter Frequencies (All Tasks):\n")
         if statistics["optimal_dt_multipler_values"]:
-            dt_1st_values= [t[0] for t in list(statistics["optimal_dt_multipler_values"])]
+            dt_1st_values = [t[0] for t in list(statistics["optimal_dt_multipler_values"])]
 
             dt_values, dt_counts = np.unique(dt_1st_values, return_counts=True)
             f.write("   dt_multipler parameter (0-shot):\n")
@@ -237,7 +257,9 @@ def plot_statistics(statistics, output_dir):
                 f.write(f"     field_order={field}: {count} times\n")
 
         if statistics["optimal_particle_order_values"]:
-            particle_values, particle_counts = np.unique(list(statistics["optimal_particle_order_values"]), return_counts=True)
+            particle_values, particle_counts = np.unique(
+                list(statistics["optimal_particle_order_values"]), return_counts=True
+            )
             f.write("   particle_order parameter (0-shot):\n")
             for particle, count in zip(particle_values, particle_counts):
                 f.write(f"     particle_order={particle}: {count} times\n")
@@ -347,7 +369,7 @@ def main():
                         if nx_param is not None:
                             statistics["optimal_nx_values"].append(nx_param)
                         optimal_value = nx_param
-                    
+
                     elif target_param == "npart":
                         is_converged, npart_param, cost_history, param_history = find_convergent_npart(
                             profile=profile,
@@ -403,16 +425,14 @@ def main():
                         "solver": "epoch",
                         "target_parameter": target_param,
                         "profile": profile,
-                        "precision_config": {
-                            "tolerance_rmse": precision_vals["tolerance_rmse"]
-                        },
+                        "precision_config": {"tolerance_rmse": precision_vals["tolerance_rmse"]},
                         "target_config": {
                             "initial_value": target_config.get("initial_value"),
                             "multiplication_factor": target_config.get("multiplication_factor"),
                             "max_iteration_num": target_config.get("max_iteration_num"),
                             "search_range_min": target_config.get("search_range_min"),
                             "search_range_max": target_config.get("search_range_max"),
-                            "search_range_slice_num": target_config.get("search_range_slice_num")
+                            "search_range_slice_num": target_config.get("search_range_slice_num"),
                         },
                         "non_target_parameters": task_params.copy(),
                         "results": {
@@ -420,8 +440,8 @@ def main():
                             "optimal_parameter_value": optimal_value,
                             "total_computational_cost": sum(cost_history) if cost_history else 0,
                             "cost_history": cost_history if cost_history else [],
-                            "parameter_history": param_history if param_history else []
-                        }
+                            "parameter_history": param_history if param_history else [],
+                        },
                     }
 
                     # Add task to appropriate dataset
@@ -463,17 +483,21 @@ def main():
     print(f"💾 Dataset files saved to: {dataset_dir}")
     print(f"   ✅ Successful tasks: {len(successful_tasks)} tasks")
     print(f"   ❌ Failed tasks: {len(failed_tasks)} tasks")
-    
+
     # Display dataset summary
     if len(successful_tasks) > 0:
         print(f"\n📈 Successful Task Examples:")
         for i, task in enumerate(successful_tasks[:3]):  # Show first 3 successful tasks
-            print(f"   {i+1}. {task['profile']} profile, {task['target_parameter']} optimization -> {task['results']['optimal_parameter_value']}")
-    
+            print(
+                f"   {i+1}. {task['profile']} profile, {task['target_parameter']} optimization -> {task['results']['optimal_parameter_value']}"
+            )
+
     if len(failed_tasks) > 0:
         print(f"\n📉 Failed Task Examples:")
         for i, task in enumerate(failed_tasks[:3]):  # Show first 3 failed tasks
-            print(f"   {i+1}. {task['profile']} profile, {task['target_parameter']} optimization (cost: {task['results']['total_computational_cost']})")
+            print(
+                f"   {i+1}. {task['profile']} profile, {task['target_parameter']} optimization (cost: {task['results']['total_computational_cost']})"
+            )
 
     # Expected task calculation for verification
     expected_total = 0

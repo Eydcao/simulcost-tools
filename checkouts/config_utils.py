@@ -73,10 +73,11 @@ def build_target_configs(config):
                 else None
             ),
             "search_range_slice_num": param_info.get("search_range_slice_num"),
-            "search_values": (param_info.get("search_values", [None, None, None])
+            "search_values": (
+                param_info.get("search_values", [None, None, None])
                 if isinstance(param_info.get("search_values"), list)
                 else None
-            )
+            ),
         }
 
         # Normalize all non-target parameters to lists for consistent iteration

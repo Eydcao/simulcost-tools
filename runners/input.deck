@@ -19,7 +19,7 @@ end:constant
 
 begin:control
 
-nx= 800
+nx= 3200
 
 t_end = 800*femto
 

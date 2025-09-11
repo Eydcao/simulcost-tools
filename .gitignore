@@ -23,4 +23,5 @@ useless/*
 **/*.status
 **/*.deck
 **/*.dat
+**/Makefile*
 **/output*/*

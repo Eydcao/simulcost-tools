@@ -2,7 +2,8 @@ import hydra
 import sys
 import os
 import subprocess
-#import sdf_helper as sh 
+
+# import sdf_helper as sh
 import h5py
 import time
 import numpy as np
@@ -15,9 +16,9 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 env = os.environ.copy()
 env["PYTHONPATH"] = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
 
-path_epoch2ndOrder="solvers/epoch/epoch_bin/2nd"
-path_epoch3rdOrder="solvers/epoch/epoch_bin/3rd"
-path_epoch5thOrder="solvers/epoch/epoch_bin/5th"
+path_epoch2ndOrder = "solvers/epoch/epoch1d/bin/epoch1d_2nd"
+path_epoch3rdOrder = "solvers/epoch/epoch1d/bin/epoch1d_3rd"
+path_epoch5thOrder = "solvers/epoch/epoch1d/bin/epoch1d_5th"
 
 
 @hydra.main(version_base=None, config_path="../run_configs/epoch", config_name="p1")
@@ -25,27 +26,31 @@ def main(cfg):
 
     script_dir = os.path.dirname(__file__)  # directory of input.deck, change if move somewhere else
     input_path = os.path.join(script_dir, "input.deck")
-    updateInputDeck(cfg,input_path)
+    updateInputDeck(cfg, input_path)
 
-    if (cfg.particle_order==2):
-        cmd =  f"echo {script_dir} | mpirun -np 12 {path_epoch2ndOrder}"
-    elif (cfg.particle_order==3):
-        cmd =  f"echo {script_dir} | mpirun -np 12 {path_epoch3rdOrder}"
+    if cfg.particle_order == 2:
+        cmd = f"echo {script_dir} | mpirun -np 12 {path_epoch2ndOrder}"
+    elif cfg.particle_order == 3:
+        cmd = f"echo {script_dir} | mpirun -np 12 {path_epoch3rdOrder}"
     else:
-        cmd =  f"echo {script_dir} | mpirun -np 12 {path_epoch5thOrder}"
+        cmd = f"echo {script_dir} | mpirun -np 12 {path_epoch5thOrder}"
 
-  #  subprocess.run("rm *.sdf",shell=True,check=True,env=env)
+    #  subprocess.run("rm *.sdf",shell=True,check=True,env=env)
 
- #   start_time=time.time()
+    #   start_time=time.time()
     subprocess.run(cmd, shell=True, check=True, env=env)
- #   end_time=time.time()
-#    subprocess.run("rm *.sdf",shell=True,check=True,env=env)    
-  #  run_time=end_time-start_time
-    
-   # print(f"Elapsed time: {run_time:.4f} seconds")
+    #   end_time=time.time()
+    #    subprocess.run("rm *.sdf",shell=True,check=True,env=env)
+    #  run_time=end_time-start_time
 
-    savePath=os.path.join(os.path.dirname(script_dir),cfg.dump_dir+f"_nx_{cfg.nx}_dtmult_{cfg.dt_mult}_part_{cfg.part_cell}_fieldO_{cfg.field_order}_partO_{cfg.particle_order}")
-    runTime= saveData(savePath)
+    # print(f"Elapsed time: {run_time:.4f} seconds")
+
+    savePath = os.path.join(
+        os.path.dirname(script_dir),
+        cfg.dump_dir
+        + f"_nx_{cfg.nx}_dtmult_{cfg.dt_mult}_part_{cfg.part_cell}_fieldO_{cfg.field_order}_partO_{cfg.particle_order}",
+    )
+    runTime = saveData(savePath)
 
     # Python dictionary representing the data
     metaData = {
@@ -56,11 +61,11 @@ def main(cfg):
         "field_Order": cfg.field_order,
         "particle_Order": cfg.particle_order,
         "a0": cfg.a0,
-        "lambda":cfg.laser_lambda
+        "lambda": cfg.laser_lambda,
     }
     print(f"Elpased Time: {runTime} seconds")
     # Write the Python dictionary to a JSON file
-    with open(os.path.join(savePath,"meta.json"), "w") as json_file:
+    with open(os.path.join(savePath, "meta.json"), "w") as json_file:
         json.dump(metaData, json_file, indent=4)
 
     print("Simulation completed successfully!")
@@ -68,104 +73,101 @@ def main(cfg):
 
 def saveData(savePath):
     script_dir = os.path.dirname(__file__)
-    
-    eFieldPrefix='e_fields'
 
-    densityPrefix='density'
+    eFieldPrefix = "e_fields"
 
-    eFieldRange=range(0,81)
-    densityRange=range(0,41)
+    densityPrefix = "density"
 
-   
-    fileEy0=ReadSDFData.get_data_sdf(os.path.join(script_dir, eFieldPrefix+"0001"+".sdf"))
-    
-    x_grid=fileEy0['Electric_Field']['Ey']['grid']['x']
-    x_grid=(x_grid[0:-1]+x_grid[1:])/2
+    eFieldRange = range(0, 81)
+    densityRange = range(0, 41)
 
-    EyData=np.zeros((len(x_grid),len(eFieldRange)))
-    EyTime=np.zeros(len(eFieldRange))
+    fileEy0 = ReadSDFData.get_data_sdf(os.path.join(script_dir, eFieldPrefix + "0001" + ".sdf"))
 
-    DensityData=np.zeros((len(x_grid),len(densityRange)))
-    DensityTime=np.zeros(len(densityRange))
+    x_grid = fileEy0["Electric_Field"]["Ey"]["grid"]["x"]
+    x_grid = (x_grid[0:-1] + x_grid[1:]) / 2
+
+    EyData = np.zeros((len(x_grid), len(eFieldRange)))
+    EyTime = np.zeros(len(eFieldRange))
+
+    DensityData = np.zeros((len(x_grid), len(densityRange)))
+    DensityTime = np.zeros(len(densityRange))
     for i in eFieldRange:
-        fileEy=ReadSDFData.get_data_sdf(os.path.join(script_dir, eFieldPrefix+f'{i:04}'+".sdf"))
+        fileEy = ReadSDFData.get_data_sdf(os.path.join(script_dir, eFieldPrefix + f"{i:04}" + ".sdf"))
 
-        EyDataTemp=fileEy['Electric_Field']['Ey']['data']
-        EyData[:,i]=EyDataTemp
+        EyDataTemp = fileEy["Electric_Field"]["Ey"]["data"]
+        EyData[:, i] = EyDataTemp
 
-        timeTemp=fileEy['time']
-        EyTime[i]=timeTemp
-    
-    timeElapsed1=fileEy['Walltime']
+        timeTemp = fileEy["time"]
+        EyTime[i] = timeTemp
+
+    timeElapsed1 = fileEy["Walltime"]
     for i in densityRange:
-        fileden=ReadSDFData.get_data_sdf(os.path.join(script_dir, densityPrefix+f'{i:04}'+".sdf"))
+        fileden = ReadSDFData.get_data_sdf(os.path.join(script_dir, densityPrefix + f"{i:04}" + ".sdf"))
 
-        denDataTemp=fileden['Derived']['Number_Density']['electron_o']['data']
-        DensityData[:,i]=denDataTemp
+        denDataTemp = fileden["Derived"]["Number_Density"]["electron_o"]["data"]
+        DensityData[:, i] = denDataTemp
 
-        timeTemp=fileden['time']
-        DensityTime[i]=timeTemp
-    timeElapsed2=fileden['Walltime']
+        timeTemp = fileden["time"]
+        DensityTime[i] = timeTemp
+    timeElapsed2 = fileden["Walltime"]
 
-    timeElapsed=max(timeElapsed1,timeElapsed2)
+    timeElapsed = max(timeElapsed1, timeElapsed2)
 
-    xG_Ey,time_Ey=np.meshgrid(x_grid,EyTime)
-    xG_den,time_den=np.meshgrid(x_grid,DensityTime)
+    xG_Ey, time_Ey = np.meshgrid(x_grid, EyTime)
+    xG_den, time_den = np.meshgrid(x_grid, DensityTime)
 
     z_min, z_max = -abs(EyData).max(), abs(EyData).max()
 
-    fig, (ax1, ax2) = plt.subplots(1, 2,figsize=(12, 5))
-    c = ax1.pcolor(xG_Ey*10**6, time_Ey*10**15, np.transpose(EyData),shading='auto',cmap='bwr',vmin=z_min,vmax=z_max)
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))
+    c = ax1.pcolor(
+        xG_Ey * 10**6, time_Ey * 10**15, np.transpose(EyData), shading="auto", cmap="bwr", vmin=z_min, vmax=z_max
+    )
     ax1.set_xlabel(r"$x [\mu m]$")
     ax1.set_ylabel(r"$t [fs]$")
-    cb=fig.colorbar(c, ax=ax1)
+    cb = fig.colorbar(c, ax=ax1)
     cb.set_label(r"$E_y$")
     ax1.grid(True)
 
-    c = ax2.pcolor(xG_den*10**6, time_den*10**15, np.transpose(DensityData),shading='auto',cmap='Blues')
+    c = ax2.pcolor(xG_den * 10**6, time_den * 10**15, np.transpose(DensityData), shading="auto", cmap="Blues")
     ax2.set_xlabel(r"$x [\mu m]$")
     ax2.set_ylabel(r"$t [fs]$")
-    cb=fig.colorbar(c, ax=ax2)
+    cb = fig.colorbar(c, ax=ax2)
     cb.set_label(r"$n_e$")
     ax2.grid(True)
 
     plt.tight_layout()
-    os.makedirs(os.path.dirname(os.path.join(savePath,"fig.png")),exist_ok=True)
-    plt.savefig(os.path.join(savePath,"fig.png"))
+    os.makedirs(os.path.dirname(os.path.join(savePath, "fig.png")), exist_ok=True)
+    plt.savefig(os.path.join(savePath, "fig.png"))
 
-    
-    with h5py.File(os.path.join(savePath,"res.h5"), 'w') as f:
-        
-        f.create_dataset('Ey', data=EyData)
-        f.create_dataset('n_elec', data=DensityData)
-        f.create_dataset('Ey_Time',data=EyTime)
-        f.create_dataset('Density_Time',data=DensityTime)
-        f.create_dataset('x_grid',data=x_grid)
+    with h5py.File(os.path.join(savePath, "res.h5"), "w") as f:
+
+        f.create_dataset("Ey", data=EyData)
+        f.create_dataset("n_elec", data=DensityData)
+        f.create_dataset("Ey_Time", data=EyTime)
+        f.create_dataset("Density_Time", data=DensityTime)
+        f.create_dataset("x_grid", data=x_grid)
     return timeElapsed
 
-def updateInputDeck(cfg,input_path):
-    
-    with open(input_path,"r") as f:
+
+def updateInputDeck(cfg, input_path):
+
+    with open(input_path, "r") as f:
         lines = f.readlines()
 
-        lines[2]=f'laser_lamada= {cfg.laser_lambda}*micron\n'
-        lines[8]=f'a0 = {cfg.a0}\n'
-        lines[14]=f'n_target  = {cfg.n_target}*n_cr\n'
-        lines[21]=f'nx= {cfg.nx}\n'
-        lines[23]=f't_end = {cfg.end_time}*femto\n'
-        lines[27]=f'x_max = {cfg.L}*micron\n'
-        lines[29]=f'dt_multiplier = {cfg.dt_mult}\n'
-        lines[37]=f'field_order = {cfg.field_order}\n'
-        lines[69]=f't_end  = {cfg.laser_time}\n'
-        lines[87]=f'npart_per_cell = {cfg.part_cell}\n'
-        lines[89]=f'density = if (x gt 50*micron and x lt {50+cfg.L_target}*micron,n_target,0)\n'
+        lines[2] = f"laser_lamada= {cfg.laser_lambda}*micron\n"
+        lines[8] = f"a0 = {cfg.a0}\n"
+        lines[14] = f"n_target  = {cfg.n_target}*n_cr\n"
+        lines[21] = f"nx= {cfg.nx}\n"
+        lines[23] = f"t_end = {cfg.end_time}*femto\n"
+        lines[27] = f"x_max = {cfg.L}*micron\n"
+        lines[29] = f"dt_multiplier = {cfg.dt_mult}\n"
+        lines[37] = f"field_order = {cfg.field_order}\n"
+        lines[69] = f"t_end  = {cfg.laser_time}\n"
+        lines[87] = f"npart_per_cell = {cfg.part_cell}\n"
+        lines[89] = f"density = if (x gt 50*micron and x lt {50+cfg.L_target}*micron,n_target,0)\n"
 
-    with open(input_path,"w") as f:
+    with open(input_path, "w") as f:
         f.writelines(lines)
-
-
-
-        
 
 
 if __name__ == "__main__":

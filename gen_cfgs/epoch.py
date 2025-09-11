@@ -1,7 +1,8 @@
 import numpy as np
 import re
 from pathlib import Path
-import os 
+import os
+
 # Fix np random seed
 np.random.seed(42)
 
@@ -98,6 +99,6 @@ if __name__ == "__main__":
         {"a0": 150, "n_target": 5},  # Weaker laser
         {"a0": 200, "n_target": 8},  # Denser target
     ]
-    base_path=dir_path = "run_configs/epoch/p1.yaml"
-    path=os.path.join(os.path.dirname(os.path.dirname(__file__)),base_path)
+    base_path = dir_path = "run_configs/epoch/p1.yaml"
+    path = os.path.join(os.path.dirname(os.path.dirname(__file__)), base_path)
     profiles = create_epoch_profiles(case_configs=case_configs, base_profile_path=path)
