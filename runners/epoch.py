@@ -40,8 +40,10 @@ def main(cfg):
             cmd = f"echo {script_dir} | mpirun -np 12 {path_epoch2ndOrder}"
         elif cfg.particle_order == 3:
             cmd = f"echo {script_dir} | mpirun -np 12 {path_epoch3rdOrder}"
-        else:
+        elif cfg.particle_order == 5:
             cmd = f"echo {script_dir} | mpirun -np 12 {path_epoch5thOrder}"
+        else:
+            raise ValueError("particle_order must be 2, 3, or 5")
 
         #  subprocess.run("rm *.sdf",shell=True,check=True,env=env)
 

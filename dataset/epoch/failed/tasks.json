@@ -532,49 +532,49 @@
               "dt_mult": 0.95,
               "npart": 20,
               "field_Order": 6,
-              "particle_order": 4
+              "particle_order": 3
             },
             {
               "nx": 480,
               "dt_mult": 0.95,
               "npart": 20,
               "field_Order": 6,
-              "particle_order": 4
+              "particle_order": 3
             },
             {
               "nx": 576,
               "dt_mult": 0.95,
               "npart": 20,
               "field_Order": 6,
-              "particle_order": 4
+              "particle_order": 3
             },
             {
               "nx": 691,
               "dt_mult": 0.95,
               "npart": 20,
               "field_Order": 6,
-              "particle_order": 4
+              "particle_order": 3
             },
             {
               "nx": 829,
               "dt_mult": 0.95,
               "npart": 20,
               "field_Order": 6,
-              "particle_order": 4
+              "particle_order": 3
             },
             {
               "nx": 994,
               "dt_mult": 0.95,
               "npart": 20,
               "field_Order": 6,
-              "particle_order": 4
+              "particle_order": 3
             },
             {
               "nx": 1192,
               "dt_mult": 0.95,
               "npart": 20,
               "field_Order": 6,
-              "particle_order": 4
+              "particle_order": 3
             }
           ],
           [
@@ -1847,49 +1847,49 @@
               "dt_mult": 0.95,
               "npart": 20,
               "field_Order": 4,
-              "particle_order": 4
+              "particle_order": 3
             },
             {
               "nx": 480,
               "dt_mult": 0.95,
               "npart": 20,
               "field_Order": 4,
-              "particle_order": 4
+              "particle_order": 3
             },
             {
               "nx": 576,
               "dt_mult": 0.95,
               "npart": 20,
               "field_Order": 4,
-              "particle_order": 4
+              "particle_order": 3
             },
             {
               "nx": 691,
               "dt_mult": 0.95,
               "npart": 20,
               "field_Order": 4,
-              "particle_order": 4
+              "particle_order": 3
             },
             {
               "nx": 829,
               "dt_mult": 0.95,
               "npart": 20,
               "field_Order": 4,
-              "particle_order": 4
+              "particle_order": 3
             },
             {
               "nx": 994,
               "dt_mult": 0.95,
               "npart": 20,
               "field_Order": 4,
-              "particle_order": 4
+              "particle_order": 3
             },
             {
               "nx": 1192,
               "dt_mult": 0.95,
               "npart": 20,
               "field_Order": 4,
-              "particle_order": 4
+              "particle_order": 3
             }
           ],
           [
@@ -2038,49 +2038,49 @@
               "dt_mult": 0.95,
               "npart": 20,
               "field_Order": 6,
-              "particle_order": 4
+              "particle_order": 3
             },
             {
               "nx": 480,
               "dt_mult": 0.95,
               "npart": 20,
               "field_Order": 6,
-              "particle_order": 4
+              "particle_order": 3
             },
             {
               "nx": 576,
               "dt_mult": 0.95,
               "npart": 20,
               "field_Order": 6,
-              "particle_order": 4
+              "particle_order": 3
             },
             {
               "nx": 691,
               "dt_mult": 0.95,
               "npart": 20,
               "field_Order": 6,
-              "particle_order": 4
+              "particle_order": 3
             },
             {
               "nx": 829,
               "dt_mult": 0.95,
               "npart": 20,
               "field_Order": 6,
-              "particle_order": 4
+              "particle_order": 3
             },
             {
               "nx": 994,
               "dt_mult": 0.95,
               "npart": 20,
               "field_Order": 6,
-              "particle_order": 4
+              "particle_order": 3
             },
             {
               "nx": 1192,
               "dt_mult": 0.95,
               "npart": 20,
               "field_Order": 6,
-              "particle_order": 4
+              "particle_order": 3
             }
           ],
           [
@@ -3353,49 +3353,49 @@
               "dt_mult": 0.95,
               "npart": 20,
               "field_Order": 4,
-              "particle_order": 4
+              "particle_order": 3
             },
             {
               "nx": 480,
               "dt_mult": 0.95,
               "npart": 20,
               "field_Order": 4,
-              "particle_order": 4
+              "particle_order": 3
             },
             {
               "nx": 576,
               "dt_mult": 0.95,
               "npart": 20,
               "field_Order": 4,
-              "particle_order": 4
+              "particle_order": 3
             },
             {
               "nx": 691,
               "dt_mult": 0.95,
               "npart": 20,
               "field_Order": 4,
-              "particle_order": 4
+              "particle_order": 3
             },
             {
               "nx": 829,
               "dt_mult": 0.95,
               "npart": 20,
               "field_Order": 4,
-              "particle_order": 4
+              "particle_order": 3
             },
             {
               "nx": 994,
               "dt_mult": 0.95,
               "npart": 20,
               "field_Order": 4,
-              "particle_order": 4
+              "particle_order": 3
             },
             {
               "nx": 1192,
               "dt_mult": 0.95,
               "npart": 20,
               "field_Order": 4,
-              "particle_order": 4
+              "particle_order": 3
             }
           ],
           [
@@ -3544,49 +3544,49 @@
               "dt_mult": 0.95,
               "npart": 20,
               "field_Order": 6,
-              "particle_order": 4
+              "particle_order": 3
             },
             {
               "nx": 480,
               "dt_mult": 0.95,
               "npart": 20,
               "field_Order": 6,
-              "particle_order": 4
+              "particle_order": 3
             },
             {
               "nx": 576,
               "dt_mult": 0.95,
               "npart": 20,
               "field_Order": 6,
-              "particle_order": 4
+              "particle_order": 3
             },
             {
               "nx": 691,
               "dt_mult": 0.95,
               "npart": 20,
               "field_Order": 6,
-              "particle_order": 4
+              "particle_order": 3
             },
             {
               "nx": 829,
               "dt_mult": 0.95,
               "npart": 20,
               "field_Order": 6,
-              "particle_order": 4
+              "particle_order": 3
             },
             {
               "nx": 994,
               "dt_mult": 0.95,
               "npart": 20,
               "field_Order": 6,
-              "particle_order": 4
+              "particle_order": 3
             },
             {
               "nx": 1192,
               "dt_mult": 0.95,
               "npart": 20,
               "field_Order": 6,
-              "particle_order": 4
+              "particle_order": 3
             }
           ],
           [

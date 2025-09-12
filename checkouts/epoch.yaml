@@ -77,11 +77,11 @@ target_parameters:
   particle_order:
     description: "particle-weighting order"
     search_type: "0-shot"
-    search_values: [2, 4,5]
+    search_values: [2, 3, 5]
     multiplication_factor: 1.2  # For internal n_space search
     max_iteration_num: 7       # For internal n_space search
     non_target_parameters:
       npart: 20      # Stable number of number of particles
       dt_multipler: 0.95
-      field_order: [2,4,6] #particle-weighting orders
+      field_order: [2,4,6] #field integration orders
       nx: 400   # Produces a dx=0.4microns, with laser wavelength of 1 micron need at least 0.5 microns for proper sampling
