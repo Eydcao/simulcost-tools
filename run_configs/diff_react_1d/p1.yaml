@@ -1,0 +1,22 @@
+defaults:
+  - _self_
+  - override hydra/hydra_logging: none
+  - override hydra/job_logging: none
+
+###### Static parameters ######
+L: 512.0                # Domain length
+reaction_type: "fisher"  # Reaction term type: fisher, allee, cubic
+record_dt: 25.6        # Time interval between recordings (total runtime = 256, 10 recordings)
+end_frame: 10          # Simulation end after certain number of frames (total time = 256)
+max_iter: 2000         # Maximum Newton iterations
+
+###### Tunable parameters ######
+n_space: 2048           # Number of spatial points
+cfl: 0.5             # CFL number for stability (dt = cfl * dx^2 / D)
+tol: 1e-9              # Newton solver tolerance
+min_step: 1e-3         # Minimum step size for line search, TODO: consider schedule as NS steady state solver
+initial_step_guess: 1.0  # Initial step size for Newton solver line search
+
+###### Output configuration ######
+dump_dir: "sim_res/diff_react_1d/p1"  # Directory for output files
+verbose: False         # Enable verbose output

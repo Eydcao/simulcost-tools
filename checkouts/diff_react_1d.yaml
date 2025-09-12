@@ -1,0 +1,116 @@
+# DiffReact 1D Solver Checkout Configuration
+# This file centralizes all parameter settings for both documentation and dummy solution generation
+
+solver_info:
+  name: "DiffReact 1D"
+  numerical_method: "Fully implicit Newton method for 1D diffusion-reaction equations"
+  reference: "Reaction-diffusion equations with Fisher-KPP, Allee effect, and Allen-Cahn reaction terms"
+
+task_distribution:
+  strategy: "flexible_parameter"
+  total_individuals: 99
+  description: "1 profile * 3 precision levels * (2 target parameters * 3 combinations + 3 target parameters * 9 combinations) = 99 tasks (only p1 profile active)"
+
+precision_levels:
+  low:
+    tolerance_rmse: 0.15
+    description: "Relaxed convergence criteria"
+  medium:
+    tolerance_rmse: 0.001  
+    description: "Moderate convergence criteria"
+  high:
+    tolerance_rmse: 0.0001
+    description: "Most stringent convergence criteria"
+
+profiles:
+  num_profiles: 3
+  # 3 profiles for different reaction types
+  # p1: Fisher-KPP reaction, p2: Allee effect, p3: Allen-Cahn (cubic)
+  active_profiles: ["p1"]
+
+# Parameter configurations for each target parameter
+target_parameters:
+  cfl:
+    description: "CFL number for temporal stability in diffusion-reaction equation - controls time step size relative to grid spacing squared"
+    search_type: "iterative+0-shot"
+    initial_value: 4.0
+    multiplication_factor: 0.5
+    max_iteration_num: 4
+    non_target_parameters:
+      n_space: [512, 1024, 2048]
+      tol: [1e-6, 1e-7, 1e-8]
+      min_step: 1e-3
+      initial_step_guess: 1.0
+
+  n_space:
+    description: "Number of spatial grid points for discretization - determines spatial resolution"
+    search_type: "iterative+0-shot"  
+    initial_value: 512
+    multiplication_factor: 2
+    max_iteration_num: 4
+    non_target_parameters:
+      cfl: 0.5
+      tol: [1e-6, 1e-7, 1e-8]
+      min_step: 1e-3
+      initial_step_guess: 1.0
+
+  tol:
+    description: "Newton solver tolerance - controls convergence of the nonlinear solver"
+    search_type: "iterative+0-shot"
+    initial_value: 1e-5
+    multiplication_factor: 0.1
+    max_iteration_num: 4
+    non_target_parameters:
+      n_space: [512, 1024, 2048]
+      cfl: 0.5
+      min_step: 1e-3
+      initial_step_guess: 1.0
+
+  min_step:
+    description: "Minimum step size for Newton line search - controls robustness of optimization"
+    search_type: "iterative+0-shot"
+    initial_value: 1e-1
+    multiplication_factor: 0.1
+    max_iteration_num: 5
+    non_target_parameters:
+      n_space: [512, 1024, 2048]
+      cfl: 0.5
+      tol: [1e-6, 1e-7, 1e-8]
+      initial_step_guess: 1.0
+
+  initial_step_guess:
+    description: "Initial step size for Newton line search - controls aggressiveness of optimization"
+    search_type: "0-shot"
+    exact_values: [0.6, 0.8, 1.0, 1.5, 2.0, 2.5]
+    non_target_parameters:
+      n_space: [512, 1024, 2048]
+      cfl: 0.5
+      tol: [1e-6, 1e-7, 1e-8]
+      min_step: 1e-3
+
+# Reaction-specific parameters
+reaction_parameters:
+  fisher:
+    description: "Fisher-KPP reaction term: f(u) = u(1-u)"
+    allee_threshold: null
+    
+  allee:
+    description: "Allee effect reaction term: f(u) = u(1-u)(u-a)"
+    allee_threshold: 0.3
+    
+  cubic:
+    description: "Allen-Cahn cubic reaction term: f(u) = u(1-u²)"
+    allee_threshold: null
+
+# Physical parameters (fixed)
+physical_parameters:
+  L: 512.0  # Domain length
+  boundary_conditions: "Dirichlet: u(0,t)=1, u(L,t)=0"
+  initial_condition: "Step function: u(x,0)=1 for 0≤x≤2, u(x,0)=0 elsewhere"
+
+# Simulation parameters (fixed)
+simulation_parameters:
+  record_dt: 25.6  # Time interval between recordings
+  end_frame: 10    # Number of recordings
+  max_iter: 2000   # Maximum Newton iterations
+  total_runtime: 256.0  # Total simulation time
