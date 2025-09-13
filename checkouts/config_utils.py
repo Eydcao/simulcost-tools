@@ -78,6 +78,10 @@ def build_target_configs(config):
                 if isinstance(param_info.get("search_values"), list)
                 else None
             ),
+            # Exact values for precise parameter control
+            "exact_values": param_info.get("exact_values"),
+            # Additional parameters for different search types
+            "schedule_options": param_info.get("schedule_options"),
         }
 
         # Normalize all non-target parameters to lists for consistent iteration

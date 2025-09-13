@@ -47,7 +47,7 @@ The solver supports multiple profiles with varying material properties and condi
 
 **Note for LLM Developers**: When generating natural language descriptions of the test cases, read the actual profile configuration files (run_configs/heat_1d/p*.yaml) to extract specific parameter values for each profile and create accurate, detailed descriptions.
 
-The simulated results are considered correct if the relative RMSE meets the precision-dependent tolerance (high: 0.0001, medium: 0.001, low: 0.01) compared to reference solution.
+The simulated results are considered correct if the relative RMSE of the heat flux at left boundary meets the precision-dependent tolerance (high: 0.0001, medium: 0.001, low: 0.01) compared to reference solution.
 
 ## Parameter Tuning Tasks and Dummy Strategy
 

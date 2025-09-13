@@ -8,6 +8,58 @@ env = os.environ.copy()
 env["PYTHONPATH"] = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
 
 
+def _find_runner_path():
+    """Automatically find the correct path to heat_1d.py runner."""
+    # Get current working directory
+    cwd = os.getcwd()
+    
+    # List of possible runner paths relative to different working directories
+    possible_paths = []
+    
+    # If working from project root (SimulCost-Bench/)
+    if cwd.endswith('SimulCost-Bench'):
+        possible_paths.extend([
+            "costsci_tools/runners/heat_1d.py",
+            "runners/heat_1d.py"
+        ])
+    # If working from costsci_tools/ subdirectory
+    elif cwd.endswith('costsci_tools') or 'costsci_tools' in cwd:
+        possible_paths.extend([
+            "runners/heat_1d.py",
+            "../runners/heat_1d.py",
+            "costsci_tools/runners/heat_1d.py"
+        ])
+    
+    # Add generic fallback paths
+    possible_paths.extend([
+        "runners/heat_1d.py",
+        "costsci_tools/runners/heat_1d.py",
+        "./runners/heat_1d.py",
+        "../runners/heat_1d.py",
+        "../../runners/heat_1d.py"
+    ])
+    
+    # Remove duplicates while preserving order
+    seen = set()
+    unique_paths = []
+    for path in possible_paths:
+        if path not in seen:
+            seen.add(path)
+            unique_paths.append(path)
+    
+    for path in unique_paths:
+        if os.path.exists(path):
+            return path
+    
+    # If none found, raise an error with helpful information
+    raise FileNotFoundError(
+        f"Could not find heat_1d.py runner in any expected location.\n"
+        f"Current working directory: {cwd}\n"
+        f"Searched paths: {unique_paths}\n"
+        f"Please ensure the runner exists or update the search paths."
+    )
+
+
 def run_sim_heat_1d(profile, cfl, n_space):
     """Run the heat1d simulation with the given CFL number if not already simulated."""
     dir_path = f"sim_res/heat_1d/{profile}_cfl_{cfl}_nx_{n_space}/"
@@ -21,7 +73,8 @@ def run_sim_heat_1d(profile, cfl, n_space):
                 return meta["cost"]
 
     # Run the simulation if not already done
-    cmd = f"python costsci_tools/runners/heat_1d.py  --config-name={profile} cfl={cfl} n_space={n_space}"
+    runner_path = _find_runner_path()
+    cmd = f"python {runner_path} --config-name={profile} cfl={cfl} n_space={n_space}"
     subprocess.run(cmd, shell=True, check=True, env=env)
 
     # Load the cost from the meta.json file
@@ -84,25 +137,27 @@ def compare_res_heat_1d(profile1, cfl1, n_space1, profile2, cfl2, n_space2, tole
 #     return interpolated_data
 
 
-# if __name__ == "__main__":
-#     # Example usage
-#     profile1 = "p1"
-#     cfl1 = 0.5
-#     n_space1 = 320
+if __name__ == "__main__":
+    # Example usage
+    profile1 = "p8"
+    cfl1 = 0.25
+    n_space1 = 75
 
-#     profile2 = "p1"
-#     cfl2 = 0.5
-#     n_space2 = 640
+    profile2 = "p8"
+    cfl2 = 0.25
+    n_space2 = 150
 
-#     tolerance = 1e-5
+    tolerance = 0.01
 
-#     res1, x1 = get_res_heat_1d(profile1, cfl1, n_space1)
-#     res2, x2 = get_res_heat_1d(profile2, cfl2, n_space2)
+    res1, x1 = get_res_heat_1d(profile1, cfl1, n_space1)
+    res2, x2 = get_res_heat_1d(profile2, cfl2, n_space2)
 
-#     # upsample res1 to match res2
-#     res1_interp = interpolate_to_finer_grid(res1, res2, x1, x2)
-#     # for each time step, compare the results
-#     for t in range(res1.shape[0]):
-#         diff = np.abs(res1_interp[t] - res2[t])
-#         mean_diff = np.mean(diff)
-#         print(f"Mean difference at time step {t}: {mean_diff}")
+    print(compare_res_heat_1d(profile1, cfl1, n_space1, profile2, cfl2, n_space2, tolerance))
+
+    # upsample res1 to match res2
+    # res1_interp = interpolate_to_finer_grid(res1, res2, x1, x2)
+    # for each time step, compare the results
+    # for t in range(res1.shape[0]):
+    #     diff = np.abs(res1_interp[t] - res2[t])
+    #     mean_diff = np.mean(diff)
+    #     print(f"Mean difference at time step {t}: {mean_diff}")

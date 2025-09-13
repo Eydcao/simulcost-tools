@@ -6,6 +6,58 @@ import json
 import matplotlib.pyplot as plt
 
 
+def _find_runner_path():
+    """Automatically find the correct path to burgers_1d.py runner."""
+    # Get current working directory
+    cwd = os.getcwd()
+    
+    # List of possible runner paths relative to different working directories
+    possible_paths = []
+    
+    # If working from project root (SimulCost-Bench/)
+    if cwd.endswith('SimulCost-Bench'):
+        possible_paths.extend([
+            "costsci_tools/runners/burgers_1d.py",
+            "runners/burgers_1d.py"
+        ])
+    # If working from costsci_tools/ subdirectory
+    elif cwd.endswith('costsci_tools') or 'costsci_tools' in cwd:
+        possible_paths.extend([
+            "runners/burgers_1d.py",
+            "../runners/burgers_1d.py",
+            "costsci_tools/runners/burgers_1d.py"
+        ])
+    
+    # Add generic fallback paths
+    possible_paths.extend([
+        "runners/burgers_1d.py",
+        "costsci_tools/runners/burgers_1d.py",
+        "./runners/burgers_1d.py",
+        "../runners/burgers_1d.py",
+        "../../runners/burgers_1d.py"
+    ])
+    
+    # Remove duplicates while preserving order
+    seen = set()
+    unique_paths = []
+    for path in possible_paths:
+        if path not in seen:
+            seen.add(path)
+            unique_paths.append(path)
+    
+    for path in unique_paths:
+        if os.path.exists(path):
+            return path
+    
+    # If none found, raise an error with helpful information
+    raise FileNotFoundError(
+        f"Could not find burgers_1d.py runner in any expected location.\n"
+        f"Current working directory: {cwd}\n"
+        f"Searched paths: {unique_paths}\n"
+        f"Please ensure the runner exists or update the search paths."
+    )
+
+
 def run_sim_burgers_1d(profile, cfl, k, beta, n_space):
     """Run the burgers_1d simulation with the given parameters if not already simulated."""
     dir_path = f"sim_res/burgers_1d/{profile}_cfl_{cfl}_k_{k}_beta_{beta}_n_{n_space}/"
@@ -21,7 +73,8 @@ def run_sim_burgers_1d(profile, cfl, k, beta, n_space):
 
     # Run the simulation if not already done
     print(f"Running new simulation with parameters: cfl={cfl}, k={k}, beta={beta}, n_space={n_space}")
-    cmd = f"python costsci_tools/runners/burgers_1d.py --config-name={profile} cfl={cfl} k={k} beta={beta} n_space={n_space}"
+    runner_path = _find_runner_path()
+    cmd = f"python {runner_path} --config-name={profile} cfl={cfl} k={k} beta={beta} n_space={n_space}"
     subprocess.run(cmd, shell=True, check=True)
 
     # Load the cost from the meta.json file

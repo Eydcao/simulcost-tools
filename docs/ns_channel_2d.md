@@ -140,6 +140,10 @@ Base wall values: height=4, width=16, start_height=4, start_width=20
 - **Convergence order**: Thresholds decrease from loose to tight during search (easier to harder convergence)
 - **Relaxation factors**: Lower values = more stable but slower convergence, higher values = faster but potentially unstable
 
+### Non-Target Parameters
+
+- **aspect_ratio**: The ratio of mesh_y to mesh_x (mesh_y/mesh_x) that defines the geometric aspect ratio of the computational domain. This is a non-target parameter used to test geometric sensitivity across different domain shapes. Values range from 0.1 (very wide domain) to 1.0 (square domain), with 0.25 being a common channel aspect ratio. **Note**: This parameter is only used for mesh tasks (mesh_x, mesh_y optimization). For non-mesh tasks, mesh_x and mesh_y are provided as fixed pairs from predefined mesh combinations.
+
 ## Checkout
 
 ### Summary

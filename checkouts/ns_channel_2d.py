@@ -1123,6 +1123,9 @@ def main():
                             scaled_wall_params = calculate_scaled_wall_dimensions(aspect_task_params["mesh_x"], base_mesh_y, wall_base_values, mesh_base_values)
                             aspect_task_params["other_params"] = scaled_wall_params
                         
+                        # Add aspect_ratio to task parameters
+                        aspect_task_params["aspect_ratio"] = aspect_ratio
+                        
                         # Process this task at all precision levels
                         process_task_at_all_precisions(target_param, target_config, aspect_task_params, profile, 
                                                       precision_configs, statistics, successful_tasks, failed_tasks,
@@ -1135,7 +1138,6 @@ def main():
                     # Update task_params with actual mesh values
                     task_params["mesh_x"] = mesh_x
                     task_params["mesh_y"] = mesh_y
-                    del task_params["mesh_combination"]  # Remove the index
                     
                     # Process this task at all precision levels
                     process_task_at_all_precisions(target_param, target_config, task_params, profile, 
