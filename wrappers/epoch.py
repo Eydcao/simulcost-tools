@@ -5,8 +5,56 @@ import numpy as np
 import json
 from scipy.interpolate import RegularGridInterpolator
 
-env = os.environ.copy()
-env["PYTHONPATH"] = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
+def _find_runner_path():
+    """Automatically find the correct path to epoch.py runner."""
+    # Get current working directory
+    cwd = os.getcwd()
+
+    # List of possible runner paths relative to different working directories
+    possible_paths = []
+
+    # If working from project root (SimulCost-Bench/)
+    if cwd.endswith('SimulCost-Bench'):
+        possible_paths.extend([
+            "costsci_tools/runners/epoch.py",
+            "runners/epoch.py"
+        ])
+    # If working from costsci_tools/ subdirectory
+    elif cwd.endswith('costsci_tools') or 'costsci_tools' in cwd:
+        possible_paths.extend([
+            "runners/epoch.py",
+            "../runners/epoch.py",
+            "costsci_tools/runners/epoch.py"
+        ])
+
+    # Add generic fallback paths
+    possible_paths.extend([
+        "runners/epoch.py",
+        "costsci_tools/runners/epoch.py",
+        "./runners/epoch.py",
+        "../runners/epoch.py",
+        "../../runners/epoch.py"
+    ])
+
+    # Remove duplicates while preserving order
+    seen = set()
+    unique_paths = []
+    for path in possible_paths:
+        if path not in seen:
+            seen.add(path)
+            unique_paths.append(path)
+
+    for path in unique_paths:
+        if os.path.exists(path):
+            return path
+
+    # If none found, raise an error with helpful information
+    raise FileNotFoundError(
+        f"Could not find epoch.py runner in any expected location.\n"
+        f"Current working directory: {cwd}\n"
+        f"Searched paths: {unique_paths}\n"
+        f"Please ensure the runner exists or update the search paths."
+    )
 
 
 def runEpoch(profile, nx, dt_mult, nPart, field_order, particle_order):
@@ -25,9 +73,9 @@ def runEpoch(profile, nx, dt_mult, nPart, field_order, particle_order):
                 return meta["cost"]
 
     # Run the simulation if not already done
-    runner_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), f"runners/epoch.py")
+    runner_path = _find_runner_path()
     cmd = f"python {runner_path}  --config-name={profile} nx={nx} dt_mult={dt_mult} part_cell={nPart} field_order={field_order} particle_order={particle_order}"
-    subprocess.run(cmd, shell=True, check=True, env=env)
+    subprocess.run(cmd, shell=True, check=True)
 
     # Load the cost from the meta.json file
     with open(meta_file, "r") as f:
@@ -82,7 +130,7 @@ def get_res_epoch(profile, nx, dt_mult, nPart, field_order, particle_order):
 
 def compare_res_epoch(profile1, nx1, dt_mult1, nPart1, fO1, pO1, profile2, nx2, dt_mult2, nPart2, fO2, pO2, tolerance):
 
-    res1, E01 = get_res_epoch(profile1, nx1, dt_mult1, nPart1, fO2, pO1)
+    res1, E01 = get_res_epoch(profile1, nx1, dt_mult1, nPart1, fO1, pO1)
     res2, E02 = get_res_epoch(profile2, nx2, dt_mult2, nPart2, fO2, pO2)
 
     x1 = res1["X_Grid"]
@@ -107,7 +155,7 @@ def compare_res_epoch(profile1, nx1, dt_mult1, nPart1, fO1, pO1, profile2, nx2, 
 
     print(f"L2 Ey: {L2Ey}")
 
-    return L2Ey < tolerance
+    return L2Ey < tolerance, L2Ey
 
 
 if __name__ == "__main__":
