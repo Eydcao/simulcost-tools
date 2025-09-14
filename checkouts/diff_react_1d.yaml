@@ -8,8 +8,8 @@ solver_info:
 
 task_distribution:
   strategy: "flexible_parameter"
-  total_individuals: 99
-  description: "1 profile * 3 precision levels * (2 target parameters * 3 combinations + 3 target parameters * 9 combinations) = 99 tasks (only p1 profile active)"
+  total_individuals: 297
+  description: "3 profile * 3 precision levels * (2 target parameters * 3 combinations + 3 target parameters * 9 combinations) = 297 tasks"
 
 precision_levels:
   low:
@@ -26,16 +26,16 @@ profiles:
   num_profiles: 3
   # 3 profiles for different reaction types
   # p1: Fisher-KPP reaction, p2: Allee effect, p3: Allen-Cahn (cubic)
-  active_profiles: ["p1"]
+  active_profiles: ["p1","p2", "p3"]
 
 # Parameter configurations for each target parameter
 target_parameters:
   cfl:
     description: "CFL number for temporal stability in diffusion-reaction equation - controls time step size relative to grid spacing squared"
     search_type: "iterative+0-shot"
-    initial_value: 4.0
+    initial_value: 16.0
     multiplication_factor: 0.5
-    max_iteration_num: 4
+    max_iteration_num: 6
     non_target_parameters:
       n_space: [512, 1024, 2048]
       tol: [1e-6, 1e-7, 1e-8]
