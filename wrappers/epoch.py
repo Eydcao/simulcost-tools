@@ -89,7 +89,7 @@ def get_res_epoch(profile, nx, dt_mult, nPart, field_order, particle_order):
         f"sim_res/epoch/{profile}_nx_{nx}_dtmult_{dt_mult}_part_{nPart}_fieldO_{field_order}_partO_{particle_order}/"
     )
 
-    meta_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), dir_path)
+    meta_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), dir_path)
     results_file = os.path.join(meta_path, "res.h5")
     meta_file = os.path.join(meta_path, "meta.json")
 

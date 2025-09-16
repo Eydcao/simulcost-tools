@@ -56,7 +56,7 @@ def main(cfg):
         # print(f"Elapsed time: {run_time:.4f} seconds")
 
         savePath = os.path.join(
-            os.path.dirname(script_dir),
+            os.path.dirname(os.path.dirname(script_dir)),  # Go up two levels: runners -> costsci_tools -> SimulCost-Bench
             cfg.dump_dir
             + f"_nx_{cfg.nx}_dtmult_{cfg.dt_mult}_part_{cfg.part_cell}_fieldO_{cfg.field_order}_partO_{cfg.particle_order}",
         )
