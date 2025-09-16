@@ -61,7 +61,7 @@ def runEpoch(profile, nx, dt_mult, nPart, field_order, particle_order):
     dir_path = (
         f"sim_res/epoch/{profile}_nx_{nx}_dtmult_{dt_mult}_part_{nPart}_fieldO_{field_order}_partO_{particle_order}/"
     )
-    meta_path = os.path.join(dir_path, "meta.json")
+    meta_file = os.path.join(dir_path, "meta.json")
 
     # Check if the simulation has already been run
     if os.path.exists(meta_file):
