@@ -11,7 +11,7 @@
       "profile": "p1",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 0.0001
+        "tolerance_rmse": 1e-10
       },
       "target_config": {
         "initial_value": 16.0,
@@ -31,10 +31,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 8.0,
-        "total_computational_cost": 31778816,
+        "total_computational_cost": 42305536,
         "cost_history": [
-          15889408,
-          15889408
+          21152768,
+          21152768
         ],
         "parameter_history": [
           {
@@ -56,7 +56,7 @@
       "profile": "p1",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 0.0001
+        "tolerance_rmse": 1e-10
       },
       "target_config": {
         "initial_value": 16.0,
@@ -76,10 +76,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 8.0,
-        "total_computational_cost": 31778816,
+        "total_computational_cost": 42305536,
         "cost_history": [
-          15889408,
-          15889408
+          21152768,
+          21152768
         ],
         "parameter_history": [
           {
@@ -101,7 +101,7 @@
       "profile": "p1",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 0.0001
+        "tolerance_rmse": 1e-10
       },
       "target_config": {
         "initial_value": 16.0,
@@ -121,10 +121,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 8.0,
-        "total_computational_cost": 31778816,
+        "total_computational_cost": 42305536,
         "cost_history": [
-          15889408,
-          15889408
+          21152768,
+          21152768
         ],
         "parameter_history": [
           {
@@ -146,7 +146,7 @@
       "profile": "p1",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 0.0001
+        "tolerance_rmse": 1e-10
       },
       "target_config": {
         "initial_value": 16.0,
@@ -166,10 +166,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 8.0,
-        "total_computational_cost": 70189056,
+        "total_computational_cost": 92102656,
         "cost_history": [
-          35094528,
-          35094528
+          46051328,
+          46051328
         ],
         "parameter_history": [
           {
@@ -191,7 +191,7 @@
       "profile": "p1",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 0.0001
+        "tolerance_rmse": 1e-10
       },
       "target_config": {
         "initial_value": 16.0,
@@ -211,10 +211,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 8.0,
-        "total_computational_cost": 70189056,
+        "total_computational_cost": 92102656,
         "cost_history": [
-          35094528,
-          35094528
+          46051328,
+          46051328
         ],
         "parameter_history": [
           {
@@ -236,7 +236,7 @@
       "profile": "p1",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 0.0001
+        "tolerance_rmse": 1e-10
       },
       "target_config": {
         "initial_value": 16.0,
@@ -256,10 +256,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 8.0,
-        "total_computational_cost": 70189056,
+        "total_computational_cost": 92102656,
         "cost_history": [
-          35094528,
-          35094528
+          46051328,
+          46051328
         ],
         "parameter_history": [
           {
@@ -281,7 +281,7 @@
       "profile": "p1",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 0.0001
+        "tolerance_rmse": 1e-10
       },
       "target_config": {
         "initial_value": 16.0,
@@ -301,10 +301,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 8.0,
-        "total_computational_cost": 571932672,
+        "total_computational_cost": 691920896,
         "cost_history": [
-          285966336,
-          285966336
+          345960448,
+          345960448
         ],
         "parameter_history": [
           {
@@ -326,7 +326,7 @@
       "profile": "p1",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 0.0001
+        "tolerance_rmse": 1e-10
       },
       "target_config": {
         "initial_value": 16.0,
@@ -346,10 +346,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 8.0,
-        "total_computational_cost": 571932672,
+        "total_computational_cost": 691920896,
         "cost_history": [
-          285966336,
-          285966336
+          345960448,
+          345960448
         ],
         "parameter_history": [
           {
@@ -371,7 +371,7 @@
       "profile": "p1",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 0.0001
+        "tolerance_rmse": 1e-10
       },
       "target_config": {
         "initial_value": 16.0,
@@ -391,10 +391,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 8.0,
-        "total_computational_cost": 571932672,
+        "total_computational_cost": 691920896,
         "cost_history": [
-          285966336,
-          285966336
+          345960448,
+          345960448
         ],
         "parameter_history": [
           {
@@ -416,7 +416,7 @@
       "profile": "p1",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 0.0001
+        "tolerance_rmse": 1e-10
       },
       "target_config": {
         "initial_value": 1e-05,
@@ -436,10 +436,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 1e-06,
-        "total_computational_cost": 10582016,
+        "total_computational_cost": 21108736,
         "cost_history": [
-          5277184,
-          5304832
+          10540544,
+          10568192
         ],
         "parameter_history": [
           {
@@ -463,7 +463,7 @@
       "profile": "p1",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 0.0001
+        "tolerance_rmse": 1e-10
       },
       "target_config": {
         "initial_value": 0.1,
@@ -483,10 +483,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 0.1,
-        "total_computational_cost": 21152768,
+        "total_computational_cost": 31679488,
         "cost_history": [
-          8805376,
-          12347392
+          14068736,
+          17610752
         ],
         "parameter_history": [
           0.1,
@@ -500,7 +500,7 @@
       "profile": "p1",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 0.0001
+        "tolerance_rmse": 1e-10
       },
       "target_config": {
         "initial_value": 0.1,
@@ -520,10 +520,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 0.1,
-        "total_computational_cost": 21152768,
+        "total_computational_cost": 31679488,
         "cost_history": [
-          8805376,
-          12347392
+          14068736,
+          17610752
         ],
         "parameter_history": [
           0.1,
@@ -537,7 +537,7 @@
       "profile": "p1",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 0.0001
+        "tolerance_rmse": 1e-10
       },
       "target_config": {
         "initial_value": 0.1,
@@ -557,10 +557,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 0.1,
-        "total_computational_cost": 21152768,
+        "total_computational_cost": 31679488,
         "cost_history": [
-          8805376,
-          12347392
+          14068736,
+          17610752
         ],
         "parameter_history": [
           0.1,
@@ -574,7 +574,7 @@
       "profile": "p1",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 0.0001
+        "tolerance_rmse": 1e-10
       },
       "target_config": {
         "initial_value": 0.1,
@@ -594,10 +594,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 0.1,
-        "total_computational_cost": 46061568,
+        "total_computational_cost": 67975168,
         "cost_history": [
-          19009536,
-          27052032
+          29966336,
+          38008832
         ],
         "parameter_history": [
           0.1,
@@ -611,7 +611,7 @@
       "profile": "p1",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 0.0001
+        "tolerance_rmse": 1e-10
       },
       "target_config": {
         "initial_value": 0.1,
@@ -631,10 +631,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 0.1,
-        "total_computational_cost": 46061568,
+        "total_computational_cost": 67975168,
         "cost_history": [
-          19009536,
-          27052032
+          29966336,
+          38008832
         ],
         "parameter_history": [
           0.1,
@@ -648,7 +648,7 @@
       "profile": "p1",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 0.0001
+        "tolerance_rmse": 1e-10
       },
       "target_config": {
         "initial_value": 0.1,
@@ -668,10 +668,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 0.1,
-        "total_computational_cost": 46061568,
+        "total_computational_cost": 67975168,
         "cost_history": [
-          19009536,
-          27052032
+          29966336,
+          38008832
         ],
         "parameter_history": [
           0.1,
@@ -685,7 +685,7 @@
       "profile": "p1",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 0.0001
+        "tolerance_rmse": 1e-10
       },
       "target_config": {
         "initial_value": 0.1,
@@ -705,10 +705,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 0.1,
-        "total_computational_cost": 345853952,
+        "total_computational_cost": 494866432,
         "cost_history": [
-          142262272,
-          203591680
+          216768512,
+          278097920
         ],
         "parameter_history": [
           0.1,
@@ -722,7 +722,7 @@
       "profile": "p1",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 0.0001
+        "tolerance_rmse": 1e-10
       },
       "target_config": {
         "initial_value": 0.1,
@@ -742,10 +742,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 0.1,
-        "total_computational_cost": 345853952,
+        "total_computational_cost": 494866432,
         "cost_history": [
-          142262272,
-          203591680
+          216768512,
+          278097920
         ],
         "parameter_history": [
           0.1,
@@ -759,7 +759,7 @@
       "profile": "p1",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 0.0001
+        "tolerance_rmse": 1e-10
       },
       "target_config": {
         "initial_value": 0.1,
@@ -779,10 +779,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 0.1,
-        "total_computational_cost": 345853952,
+        "total_computational_cost": 494866432,
         "cost_history": [
-          142262272,
-          203591680
+          216768512,
+          278097920
         ],
         "parameter_history": [
           0.1,
@@ -796,7 +796,7 @@
       "profile": "p1",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 0.0001
+        "tolerance_rmse": 1e-10
       },
       "target_config": {
         "initial_value": null,
@@ -816,14 +816,14 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 1.0,
-        "total_computational_cost": 231484416,
+        "total_computational_cost": 288897024,
         "cost_history": [
-          79505408,
-          42092032,
-          5304832,
-          47164416,
-          6515712,
-          50902016
+          96295936,
+          52089344,
+          10568192,
+          57210880,
+          11779072,
+          60953600
         ],
         "parameter_history": [
           0.6,
@@ -841,7 +841,7 @@
       "profile": "p1",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 0.0001
+        "tolerance_rmse": 1e-10
       },
       "target_config": {
         "initial_value": null,
@@ -861,14 +861,14 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 1.0,
-        "total_computational_cost": 311084544,
+        "total_computational_cost": 378299904,
         "cost_history": [
-          94610432,
-          55147008,
-          15723520,
-          61362688,
-          18099200,
-          66141696
+          114138112,
+          67508736,
+          20986880,
+          73768448,
+          23362560,
+          78535168
         ],
         "parameter_history": [
           0.6,
@@ -886,7 +886,7 @@
       "profile": "p1",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 0.0001
+        "tolerance_rmse": 1e-10
       },
       "target_config": {
         "initial_value": null,
@@ -906,14 +906,14 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 1.0,
-        "total_computational_cost": 355327488,
+        "total_computational_cost": 429832704,
         "cost_history": [
-          108069888,
-          55527936,
-          15852544,
-          75771392,
-          18249216,
-          81856512
+          130034688,
+          67948032,
+          21115904,
+          90568192,
+          23512576,
+          96653312
         ],
         "parameter_history": [
           0.6,
@@ -931,7 +931,7 @@
       "profile": "p1",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 0.0001
+        "tolerance_rmse": 1e-10
       },
       "target_config": {
         "initial_value": null,
@@ -951,14 +951,14 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 1.0,
-        "total_computational_cost": 371096576,
+        "total_computational_cost": 468530176,
         "cost_history": [
-          113530880,
-          59657216,
-          11402240,
-          67770368,
-          15799296,
-          102936576
+          138735616,
+          75086848,
+          21974016,
+          83259392,
+          26371072,
+          123103232
         ],
         "parameter_history": [
           0.6,
@@ -976,7 +976,7 @@
       "profile": "p1",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 0.0001
+        "tolerance_rmse": 1e-10
       },
       "target_config": {
         "initial_value": null,
@@ -996,14 +996,14 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 1.0,
-        "total_computational_cost": 19680398336,
+        "total_computational_cost": 22742330368,
         "cost_history": [
-          139902976,
-          85860352,
-          32835584,
-          96231424,
-          38067200,
-          19287500800
+          169914368,
+          106074112,
+          43458560,
+          116514816,
+          48690176,
+          22257678336
         ],
         "parameter_history": [
           0.6,
@@ -1021,7 +1021,7 @@
       "profile": "p1",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 0.0001
+        "tolerance_rmse": 1e-10
       },
       "target_config": {
         "initial_value": null,
@@ -1041,14 +1041,14 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 1.0,
-        "total_computational_cost": 617544704,
+        "total_computational_cost": 749147136,
         "cost_history": [
-          166734848,
-          86430720,
-          33778688,
-          125156352,
-          39091200,
-          166352896
+          201616384,
+          106726400,
+          44516352,
+          150260736,
+          49828864,
+          196198400
         ],
         "parameter_history": [
           0.6,
@@ -1066,7 +1066,7 @@
       "profile": "p1",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 0.0001
+        "tolerance_rmse": 1e-10
       },
       "target_config": {
         "initial_value": null,
@@ -1086,14 +1086,14 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 1.0,
-        "total_computational_cost": 1772212224,
+        "total_computational_cost": 2263687168,
         "cost_history": [
-          404760576,
-          286320640,
-          124102656,
-          303958016,
-          157519872,
-          495550464
+          505833472,
+          365856768,
+          191387648,
+          380241920,
+          224804864,
+          595562496
         ],
         "parameter_history": [
           0.6,
@@ -1111,7 +1111,7 @@
       "profile": "p1",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 0.0001
+        "tolerance_rmse": 1e-10
       },
       "target_config": {
         "initial_value": null,
@@ -1131,14 +1131,14 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 1.0,
-        "total_computational_cost": 2661683200,
+        "total_computational_cost": 3299237888,
         "cost_history": [
-          770951168,
-          402440192,
-          143009792,
-          453945344,
-          176801792,
-          714534912
+          938604544,
+          503091200,
+          210376704,
+          554792960,
+          244168704,
+          848203776
         ],
         "parameter_history": [
           0.6,
@@ -1156,7 +1156,7 @@
       "profile": "p1",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 0.0001
+        "tolerance_rmse": 1e-10
       },
       "target_config": {
         "initial_value": null,
@@ -1176,14 +1176,14 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 1.0,
-        "total_computational_cost": 3608848384,
+        "total_computational_cost": 4379830272,
         "cost_history": [
-          953159680,
-          590020608,
-          223973376,
-          669571072,
-          257744896,
-          914378752
+          1153941504,
+          723779584,
+          291516416,
+          806365184,
+          325287936,
+          1078939648
         ],
         "parameter_history": [
           0.6,
@@ -1201,7 +1201,7 @@
       "profile": "p2",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 0.0001
+        "tolerance_rmse": 1e-10
       },
       "target_config": {
         "initial_value": 16.0,
@@ -1222,10 +1222,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 8.0,
-        "total_computational_cost": 31778816,
+        "total_computational_cost": 42305536,
         "cost_history": [
-          15889408,
-          15889408
+          21152768,
+          21152768
         ],
         "parameter_history": [
           {
@@ -1247,7 +1247,7 @@
       "profile": "p2",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 0.0001
+        "tolerance_rmse": 1e-10
       },
       "target_config": {
         "initial_value": 16.0,
@@ -1268,10 +1268,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 8.0,
-        "total_computational_cost": 31778816,
+        "total_computational_cost": 42305536,
         "cost_history": [
-          15889408,
-          15889408
+          21152768,
+          21152768
         ],
         "parameter_history": [
           {
@@ -1293,7 +1293,7 @@
       "profile": "p2",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 0.0001
+        "tolerance_rmse": 1e-10
       },
       "target_config": {
         "initial_value": 16.0,
@@ -1314,10 +1314,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 8.0,
-        "total_computational_cost": 31778816,
+        "total_computational_cost": 42305536,
         "cost_history": [
-          15889408,
-          15889408
+          21152768,
+          21152768
         ],
         "parameter_history": [
           {
@@ -1339,7 +1339,7 @@
       "profile": "p2",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 0.0001
+        "tolerance_rmse": 1e-10
       },
       "target_config": {
         "initial_value": 16.0,
@@ -1360,10 +1360,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 8.0,
-        "total_computational_cost": 70189056,
+        "total_computational_cost": 92102656,
         "cost_history": [
-          35094528,
-          35094528
+          46051328,
+          46051328
         ],
         "parameter_history": [
           {
@@ -1385,7 +1385,7 @@
       "profile": "p2",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 0.0001
+        "tolerance_rmse": 1e-10
       },
       "target_config": {
         "initial_value": 16.0,
@@ -1406,10 +1406,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 8.0,
-        "total_computational_cost": 70189056,
+        "total_computational_cost": 92102656,
         "cost_history": [
-          35094528,
-          35094528
+          46051328,
+          46051328
         ],
         "parameter_history": [
           {
@@ -1431,7 +1431,7 @@
       "profile": "p2",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 0.0001
+        "tolerance_rmse": 1e-10
       },
       "target_config": {
         "initial_value": 16.0,
@@ -1452,10 +1452,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 8.0,
-        "total_computational_cost": 70189056,
+        "total_computational_cost": 92102656,
         "cost_history": [
-          35094528,
-          35094528
+          46051328,
+          46051328
         ],
         "parameter_history": [
           {
@@ -1477,7 +1477,7 @@
       "profile": "p2",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 0.0001
+        "tolerance_rmse": 1e-10
       },
       "target_config": {
         "initial_value": 16.0,
@@ -1498,10 +1498,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 8.0,
-        "total_computational_cost": 571932672,
+        "total_computational_cost": 691920896,
         "cost_history": [
-          285966336,
-          285966336
+          345960448,
+          345960448
         ],
         "parameter_history": [
           {
@@ -1523,7 +1523,7 @@
       "profile": "p2",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 0.0001
+        "tolerance_rmse": 1e-10
       },
       "target_config": {
         "initial_value": 16.0,
@@ -1544,10 +1544,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 8.0,
-        "total_computational_cost": 571932672,
+        "total_computational_cost": 691920896,
         "cost_history": [
-          285966336,
-          285966336
+          345960448,
+          345960448
         ],
         "parameter_history": [
           {
@@ -1569,7 +1569,7 @@
       "profile": "p2",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 0.0001
+        "tolerance_rmse": 1e-10
       },
       "target_config": {
         "initial_value": 16.0,
@@ -1590,10 +1590,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 8.0,
-        "total_computational_cost": 571932672,
+        "total_computational_cost": 691920896,
         "cost_history": [
-          285966336,
-          285966336
+          345960448,
+          345960448
         ],
         "parameter_history": [
           {
@@ -1615,7 +1615,7 @@
       "profile": "p2",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 0.0001
+        "tolerance_rmse": 1e-10
       },
       "target_config": {
         "initial_value": 1e-05,
@@ -1636,10 +1636,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 1e-06,
-        "total_computational_cost": 10582016,
+        "total_computational_cost": 21108736,
         "cost_history": [
-          5277184,
-          5304832
+          10540544,
+          10568192
         ],
         "parameter_history": [
           {
@@ -1663,7 +1663,7 @@
       "profile": "p2",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 0.0001
+        "tolerance_rmse": 1e-10
       },
       "target_config": {
         "initial_value": 0.1,
@@ -1684,10 +1684,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 0.1,
-        "total_computational_cost": 21152768,
+        "total_computational_cost": 31679488,
         "cost_history": [
-          8805376,
-          12347392
+          14068736,
+          17610752
         ],
         "parameter_history": [
           0.1,
@@ -1701,7 +1701,7 @@
       "profile": "p2",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 0.0001
+        "tolerance_rmse": 1e-10
       },
       "target_config": {
         "initial_value": 0.1,
@@ -1722,10 +1722,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 0.1,
-        "total_computational_cost": 21152768,
+        "total_computational_cost": 31679488,
         "cost_history": [
-          8805376,
-          12347392
+          14068736,
+          17610752
         ],
         "parameter_history": [
           0.1,
@@ -1739,7 +1739,7 @@
       "profile": "p2",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 0.0001
+        "tolerance_rmse": 1e-10
       },
       "target_config": {
         "initial_value": 0.1,
@@ -1760,10 +1760,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 0.1,
-        "total_computational_cost": 21152768,
+        "total_computational_cost": 31679488,
         "cost_history": [
-          8805376,
-          12347392
+          14068736,
+          17610752
         ],
         "parameter_history": [
           0.1,
@@ -1777,7 +1777,7 @@
       "profile": "p2",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 0.0001
+        "tolerance_rmse": 1e-10
       },
       "target_config": {
         "initial_value": 0.1,
@@ -1798,10 +1798,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 0.1,
-        "total_computational_cost": 46061568,
+        "total_computational_cost": 67975168,
         "cost_history": [
-          19009536,
-          27052032
+          29966336,
+          38008832
         ],
         "parameter_history": [
           0.1,
@@ -1815,7 +1815,7 @@
       "profile": "p2",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 0.0001
+        "tolerance_rmse": 1e-10
       },
       "target_config": {
         "initial_value": 0.1,
@@ -1836,10 +1836,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 0.1,
-        "total_computational_cost": 46061568,
+        "total_computational_cost": 67975168,
         "cost_history": [
-          19009536,
-          27052032
+          29966336,
+          38008832
         ],
         "parameter_history": [
           0.1,
@@ -1853,7 +1853,7 @@
       "profile": "p2",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 0.0001
+        "tolerance_rmse": 1e-10
       },
       "target_config": {
         "initial_value": 0.1,
@@ -1874,10 +1874,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 0.1,
-        "total_computational_cost": 46061568,
+        "total_computational_cost": 67975168,
         "cost_history": [
-          19009536,
-          27052032
+          29966336,
+          38008832
         ],
         "parameter_history": [
           0.1,
@@ -1891,7 +1891,7 @@
       "profile": "p2",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 0.0001
+        "tolerance_rmse": 1e-10
       },
       "target_config": {
         "initial_value": 0.1,
@@ -1912,10 +1912,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 0.1,
-        "total_computational_cost": 345853952,
+        "total_computational_cost": 494866432,
         "cost_history": [
-          142262272,
-          203591680
+          216768512,
+          278097920
         ],
         "parameter_history": [
           0.1,
@@ -1929,7 +1929,7 @@
       "profile": "p2",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 0.0001
+        "tolerance_rmse": 1e-10
       },
       "target_config": {
         "initial_value": 0.1,
@@ -1950,10 +1950,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 0.1,
-        "total_computational_cost": 345853952,
+        "total_computational_cost": 494866432,
         "cost_history": [
-          142262272,
-          203591680
+          216768512,
+          278097920
         ],
         "parameter_history": [
           0.1,
@@ -1967,7 +1967,7 @@
       "profile": "p2",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 0.0001
+        "tolerance_rmse": 1e-10
       },
       "target_config": {
         "initial_value": 0.1,
@@ -1988,10 +1988,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 0.1,
-        "total_computational_cost": 345853952,
+        "total_computational_cost": 494866432,
         "cost_history": [
-          142262272,
-          203591680
+          216768512,
+          278097920
         ],
         "parameter_history": [
           0.1,
@@ -2005,7 +2005,7 @@
       "profile": "p2",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 0.0001
+        "tolerance_rmse": 1e-10
       },
       "target_config": {
         "initial_value": null,
@@ -2026,14 +2026,14 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 1.0,
-        "total_computational_cost": 208496128,
+        "total_computational_cost": 258599424,
         "cost_history": [
-          60691968,
-          31664640,
-          5304832,
-          35816960,
-          19759104,
-          55258624
+          73880064,
+          39575040,
+          10568192,
+          43763200,
+          25028608,
+          65784320
         ],
         "parameter_history": [
           0.6,
@@ -2051,7 +2051,7 @@
       "profile": "p2",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 0.0001
+        "tolerance_rmse": 1e-10
       },
       "target_config": {
         "initial_value": null,
@@ -2072,14 +2072,14 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 1.0,
-        "total_computational_cost": 282164736,
+        "total_computational_cost": 342796800,
         "cost_history": [
-          75245056,
-          46105088,
-          17162240,
-          51515392,
-          19799040,
-          72337920
+          91079168,
+          56641024,
+          22435840,
+          62076928,
+          25072640,
+          85491200
         ],
         "parameter_history": [
           0.6,
@@ -2097,7 +2097,7 @@
       "profile": "p2",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 0.0001
+        "tolerance_rmse": 1e-10
       },
       "target_config": {
         "initial_value": null,
@@ -2118,14 +2118,14 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 1.0,
-        "total_computational_cost": 358427136,
+        "total_computational_cost": 432203264,
         "cost_history": [
-          89820672,
-          46319104,
-          31473152,
-          65959424,
-          35410944,
-          89443840
+          108304896,
+          56893952,
+          39348736,
+          79140352,
+          43286528,
+          105228800
         ],
         "parameter_history": [
           0.6,
@@ -2143,7 +2143,7 @@
       "profile": "p2",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 0.0001
+        "tolerance_rmse": 1e-10
       },
       "target_config": {
         "initial_value": null,
@@ -2164,14 +2164,14 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 1.0,
-        "total_computational_cost": 242281472,
+        "total_computational_cost": 316249088,
         "cost_history": [
-          63565824,
-          34449408,
-          11402240,
-          39923712,
-          16314368,
-          76625920
+          79429632,
+          45019136,
+          21974016,
+          50528256,
+          26890240,
+          92407808
         ],
         "parameter_history": [
           0.6,
@@ -2189,7 +2189,7 @@
       "profile": "p2",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 0.0001
+        "tolerance_rmse": 1e-10
       },
       "target_config": {
         "initial_value": null,
@@ -2210,14 +2210,14 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 1.0,
-        "total_computational_cost": 410835968,
+        "total_computational_cost": 505965568,
         "cost_history": [
-          92795904,
-          63385600,
-          32835584,
-          71345152,
-          39993344,
-          110480384
+          113974272,
+          79216640,
+          43458560,
+          87184384,
+          50606080,
+          131525632
         ],
         "parameter_history": [
           0.6,
@@ -2235,7 +2235,7 @@
       "profile": "p2",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 0.0001
+        "tolerance_rmse": 1e-10
       },
       "target_config": {
         "initial_value": null,
@@ -2256,14 +2256,14 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 1.0,
-        "total_computational_cost": 522110976,
+        "total_computational_cost": 636440576,
         "cost_history": [
-          139034624,
-          63780864,
-          33778688,
-          100287488,
-          40513536,
-          144715776
+          168620032,
+          79683584,
+          44516352,
+          121379840,
+          51212288,
+          171028480
         ],
         "parameter_history": [
           0.6,
@@ -2281,7 +2281,7 @@
       "profile": "p2",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 0.0001
+        "tolerance_rmse": 1e-10
       },
       "target_config": {
         "initial_value": null,
@@ -2302,14 +2302,14 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 0.8,
-        "total_computational_cost": 965265408,
+        "total_computational_cost": 1369188352,
         "cost_history": [
-          219828224,
-          84500480,
-          124102656,
-          110596096,
-          155115520,
-          271122432
+          287277056,
+          151752704,
+          191387648,
+          177848320,
+          222400512,
+          338522112
         ],
         "parameter_history": [
           0.6,
@@ -2327,7 +2327,7 @@
       "profile": "p2",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 0.0001
+        "tolerance_rmse": 1e-10
       },
       "target_config": {
         "initial_value": null,
@@ -2348,14 +2348,14 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 1.0,
-        "total_computational_cost": 1591697408,
+        "total_computational_cost": 2049929216,
         "cost_history": [
-          405051392,
-          247461888,
-          143009792,
-          265867264,
-          156633088,
-          373673984
+          506177536,
+          319739904,
+          210376704,
+          335233024,
+          224008192,
+          454393856
         ],
         "parameter_history": [
           0.6,
@@ -2373,7 +2373,7 @@
       "profile": "p2",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 0.0001
+        "tolerance_rmse": 1e-10
       },
       "target_config": {
         "initial_value": null,
@@ -2394,14 +2394,14 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 2.0,
-        "total_computational_cost": 2517112832,
+        "total_computational_cost": 3118979072,
         "cost_history": [
-          590954496,
-          403685376,
-          223973376,
-          446138368,
-          161165312,
-          691195904
+          725880832,
+          504561664,
+          291516416,
+          547158016,
+          228651008,
+          821211136
         ],
         "parameter_history": [
           0.6,
@@ -2419,7 +2419,7 @@
       "profile": "p3",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 0.0001
+        "tolerance_rmse": 1e-10
       },
       "target_config": {
         "initial_value": 16.0,
@@ -2439,10 +2439,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 8.0,
-        "total_computational_cost": 31778816,
+        "total_computational_cost": 42305536,
         "cost_history": [
-          15889408,
-          15889408
+          21152768,
+          21152768
         ],
         "parameter_history": [
           {
@@ -2464,7 +2464,7 @@
       "profile": "p3",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 0.0001
+        "tolerance_rmse": 1e-10
       },
       "target_config": {
         "initial_value": 16.0,
@@ -2484,10 +2484,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 8.0,
-        "total_computational_cost": 31778816,
+        "total_computational_cost": 42305536,
         "cost_history": [
-          15889408,
-          15889408
+          21152768,
+          21152768
         ],
         "parameter_history": [
           {
@@ -2509,7 +2509,7 @@
       "profile": "p3",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 0.0001
+        "tolerance_rmse": 1e-10
       },
       "target_config": {
         "initial_value": 16.0,
@@ -2529,10 +2529,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 8.0,
-        "total_computational_cost": 31778816,
+        "total_computational_cost": 42305536,
         "cost_history": [
-          15889408,
-          15889408
+          21152768,
+          21152768
         ],
         "parameter_history": [
           {
@@ -2554,7 +2554,7 @@
       "profile": "p3",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 0.0001
+        "tolerance_rmse": 1e-10
       },
       "target_config": {
         "initial_value": 16.0,
@@ -2574,10 +2574,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 8.0,
-        "total_computational_cost": 70189056,
+        "total_computational_cost": 92102656,
         "cost_history": [
-          35094528,
-          35094528
+          46051328,
+          46051328
         ],
         "parameter_history": [
           {
@@ -2599,7 +2599,7 @@
       "profile": "p3",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 0.0001
+        "tolerance_rmse": 1e-10
       },
       "target_config": {
         "initial_value": 16.0,
@@ -2619,10 +2619,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 8.0,
-        "total_computational_cost": 70189056,
+        "total_computational_cost": 92102656,
         "cost_history": [
-          35094528,
-          35094528
+          46051328,
+          46051328
         ],
         "parameter_history": [
           {
@@ -2644,7 +2644,7 @@
       "profile": "p3",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 0.0001
+        "tolerance_rmse": 1e-10
       },
       "target_config": {
         "initial_value": 16.0,
@@ -2664,10 +2664,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 8.0,
-        "total_computational_cost": 70189056,
+        "total_computational_cost": 92102656,
         "cost_history": [
-          35094528,
-          35094528
+          46051328,
+          46051328
         ],
         "parameter_history": [
           {
@@ -2689,7 +2689,7 @@
       "profile": "p3",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 0.0001
+        "tolerance_rmse": 1e-10
       },
       "target_config": {
         "initial_value": 16.0,
@@ -2709,10 +2709,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 8.0,
-        "total_computational_cost": 571932672,
+        "total_computational_cost": 691920896,
         "cost_history": [
-          285966336,
-          285966336
+          345960448,
+          345960448
         ],
         "parameter_history": [
           {
@@ -2734,7 +2734,7 @@
       "profile": "p3",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 0.0001
+        "tolerance_rmse": 1e-10
       },
       "target_config": {
         "initial_value": 16.0,
@@ -2754,10 +2754,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 8.0,
-        "total_computational_cost": 571932672,
+        "total_computational_cost": 691920896,
         "cost_history": [
-          285966336,
-          285966336
+          345960448,
+          345960448
         ],
         "parameter_history": [
           {
@@ -2779,7 +2779,7 @@
       "profile": "p3",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 0.0001
+        "tolerance_rmse": 1e-10
       },
       "target_config": {
         "initial_value": 16.0,
@@ -2799,10 +2799,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 8.0,
-        "total_computational_cost": 571932672,
+        "total_computational_cost": 691920896,
         "cost_history": [
-          285966336,
-          285966336
+          345960448,
+          345960448
         ],
         "parameter_history": [
           {
@@ -2824,7 +2824,7 @@
       "profile": "p3",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 0.0001
+        "tolerance_rmse": 1e-10
       },
       "target_config": {
         "initial_value": 1e-05,
@@ -2844,10 +2844,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 1e-06,
-        "total_computational_cost": 10582016,
+        "total_computational_cost": 21108736,
         "cost_history": [
-          5277184,
-          5304832
+          10540544,
+          10568192
         ],
         "parameter_history": [
           {
@@ -2871,7 +2871,7 @@
       "profile": "p3",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 0.0001
+        "tolerance_rmse": 1e-10
       },
       "target_config": {
         "initial_value": 0.1,
@@ -2891,10 +2891,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 0.1,
-        "total_computational_cost": 21152768,
+        "total_computational_cost": 31679488,
         "cost_history": [
-          8805376,
-          12347392
+          14068736,
+          17610752
         ],
         "parameter_history": [
           0.1,
@@ -2908,7 +2908,7 @@
       "profile": "p3",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 0.0001
+        "tolerance_rmse": 1e-10
       },
       "target_config": {
         "initial_value": 0.1,
@@ -2928,10 +2928,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 0.1,
-        "total_computational_cost": 21152768,
+        "total_computational_cost": 31679488,
         "cost_history": [
-          8805376,
-          12347392
+          14068736,
+          17610752
         ],
         "parameter_history": [
           0.1,
@@ -2945,7 +2945,7 @@
       "profile": "p3",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 0.0001
+        "tolerance_rmse": 1e-10
       },
       "target_config": {
         "initial_value": 0.1,
@@ -2965,10 +2965,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 0.1,
-        "total_computational_cost": 21152768,
+        "total_computational_cost": 31679488,
         "cost_history": [
-          8805376,
-          12347392
+          14068736,
+          17610752
         ],
         "parameter_history": [
           0.1,
@@ -2982,7 +2982,7 @@
       "profile": "p3",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 0.0001
+        "tolerance_rmse": 1e-10
       },
       "target_config": {
         "initial_value": 0.1,
@@ -3002,10 +3002,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 0.1,
-        "total_computational_cost": 46061568,
+        "total_computational_cost": 67975168,
         "cost_history": [
-          19009536,
-          27052032
+          29966336,
+          38008832
         ],
         "parameter_history": [
           0.1,
@@ -3019,7 +3019,7 @@
       "profile": "p3",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 0.0001
+        "tolerance_rmse": 1e-10
       },
       "target_config": {
         "initial_value": 0.1,
@@ -3039,10 +3039,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 0.1,
-        "total_computational_cost": 46061568,
+        "total_computational_cost": 67975168,
         "cost_history": [
-          19009536,
-          27052032
+          29966336,
+          38008832
         ],
         "parameter_history": [
           0.1,
@@ -3056,7 +3056,7 @@
       "profile": "p3",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 0.0001
+        "tolerance_rmse": 1e-10
       },
       "target_config": {
         "initial_value": 0.1,
@@ -3076,10 +3076,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 0.1,
-        "total_computational_cost": 46061568,
+        "total_computational_cost": 67975168,
         "cost_history": [
-          19009536,
-          27052032
+          29966336,
+          38008832
         ],
         "parameter_history": [
           0.1,
@@ -3093,7 +3093,7 @@
       "profile": "p3",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 0.0001
+        "tolerance_rmse": 1e-10
       },
       "target_config": {
         "initial_value": 0.1,
@@ -3113,10 +3113,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 0.1,
-        "total_computational_cost": 345853952,
+        "total_computational_cost": 494866432,
         "cost_history": [
-          142262272,
-          203591680
+          216768512,
+          278097920
         ],
         "parameter_history": [
           0.1,
@@ -3130,7 +3130,7 @@
       "profile": "p3",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 0.0001
+        "tolerance_rmse": 1e-10
       },
       "target_config": {
         "initial_value": 0.1,
@@ -3150,10 +3150,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 0.1,
-        "total_computational_cost": 345853952,
+        "total_computational_cost": 494866432,
         "cost_history": [
-          142262272,
-          203591680
+          216768512,
+          278097920
         ],
         "parameter_history": [
           0.1,
@@ -3167,7 +3167,7 @@
       "profile": "p3",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 0.0001
+        "tolerance_rmse": 1e-10
       },
       "target_config": {
         "initial_value": 0.1,
@@ -3187,10 +3187,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 0.1,
-        "total_computational_cost": 345853952,
+        "total_computational_cost": 494866432,
         "cost_history": [
-          142262272,
-          203591680
+          216768512,
+          278097920
         ],
         "parameter_history": [
           0.1,
@@ -3204,7 +3204,7 @@
       "profile": "p3",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 0.0001
+        "tolerance_rmse": 1e-10
       },
       "target_config": {
         "initial_value": null,
@@ -3224,14 +3224,14 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 1.0,
-        "total_computational_cost": 270495232,
+        "total_computational_cost": 332624384,
         "cost_history": [
-          80751616,
-          41836032,
-          5304832,
-          59277312,
-          18040320,
-          65285120
+          97793024,
+          51807744,
+          10568192,
+          71569408,
+          23303680,
+          77582336
         ],
         "parameter_history": [
           0.6,
@@ -3249,7 +3249,7 @@
       "profile": "p3",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 0.0001
+        "tolerance_rmse": 1e-10
       },
       "target_config": {
         "initial_value": null,
@@ -3269,14 +3269,14 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 1.0,
-        "total_computational_cost": 336864768,
+        "total_computational_cost": 408453632,
         "cost_history": [
-          93873664,
-          54772224,
-          15792640,
-          73524736,
-          18157056,
-          80744448
+          113295872,
+          67090944,
+          21056000,
+          88180224,
+          23420416,
+          95410176
         ],
         "parameter_history": [
           0.6,
@@ -3294,7 +3294,7 @@
       "profile": "p3",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 0.0001
+        "tolerance_rmse": 1e-10
       },
       "target_config": {
         "initial_value": null,
@@ -3314,14 +3314,14 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 1.0,
-        "total_computational_cost": 365132288,
+        "total_computational_cost": 441593344,
         "cost_history": [
-          107123200,
-          67768320,
-          15815680,
-          75102208,
-          18187264,
-          81135616
+          128947712,
+          82443264,
+          21079040,
+          89819136,
+          23450624,
+          95853568
         ],
         "parameter_history": [
           0.6,
@@ -3339,7 +3339,7 @@
       "profile": "p3",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 0.0001
+        "tolerance_rmse": 1e-10
       },
       "target_config": {
         "initial_value": null,
@@ -3359,14 +3359,14 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 1.0,
-        "total_computational_cost": 416283648,
+        "total_computational_cost": 518106112,
         "cost_history": [
-          112870400,
-          59360256,
-          11402240,
-          91373568,
-          37592064,
-          103685120
+          137995264,
+          74769408,
+          21974016,
+          111364096,
+          48172032,
+          123831296
         ],
         "parameter_history": [
           0.6,
@@ -3384,7 +3384,7 @@
       "profile": "p3",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 0.0001
+        "tolerance_rmse": 1e-10
       },
       "target_config": {
         "initial_value": null,
@@ -3404,14 +3404,14 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 1.0,
-        "total_computational_cost": 534159360,
+        "total_computational_cost": 653256704,
         "cost_history": [
-          164173824,
-          85348352,
-          32835584,
-          95774720,
-          38389760,
-          117637120
+          198660096,
+          105510912,
+          43458560,
+          116027392,
+          49057792,
+          140541952
         ],
         "parameter_history": [
           0.6,
@@ -3429,7 +3429,7 @@
       "profile": "p3",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 0.0001
+        "tolerance_rmse": 1e-10
       },
       "target_config": {
         "initial_value": null,
@@ -3449,14 +3449,14 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 1.0,
-        "total_computational_cost": 693407744,
+        "total_computational_cost": 838711296,
         "cost_history": [
-          191152128,
-          111509504,
-          33778688,
-          124218368,
-          67037184,
-          165711872
+          230535168,
+          136425472,
+          44516352,
+          149216256,
+          82479104,
+          195538944
         ],
         "parameter_history": [
           0.6,
@@ -3474,7 +3474,7 @@
       "profile": "p3",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 0.0001
+        "tolerance_rmse": 1e-10
       },
       "target_config": {
         "initial_value": null,
@@ -3494,14 +3494,14 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 1.0,
-        "total_computational_cost": 2310242304,
+        "total_computational_cost": 2890641408,
         "cost_history": [
-          587980800,
-          286670848,
-          124102656,
-          432494592,
-          177604608,
-          701388800
+          722366464,
+          366272512,
+          191387648,
+          532129792,
+          244889600,
+          833595392
         ],
         "parameter_history": [
           0.6,
@@ -3519,7 +3519,7 @@
       "profile": "p3",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 0.0001
+        "tolerance_rmse": 1e-10
       },
       "target_config": {
         "initial_value": null,
@@ -3539,14 +3539,14 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 1.0,
-        "total_computational_cost": 3128711168,
+        "total_computational_cost": 3828627456,
         "cost_history": [
-          769193984,
-          401164288,
-          143009792,
-          648685568,
-          263753728,
-          902903808
+          936527872,
+          501700608,
+          210376704,
+          782039040,
+          331145216,
+          1066838016
         ],
         "parameter_history": [
           0.6,
@@ -3564,7 +3564,7 @@
       "profile": "p3",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 0.0001
+        "tolerance_rmse": 1e-10
       },
       "target_config": {
         "initial_value": null,
@@ -3584,14 +3584,14 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 1.0,
-        "total_computational_cost": 3952558080,
+        "total_computational_cost": 4781715456,
         "cost_history": [
-          948516864,
-          642277376,
-          223973376,
-          666320896,
-          336627712,
-          1134841856
+          1148565504,
+          786788352,
+          291516416,
+          802713600,
+          418076672,
+          1334054912
         ],
         "parameter_history": [
           0.6,
@@ -3609,7 +3609,7 @@
       "profile": "p1",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.001
+        "tolerance_rmse": 0.0005
       },
       "target_config": {
         "initial_value": 16.0,
@@ -3629,10 +3629,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 8.0,
-        "total_computational_cost": 31778816,
+        "total_computational_cost": 42305536,
         "cost_history": [
-          15889408,
-          15889408
+          21152768,
+          21152768
         ],
         "parameter_history": [
           {
@@ -3654,7 +3654,7 @@
       "profile": "p1",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.001
+        "tolerance_rmse": 0.0005
       },
       "target_config": {
         "initial_value": 16.0,
@@ -3674,10 +3674,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 8.0,
-        "total_computational_cost": 31778816,
+        "total_computational_cost": 42305536,
         "cost_history": [
-          15889408,
-          15889408
+          21152768,
+          21152768
         ],
         "parameter_history": [
           {
@@ -3699,7 +3699,7 @@
       "profile": "p1",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.001
+        "tolerance_rmse": 0.0005
       },
       "target_config": {
         "initial_value": 16.0,
@@ -3719,10 +3719,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 8.0,
-        "total_computational_cost": 31778816,
+        "total_computational_cost": 42305536,
         "cost_history": [
-          15889408,
-          15889408
+          21152768,
+          21152768
         ],
         "parameter_history": [
           {
@@ -3744,7 +3744,7 @@
       "profile": "p1",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.001
+        "tolerance_rmse": 0.0005
       },
       "target_config": {
         "initial_value": 16.0,
@@ -3764,10 +3764,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 8.0,
-        "total_computational_cost": 70189056,
+        "total_computational_cost": 92102656,
         "cost_history": [
-          35094528,
-          35094528
+          46051328,
+          46051328
         ],
         "parameter_history": [
           {
@@ -3789,7 +3789,7 @@
       "profile": "p1",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.001
+        "tolerance_rmse": 0.0005
       },
       "target_config": {
         "initial_value": 16.0,
@@ -3809,10 +3809,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 8.0,
-        "total_computational_cost": 70189056,
+        "total_computational_cost": 92102656,
         "cost_history": [
-          35094528,
-          35094528
+          46051328,
+          46051328
         ],
         "parameter_history": [
           {
@@ -3834,7 +3834,7 @@
       "profile": "p1",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.001
+        "tolerance_rmse": 0.0005
       },
       "target_config": {
         "initial_value": 16.0,
@@ -3854,10 +3854,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 8.0,
-        "total_computational_cost": 70189056,
+        "total_computational_cost": 92102656,
         "cost_history": [
-          35094528,
-          35094528
+          46051328,
+          46051328
         ],
         "parameter_history": [
           {
@@ -3879,7 +3879,7 @@
       "profile": "p1",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.001
+        "tolerance_rmse": 0.0005
       },
       "target_config": {
         "initial_value": 16.0,
@@ -3899,10 +3899,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 8.0,
-        "total_computational_cost": 571932672,
+        "total_computational_cost": 691920896,
         "cost_history": [
-          285966336,
-          285966336
+          345960448,
+          345960448
         ],
         "parameter_history": [
           {
@@ -3924,7 +3924,7 @@
       "profile": "p1",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.001
+        "tolerance_rmse": 0.0005
       },
       "target_config": {
         "initial_value": 16.0,
@@ -3944,10 +3944,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 8.0,
-        "total_computational_cost": 571932672,
+        "total_computational_cost": 691920896,
         "cost_history": [
-          285966336,
-          285966336
+          345960448,
+          345960448
         ],
         "parameter_history": [
           {
@@ -3969,7 +3969,7 @@
       "profile": "p1",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.001
+        "tolerance_rmse": 0.0005
       },
       "target_config": {
         "initial_value": 16.0,
@@ -3989,10 +3989,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 8.0,
-        "total_computational_cost": 571932672,
+        "total_computational_cost": 691920896,
         "cost_history": [
-          285966336,
-          285966336
+          345960448,
+          345960448
         ],
         "parameter_history": [
           {
@@ -4014,7 +4014,7 @@
       "profile": "p1",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.001
+        "tolerance_rmse": 0.0005
       },
       "target_config": {
         "initial_value": 1e-05,
@@ -4034,10 +4034,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 1e-06,
-        "total_computational_cost": 10582016,
+        "total_computational_cost": 21108736,
         "cost_history": [
-          5277184,
-          5304832
+          10540544,
+          10568192
         ],
         "parameter_history": [
           {
@@ -4061,7 +4061,7 @@
       "profile": "p1",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.001
+        "tolerance_rmse": 0.0005
       },
       "target_config": {
         "initial_value": 1e-05,
@@ -4081,10 +4081,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 1e-06,
-        "total_computational_cost": 22195200,
+        "total_computational_cost": 43318272,
         "cost_history": [
-          10792960,
-          11402240
+          21344256,
+          21974016
         ],
         "parameter_history": [
           {
@@ -4108,7 +4108,7 @@
       "profile": "p1",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.001
+        "tolerance_rmse": 0.0005
       },
       "target_config": {
         "initial_value": 1e-05,
@@ -4128,10 +4128,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 1e-06,
-        "total_computational_cost": 241934336,
+        "total_computational_cost": 376446976,
         "cost_history": [
-          117831680,
-          124102656
+          185059328,
+          191387648
         ],
         "parameter_history": [
           {
@@ -4155,7 +4155,7 @@
       "profile": "p1",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.001
+        "tolerance_rmse": 0.0005
       },
       "target_config": {
         "initial_value": 0.1,
@@ -4175,10 +4175,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 0.1,
-        "total_computational_cost": 21152768,
+        "total_computational_cost": 31679488,
         "cost_history": [
-          8805376,
-          12347392
+          14068736,
+          17610752
         ],
         "parameter_history": [
           0.1,
@@ -4192,7 +4192,7 @@
       "profile": "p1",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.001
+        "tolerance_rmse": 0.0005
       },
       "target_config": {
         "initial_value": 0.1,
@@ -4212,10 +4212,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 0.1,
-        "total_computational_cost": 21152768,
+        "total_computational_cost": 31679488,
         "cost_history": [
-          8805376,
-          12347392
+          14068736,
+          17610752
         ],
         "parameter_history": [
           0.1,
@@ -4229,7 +4229,7 @@
       "profile": "p1",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.001
+        "tolerance_rmse": 0.0005
       },
       "target_config": {
         "initial_value": 0.1,
@@ -4249,10 +4249,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 0.1,
-        "total_computational_cost": 21152768,
+        "total_computational_cost": 31679488,
         "cost_history": [
-          8805376,
-          12347392
+          14068736,
+          17610752
         ],
         "parameter_history": [
           0.1,
@@ -4266,7 +4266,7 @@
       "profile": "p1",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.001
+        "tolerance_rmse": 0.0005
       },
       "target_config": {
         "initial_value": 0.1,
@@ -4286,10 +4286,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 0.1,
-        "total_computational_cost": 46061568,
+        "total_computational_cost": 67975168,
         "cost_history": [
-          19009536,
-          27052032
+          29966336,
+          38008832
         ],
         "parameter_history": [
           0.1,
@@ -4303,7 +4303,7 @@
       "profile": "p1",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.001
+        "tolerance_rmse": 0.0005
       },
       "target_config": {
         "initial_value": 0.1,
@@ -4323,10 +4323,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 0.1,
-        "total_computational_cost": 46061568,
+        "total_computational_cost": 67975168,
         "cost_history": [
-          19009536,
-          27052032
+          29966336,
+          38008832
         ],
         "parameter_history": [
           0.1,
@@ -4340,7 +4340,7 @@
       "profile": "p1",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.001
+        "tolerance_rmse": 0.0005
       },
       "target_config": {
         "initial_value": 0.1,
@@ -4360,10 +4360,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 0.1,
-        "total_computational_cost": 46061568,
+        "total_computational_cost": 67975168,
         "cost_history": [
-          19009536,
-          27052032
+          29966336,
+          38008832
         ],
         "parameter_history": [
           0.1,
@@ -4377,7 +4377,7 @@
       "profile": "p1",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.001
+        "tolerance_rmse": 0.0005
       },
       "target_config": {
         "initial_value": 0.1,
@@ -4397,10 +4397,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 0.1,
-        "total_computational_cost": 345853952,
+        "total_computational_cost": 494866432,
         "cost_history": [
-          142262272,
-          203591680
+          216768512,
+          278097920
         ],
         "parameter_history": [
           0.1,
@@ -4414,7 +4414,7 @@
       "profile": "p1",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.001
+        "tolerance_rmse": 0.0005
       },
       "target_config": {
         "initial_value": 0.1,
@@ -4434,10 +4434,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 0.1,
-        "total_computational_cost": 345853952,
+        "total_computational_cost": 494866432,
         "cost_history": [
-          142262272,
-          203591680
+          216768512,
+          278097920
         ],
         "parameter_history": [
           0.1,
@@ -4451,7 +4451,7 @@
       "profile": "p1",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.001
+        "tolerance_rmse": 0.0005
       },
       "target_config": {
         "initial_value": 0.1,
@@ -4471,10 +4471,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 0.1,
-        "total_computational_cost": 345853952,
+        "total_computational_cost": 494866432,
         "cost_history": [
-          142262272,
-          203591680
+          216768512,
+          278097920
         ],
         "parameter_history": [
           0.1,
@@ -4488,7 +4488,7 @@
       "profile": "p1",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.001
+        "tolerance_rmse": 0.0005
       },
       "target_config": {
         "initial_value": null,
@@ -4508,14 +4508,14 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 1.0,
-        "total_computational_cost": 231484416,
+        "total_computational_cost": 288897024,
         "cost_history": [
-          79505408,
-          42092032,
-          5304832,
-          47164416,
-          6515712,
-          50902016
+          96295936,
+          52089344,
+          10568192,
+          57210880,
+          11779072,
+          60953600
         ],
         "parameter_history": [
           0.6,
@@ -4533,7 +4533,7 @@
       "profile": "p1",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.001
+        "tolerance_rmse": 0.0005
       },
       "target_config": {
         "initial_value": null,
@@ -4553,14 +4553,14 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 1.0,
-        "total_computational_cost": 311084544,
+        "total_computational_cost": 378299904,
         "cost_history": [
-          94610432,
-          55147008,
-          15723520,
-          61362688,
-          18099200,
-          66141696
+          114138112,
+          67508736,
+          20986880,
+          73768448,
+          23362560,
+          78535168
         ],
         "parameter_history": [
           0.6,
@@ -4578,7 +4578,7 @@
       "profile": "p1",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.001
+        "tolerance_rmse": 0.0005
       },
       "target_config": {
         "initial_value": null,
@@ -4598,14 +4598,14 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 1.0,
-        "total_computational_cost": 355327488,
+        "total_computational_cost": 429832704,
         "cost_history": [
-          108069888,
-          55527936,
-          15852544,
-          75771392,
-          18249216,
-          81856512
+          130034688,
+          67948032,
+          21115904,
+          90568192,
+          23512576,
+          96653312
         ],
         "parameter_history": [
           0.6,
@@ -4623,7 +4623,7 @@
       "profile": "p1",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.001
+        "tolerance_rmse": 0.0005
       },
       "target_config": {
         "initial_value": null,
@@ -4643,14 +4643,14 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 1.0,
-        "total_computational_cost": 371096576,
+        "total_computational_cost": 468530176,
         "cost_history": [
-          113530880,
-          59657216,
-          11402240,
-          67770368,
-          15799296,
-          102936576
+          138735616,
+          75086848,
+          21974016,
+          83259392,
+          26371072,
+          123103232
         ],
         "parameter_history": [
           0.6,
@@ -4668,7 +4668,7 @@
       "profile": "p1",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.001
+        "tolerance_rmse": 0.0005
       },
       "target_config": {
         "initial_value": null,
@@ -4688,14 +4688,14 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 1.0,
-        "total_computational_cost": 19680398336,
+        "total_computational_cost": 22742330368,
         "cost_history": [
-          139902976,
-          85860352,
-          32835584,
-          96231424,
-          38067200,
-          19287500800
+          169914368,
+          106074112,
+          43458560,
+          116514816,
+          48690176,
+          22257678336
         ],
         "parameter_history": [
           0.6,
@@ -4713,7 +4713,7 @@
       "profile": "p1",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.001
+        "tolerance_rmse": 0.0005
       },
       "target_config": {
         "initial_value": null,
@@ -4733,14 +4733,14 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 1.0,
-        "total_computational_cost": 617544704,
+        "total_computational_cost": 749147136,
         "cost_history": [
-          166734848,
-          86430720,
-          33778688,
-          125156352,
-          39091200,
-          166352896
+          201616384,
+          106726400,
+          44516352,
+          150260736,
+          49828864,
+          196198400
         ],
         "parameter_history": [
           0.6,
@@ -4758,7 +4758,7 @@
       "profile": "p1",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.001
+        "tolerance_rmse": 0.0005
       },
       "target_config": {
         "initial_value": null,
@@ -4778,14 +4778,14 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 1.0,
-        "total_computational_cost": 1772212224,
+        "total_computational_cost": 2263687168,
         "cost_history": [
-          404760576,
-          286320640,
-          124102656,
-          303958016,
-          157519872,
-          495550464
+          505833472,
+          365856768,
+          191387648,
+          380241920,
+          224804864,
+          595562496
         ],
         "parameter_history": [
           0.6,
@@ -4803,7 +4803,7 @@
       "profile": "p1",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.001
+        "tolerance_rmse": 0.0005
       },
       "target_config": {
         "initial_value": null,
@@ -4823,14 +4823,14 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 1.0,
-        "total_computational_cost": 2661683200,
+        "total_computational_cost": 3299237888,
         "cost_history": [
-          770951168,
-          402440192,
-          143009792,
-          453945344,
-          176801792,
-          714534912
+          938604544,
+          503091200,
+          210376704,
+          554792960,
+          244168704,
+          848203776
         ],
         "parameter_history": [
           0.6,
@@ -4848,7 +4848,7 @@
       "profile": "p1",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.001
+        "tolerance_rmse": 0.0005
       },
       "target_config": {
         "initial_value": null,
@@ -4868,14 +4868,14 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 1.0,
-        "total_computational_cost": 3608848384,
+        "total_computational_cost": 4379830272,
         "cost_history": [
-          953159680,
-          590020608,
-          223973376,
-          669571072,
-          257744896,
-          914378752
+          1153941504,
+          723779584,
+          291516416,
+          806365184,
+          325287936,
+          1078939648
         ],
         "parameter_history": [
           0.6,
@@ -4893,7 +4893,7 @@
       "profile": "p2",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.001
+        "tolerance_rmse": 0.0005
       },
       "target_config": {
         "initial_value": 16.0,
@@ -4914,10 +4914,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 8.0,
-        "total_computational_cost": 31778816,
+        "total_computational_cost": 42305536,
         "cost_history": [
-          15889408,
-          15889408
+          21152768,
+          21152768
         ],
         "parameter_history": [
           {
@@ -4939,7 +4939,7 @@
       "profile": "p2",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.001
+        "tolerance_rmse": 0.0005
       },
       "target_config": {
         "initial_value": 16.0,
@@ -4960,10 +4960,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 8.0,
-        "total_computational_cost": 31778816,
+        "total_computational_cost": 42305536,
         "cost_history": [
-          15889408,
-          15889408
+          21152768,
+          21152768
         ],
         "parameter_history": [
           {
@@ -4985,7 +4985,7 @@
       "profile": "p2",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.001
+        "tolerance_rmse": 0.0005
       },
       "target_config": {
         "initial_value": 16.0,
@@ -5006,10 +5006,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 8.0,
-        "total_computational_cost": 31778816,
+        "total_computational_cost": 42305536,
         "cost_history": [
-          15889408,
-          15889408
+          21152768,
+          21152768
         ],
         "parameter_history": [
           {
@@ -5031,7 +5031,7 @@
       "profile": "p2",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.001
+        "tolerance_rmse": 0.0005
       },
       "target_config": {
         "initial_value": 16.0,
@@ -5052,10 +5052,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 8.0,
-        "total_computational_cost": 70189056,
+        "total_computational_cost": 92102656,
         "cost_history": [
-          35094528,
-          35094528
+          46051328,
+          46051328
         ],
         "parameter_history": [
           {
@@ -5077,7 +5077,7 @@
       "profile": "p2",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.001
+        "tolerance_rmse": 0.0005
       },
       "target_config": {
         "initial_value": 16.0,
@@ -5098,10 +5098,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 8.0,
-        "total_computational_cost": 70189056,
+        "total_computational_cost": 92102656,
         "cost_history": [
-          35094528,
-          35094528
+          46051328,
+          46051328
         ],
         "parameter_history": [
           {
@@ -5123,7 +5123,7 @@
       "profile": "p2",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.001
+        "tolerance_rmse": 0.0005
       },
       "target_config": {
         "initial_value": 16.0,
@@ -5144,10 +5144,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 8.0,
-        "total_computational_cost": 70189056,
+        "total_computational_cost": 92102656,
         "cost_history": [
-          35094528,
-          35094528
+          46051328,
+          46051328
         ],
         "parameter_history": [
           {
@@ -5169,7 +5169,7 @@
       "profile": "p2",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.001
+        "tolerance_rmse": 0.0005
       },
       "target_config": {
         "initial_value": 16.0,
@@ -5190,10 +5190,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 8.0,
-        "total_computational_cost": 571932672,
+        "total_computational_cost": 691920896,
         "cost_history": [
-          285966336,
-          285966336
+          345960448,
+          345960448
         ],
         "parameter_history": [
           {
@@ -5215,7 +5215,7 @@
       "profile": "p2",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.001
+        "tolerance_rmse": 0.0005
       },
       "target_config": {
         "initial_value": 16.0,
@@ -5236,10 +5236,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 8.0,
-        "total_computational_cost": 571932672,
+        "total_computational_cost": 691920896,
         "cost_history": [
-          285966336,
-          285966336
+          345960448,
+          345960448
         ],
         "parameter_history": [
           {
@@ -5261,7 +5261,7 @@
       "profile": "p2",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.001
+        "tolerance_rmse": 0.0005
       },
       "target_config": {
         "initial_value": 16.0,
@@ -5282,10 +5282,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 8.0,
-        "total_computational_cost": 571932672,
+        "total_computational_cost": 691920896,
         "cost_history": [
-          285966336,
-          285966336
+          345960448,
+          345960448
         ],
         "parameter_history": [
           {
@@ -5307,7 +5307,7 @@
       "profile": "p2",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.001
+        "tolerance_rmse": 0.0005
       },
       "target_config": {
         "initial_value": 1e-05,
@@ -5328,10 +5328,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 1e-06,
-        "total_computational_cost": 10582016,
+        "total_computational_cost": 21108736,
         "cost_history": [
-          5277184,
-          5304832
+          10540544,
+          10568192
         ],
         "parameter_history": [
           {
@@ -5355,7 +5355,7 @@
       "profile": "p2",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.001
+        "tolerance_rmse": 0.0005
       },
       "target_config": {
         "initial_value": 1e-05,
@@ -5376,10 +5376,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 1e-06,
-        "total_computational_cost": 22195200,
+        "total_computational_cost": 43318272,
         "cost_history": [
-          10792960,
-          11402240
+          21344256,
+          21974016
         ],
         "parameter_history": [
           {
@@ -5403,7 +5403,7 @@
       "profile": "p2",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.001
+        "tolerance_rmse": 0.0005
       },
       "target_config": {
         "initial_value": 1e-05,
@@ -5424,10 +5424,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 1e-06,
-        "total_computational_cost": 241934336,
+        "total_computational_cost": 376446976,
         "cost_history": [
-          117831680,
-          124102656
+          185059328,
+          191387648
         ],
         "parameter_history": [
           {
@@ -5451,7 +5451,7 @@
       "profile": "p2",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.001
+        "tolerance_rmse": 0.0005
       },
       "target_config": {
         "initial_value": 0.1,
@@ -5472,10 +5472,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 0.1,
-        "total_computational_cost": 21152768,
+        "total_computational_cost": 31679488,
         "cost_history": [
-          8805376,
-          12347392
+          14068736,
+          17610752
         ],
         "parameter_history": [
           0.1,
@@ -5489,7 +5489,7 @@
       "profile": "p2",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.001
+        "tolerance_rmse": 0.0005
       },
       "target_config": {
         "initial_value": 0.1,
@@ -5510,10 +5510,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 0.1,
-        "total_computational_cost": 21152768,
+        "total_computational_cost": 31679488,
         "cost_history": [
-          8805376,
-          12347392
+          14068736,
+          17610752
         ],
         "parameter_history": [
           0.1,
@@ -5527,7 +5527,7 @@
       "profile": "p2",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.001
+        "tolerance_rmse": 0.0005
       },
       "target_config": {
         "initial_value": 0.1,
@@ -5548,10 +5548,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 0.1,
-        "total_computational_cost": 21152768,
+        "total_computational_cost": 31679488,
         "cost_history": [
-          8805376,
-          12347392
+          14068736,
+          17610752
         ],
         "parameter_history": [
           0.1,
@@ -5565,7 +5565,7 @@
       "profile": "p2",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.001
+        "tolerance_rmse": 0.0005
       },
       "target_config": {
         "initial_value": 0.1,
@@ -5586,10 +5586,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 0.1,
-        "total_computational_cost": 46061568,
+        "total_computational_cost": 67975168,
         "cost_history": [
-          19009536,
-          27052032
+          29966336,
+          38008832
         ],
         "parameter_history": [
           0.1,
@@ -5603,7 +5603,7 @@
       "profile": "p2",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.001
+        "tolerance_rmse": 0.0005
       },
       "target_config": {
         "initial_value": 0.1,
@@ -5624,10 +5624,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 0.1,
-        "total_computational_cost": 46061568,
+        "total_computational_cost": 67975168,
         "cost_history": [
-          19009536,
-          27052032
+          29966336,
+          38008832
         ],
         "parameter_history": [
           0.1,
@@ -5641,7 +5641,7 @@
       "profile": "p2",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.001
+        "tolerance_rmse": 0.0005
       },
       "target_config": {
         "initial_value": 0.1,
@@ -5662,10 +5662,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 0.1,
-        "total_computational_cost": 46061568,
+        "total_computational_cost": 67975168,
         "cost_history": [
-          19009536,
-          27052032
+          29966336,
+          38008832
         ],
         "parameter_history": [
           0.1,
@@ -5679,7 +5679,7 @@
       "profile": "p2",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.001
+        "tolerance_rmse": 0.0005
       },
       "target_config": {
         "initial_value": 0.1,
@@ -5700,10 +5700,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 0.1,
-        "total_computational_cost": 345853952,
+        "total_computational_cost": 494866432,
         "cost_history": [
-          142262272,
-          203591680
+          216768512,
+          278097920
         ],
         "parameter_history": [
           0.1,
@@ -5717,7 +5717,7 @@
       "profile": "p2",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.001
+        "tolerance_rmse": 0.0005
       },
       "target_config": {
         "initial_value": 0.1,
@@ -5738,10 +5738,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 0.1,
-        "total_computational_cost": 345853952,
+        "total_computational_cost": 494866432,
         "cost_history": [
-          142262272,
-          203591680
+          216768512,
+          278097920
         ],
         "parameter_history": [
           0.1,
@@ -5755,7 +5755,7 @@
       "profile": "p2",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.001
+        "tolerance_rmse": 0.0005
       },
       "target_config": {
         "initial_value": 0.1,
@@ -5776,10 +5776,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 0.1,
-        "total_computational_cost": 345853952,
+        "total_computational_cost": 494866432,
         "cost_history": [
-          142262272,
-          203591680
+          216768512,
+          278097920
         ],
         "parameter_history": [
           0.1,
@@ -5793,7 +5793,7 @@
       "profile": "p2",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.001
+        "tolerance_rmse": 0.0005
       },
       "target_config": {
         "initial_value": null,
@@ -5814,14 +5814,14 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 1.0,
-        "total_computational_cost": 208496128,
+        "total_computational_cost": 258599424,
         "cost_history": [
-          60691968,
-          31664640,
-          5304832,
-          35816960,
-          19759104,
-          55258624
+          73880064,
+          39575040,
+          10568192,
+          43763200,
+          25028608,
+          65784320
         ],
         "parameter_history": [
           0.6,
@@ -5839,7 +5839,7 @@
       "profile": "p2",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.001
+        "tolerance_rmse": 0.0005
       },
       "target_config": {
         "initial_value": null,
@@ -5860,14 +5860,14 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 1.0,
-        "total_computational_cost": 282164736,
+        "total_computational_cost": 342796800,
         "cost_history": [
-          75245056,
-          46105088,
-          17162240,
-          51515392,
-          19799040,
-          72337920
+          91079168,
+          56641024,
+          22435840,
+          62076928,
+          25072640,
+          85491200
         ],
         "parameter_history": [
           0.6,
@@ -5885,7 +5885,7 @@
       "profile": "p2",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.001
+        "tolerance_rmse": 0.0005
       },
       "target_config": {
         "initial_value": null,
@@ -5906,14 +5906,14 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 1.0,
-        "total_computational_cost": 358427136,
+        "total_computational_cost": 432203264,
         "cost_history": [
-          89820672,
-          46319104,
-          31473152,
-          65959424,
-          35410944,
-          89443840
+          108304896,
+          56893952,
+          39348736,
+          79140352,
+          43286528,
+          105228800
         ],
         "parameter_history": [
           0.6,
@@ -5931,7 +5931,7 @@
       "profile": "p2",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.001
+        "tolerance_rmse": 0.0005
       },
       "target_config": {
         "initial_value": null,
@@ -5952,14 +5952,14 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 1.0,
-        "total_computational_cost": 242281472,
+        "total_computational_cost": 316249088,
         "cost_history": [
-          63565824,
-          34449408,
-          11402240,
-          39923712,
-          16314368,
-          76625920
+          79429632,
+          45019136,
+          21974016,
+          50528256,
+          26890240,
+          92407808
         ],
         "parameter_history": [
           0.6,
@@ -5977,7 +5977,7 @@
       "profile": "p2",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.001
+        "tolerance_rmse": 0.0005
       },
       "target_config": {
         "initial_value": null,
@@ -5998,14 +5998,14 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 1.0,
-        "total_computational_cost": 410835968,
+        "total_computational_cost": 505965568,
         "cost_history": [
-          92795904,
-          63385600,
-          32835584,
-          71345152,
-          39993344,
-          110480384
+          113974272,
+          79216640,
+          43458560,
+          87184384,
+          50606080,
+          131525632
         ],
         "parameter_history": [
           0.6,
@@ -6023,7 +6023,7 @@
       "profile": "p2",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.001
+        "tolerance_rmse": 0.0005
       },
       "target_config": {
         "initial_value": null,
@@ -6044,14 +6044,14 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 1.0,
-        "total_computational_cost": 522110976,
+        "total_computational_cost": 636440576,
         "cost_history": [
-          139034624,
-          63780864,
-          33778688,
-          100287488,
-          40513536,
-          144715776
+          168620032,
+          79683584,
+          44516352,
+          121379840,
+          51212288,
+          171028480
         ],
         "parameter_history": [
           0.6,
@@ -6069,7 +6069,7 @@
       "profile": "p2",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.001
+        "tolerance_rmse": 0.0005
       },
       "target_config": {
         "initial_value": null,
@@ -6090,14 +6090,14 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 0.8,
-        "total_computational_cost": 965265408,
+        "total_computational_cost": 1369188352,
         "cost_history": [
-          219828224,
-          84500480,
-          124102656,
-          110596096,
-          155115520,
-          271122432
+          287277056,
+          151752704,
+          191387648,
+          177848320,
+          222400512,
+          338522112
         ],
         "parameter_history": [
           0.6,
@@ -6115,7 +6115,7 @@
       "profile": "p2",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.001
+        "tolerance_rmse": 0.0005
       },
       "target_config": {
         "initial_value": null,
@@ -6136,14 +6136,14 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 1.0,
-        "total_computational_cost": 1591697408,
+        "total_computational_cost": 2049929216,
         "cost_history": [
-          405051392,
-          247461888,
-          143009792,
-          265867264,
-          156633088,
-          373673984
+          506177536,
+          319739904,
+          210376704,
+          335233024,
+          224008192,
+          454393856
         ],
         "parameter_history": [
           0.6,
@@ -6161,7 +6161,7 @@
       "profile": "p2",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.001
+        "tolerance_rmse": 0.0005
       },
       "target_config": {
         "initial_value": null,
@@ -6182,14 +6182,14 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 2.0,
-        "total_computational_cost": 2517112832,
+        "total_computational_cost": 3118979072,
         "cost_history": [
-          590954496,
-          403685376,
-          223973376,
-          446138368,
-          161165312,
-          691195904
+          725880832,
+          504561664,
+          291516416,
+          547158016,
+          228651008,
+          821211136
         ],
         "parameter_history": [
           0.6,
@@ -6207,7 +6207,7 @@
       "profile": "p3",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.001
+        "tolerance_rmse": 0.0005
       },
       "target_config": {
         "initial_value": 16.0,
@@ -6227,10 +6227,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 8.0,
-        "total_computational_cost": 31778816,
+        "total_computational_cost": 42305536,
         "cost_history": [
-          15889408,
-          15889408
+          21152768,
+          21152768
         ],
         "parameter_history": [
           {
@@ -6252,7 +6252,7 @@
       "profile": "p3",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.001
+        "tolerance_rmse": 0.0005
       },
       "target_config": {
         "initial_value": 16.0,
@@ -6272,10 +6272,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 8.0,
-        "total_computational_cost": 31778816,
+        "total_computational_cost": 42305536,
         "cost_history": [
-          15889408,
-          15889408
+          21152768,
+          21152768
         ],
         "parameter_history": [
           {
@@ -6297,7 +6297,7 @@
       "profile": "p3",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.001
+        "tolerance_rmse": 0.0005
       },
       "target_config": {
         "initial_value": 16.0,
@@ -6317,10 +6317,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 8.0,
-        "total_computational_cost": 31778816,
+        "total_computational_cost": 42305536,
         "cost_history": [
-          15889408,
-          15889408
+          21152768,
+          21152768
         ],
         "parameter_history": [
           {
@@ -6342,7 +6342,7 @@
       "profile": "p3",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.001
+        "tolerance_rmse": 0.0005
       },
       "target_config": {
         "initial_value": 16.0,
@@ -6362,10 +6362,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 8.0,
-        "total_computational_cost": 70189056,
+        "total_computational_cost": 92102656,
         "cost_history": [
-          35094528,
-          35094528
+          46051328,
+          46051328
         ],
         "parameter_history": [
           {
@@ -6387,7 +6387,7 @@
       "profile": "p3",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.001
+        "tolerance_rmse": 0.0005
       },
       "target_config": {
         "initial_value": 16.0,
@@ -6407,10 +6407,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 8.0,
-        "total_computational_cost": 70189056,
+        "total_computational_cost": 92102656,
         "cost_history": [
-          35094528,
-          35094528
+          46051328,
+          46051328
         ],
         "parameter_history": [
           {
@@ -6432,7 +6432,7 @@
       "profile": "p3",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.001
+        "tolerance_rmse": 0.0005
       },
       "target_config": {
         "initial_value": 16.0,
@@ -6452,10 +6452,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 8.0,
-        "total_computational_cost": 70189056,
+        "total_computational_cost": 92102656,
         "cost_history": [
-          35094528,
-          35094528
+          46051328,
+          46051328
         ],
         "parameter_history": [
           {
@@ -6477,7 +6477,7 @@
       "profile": "p3",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.001
+        "tolerance_rmse": 0.0005
       },
       "target_config": {
         "initial_value": 16.0,
@@ -6497,10 +6497,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 8.0,
-        "total_computational_cost": 571932672,
+        "total_computational_cost": 691920896,
         "cost_history": [
-          285966336,
-          285966336
+          345960448,
+          345960448
         ],
         "parameter_history": [
           {
@@ -6522,7 +6522,7 @@
       "profile": "p3",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.001
+        "tolerance_rmse": 0.0005
       },
       "target_config": {
         "initial_value": 16.0,
@@ -6542,10 +6542,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 8.0,
-        "total_computational_cost": 571932672,
+        "total_computational_cost": 691920896,
         "cost_history": [
-          285966336,
-          285966336
+          345960448,
+          345960448
         ],
         "parameter_history": [
           {
@@ -6567,7 +6567,7 @@
       "profile": "p3",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.001
+        "tolerance_rmse": 0.0005
       },
       "target_config": {
         "initial_value": 16.0,
@@ -6587,10 +6587,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 8.0,
-        "total_computational_cost": 571932672,
+        "total_computational_cost": 691920896,
         "cost_history": [
-          285966336,
-          285966336
+          345960448,
+          345960448
         ],
         "parameter_history": [
           {
@@ -6612,7 +6612,7 @@
       "profile": "p3",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.001
+        "tolerance_rmse": 0.0005
       },
       "target_config": {
         "initial_value": 1e-05,
@@ -6632,10 +6632,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 1e-06,
-        "total_computational_cost": 10582016,
+        "total_computational_cost": 21108736,
         "cost_history": [
-          5277184,
-          5304832
+          10540544,
+          10568192
         ],
         "parameter_history": [
           {
@@ -6659,7 +6659,7 @@
       "profile": "p3",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.001
+        "tolerance_rmse": 0.0005
       },
       "target_config": {
         "initial_value": 1e-05,
@@ -6679,10 +6679,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 1e-06,
-        "total_computational_cost": 22195200,
+        "total_computational_cost": 43318272,
         "cost_history": [
-          10792960,
-          11402240
+          21344256,
+          21974016
         ],
         "parameter_history": [
           {
@@ -6706,7 +6706,7 @@
       "profile": "p3",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.001
+        "tolerance_rmse": 0.0005
       },
       "target_config": {
         "initial_value": 1e-05,
@@ -6726,10 +6726,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 1e-06,
-        "total_computational_cost": 241934336,
+        "total_computational_cost": 376446976,
         "cost_history": [
-          117831680,
-          124102656
+          185059328,
+          191387648
         ],
         "parameter_history": [
           {
@@ -6753,7 +6753,7 @@
       "profile": "p3",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.001
+        "tolerance_rmse": 0.0005
       },
       "target_config": {
         "initial_value": 0.1,
@@ -6773,10 +6773,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 0.1,
-        "total_computational_cost": 21152768,
+        "total_computational_cost": 31679488,
         "cost_history": [
-          8805376,
-          12347392
+          14068736,
+          17610752
         ],
         "parameter_history": [
           0.1,
@@ -6790,7 +6790,7 @@
       "profile": "p3",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.001
+        "tolerance_rmse": 0.0005
       },
       "target_config": {
         "initial_value": 0.1,
@@ -6810,10 +6810,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 0.1,
-        "total_computational_cost": 21152768,
+        "total_computational_cost": 31679488,
         "cost_history": [
-          8805376,
-          12347392
+          14068736,
+          17610752
         ],
         "parameter_history": [
           0.1,
@@ -6827,7 +6827,7 @@
       "profile": "p3",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.001
+        "tolerance_rmse": 0.0005
       },
       "target_config": {
         "initial_value": 0.1,
@@ -6847,10 +6847,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 0.1,
-        "total_computational_cost": 21152768,
+        "total_computational_cost": 31679488,
         "cost_history": [
-          8805376,
-          12347392
+          14068736,
+          17610752
         ],
         "parameter_history": [
           0.1,
@@ -6864,7 +6864,7 @@
       "profile": "p3",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.001
+        "tolerance_rmse": 0.0005
       },
       "target_config": {
         "initial_value": 0.1,
@@ -6884,10 +6884,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 0.1,
-        "total_computational_cost": 46061568,
+        "total_computational_cost": 67975168,
         "cost_history": [
-          19009536,
-          27052032
+          29966336,
+          38008832
         ],
         "parameter_history": [
           0.1,
@@ -6901,7 +6901,7 @@
       "profile": "p3",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.001
+        "tolerance_rmse": 0.0005
       },
       "target_config": {
         "initial_value": 0.1,
@@ -6921,10 +6921,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 0.1,
-        "total_computational_cost": 46061568,
+        "total_computational_cost": 67975168,
         "cost_history": [
-          19009536,
-          27052032
+          29966336,
+          38008832
         ],
         "parameter_history": [
           0.1,
@@ -6938,7 +6938,7 @@
       "profile": "p3",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.001
+        "tolerance_rmse": 0.0005
       },
       "target_config": {
         "initial_value": 0.1,
@@ -6958,10 +6958,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 0.1,
-        "total_computational_cost": 46061568,
+        "total_computational_cost": 67975168,
         "cost_history": [
-          19009536,
-          27052032
+          29966336,
+          38008832
         ],
         "parameter_history": [
           0.1,
@@ -6975,7 +6975,7 @@
       "profile": "p3",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.001
+        "tolerance_rmse": 0.0005
       },
       "target_config": {
         "initial_value": 0.1,
@@ -6995,10 +6995,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 0.1,
-        "total_computational_cost": 345853952,
+        "total_computational_cost": 494866432,
         "cost_history": [
-          142262272,
-          203591680
+          216768512,
+          278097920
         ],
         "parameter_history": [
           0.1,
@@ -7012,7 +7012,7 @@
       "profile": "p3",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.001
+        "tolerance_rmse": 0.0005
       },
       "target_config": {
         "initial_value": 0.1,
@@ -7032,10 +7032,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 0.1,
-        "total_computational_cost": 345853952,
+        "total_computational_cost": 494866432,
         "cost_history": [
-          142262272,
-          203591680
+          216768512,
+          278097920
         ],
         "parameter_history": [
           0.1,
@@ -7049,7 +7049,7 @@
       "profile": "p3",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.001
+        "tolerance_rmse": 0.0005
       },
       "target_config": {
         "initial_value": 0.1,
@@ -7069,10 +7069,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 0.1,
-        "total_computational_cost": 345853952,
+        "total_computational_cost": 494866432,
         "cost_history": [
-          142262272,
-          203591680
+          216768512,
+          278097920
         ],
         "parameter_history": [
           0.1,
@@ -7086,7 +7086,7 @@
       "profile": "p3",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.001
+        "tolerance_rmse": 0.0005
       },
       "target_config": {
         "initial_value": null,
@@ -7106,14 +7106,14 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 1.0,
-        "total_computational_cost": 270495232,
+        "total_computational_cost": 332624384,
         "cost_history": [
-          80751616,
-          41836032,
-          5304832,
-          59277312,
-          18040320,
-          65285120
+          97793024,
+          51807744,
+          10568192,
+          71569408,
+          23303680,
+          77582336
         ],
         "parameter_history": [
           0.6,
@@ -7131,7 +7131,7 @@
       "profile": "p3",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.001
+        "tolerance_rmse": 0.0005
       },
       "target_config": {
         "initial_value": null,
@@ -7151,14 +7151,14 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 1.0,
-        "total_computational_cost": 336864768,
+        "total_computational_cost": 408453632,
         "cost_history": [
-          93873664,
-          54772224,
-          15792640,
-          73524736,
-          18157056,
-          80744448
+          113295872,
+          67090944,
+          21056000,
+          88180224,
+          23420416,
+          95410176
         ],
         "parameter_history": [
           0.6,
@@ -7176,7 +7176,7 @@
       "profile": "p3",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.001
+        "tolerance_rmse": 0.0005
       },
       "target_config": {
         "initial_value": null,
@@ -7196,14 +7196,14 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 1.0,
-        "total_computational_cost": 365132288,
+        "total_computational_cost": 441593344,
         "cost_history": [
-          107123200,
-          67768320,
-          15815680,
-          75102208,
-          18187264,
-          81135616
+          128947712,
+          82443264,
+          21079040,
+          89819136,
+          23450624,
+          95853568
         ],
         "parameter_history": [
           0.6,
@@ -7221,7 +7221,7 @@
       "profile": "p3",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.001
+        "tolerance_rmse": 0.0005
       },
       "target_config": {
         "initial_value": null,
@@ -7241,14 +7241,14 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 1.0,
-        "total_computational_cost": 416283648,
+        "total_computational_cost": 518106112,
         "cost_history": [
-          112870400,
-          59360256,
-          11402240,
-          91373568,
-          37592064,
-          103685120
+          137995264,
+          74769408,
+          21974016,
+          111364096,
+          48172032,
+          123831296
         ],
         "parameter_history": [
           0.6,
@@ -7266,7 +7266,7 @@
       "profile": "p3",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.001
+        "tolerance_rmse": 0.0005
       },
       "target_config": {
         "initial_value": null,
@@ -7286,14 +7286,14 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 1.0,
-        "total_computational_cost": 534159360,
+        "total_computational_cost": 653256704,
         "cost_history": [
-          164173824,
-          85348352,
-          32835584,
-          95774720,
-          38389760,
-          117637120
+          198660096,
+          105510912,
+          43458560,
+          116027392,
+          49057792,
+          140541952
         ],
         "parameter_history": [
           0.6,
@@ -7311,7 +7311,7 @@
       "profile": "p3",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.001
+        "tolerance_rmse": 0.0005
       },
       "target_config": {
         "initial_value": null,
@@ -7331,14 +7331,14 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 1.0,
-        "total_computational_cost": 693407744,
+        "total_computational_cost": 838711296,
         "cost_history": [
-          191152128,
-          111509504,
-          33778688,
-          124218368,
-          67037184,
-          165711872
+          230535168,
+          136425472,
+          44516352,
+          149216256,
+          82479104,
+          195538944
         ],
         "parameter_history": [
           0.6,
@@ -7356,7 +7356,7 @@
       "profile": "p3",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.001
+        "tolerance_rmse": 0.0005
       },
       "target_config": {
         "initial_value": null,
@@ -7376,14 +7376,14 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 1.0,
-        "total_computational_cost": 2310242304,
+        "total_computational_cost": 2890641408,
         "cost_history": [
-          587980800,
-          286670848,
-          124102656,
-          432494592,
-          177604608,
-          701388800
+          722366464,
+          366272512,
+          191387648,
+          532129792,
+          244889600,
+          833595392
         ],
         "parameter_history": [
           0.6,
@@ -7401,7 +7401,7 @@
       "profile": "p3",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.001
+        "tolerance_rmse": 0.0005
       },
       "target_config": {
         "initial_value": null,
@@ -7421,14 +7421,14 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 1.0,
-        "total_computational_cost": 3128711168,
+        "total_computational_cost": 3828627456,
         "cost_history": [
-          769193984,
-          401164288,
-          143009792,
-          648685568,
-          263753728,
-          902903808
+          936527872,
+          501700608,
+          210376704,
+          782039040,
+          331145216,
+          1066838016
         ],
         "parameter_history": [
           0.6,
@@ -7446,7 +7446,7 @@
       "profile": "p3",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.001
+        "tolerance_rmse": 0.0005
       },
       "target_config": {
         "initial_value": null,
@@ -7466,14 +7466,14 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 1.0,
-        "total_computational_cost": 3952558080,
+        "total_computational_cost": 4781715456,
         "cost_history": [
-          948516864,
-          642277376,
-          223973376,
-          666320896,
-          336627712,
-          1134841856
+          1148565504,
+          786788352,
+          291516416,
+          802713600,
+          418076672,
+          1334054912
         ],
         "parameter_history": [
           0.6,
@@ -7511,10 +7511,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 8.0,
-        "total_computational_cost": 31778816,
+        "total_computational_cost": 42305536,
         "cost_history": [
-          15889408,
-          15889408
+          21152768,
+          21152768
         ],
         "parameter_history": [
           {
@@ -7556,10 +7556,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 8.0,
-        "total_computational_cost": 31778816,
+        "total_computational_cost": 42305536,
         "cost_history": [
-          15889408,
-          15889408
+          21152768,
+          21152768
         ],
         "parameter_history": [
           {
@@ -7601,10 +7601,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 8.0,
-        "total_computational_cost": 31778816,
+        "total_computational_cost": 42305536,
         "cost_history": [
-          15889408,
-          15889408
+          21152768,
+          21152768
         ],
         "parameter_history": [
           {
@@ -7646,10 +7646,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 8.0,
-        "total_computational_cost": 70189056,
+        "total_computational_cost": 92102656,
         "cost_history": [
-          35094528,
-          35094528
+          46051328,
+          46051328
         ],
         "parameter_history": [
           {
@@ -7691,10 +7691,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 8.0,
-        "total_computational_cost": 70189056,
+        "total_computational_cost": 92102656,
         "cost_history": [
-          35094528,
-          35094528
+          46051328,
+          46051328
         ],
         "parameter_history": [
           {
@@ -7736,10 +7736,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 8.0,
-        "total_computational_cost": 70189056,
+        "total_computational_cost": 92102656,
         "cost_history": [
-          35094528,
-          35094528
+          46051328,
+          46051328
         ],
         "parameter_history": [
           {
@@ -7781,10 +7781,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 8.0,
-        "total_computational_cost": 571932672,
+        "total_computational_cost": 691920896,
         "cost_history": [
-          285966336,
-          285966336
+          345960448,
+          345960448
         ],
         "parameter_history": [
           {
@@ -7826,10 +7826,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 8.0,
-        "total_computational_cost": 571932672,
+        "total_computational_cost": 691920896,
         "cost_history": [
-          285966336,
-          285966336
+          345960448,
+          345960448
         ],
         "parameter_history": [
           {
@@ -7871,10 +7871,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 8.0,
-        "total_computational_cost": 571932672,
+        "total_computational_cost": 691920896,
         "cost_history": [
-          285966336,
-          285966336
+          345960448,
+          345960448
         ],
         "parameter_history": [
           {
@@ -7916,10 +7916,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 1024,
-        "total_computational_cost": 50983936,
+        "total_computational_cost": 67204096,
         "cost_history": [
-          15889408,
-          35094528
+          21152768,
+          46051328
         ],
         "parameter_history": [
           {
@@ -7961,10 +7961,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 1024,
-        "total_computational_cost": 50983936,
+        "total_computational_cost": 67204096,
         "cost_history": [
-          15889408,
-          35094528
+          21152768,
+          46051328
         ],
         "parameter_history": [
           {
@@ -8006,10 +8006,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 1024,
-        "total_computational_cost": 50983936,
+        "total_computational_cost": 67204096,
         "cost_history": [
-          15889408,
-          35094528
+          21152768,
+          46051328
         ],
         "parameter_history": [
           {
@@ -8051,10 +8051,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 1e-06,
-        "total_computational_cost": 10582016,
+        "total_computational_cost": 21108736,
         "cost_history": [
-          5277184,
-          5304832
+          10540544,
+          10568192
         ],
         "parameter_history": [
           {
@@ -8098,10 +8098,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 1e-06,
-        "total_computational_cost": 22195200,
+        "total_computational_cost": 43318272,
         "cost_history": [
-          10792960,
-          11402240
+          21344256,
+          21974016
         ],
         "parameter_history": [
           {
@@ -8145,10 +8145,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 1e-06,
-        "total_computational_cost": 241934336,
+        "total_computational_cost": 376446976,
         "cost_history": [
-          117831680,
-          124102656
+          185059328,
+          191387648
         ],
         "parameter_history": [
           {
@@ -8192,10 +8192,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 0.1,
-        "total_computational_cost": 21152768,
+        "total_computational_cost": 31679488,
         "cost_history": [
-          8805376,
-          12347392
+          14068736,
+          17610752
         ],
         "parameter_history": [
           0.1,
@@ -8229,10 +8229,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 0.1,
-        "total_computational_cost": 21152768,
+        "total_computational_cost": 31679488,
         "cost_history": [
-          8805376,
-          12347392
+          14068736,
+          17610752
         ],
         "parameter_history": [
           0.1,
@@ -8266,10 +8266,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 0.1,
-        "total_computational_cost": 21152768,
+        "total_computational_cost": 31679488,
         "cost_history": [
-          8805376,
-          12347392
+          14068736,
+          17610752
         ],
         "parameter_history": [
           0.1,
@@ -8303,10 +8303,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 0.1,
-        "total_computational_cost": 46061568,
+        "total_computational_cost": 67975168,
         "cost_history": [
-          19009536,
-          27052032
+          29966336,
+          38008832
         ],
         "parameter_history": [
           0.1,
@@ -8340,10 +8340,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 0.1,
-        "total_computational_cost": 46061568,
+        "total_computational_cost": 67975168,
         "cost_history": [
-          19009536,
-          27052032
+          29966336,
+          38008832
         ],
         "parameter_history": [
           0.1,
@@ -8377,10 +8377,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 0.1,
-        "total_computational_cost": 46061568,
+        "total_computational_cost": 67975168,
         "cost_history": [
-          19009536,
-          27052032
+          29966336,
+          38008832
         ],
         "parameter_history": [
           0.1,
@@ -8414,10 +8414,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 0.1,
-        "total_computational_cost": 345853952,
+        "total_computational_cost": 494866432,
         "cost_history": [
-          142262272,
-          203591680
+          216768512,
+          278097920
         ],
         "parameter_history": [
           0.1,
@@ -8451,10 +8451,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 0.1,
-        "total_computational_cost": 345853952,
+        "total_computational_cost": 494866432,
         "cost_history": [
-          142262272,
-          203591680
+          216768512,
+          278097920
         ],
         "parameter_history": [
           0.1,
@@ -8488,10 +8488,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 0.1,
-        "total_computational_cost": 345853952,
+        "total_computational_cost": 494866432,
         "cost_history": [
-          142262272,
-          203591680
+          216768512,
+          278097920
         ],
         "parameter_history": [
           0.1,
@@ -8525,14 +8525,14 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 1.0,
-        "total_computational_cost": 231484416,
+        "total_computational_cost": 288897024,
         "cost_history": [
-          79505408,
-          42092032,
-          5304832,
-          47164416,
-          6515712,
-          50902016
+          96295936,
+          52089344,
+          10568192,
+          57210880,
+          11779072,
+          60953600
         ],
         "parameter_history": [
           0.6,
@@ -8570,14 +8570,14 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 1.0,
-        "total_computational_cost": 311084544,
+        "total_computational_cost": 378299904,
         "cost_history": [
-          94610432,
-          55147008,
-          15723520,
-          61362688,
-          18099200,
-          66141696
+          114138112,
+          67508736,
+          20986880,
+          73768448,
+          23362560,
+          78535168
         ],
         "parameter_history": [
           0.6,
@@ -8615,14 +8615,14 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 1.0,
-        "total_computational_cost": 355327488,
+        "total_computational_cost": 429832704,
         "cost_history": [
-          108069888,
-          55527936,
-          15852544,
-          75771392,
-          18249216,
-          81856512
+          130034688,
+          67948032,
+          21115904,
+          90568192,
+          23512576,
+          96653312
         ],
         "parameter_history": [
           0.6,
@@ -8660,14 +8660,14 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 1.0,
-        "total_computational_cost": 371096576,
+        "total_computational_cost": 468530176,
         "cost_history": [
-          113530880,
-          59657216,
-          11402240,
-          67770368,
-          15799296,
-          102936576
+          138735616,
+          75086848,
+          21974016,
+          83259392,
+          26371072,
+          123103232
         ],
         "parameter_history": [
           0.6,
@@ -8705,14 +8705,14 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 1.0,
-        "total_computational_cost": 19680398336,
+        "total_computational_cost": 22742330368,
         "cost_history": [
-          139902976,
-          85860352,
-          32835584,
-          96231424,
-          38067200,
-          19287500800
+          169914368,
+          106074112,
+          43458560,
+          116514816,
+          48690176,
+          22257678336
         ],
         "parameter_history": [
           0.6,
@@ -8750,14 +8750,14 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 1.0,
-        "total_computational_cost": 617544704,
+        "total_computational_cost": 749147136,
         "cost_history": [
-          166734848,
-          86430720,
-          33778688,
-          125156352,
-          39091200,
-          166352896
+          201616384,
+          106726400,
+          44516352,
+          150260736,
+          49828864,
+          196198400
         ],
         "parameter_history": [
           0.6,
@@ -8795,14 +8795,14 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 1.0,
-        "total_computational_cost": 1772212224,
+        "total_computational_cost": 2263687168,
         "cost_history": [
-          404760576,
-          286320640,
-          124102656,
-          303958016,
-          157519872,
-          495550464
+          505833472,
+          365856768,
+          191387648,
+          380241920,
+          224804864,
+          595562496
         ],
         "parameter_history": [
           0.6,
@@ -8840,14 +8840,14 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 1.0,
-        "total_computational_cost": 2661683200,
+        "total_computational_cost": 3299237888,
         "cost_history": [
-          770951168,
-          402440192,
-          143009792,
-          453945344,
-          176801792,
-          714534912
+          938604544,
+          503091200,
+          210376704,
+          554792960,
+          244168704,
+          848203776
         ],
         "parameter_history": [
           0.6,
@@ -8885,14 +8885,14 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 1.0,
-        "total_computational_cost": 3608848384,
+        "total_computational_cost": 4379830272,
         "cost_history": [
-          953159680,
-          590020608,
-          223973376,
-          669571072,
-          257744896,
-          914378752
+          1153941504,
+          723779584,
+          291516416,
+          806365184,
+          325287936,
+          1078939648
         ],
         "parameter_history": [
           0.6,
@@ -8931,10 +8931,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 8.0,
-        "total_computational_cost": 31778816,
+        "total_computational_cost": 42305536,
         "cost_history": [
-          15889408,
-          15889408
+          21152768,
+          21152768
         ],
         "parameter_history": [
           {
@@ -8977,10 +8977,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 8.0,
-        "total_computational_cost": 31778816,
+        "total_computational_cost": 42305536,
         "cost_history": [
-          15889408,
-          15889408
+          21152768,
+          21152768
         ],
         "parameter_history": [
           {
@@ -9023,10 +9023,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 8.0,
-        "total_computational_cost": 31778816,
+        "total_computational_cost": 42305536,
         "cost_history": [
-          15889408,
-          15889408
+          21152768,
+          21152768
         ],
         "parameter_history": [
           {
@@ -9069,10 +9069,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 8.0,
-        "total_computational_cost": 70189056,
+        "total_computational_cost": 92102656,
         "cost_history": [
-          35094528,
-          35094528
+          46051328,
+          46051328
         ],
         "parameter_history": [
           {
@@ -9115,10 +9115,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 8.0,
-        "total_computational_cost": 70189056,
+        "total_computational_cost": 92102656,
         "cost_history": [
-          35094528,
-          35094528
+          46051328,
+          46051328
         ],
         "parameter_history": [
           {
@@ -9161,10 +9161,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 8.0,
-        "total_computational_cost": 70189056,
+        "total_computational_cost": 92102656,
         "cost_history": [
-          35094528,
-          35094528
+          46051328,
+          46051328
         ],
         "parameter_history": [
           {
@@ -9207,10 +9207,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 8.0,
-        "total_computational_cost": 571932672,
+        "total_computational_cost": 691920896,
         "cost_history": [
-          285966336,
-          285966336
+          345960448,
+          345960448
         ],
         "parameter_history": [
           {
@@ -9253,10 +9253,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 8.0,
-        "total_computational_cost": 571932672,
+        "total_computational_cost": 691920896,
         "cost_history": [
-          285966336,
-          285966336
+          345960448,
+          345960448
         ],
         "parameter_history": [
           {
@@ -9299,10 +9299,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 8.0,
-        "total_computational_cost": 571932672,
+        "total_computational_cost": 691920896,
         "cost_history": [
-          285966336,
-          285966336
+          345960448,
+          345960448
         ],
         "parameter_history": [
           {
@@ -9345,10 +9345,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 1024,
-        "total_computational_cost": 50983936,
+        "total_computational_cost": 67204096,
         "cost_history": [
-          15889408,
-          35094528
+          21152768,
+          46051328
         ],
         "parameter_history": [
           {
@@ -9391,10 +9391,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 1024,
-        "total_computational_cost": 50983936,
+        "total_computational_cost": 67204096,
         "cost_history": [
-          15889408,
-          35094528
+          21152768,
+          46051328
         ],
         "parameter_history": [
           {
@@ -9437,10 +9437,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 1024,
-        "total_computational_cost": 50983936,
+        "total_computational_cost": 67204096,
         "cost_history": [
-          15889408,
-          35094528
+          21152768,
+          46051328
         ],
         "parameter_history": [
           {
@@ -9483,10 +9483,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 1e-06,
-        "total_computational_cost": 10582016,
+        "total_computational_cost": 21108736,
         "cost_history": [
-          5277184,
-          5304832
+          10540544,
+          10568192
         ],
         "parameter_history": [
           {
@@ -9531,10 +9531,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 1e-06,
-        "total_computational_cost": 22195200,
+        "total_computational_cost": 43318272,
         "cost_history": [
-          10792960,
-          11402240
+          21344256,
+          21974016
         ],
         "parameter_history": [
           {
@@ -9579,10 +9579,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 1e-06,
-        "total_computational_cost": 241934336,
+        "total_computational_cost": 376446976,
         "cost_history": [
-          117831680,
-          124102656
+          185059328,
+          191387648
         ],
         "parameter_history": [
           {
@@ -9627,10 +9627,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 0.1,
-        "total_computational_cost": 21152768,
+        "total_computational_cost": 31679488,
         "cost_history": [
-          8805376,
-          12347392
+          14068736,
+          17610752
         ],
         "parameter_history": [
           0.1,
@@ -9665,10 +9665,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 0.1,
-        "total_computational_cost": 21152768,
+        "total_computational_cost": 31679488,
         "cost_history": [
-          8805376,
-          12347392
+          14068736,
+          17610752
         ],
         "parameter_history": [
           0.1,
@@ -9703,10 +9703,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 0.1,
-        "total_computational_cost": 21152768,
+        "total_computational_cost": 31679488,
         "cost_history": [
-          8805376,
-          12347392
+          14068736,
+          17610752
         ],
         "parameter_history": [
           0.1,
@@ -9741,10 +9741,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 0.1,
-        "total_computational_cost": 46061568,
+        "total_computational_cost": 67975168,
         "cost_history": [
-          19009536,
-          27052032
+          29966336,
+          38008832
         ],
         "parameter_history": [
           0.1,
@@ -9779,10 +9779,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 0.1,
-        "total_computational_cost": 46061568,
+        "total_computational_cost": 67975168,
         "cost_history": [
-          19009536,
-          27052032
+          29966336,
+          38008832
         ],
         "parameter_history": [
           0.1,
@@ -9817,10 +9817,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 0.1,
-        "total_computational_cost": 46061568,
+        "total_computational_cost": 67975168,
         "cost_history": [
-          19009536,
-          27052032
+          29966336,
+          38008832
         ],
         "parameter_history": [
           0.1,
@@ -9855,10 +9855,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 0.1,
-        "total_computational_cost": 345853952,
+        "total_computational_cost": 494866432,
         "cost_history": [
-          142262272,
-          203591680
+          216768512,
+          278097920
         ],
         "parameter_history": [
           0.1,
@@ -9893,10 +9893,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 0.1,
-        "total_computational_cost": 345853952,
+        "total_computational_cost": 494866432,
         "cost_history": [
-          142262272,
-          203591680
+          216768512,
+          278097920
         ],
         "parameter_history": [
           0.1,
@@ -9931,10 +9931,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 0.1,
-        "total_computational_cost": 345853952,
+        "total_computational_cost": 494866432,
         "cost_history": [
-          142262272,
-          203591680
+          216768512,
+          278097920
         ],
         "parameter_history": [
           0.1,
@@ -9969,14 +9969,14 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 1.0,
-        "total_computational_cost": 208496128,
+        "total_computational_cost": 258599424,
         "cost_history": [
-          60691968,
-          31664640,
-          5304832,
-          35816960,
-          19759104,
-          55258624
+          73880064,
+          39575040,
+          10568192,
+          43763200,
+          25028608,
+          65784320
         ],
         "parameter_history": [
           0.6,
@@ -10015,14 +10015,14 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 1.0,
-        "total_computational_cost": 282164736,
+        "total_computational_cost": 342796800,
         "cost_history": [
-          75245056,
-          46105088,
-          17162240,
-          51515392,
-          19799040,
-          72337920
+          91079168,
+          56641024,
+          22435840,
+          62076928,
+          25072640,
+          85491200
         ],
         "parameter_history": [
           0.6,
@@ -10061,14 +10061,14 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 1.0,
-        "total_computational_cost": 358427136,
+        "total_computational_cost": 432203264,
         "cost_history": [
-          89820672,
-          46319104,
-          31473152,
-          65959424,
-          35410944,
-          89443840
+          108304896,
+          56893952,
+          39348736,
+          79140352,
+          43286528,
+          105228800
         ],
         "parameter_history": [
           0.6,
@@ -10107,14 +10107,14 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 1.0,
-        "total_computational_cost": 242281472,
+        "total_computational_cost": 316249088,
         "cost_history": [
-          63565824,
-          34449408,
-          11402240,
-          39923712,
-          16314368,
-          76625920
+          79429632,
+          45019136,
+          21974016,
+          50528256,
+          26890240,
+          92407808
         ],
         "parameter_history": [
           0.6,
@@ -10153,14 +10153,14 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 1.0,
-        "total_computational_cost": 410835968,
+        "total_computational_cost": 505965568,
         "cost_history": [
-          92795904,
-          63385600,
-          32835584,
-          71345152,
-          39993344,
-          110480384
+          113974272,
+          79216640,
+          43458560,
+          87184384,
+          50606080,
+          131525632
         ],
         "parameter_history": [
           0.6,
@@ -10199,14 +10199,14 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 1.0,
-        "total_computational_cost": 522110976,
+        "total_computational_cost": 636440576,
         "cost_history": [
-          139034624,
-          63780864,
-          33778688,
-          100287488,
-          40513536,
-          144715776
+          168620032,
+          79683584,
+          44516352,
+          121379840,
+          51212288,
+          171028480
         ],
         "parameter_history": [
           0.6,
@@ -10245,14 +10245,14 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 0.8,
-        "total_computational_cost": 965265408,
+        "total_computational_cost": 1369188352,
         "cost_history": [
-          219828224,
-          84500480,
-          124102656,
-          110596096,
-          155115520,
-          271122432
+          287277056,
+          151752704,
+          191387648,
+          177848320,
+          222400512,
+          338522112
         ],
         "parameter_history": [
           0.6,
@@ -10291,14 +10291,14 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 1.0,
-        "total_computational_cost": 1591697408,
+        "total_computational_cost": 2049929216,
         "cost_history": [
-          405051392,
-          247461888,
-          143009792,
-          265867264,
-          156633088,
-          373673984
+          506177536,
+          319739904,
+          210376704,
+          335233024,
+          224008192,
+          454393856
         ],
         "parameter_history": [
           0.6,
@@ -10337,14 +10337,14 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 2.0,
-        "total_computational_cost": 2517112832,
+        "total_computational_cost": 3118979072,
         "cost_history": [
-          590954496,
-          403685376,
-          223973376,
-          446138368,
-          161165312,
-          691195904
+          725880832,
+          504561664,
+          291516416,
+          547158016,
+          228651008,
+          821211136
         ],
         "parameter_history": [
           0.6,
@@ -10382,10 +10382,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 8.0,
-        "total_computational_cost": 31778816,
+        "total_computational_cost": 42305536,
         "cost_history": [
-          15889408,
-          15889408
+          21152768,
+          21152768
         ],
         "parameter_history": [
           {
@@ -10427,10 +10427,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 8.0,
-        "total_computational_cost": 31778816,
+        "total_computational_cost": 42305536,
         "cost_history": [
-          15889408,
-          15889408
+          21152768,
+          21152768
         ],
         "parameter_history": [
           {
@@ -10472,10 +10472,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 8.0,
-        "total_computational_cost": 31778816,
+        "total_computational_cost": 42305536,
         "cost_history": [
-          15889408,
-          15889408
+          21152768,
+          21152768
         ],
         "parameter_history": [
           {
@@ -10517,10 +10517,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 8.0,
-        "total_computational_cost": 70189056,
+        "total_computational_cost": 92102656,
         "cost_history": [
-          35094528,
-          35094528
+          46051328,
+          46051328
         ],
         "parameter_history": [
           {
@@ -10562,10 +10562,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 8.0,
-        "total_computational_cost": 70189056,
+        "total_computational_cost": 92102656,
         "cost_history": [
-          35094528,
-          35094528
+          46051328,
+          46051328
         ],
         "parameter_history": [
           {
@@ -10607,10 +10607,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 8.0,
-        "total_computational_cost": 70189056,
+        "total_computational_cost": 92102656,
         "cost_history": [
-          35094528,
-          35094528
+          46051328,
+          46051328
         ],
         "parameter_history": [
           {
@@ -10652,10 +10652,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 8.0,
-        "total_computational_cost": 571932672,
+        "total_computational_cost": 691920896,
         "cost_history": [
-          285966336,
-          285966336
+          345960448,
+          345960448
         ],
         "parameter_history": [
           {
@@ -10697,10 +10697,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 8.0,
-        "total_computational_cost": 571932672,
+        "total_computational_cost": 691920896,
         "cost_history": [
-          285966336,
-          285966336
+          345960448,
+          345960448
         ],
         "parameter_history": [
           {
@@ -10742,10 +10742,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 8.0,
-        "total_computational_cost": 571932672,
+        "total_computational_cost": 691920896,
         "cost_history": [
-          285966336,
-          285966336
+          345960448,
+          345960448
         ],
         "parameter_history": [
           {
@@ -10787,10 +10787,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 1024,
-        "total_computational_cost": 50983936,
+        "total_computational_cost": 67204096,
         "cost_history": [
-          15889408,
-          35094528
+          21152768,
+          46051328
         ],
         "parameter_history": [
           {
@@ -10832,10 +10832,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 1024,
-        "total_computational_cost": 50983936,
+        "total_computational_cost": 67204096,
         "cost_history": [
-          15889408,
-          35094528
+          21152768,
+          46051328
         ],
         "parameter_history": [
           {
@@ -10877,10 +10877,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 1024,
-        "total_computational_cost": 50983936,
+        "total_computational_cost": 67204096,
         "cost_history": [
-          15889408,
-          35094528
+          21152768,
+          46051328
         ],
         "parameter_history": [
           {
@@ -10922,10 +10922,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 1e-06,
-        "total_computational_cost": 10582016,
+        "total_computational_cost": 21108736,
         "cost_history": [
-          5277184,
-          5304832
+          10540544,
+          10568192
         ],
         "parameter_history": [
           {
@@ -10969,10 +10969,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 1e-06,
-        "total_computational_cost": 22195200,
+        "total_computational_cost": 43318272,
         "cost_history": [
-          10792960,
-          11402240
+          21344256,
+          21974016
         ],
         "parameter_history": [
           {
@@ -11016,10 +11016,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 1e-06,
-        "total_computational_cost": 241934336,
+        "total_computational_cost": 376446976,
         "cost_history": [
-          117831680,
-          124102656
+          185059328,
+          191387648
         ],
         "parameter_history": [
           {
@@ -11063,10 +11063,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 0.1,
-        "total_computational_cost": 21152768,
+        "total_computational_cost": 31679488,
         "cost_history": [
-          8805376,
-          12347392
+          14068736,
+          17610752
         ],
         "parameter_history": [
           0.1,
@@ -11100,10 +11100,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 0.1,
-        "total_computational_cost": 21152768,
+        "total_computational_cost": 31679488,
         "cost_history": [
-          8805376,
-          12347392
+          14068736,
+          17610752
         ],
         "parameter_history": [
           0.1,
@@ -11137,10 +11137,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 0.1,
-        "total_computational_cost": 21152768,
+        "total_computational_cost": 31679488,
         "cost_history": [
-          8805376,
-          12347392
+          14068736,
+          17610752
         ],
         "parameter_history": [
           0.1,
@@ -11174,10 +11174,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 0.1,
-        "total_computational_cost": 46061568,
+        "total_computational_cost": 67975168,
         "cost_history": [
-          19009536,
-          27052032
+          29966336,
+          38008832
         ],
         "parameter_history": [
           0.1,
@@ -11211,10 +11211,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 0.1,
-        "total_computational_cost": 46061568,
+        "total_computational_cost": 67975168,
         "cost_history": [
-          19009536,
-          27052032
+          29966336,
+          38008832
         ],
         "parameter_history": [
           0.1,
@@ -11248,10 +11248,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 0.1,
-        "total_computational_cost": 46061568,
+        "total_computational_cost": 67975168,
         "cost_history": [
-          19009536,
-          27052032
+          29966336,
+          38008832
         ],
         "parameter_history": [
           0.1,
@@ -11285,10 +11285,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 0.1,
-        "total_computational_cost": 345853952,
+        "total_computational_cost": 494866432,
         "cost_history": [
-          142262272,
-          203591680
+          216768512,
+          278097920
         ],
         "parameter_history": [
           0.1,
@@ -11322,10 +11322,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 0.1,
-        "total_computational_cost": 345853952,
+        "total_computational_cost": 494866432,
         "cost_history": [
-          142262272,
-          203591680
+          216768512,
+          278097920
         ],
         "parameter_history": [
           0.1,
@@ -11359,10 +11359,10 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 0.1,
-        "total_computational_cost": 345853952,
+        "total_computational_cost": 494866432,
         "cost_history": [
-          142262272,
-          203591680
+          216768512,
+          278097920
         ],
         "parameter_history": [
           0.1,
@@ -11396,14 +11396,14 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 1.0,
-        "total_computational_cost": 270495232,
+        "total_computational_cost": 332624384,
         "cost_history": [
-          80751616,
-          41836032,
-          5304832,
-          59277312,
-          18040320,
-          65285120
+          97793024,
+          51807744,
+          10568192,
+          71569408,
+          23303680,
+          77582336
         ],
         "parameter_history": [
           0.6,
@@ -11441,14 +11441,14 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 1.0,
-        "total_computational_cost": 336864768,
+        "total_computational_cost": 408453632,
         "cost_history": [
-          93873664,
-          54772224,
-          15792640,
-          73524736,
-          18157056,
-          80744448
+          113295872,
+          67090944,
+          21056000,
+          88180224,
+          23420416,
+          95410176
         ],
         "parameter_history": [
           0.6,
@@ -11486,14 +11486,14 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 1.0,
-        "total_computational_cost": 365132288,
+        "total_computational_cost": 441593344,
         "cost_history": [
-          107123200,
-          67768320,
-          15815680,
-          75102208,
-          18187264,
-          81135616
+          128947712,
+          82443264,
+          21079040,
+          89819136,
+          23450624,
+          95853568
         ],
         "parameter_history": [
           0.6,
@@ -11531,14 +11531,14 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 1.0,
-        "total_computational_cost": 416283648,
+        "total_computational_cost": 518106112,
         "cost_history": [
-          112870400,
-          59360256,
-          11402240,
-          91373568,
-          37592064,
-          103685120
+          137995264,
+          74769408,
+          21974016,
+          111364096,
+          48172032,
+          123831296
         ],
         "parameter_history": [
           0.6,
@@ -11576,14 +11576,14 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 1.0,
-        "total_computational_cost": 534159360,
+        "total_computational_cost": 653256704,
         "cost_history": [
-          164173824,
-          85348352,
-          32835584,
-          95774720,
-          38389760,
-          117637120
+          198660096,
+          105510912,
+          43458560,
+          116027392,
+          49057792,
+          140541952
         ],
         "parameter_history": [
           0.6,
@@ -11621,14 +11621,14 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 1.0,
-        "total_computational_cost": 693407744,
+        "total_computational_cost": 838711296,
         "cost_history": [
-          191152128,
-          111509504,
-          33778688,
-          124218368,
-          67037184,
-          165711872
+          230535168,
+          136425472,
+          44516352,
+          149216256,
+          82479104,
+          195538944
         ],
         "parameter_history": [
           0.6,
@@ -11666,14 +11666,14 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 1.0,
-        "total_computational_cost": 2310242304,
+        "total_computational_cost": 2890641408,
         "cost_history": [
-          587980800,
-          286670848,
-          124102656,
-          432494592,
-          177604608,
-          701388800
+          722366464,
+          366272512,
+          191387648,
+          532129792,
+          244889600,
+          833595392
         ],
         "parameter_history": [
           0.6,
@@ -11711,14 +11711,14 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 1.0,
-        "total_computational_cost": 3128711168,
+        "total_computational_cost": 3828627456,
         "cost_history": [
-          769193984,
-          401164288,
-          143009792,
-          648685568,
-          263753728,
-          902903808
+          936527872,
+          501700608,
+          210376704,
+          782039040,
+          331145216,
+          1066838016
         ],
         "parameter_history": [
           0.6,
@@ -11756,14 +11756,14 @@
       "results": {
         "converged": true,
         "optimal_parameter_value": 1.0,
-        "total_computational_cost": 3952558080,
+        "total_computational_cost": 4781715456,
         "cost_history": [
-          948516864,
-          642277376,
-          223973376,
-          666320896,
-          336627712,
-          1134841856
+          1148565504,
+          786788352,
+          291516416,
+          802713600,
+          418076672,
+          1334054912
         ],
         "parameter_history": [
           0.6,
