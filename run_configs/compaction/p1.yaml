@@ -1,0 +1,26 @@
+defaults:
+  - _self_
+  - override hydra/hydra_logging: none
+  - override hydra/job_logging: none
+
+# Physical parameters
+length: 1.0            # Bar length [m]
+height: 1.0            # Bar height [m]
+
+# Material properties
+E: 1.0e5               # Young's modulus [Pa]
+nu: 0.0                # Poisson's ratio [-]
+rho: 1000.0            # Density [kg/m³]
+g: 10.0                # Gravity [m/s²]
+
+# Mesh parameters (tunable parameter from CSV: ny)
+nx: 2                  # Number of elements in x direction
+ny: 10                 # Number of elements in y direction (main tunable parameter)
+
+# Simulator statics
+record_dt: 1.0         # Not used for static problems
+end_frame: 1           # Single frame for static analysis
+
+# Output configuration
+dump_dir: "sim_res/compaction/p1"  # Directory for output files
+verbose: False         # Enable verbose output
