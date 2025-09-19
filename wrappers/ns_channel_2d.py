@@ -19,7 +19,7 @@ def run_sim_ns_channel_2d(profile, boundary_type, mesh_x, mesh_y, omega_u, omega
                 return meta["cost"], meta["num_steps"]
 
     # Build command with wall parameters if provided
-    cmd = f"python costsci_tools/runners/ns_channel_2d.py --config-name={profile} mesh_x={mesh_x} mesh_y={mesh_y} omega_u={omega_u} omega_v={omega_v} omega_p={omega_p} diff_u_threshold={diff_u_threshold} diff_v_threshold={diff_v_threshold} res_iter_v_threshold={res_iter_v_threshold} boundary_condition={boundary_type}"
+    cmd = f"python runners/ns_channel_2d.py --config-name={profile} mesh_x={mesh_x} mesh_y={mesh_y} omega_u={omega_u} omega_v={omega_v} omega_p={omega_p} diff_u_threshold={diff_u_threshold} diff_v_threshold={diff_v_threshold} res_iter_v_threshold={res_iter_v_threshold} boundary_condition={boundary_type}"
     
     # Add wall parameters if provided
     if other_params:
@@ -60,6 +60,7 @@ def run_sim_ns_channel_2d(profile, boundary_type, mesh_x, mesh_y, omega_u, omega
 def get_res_ns_channel_2d(profile, boundary_type, mesh_x, mesh_y, omega_u, omega_v, omega_p, diff_u_threshold, diff_v_threshold, res_iter_v_threshold, other_params=None):
     """Load final velocity and pressure fields for given parameters."""
     dir_path = f"sim_res/ns_channel_2d/{profile}_{boundary_type}_mesh_{mesh_x}_{mesh_y}_relax_{omega_u}_{omega_v}_{omega_p}_error_{diff_u_threshold}_{diff_v_threshold}_itererror_{res_iter_v_threshold}/"
+    meta_file_path = os.path.join(dir_path, "meta.json")
 
     if not os.path.exists(dir_path):
         os.makedirs(dir_path)
@@ -75,6 +76,16 @@ def get_res_ns_channel_2d(profile, boundary_type, mesh_x, mesh_y, omega_u, omega
         if not files:
             print(f"Warning: No result files found in {dir_path} after triggering a simulation run.")
             return None, None, None
+
+    # Check convergence from meta.json; if not converged, treat as failure for comparison
+    if os.path.exists(meta_file_path):
+        try:
+            with open(meta_file_path, "r") as f:
+                meta = json.load(f)
+            if "converged" in meta and (meta["converged"] is False or meta["converged"] == 0):
+                return None, None, None
+        except Exception as e:
+            print(f"Warning: Could not read/parse meta.json at {meta_file_path}: {e}")
 
     files.sort(key=lambda x: int(x.split("_")[1].split(".")[0]))
     latest_file = files[-1]

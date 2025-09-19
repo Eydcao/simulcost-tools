@@ -11,7 +11,7 @@
       "profile": "p1",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 0.0001
+        "tolerance_rmse": 1e-10
       },
       "target_config": {
         "initial_value": 512,
@@ -31,12 +31,12 @@
       "results": {
         "converged": false,
         "optimal_parameter_value": 4096,
-        "total_computational_cost": 1479705600,
+        "total_computational_cost": 2108793856,
         "cost_history": [
-          15889408,
-          35094528,
-          264921088,
-          1163800576
+          21152768,
+          46051328,
+          339427328,
+          1702162432
         ],
         "parameter_history": [
           {
@@ -68,7 +68,7 @@
       "profile": "p1",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 0.0001
+        "tolerance_rmse": 1e-10
       },
       "target_config": {
         "initial_value": 512,
@@ -88,12 +88,12 @@
       "results": {
         "converged": false,
         "optimal_parameter_value": 4096,
-        "total_computational_cost": 1479705600,
+        "total_computational_cost": 2108793856,
         "cost_history": [
-          15889408,
-          35094528,
-          264921088,
-          1163800576
+          21152768,
+          46051328,
+          339427328,
+          1702162432
         ],
         "parameter_history": [
           {
@@ -125,7 +125,7 @@
       "profile": "p1",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 0.0001
+        "tolerance_rmse": 1e-10
       },
       "target_config": {
         "initial_value": 512,
@@ -145,12 +145,12 @@
       "results": {
         "converged": false,
         "optimal_parameter_value": 4096,
-        "total_computational_cost": 1479705600,
+        "total_computational_cost": 2108793856,
         "cost_history": [
-          15889408,
-          35094528,
-          264921088,
-          1163800576
+          21152768,
+          46051328,
+          339427328,
+          1702162432
         ],
         "parameter_history": [
           {
@@ -182,7 +182,7 @@
       "profile": "p1",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 0.0001
+        "tolerance_rmse": 1e-10
       },
       "target_config": {
         "initial_value": 1e-05,
@@ -202,12 +202,12 @@
       "results": {
         "converged": false,
         "optimal_parameter_value": 1e-08,
-        "total_computational_cost": 88809472,
+        "total_computational_cost": 131293184,
         "cost_history": [
-          10792960,
-          11402240,
-          32835584,
-          33778688
+          21344256,
+          21974016,
+          43458560,
+          44516352
         ],
         "parameter_history": [
           {
@@ -243,7 +243,7 @@
       "profile": "p1",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 0.0001
+        "tolerance_rmse": 1e-10
       },
       "target_config": {
         "initial_value": 1e-05,
@@ -263,12 +263,12 @@
       "results": {
         "converged": false,
         "optimal_parameter_value": 1e-08,
-        "total_computational_cost": 608917504,
+        "total_computational_cost": 878340096,
         "cost_history": [
-          117831680,
-          124102656,
-          143009792,
-          223973376
+          185059328,
+          191387648,
+          210376704,
+          291516416
         ],
         "parameter_history": [
           {
@@ -304,7 +304,7 @@
       "profile": "p2",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 0.0001
+        "tolerance_rmse": 1e-10
       },
       "target_config": {
         "initial_value": 512,
@@ -325,12 +325,12 @@
       "results": {
         "converged": false,
         "optimal_parameter_value": 4096,
-        "total_computational_cost": 1479705600,
+        "total_computational_cost": 2108793856,
         "cost_history": [
-          15889408,
-          35094528,
-          264921088,
-          1163800576
+          21152768,
+          46051328,
+          339427328,
+          1702162432
         ],
         "parameter_history": [
           {
@@ -362,7 +362,7 @@
       "profile": "p2",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 0.0001
+        "tolerance_rmse": 1e-10
       },
       "target_config": {
         "initial_value": 512,
@@ -383,12 +383,12 @@
       "results": {
         "converged": false,
         "optimal_parameter_value": 4096,
-        "total_computational_cost": 1479705600,
+        "total_computational_cost": 2108793856,
         "cost_history": [
-          15889408,
-          35094528,
-          264921088,
-          1163800576
+          21152768,
+          46051328,
+          339427328,
+          1702162432
         ],
         "parameter_history": [
           {
@@ -420,7 +420,7 @@
       "profile": "p2",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 0.0001
+        "tolerance_rmse": 1e-10
       },
       "target_config": {
         "initial_value": 512,
@@ -441,12 +441,12 @@
       "results": {
         "converged": false,
         "optimal_parameter_value": 4096,
-        "total_computational_cost": 1479705600,
+        "total_computational_cost": 2108793856,
         "cost_history": [
-          15889408,
-          35094528,
-          264921088,
-          1163800576
+          21152768,
+          46051328,
+          339427328,
+          1702162432
         ],
         "parameter_history": [
           {
@@ -478,7 +478,7 @@
       "profile": "p2",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 0.0001
+        "tolerance_rmse": 1e-10
       },
       "target_config": {
         "initial_value": 1e-05,
@@ -499,12 +499,12 @@
       "results": {
         "converged": false,
         "optimal_parameter_value": 1e-08,
-        "total_computational_cost": 88809472,
+        "total_computational_cost": 131293184,
         "cost_history": [
-          10792960,
-          11402240,
-          32835584,
-          33778688
+          21344256,
+          21974016,
+          43458560,
+          44516352
         ],
         "parameter_history": [
           {
@@ -540,7 +540,7 @@
       "profile": "p2",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 0.0001
+        "tolerance_rmse": 1e-10
       },
       "target_config": {
         "initial_value": 1e-05,
@@ -561,12 +561,12 @@
       "results": {
         "converged": false,
         "optimal_parameter_value": 1e-08,
-        "total_computational_cost": 608917504,
+        "total_computational_cost": 878340096,
         "cost_history": [
-          117831680,
-          124102656,
-          143009792,
-          223973376
+          185059328,
+          191387648,
+          210376704,
+          291516416
         ],
         "parameter_history": [
           {
@@ -602,7 +602,7 @@
       "profile": "p3",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 0.0001
+        "tolerance_rmse": 1e-10
       },
       "target_config": {
         "initial_value": 512,
@@ -622,12 +622,12 @@
       "results": {
         "converged": false,
         "optimal_parameter_value": 4096,
-        "total_computational_cost": 1479705600,
+        "total_computational_cost": 2108793856,
         "cost_history": [
-          15889408,
-          35094528,
-          264921088,
-          1163800576
+          21152768,
+          46051328,
+          339427328,
+          1702162432
         ],
         "parameter_history": [
           {
@@ -659,7 +659,7 @@
       "profile": "p3",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 0.0001
+        "tolerance_rmse": 1e-10
       },
       "target_config": {
         "initial_value": 512,
@@ -679,12 +679,12 @@
       "results": {
         "converged": false,
         "optimal_parameter_value": 4096,
-        "total_computational_cost": 1479705600,
+        "total_computational_cost": 2108793856,
         "cost_history": [
-          15889408,
-          35094528,
-          264921088,
-          1163800576
+          21152768,
+          46051328,
+          339427328,
+          1702162432
         ],
         "parameter_history": [
           {
@@ -716,7 +716,7 @@
       "profile": "p3",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 0.0001
+        "tolerance_rmse": 1e-10
       },
       "target_config": {
         "initial_value": 512,
@@ -736,12 +736,12 @@
       "results": {
         "converged": false,
         "optimal_parameter_value": 4096,
-        "total_computational_cost": 1479705600,
+        "total_computational_cost": 2108793856,
         "cost_history": [
-          15889408,
-          35094528,
-          264921088,
-          1163800576
+          21152768,
+          46051328,
+          339427328,
+          1702162432
         ],
         "parameter_history": [
           {
@@ -773,7 +773,7 @@
       "profile": "p3",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 0.0001
+        "tolerance_rmse": 1e-10
       },
       "target_config": {
         "initial_value": 1e-05,
@@ -793,12 +793,12 @@
       "results": {
         "converged": false,
         "optimal_parameter_value": 1e-08,
-        "total_computational_cost": 88809472,
+        "total_computational_cost": 131293184,
         "cost_history": [
-          10792960,
-          11402240,
-          32835584,
-          33778688
+          21344256,
+          21974016,
+          43458560,
+          44516352
         ],
         "parameter_history": [
           {
@@ -834,7 +834,7 @@
       "profile": "p3",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 0.0001
+        "tolerance_rmse": 1e-10
       },
       "target_config": {
         "initial_value": 1e-05,
@@ -854,12 +854,12 @@
       "results": {
         "converged": false,
         "optimal_parameter_value": 1e-08,
-        "total_computational_cost": 608917504,
+        "total_computational_cost": 878340096,
         "cost_history": [
-          117831680,
-          124102656,
-          143009792,
-          223973376
+          185059328,
+          191387648,
+          210376704,
+          291516416
         ],
         "parameter_history": [
           {
@@ -895,7 +895,7 @@
       "profile": "p1",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.001
+        "tolerance_rmse": 0.0005
       },
       "target_config": {
         "initial_value": 512,
@@ -915,12 +915,12 @@
       "results": {
         "converged": false,
         "optimal_parameter_value": 4096,
-        "total_computational_cost": 1479705600,
+        "total_computational_cost": 2108793856,
         "cost_history": [
-          15889408,
-          35094528,
-          264921088,
-          1163800576
+          21152768,
+          46051328,
+          339427328,
+          1702162432
         ],
         "parameter_history": [
           {
@@ -952,7 +952,7 @@
       "profile": "p1",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.001
+        "tolerance_rmse": 0.0005
       },
       "target_config": {
         "initial_value": 512,
@@ -972,12 +972,12 @@
       "results": {
         "converged": false,
         "optimal_parameter_value": 4096,
-        "total_computational_cost": 1479705600,
+        "total_computational_cost": 2108793856,
         "cost_history": [
-          15889408,
-          35094528,
-          264921088,
-          1163800576
+          21152768,
+          46051328,
+          339427328,
+          1702162432
         ],
         "parameter_history": [
           {
@@ -1009,7 +1009,7 @@
       "profile": "p1",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.001
+        "tolerance_rmse": 0.0005
       },
       "target_config": {
         "initial_value": 512,
@@ -1029,12 +1029,12 @@
       "results": {
         "converged": false,
         "optimal_parameter_value": 4096,
-        "total_computational_cost": 1479705600,
+        "total_computational_cost": 2108793856,
         "cost_history": [
-          15889408,
-          35094528,
-          264921088,
-          1163800576
+          21152768,
+          46051328,
+          339427328,
+          1702162432
         ],
         "parameter_history": [
           {
@@ -1066,7 +1066,7 @@
       "profile": "p2",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.001
+        "tolerance_rmse": 0.0005
       },
       "target_config": {
         "initial_value": 512,
@@ -1087,12 +1087,12 @@
       "results": {
         "converged": false,
         "optimal_parameter_value": 4096,
-        "total_computational_cost": 1479705600,
+        "total_computational_cost": 2108793856,
         "cost_history": [
-          15889408,
-          35094528,
-          264921088,
-          1163800576
+          21152768,
+          46051328,
+          339427328,
+          1702162432
         ],
         "parameter_history": [
           {
@@ -1124,7 +1124,7 @@
       "profile": "p2",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.001
+        "tolerance_rmse": 0.0005
       },
       "target_config": {
         "initial_value": 512,
@@ -1145,12 +1145,12 @@
       "results": {
         "converged": false,
         "optimal_parameter_value": 4096,
-        "total_computational_cost": 1479705600,
+        "total_computational_cost": 2108793856,
         "cost_history": [
-          15889408,
-          35094528,
-          264921088,
-          1163800576
+          21152768,
+          46051328,
+          339427328,
+          1702162432
         ],
         "parameter_history": [
           {
@@ -1182,7 +1182,7 @@
       "profile": "p2",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.001
+        "tolerance_rmse": 0.0005
       },
       "target_config": {
         "initial_value": 512,
@@ -1203,12 +1203,12 @@
       "results": {
         "converged": false,
         "optimal_parameter_value": 4096,
-        "total_computational_cost": 1479705600,
+        "total_computational_cost": 2108793856,
         "cost_history": [
-          15889408,
-          35094528,
-          264921088,
-          1163800576
+          21152768,
+          46051328,
+          339427328,
+          1702162432
         ],
         "parameter_history": [
           {
@@ -1240,7 +1240,7 @@
       "profile": "p3",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.001
+        "tolerance_rmse": 0.0005
       },
       "target_config": {
         "initial_value": 512,
@@ -1260,12 +1260,12 @@
       "results": {
         "converged": false,
         "optimal_parameter_value": 4096,
-        "total_computational_cost": 1479705600,
+        "total_computational_cost": 2108793856,
         "cost_history": [
-          15889408,
-          35094528,
-          264921088,
-          1163800576
+          21152768,
+          46051328,
+          339427328,
+          1702162432
         ],
         "parameter_history": [
           {
@@ -1297,7 +1297,7 @@
       "profile": "p3",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.001
+        "tolerance_rmse": 0.0005
       },
       "target_config": {
         "initial_value": 512,
@@ -1317,12 +1317,12 @@
       "results": {
         "converged": false,
         "optimal_parameter_value": 4096,
-        "total_computational_cost": 1479705600,
+        "total_computational_cost": 2108793856,
         "cost_history": [
-          15889408,
-          35094528,
-          264921088,
-          1163800576
+          21152768,
+          46051328,
+          339427328,
+          1702162432
         ],
         "parameter_history": [
           {
@@ -1354,7 +1354,7 @@
       "profile": "p3",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.001
+        "tolerance_rmse": 0.0005
       },
       "target_config": {
         "initial_value": 512,
@@ -1374,12 +1374,12 @@
       "results": {
         "converged": false,
         "optimal_parameter_value": 4096,
-        "total_computational_cost": 1479705600,
+        "total_computational_cost": 2108793856,
         "cost_history": [
-          15889408,
-          35094528,
-          264921088,
-          1163800576
+          21152768,
+          46051328,
+          339427328,
+          1702162432
         ],
         "parameter_history": [
           {

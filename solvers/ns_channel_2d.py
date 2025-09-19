@@ -62,6 +62,10 @@ class NSChannel2D():
         self.verbose = verbose
         self.num_steps = None
         self.converged = None
+        # Iteration accounting for cost/complexity
+        self.total_u_inner_iters = 0
+        self.total_v_inner_iters = 0
+        self.total_pressure_corrections = 0
 
     def reset_fields(self):
         my, mx = self.mesh_y, self.mesh_x
@@ -291,7 +295,7 @@ class NSChannel2D():
         P[self.node_type[:-1, :-1] == "top-wall"] = 0
         P[self.node_type[:-1, :-1] == "bottom-wall"] = 0
         
-        file_base = os.dump_dir.join(self.dump_dir, f"res_{k}")
+        file_base = os.path.join(self.dump_dir, f"res_{k}")
 
         # Save HDF5 data file
         with h5py.File(f"{file_base}.h5", "w") as f:
@@ -393,7 +397,16 @@ class NSChannel2D():
         plt.close()
     
     def post_process(self):
-        cost = (self.mesh_x * self.mesh_y) * self.num_steps
+        # Complexity-based cost: count all inner iterations scaled by grid size
+        # - U-sweeps: fixed self.iter_v per outer step (no early stop)
+        # - V-sweeps: actual iterations with possible early stop
+        # - Pressure correction: one solve per outer step (counted as 1 iteration)
+        cells = (self.mesh_x * self.mesh_y)
+        # Linear sweeps (Gauss-Seidel style) ~ O(N) per inner iteration
+        uv_cost = cells * (int(self.total_u_inner_iters) + int(self.total_v_inner_iters))
+        # Pressure correction with sparse LU ~ O(N^(3/2)) in 2D
+        p_cost = (cells ** 1.5) * int(self.total_pressure_corrections)
+        cost = uv_cost + p_cost
         meta = {
             "cost": cost, 
             "num_steps": self.num_steps, 
@@ -405,12 +418,21 @@ class NSChannel2D():
             "omega_p": self.omega_p,
             "diff_u_threshold": self.diff_u_threshold,
             "diff_v_threshold": self.diff_v_threshold,
-            "res_iter_v_threshold": self.res_iter_v_threshold_name
+            "res_iter_v_threshold": self.res_iter_v_threshold_name,
+            "total_u_inner_iters": int(self.total_u_inner_iters),
+            "total_v_inner_iters": int(self.total_v_inner_iters),
+            "total_pressure_corrections": int(self.total_pressure_corrections),
+            "uv_cost": uv_cost,
+            "pressure_cost": p_cost
         }
         with open(os.path.join(self.dump_dir, "meta.json"), "w") as f:
             json.dump(meta, f, indent=4)
 
         print(f"Run cost: {cost}, num_steps: {self.num_steps}, converged: {self.converged}")
+        if self.verbose:
+            print(
+                f"  Iteration summary: U={int(self.total_u_inner_iters)}, V={int(self.total_v_inner_iters)}, P={int(self.total_pressure_corrections)} (cells={cells})"
+            )
         
 
     def run(self):
@@ -467,6 +489,8 @@ class NSChannel2D():
                     self.post_process()
                     # Stop early; caller can lower omega_u or check BCs.
                     return False
+            # Account U inner iterations (fixed count per outer iteration)
+            self.total_u_inner_iters += self.iter_v
             # V-momentum coefficients
             i_range_v = slice(1, my)
             j_range_v = slice(1, mx + 1)
@@ -481,6 +505,7 @@ class NSChannel2D():
             self.v_diag_coeff[self.node_type == "top-wall"] = 1e30
             self.v_diag_coeff[self.node_type == "bottom-wall"] = 1e30
             self.v_diag_coeff = np.maximum(self.v_diag_coeff, self.eps) / self.omega_v
+            v_iter_count = 0
             for _ in range(self.iter_v):
                 try:
                     with np.errstate(over='raise', divide='raise', invalid='raise', under='ignore'):
@@ -493,6 +518,7 @@ class NSChannel2D():
                             self.dx * (self.pressure[i_range_v, j_range_v] - self.pressure[i_range_v.start+1:i_range_v.stop+1, j_range_v])
                         )
                     res_v_inner = np.linalg.norm(self.v - v_new) / (np.linalg.norm(v_new) + 1e-12)
+                    v_iter_count += 1
                     if res_v_inner < self.res_iter_v_threshold(k):
                         break
                 except FloatingPointError as e:
@@ -511,6 +537,8 @@ class NSChannel2D():
                     self._dump_final()
                     self.post_process()
                     return False
+            # Account V inner iterations (actual count with early stop)
+            self.total_v_inner_iters += v_iter_count
             # Pressure correction coefficients
             i_range_p = slice(1, my + 1)
             j_range_p = slice(1, mx + 1)
@@ -530,6 +558,8 @@ class NSChannel2D():
             # self.pressure_diag_coeff[self.node_type == "top-wall"] = 1e30
             # self.pressure_diag_coeff[self.node_type == "bottom-wall"] = 1e30
             self.p_prime = self._solve_pressure_correction(self.u, self.v, self.east_coeff, self.west_coeff, self.north_coeff, self.south_coeff, self.pressure_diag_coeff)
+            # Account one pressure correction per outer iteration
+            self.total_pressure_corrections += 1
             self.pressure[1:-1, 1:-1] += self.omega_p * self.p_prime[1:-1, 1:-1]
             self.u[1:my+1, 1:mx] += (self.dy / self.u_diag_coeff[1:my+1, 1:mx]) * (self.p_prime[1:my+1, 1:mx] - self.p_prime[1:my+1, 2:mx+1])
             self.v[1:my, 1:mx+1] += (self.dx / self.v_diag_coeff[1:my, 1:mx+1]) * (self.p_prime[1:my, 1:mx+1] - self.p_prime[2:my+1, 1:mx+1])

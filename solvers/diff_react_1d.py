@@ -549,7 +549,7 @@ class DiffReact1D(SIMULATOR):
         """Post-processing: save metadata and final statistics"""
         # Calculate cost as: sum_n_newton_iter * N_res + sum_iter_line_search * N_res
         # where N_res is the number of residual calculations per iteration (n_space for 1D)
-        newton_cost = self.total_newton_iters * self.n_space
+        newton_cost = 3 * self.total_newton_iters * self.n_space
         line_search_cost = self.total_line_search_iters * self.n_space
         cost = newton_cost + line_search_cost
         
