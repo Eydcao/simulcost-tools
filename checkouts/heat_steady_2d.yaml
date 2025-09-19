@@ -1,0 +1,67 @@
+# Heat Steady 2D Solver Checkout Configuration
+# This file centralizes all parameter settings for both documentation and dummy solution generation
+
+solver_info:
+  name: "Heat Steady 2D"
+  numerical_method: "Jacobi iteration with Successive Over-Relaxation (SOR)"
+  reference: "Standard 2D Laplace equation solver with fixed boundary conditions"
+
+task_distribution:
+  strategy: "flexible_parameter"
+  total_individuals: 195
+
+precision_levels:
+  low:
+    tolerance_rmse: 0.005
+  medium:
+    tolerance_rmse: 0.0005
+  high:
+    tolerance_rmse: 0.0003
+
+profiles:
+  num_profiles: 8
+  active_profiles: ["p1", "p2", "p3", "p4", "p5", "p6", "p7", "p8"]
+
+# Parameter configurations for each target parameter
+target_parameters:
+  dx:
+    description: "Grid spacing (determines resolution) - controls spatial discretization accuracy"
+    search_type: "iterative+0-shot"
+    initial_value: 0.08
+    multiplication_factor: 0.5
+    max_iteration_num: 5
+    non_target_parameters:
+      relax: [0.2,0.6,1.0]  # Fixed standard Jacobi iteration
+      error_threshold: 1e-8  # Fixed convergence threshold
+      t_init: [0.0, 0.25, 0.5, 0.75, 1.0]  # Different initial conditions
+
+  relax:
+    description: "SOR relaxation parameter (1.0=Jacobi, <1.0=under-relaxation, >1.0=over-relaxation)"
+    search_type: "0-shot"
+    search_range: [0.1, 1.9]
+    search_range_slice_num: 10
+    non_target_parameters:
+      dx: 0.01      # Fixed moderate resolution
+      error_threshold: 1e-8  # Fixed convergence threshold
+      t_init: [0.0, 0.25, 0.5, 0.75, 1.0]  # Different initial conditions
+
+  t_init:
+    description: "Initial temperature field value - affects convergence speed and path"
+    search_type: "0-shot"
+    search_range: [0.0, 1.0]
+    search_range_slice_num: 6
+    non_target_parameters:
+      dx: 0.01       # Fixed moderate resolution
+      relax: [0.2,0.6,1.0]     # Fixed standard Jacobi iteration
+      error_threshold: 1e-8  # Fixed convergence threshold
+
+  error_threshold:
+    description: "Convergence threshold for stopping iteration when RMSE between steps drops below threshold"
+    search_type: "iterative+0-shot"
+    initial_value: 1e-4
+    multiplication_factor: 0.1
+    max_iteration_num: 6
+    non_target_parameters:
+      dx: 0.01       # Fixed moderate resolution
+      relax: [0.2,0.6,1.0]  # Fixed standard Jacobi iteration
+      t_init: [0.0, 0.25, 0.5, 0.75, 1.0]  # Different initial conditions

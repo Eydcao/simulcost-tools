@@ -1,0 +1,3280 @@
+{
+  "metadata": {
+    "solver": "euler_1d",
+    "description": "Failed to converge parameter optimization tasks",
+    "total_tasks": 19
+  },
+  "tasks": [
+    {
+      "solver": "euler_1d",
+      "target_parameter": "n_space",
+      "profile": "p2",
+      "precision_config": {
+        "tolerance_rmse": 0.02
+      },
+      "target_config": {
+        "initial_value": 256,
+        "multiplication_factor": 2,
+        "max_iteration_num": 7,
+        "search_range_min": null,
+        "search_range_max": null,
+        "search_range_slice_num": null
+      },
+      "non_target_parameters": {
+        "cfl": 0.25,
+        "beta": 1.5,
+        "k": 1.0
+      },
+      "results": {
+        "converged": false,
+        "optimal_parameter_value": 16384,
+        "total_computational_cost": 901618944,
+        "cost_history": [
+          150784,
+          599040,
+          2378752,
+          9502720,
+          37969920,
+          161972224,
+          689045504
+        ],
+        "parameter_history": [
+          {
+            "n_space": 256,
+            "cfl": 0.25,
+            "beta": 1.5,
+            "k": 1.0
+          },
+          {
+            "n_space": 512,
+            "cfl": 0.25,
+            "beta": 1.5,
+            "k": 1.0
+          },
+          {
+            "n_space": 1024,
+            "cfl": 0.25,
+            "beta": 1.5,
+            "k": 1.0
+          },
+          {
+            "n_space": 2048,
+            "cfl": 0.25,
+            "beta": 1.5,
+            "k": 1.0
+          },
+          {
+            "n_space": 4096,
+            "cfl": 0.25,
+            "beta": 1.5,
+            "k": 1.0
+          },
+          {
+            "n_space": 8192,
+            "cfl": 0.25,
+            "beta": 1.5,
+            "k": 1.0
+          },
+          {
+            "n_space": 16384,
+            "cfl": 0.25,
+            "beta": 1.5,
+            "k": 1.0
+          }
+        ]
+      }
+    },
+    {
+      "solver": "euler_1d",
+      "target_parameter": "n_space",
+      "profile": "p2",
+      "precision_config": {
+        "tolerance_rmse": 0.02
+      },
+      "target_config": {
+        "initial_value": 256,
+        "multiplication_factor": 2,
+        "max_iteration_num": 7,
+        "search_range_min": null,
+        "search_range_max": null,
+        "search_range_slice_num": null
+      },
+      "non_target_parameters": {
+        "cfl": 0.25,
+        "beta": 2.0,
+        "k": 1.0
+      },
+      "results": {
+        "converged": false,
+        "optimal_parameter_value": 16384,
+        "total_computational_cost": 2226989056,
+        "cost_history": [
+          151040,
+          602624,
+          2529280,
+          10620928,
+          46276608,
+          263004160,
+          1903804416
+        ],
+        "parameter_history": [
+          {
+            "n_space": 256,
+            "cfl": 0.25,
+            "beta": 2.0,
+            "k": 1.0
+          },
+          {
+            "n_space": 512,
+            "cfl": 0.25,
+            "beta": 2.0,
+            "k": 1.0
+          },
+          {
+            "n_space": 1024,
+            "cfl": 0.25,
+            "beta": 2.0,
+            "k": 1.0
+          },
+          {
+            "n_space": 2048,
+            "cfl": 0.25,
+            "beta": 2.0,
+            "k": 1.0
+          },
+          {
+            "n_space": 4096,
+            "cfl": 0.25,
+            "beta": 2.0,
+            "k": 1.0
+          },
+          {
+            "n_space": 8192,
+            "cfl": 0.25,
+            "beta": 2.0,
+            "k": 1.0
+          },
+          {
+            "n_space": 16384,
+            "cfl": 0.25,
+            "beta": 2.0,
+            "k": 1.0
+          }
+        ]
+      }
+    },
+    {
+      "solver": "euler_1d",
+      "target_parameter": "n_space",
+      "profile": "p3",
+      "precision_config": {
+        "tolerance_rmse": 0.02
+      },
+      "target_config": {
+        "initial_value": 256,
+        "multiplication_factor": 2,
+        "max_iteration_num": 7,
+        "search_range_min": null,
+        "search_range_max": null,
+        "search_range_slice_num": null
+      },
+      "non_target_parameters": {
+        "cfl": 0.25,
+        "beta": 2.0,
+        "k": 1.0
+      },
+      "results": {
+        "converged": false,
+        "optimal_parameter_value": 16384,
+        "total_computational_cost": 129254656,
+        "cost_history": [
+          121600,
+          481792,
+          1925120,
+          8024064,
+          15630336,
+          32309248,
+          70762496
+        ],
+        "parameter_history": [
+          {
+            "n_space": 256,
+            "cfl": 0.25,
+            "beta": 2.0,
+            "k": 1.0
+          },
+          {
+            "n_space": 512,
+            "cfl": 0.25,
+            "beta": 2.0,
+            "k": 1.0
+          },
+          {
+            "n_space": 1024,
+            "cfl": 0.25,
+            "beta": 2.0,
+            "k": 1.0
+          },
+          {
+            "n_space": 2048,
+            "cfl": 0.25,
+            "beta": 2.0,
+            "k": 1.0
+          },
+          {
+            "n_space": 4096,
+            "cfl": 0.25,
+            "beta": 2.0,
+            "k": 1.0
+          },
+          {
+            "n_space": 8192,
+            "cfl": 0.25,
+            "beta": 2.0,
+            "k": 1.0
+          },
+          {
+            "n_space": 16384,
+            "cfl": 0.25,
+            "beta": 2.0,
+            "k": 1.0
+          }
+        ]
+      }
+    },
+    {
+      "solver": "euler_1d",
+      "target_parameter": "n_space",
+      "profile": "p1",
+      "precision_config": {
+        "tolerance_rmse": 0.01
+      },
+      "target_config": {
+        "initial_value": 256,
+        "multiplication_factor": 2,
+        "max_iteration_num": 7,
+        "search_range_min": null,
+        "search_range_max": null,
+        "search_range_slice_num": null
+      },
+      "non_target_parameters": {
+        "cfl": 0.25,
+        "beta": 1.5,
+        "k": 1.0
+      },
+      "results": {
+        "converged": false,
+        "optimal_parameter_value": 16384,
+        "total_computational_cost": 742071808,
+        "cost_history": [
+          117760,
+          467456,
+          1861632,
+          7440384,
+          29917184,
+          127352832,
+          574914560
+        ],
+        "parameter_history": [
+          {
+            "n_space": 256,
+            "cfl": 0.25,
+            "beta": 1.5,
+            "k": 1.0
+          },
+          {
+            "n_space": 512,
+            "cfl": 0.25,
+            "beta": 1.5,
+            "k": 1.0
+          },
+          {
+            "n_space": 1024,
+            "cfl": 0.25,
+            "beta": 1.5,
+            "k": 1.0
+          },
+          {
+            "n_space": 2048,
+            "cfl": 0.25,
+            "beta": 1.5,
+            "k": 1.0
+          },
+          {
+            "n_space": 4096,
+            "cfl": 0.25,
+            "beta": 1.5,
+            "k": 1.0
+          },
+          {
+            "n_space": 8192,
+            "cfl": 0.25,
+            "beta": 1.5,
+            "k": 1.0
+          },
+          {
+            "n_space": 16384,
+            "cfl": 0.25,
+            "beta": 1.5,
+            "k": 1.0
+          }
+        ]
+      }
+    },
+    {
+      "solver": "euler_1d",
+      "target_parameter": "n_space",
+      "profile": "p1",
+      "precision_config": {
+        "tolerance_rmse": 0.01
+      },
+      "target_config": {
+        "initial_value": 256,
+        "multiplication_factor": 2,
+        "max_iteration_num": 7,
+        "search_range_min": null,
+        "search_range_max": null,
+        "search_range_slice_num": null
+      },
+      "non_target_parameters": {
+        "cfl": 0.25,
+        "beta": 2.0,
+        "k": 1.0
+      },
+      "results": {
+        "converged": false,
+        "optimal_parameter_value": 16384,
+        "total_computational_cost": 1934790912,
+        "cost_history": [
+          119552,
+          474624,
+          1898496,
+          7858176,
+          38838272,
+          256540672,
+          1629061120
+        ],
+        "parameter_history": [
+          {
+            "n_space": 256,
+            "cfl": 0.25,
+            "beta": 2.0,
+            "k": 1.0
+          },
+          {
+            "n_space": 512,
+            "cfl": 0.25,
+            "beta": 2.0,
+            "k": 1.0
+          },
+          {
+            "n_space": 1024,
+            "cfl": 0.25,
+            "beta": 2.0,
+            "k": 1.0
+          },
+          {
+            "n_space": 2048,
+            "cfl": 0.25,
+            "beta": 2.0,
+            "k": 1.0
+          },
+          {
+            "n_space": 4096,
+            "cfl": 0.25,
+            "beta": 2.0,
+            "k": 1.0
+          },
+          {
+            "n_space": 8192,
+            "cfl": 0.25,
+            "beta": 2.0,
+            "k": 1.0
+          },
+          {
+            "n_space": 16384,
+            "cfl": 0.25,
+            "beta": 2.0,
+            "k": 1.0
+          }
+        ]
+      }
+    },
+    {
+      "solver": "euler_1d",
+      "target_parameter": "n_space",
+      "profile": "p2",
+      "precision_config": {
+        "tolerance_rmse": 0.01
+      },
+      "target_config": {
+        "initial_value": 256,
+        "multiplication_factor": 2,
+        "max_iteration_num": 7,
+        "search_range_min": null,
+        "search_range_max": null,
+        "search_range_slice_num": null
+      },
+      "non_target_parameters": {
+        "cfl": 0.25,
+        "beta": 1.0,
+        "k": -1.0
+      },
+      "results": {
+        "converged": false,
+        "optimal_parameter_value": 16384,
+        "total_computational_cost": 807034624,
+        "cost_history": [
+          150784,
+          598528,
+          2375680,
+          9482240,
+          37871616,
+          151363584,
+          605192192
+        ],
+        "parameter_history": [
+          {
+            "n_space": 256,
+            "cfl": 0.25,
+            "beta": 1.0,
+            "k": -1.0
+          },
+          {
+            "n_space": 512,
+            "cfl": 0.25,
+            "beta": 1.0,
+            "k": -1.0
+          },
+          {
+            "n_space": 1024,
+            "cfl": 0.25,
+            "beta": 1.0,
+            "k": -1.0
+          },
+          {
+            "n_space": 2048,
+            "cfl": 0.25,
+            "beta": 1.0,
+            "k": -1.0
+          },
+          {
+            "n_space": 4096,
+            "cfl": 0.25,
+            "beta": 1.0,
+            "k": -1.0
+          },
+          {
+            "n_space": 8192,
+            "cfl": 0.25,
+            "beta": 1.0,
+            "k": -1.0
+          },
+          {
+            "n_space": 16384,
+            "cfl": 0.25,
+            "beta": 1.0,
+            "k": -1.0
+          }
+        ]
+      }
+    },
+    {
+      "solver": "euler_1d",
+      "target_parameter": "n_space",
+      "profile": "p2",
+      "precision_config": {
+        "tolerance_rmse": 0.01
+      },
+      "target_config": {
+        "initial_value": 256,
+        "multiplication_factor": 2,
+        "max_iteration_num": 7,
+        "search_range_min": null,
+        "search_range_max": null,
+        "search_range_slice_num": null
+      },
+      "non_target_parameters": {
+        "cfl": 0.25,
+        "beta": 1.0,
+        "k": 0.0
+      },
+      "results": {
+        "converged": false,
+        "optimal_parameter_value": 16384,
+        "total_computational_cost": 806948608,
+        "cost_history": [
+          150784,
+          598528,
+          2375680,
+          9482240,
+          37859328,
+          151339008,
+          605143040
+        ],
+        "parameter_history": [
+          {
+            "n_space": 256,
+            "cfl": 0.25,
+            "beta": 1.0,
+            "k": 0.0
+          },
+          {
+            "n_space": 512,
+            "cfl": 0.25,
+            "beta": 1.0,
+            "k": 0.0
+          },
+          {
+            "n_space": 1024,
+            "cfl": 0.25,
+            "beta": 1.0,
+            "k": 0.0
+          },
+          {
+            "n_space": 2048,
+            "cfl": 0.25,
+            "beta": 1.0,
+            "k": 0.0
+          },
+          {
+            "n_space": 4096,
+            "cfl": 0.25,
+            "beta": 1.0,
+            "k": 0.0
+          },
+          {
+            "n_space": 8192,
+            "cfl": 0.25,
+            "beta": 1.0,
+            "k": 0.0
+          },
+          {
+            "n_space": 16384,
+            "cfl": 0.25,
+            "beta": 1.0,
+            "k": 0.0
+          }
+        ]
+      }
+    },
+    {
+      "solver": "euler_1d",
+      "target_parameter": "n_space",
+      "profile": "p2",
+      "precision_config": {
+        "tolerance_rmse": 0.01
+      },
+      "target_config": {
+        "initial_value": 256,
+        "multiplication_factor": 2,
+        "max_iteration_num": 7,
+        "search_range_min": null,
+        "search_range_max": null,
+        "search_range_slice_num": null
+      },
+      "non_target_parameters": {
+        "cfl": 0.25,
+        "beta": 1.5,
+        "k": -1.0
+      },
+      "results": {
+        "converged": false,
+        "optimal_parameter_value": 16384,
+        "total_computational_cost": 807034624,
+        "cost_history": [
+          150784,
+          598528,
+          2375680,
+          9482240,
+          37871616,
+          151363584,
+          605192192
+        ],
+        "parameter_history": [
+          {
+            "n_space": 256,
+            "cfl": 0.25,
+            "beta": 1.5,
+            "k": -1.0
+          },
+          {
+            "n_space": 512,
+            "cfl": 0.25,
+            "beta": 1.5,
+            "k": -1.0
+          },
+          {
+            "n_space": 1024,
+            "cfl": 0.25,
+            "beta": 1.5,
+            "k": -1.0
+          },
+          {
+            "n_space": 2048,
+            "cfl": 0.25,
+            "beta": 1.5,
+            "k": -1.0
+          },
+          {
+            "n_space": 4096,
+            "cfl": 0.25,
+            "beta": 1.5,
+            "k": -1.0
+          },
+          {
+            "n_space": 8192,
+            "cfl": 0.25,
+            "beta": 1.5,
+            "k": -1.0
+          },
+          {
+            "n_space": 16384,
+            "cfl": 0.25,
+            "beta": 1.5,
+            "k": -1.0
+          }
+        ]
+      }
+    },
+    {
+      "solver": "euler_1d",
+      "target_parameter": "n_space",
+      "profile": "p2",
+      "precision_config": {
+        "tolerance_rmse": 0.01
+      },
+      "target_config": {
+        "initial_value": 256,
+        "multiplication_factor": 2,
+        "max_iteration_num": 7,
+        "search_range_min": null,
+        "search_range_max": null,
+        "search_range_slice_num": null
+      },
+      "non_target_parameters": {
+        "cfl": 0.25,
+        "beta": 1.5,
+        "k": 0.0
+      },
+      "results": {
+        "converged": false,
+        "optimal_parameter_value": 16384,
+        "total_computational_cost": 806923520,
+        "cost_history": [
+          150784,
+          598016,
+          2375680,
+          9482240,
+          37859328,
+          151330816,
+          605126656
+        ],
+        "parameter_history": [
+          {
+            "n_space": 256,
+            "cfl": 0.25,
+            "beta": 1.5,
+            "k": 0.0
+          },
+          {
+            "n_space": 512,
+            "cfl": 0.25,
+            "beta": 1.5,
+            "k": 0.0
+          },
+          {
+            "n_space": 1024,
+            "cfl": 0.25,
+            "beta": 1.5,
+            "k": 0.0
+          },
+          {
+            "n_space": 2048,
+            "cfl": 0.25,
+            "beta": 1.5,
+            "k": 0.0
+          },
+          {
+            "n_space": 4096,
+            "cfl": 0.25,
+            "beta": 1.5,
+            "k": 0.0
+          },
+          {
+            "n_space": 8192,
+            "cfl": 0.25,
+            "beta": 1.5,
+            "k": 0.0
+          },
+          {
+            "n_space": 16384,
+            "cfl": 0.25,
+            "beta": 1.5,
+            "k": 0.0
+          }
+        ]
+      }
+    },
+    {
+      "solver": "euler_1d",
+      "target_parameter": "n_space",
+      "profile": "p2",
+      "precision_config": {
+        "tolerance_rmse": 0.01
+      },
+      "target_config": {
+        "initial_value": 256,
+        "multiplication_factor": 2,
+        "max_iteration_num": 7,
+        "search_range_min": null,
+        "search_range_max": null,
+        "search_range_slice_num": null
+      },
+      "non_target_parameters": {
+        "cfl": 0.25,
+        "beta": 1.5,
+        "k": 1.0
+      },
+      "results": {
+        "converged": false,
+        "optimal_parameter_value": 16384,
+        "total_computational_cost": 901618944,
+        "cost_history": [
+          150784,
+          599040,
+          2378752,
+          9502720,
+          37969920,
+          161972224,
+          689045504
+        ],
+        "parameter_history": [
+          {
+            "n_space": 256,
+            "cfl": 0.25,
+            "beta": 1.5,
+            "k": 1.0
+          },
+          {
+            "n_space": 512,
+            "cfl": 0.25,
+            "beta": 1.5,
+            "k": 1.0
+          },
+          {
+            "n_space": 1024,
+            "cfl": 0.25,
+            "beta": 1.5,
+            "k": 1.0
+          },
+          {
+            "n_space": 2048,
+            "cfl": 0.25,
+            "beta": 1.5,
+            "k": 1.0
+          },
+          {
+            "n_space": 4096,
+            "cfl": 0.25,
+            "beta": 1.5,
+            "k": 1.0
+          },
+          {
+            "n_space": 8192,
+            "cfl": 0.25,
+            "beta": 1.5,
+            "k": 1.0
+          },
+          {
+            "n_space": 16384,
+            "cfl": 0.25,
+            "beta": 1.5,
+            "k": 1.0
+          }
+        ]
+      }
+    },
+    {
+      "solver": "euler_1d",
+      "target_parameter": "n_space",
+      "profile": "p2",
+      "precision_config": {
+        "tolerance_rmse": 0.01
+      },
+      "target_config": {
+        "initial_value": 256,
+        "multiplication_factor": 2,
+        "max_iteration_num": 7,
+        "search_range_min": null,
+        "search_range_max": null,
+        "search_range_slice_num": null
+      },
+      "non_target_parameters": {
+        "cfl": 0.25,
+        "beta": 2.0,
+        "k": -1.0
+      },
+      "results": {
+        "converged": false,
+        "optimal_parameter_value": 16384,
+        "total_computational_cost": 807034624,
+        "cost_history": [
+          150784,
+          598528,
+          2375680,
+          9482240,
+          37871616,
+          151363584,
+          605192192
+        ],
+        "parameter_history": [
+          {
+            "n_space": 256,
+            "cfl": 0.25,
+            "beta": 2.0,
+            "k": -1.0
+          },
+          {
+            "n_space": 512,
+            "cfl": 0.25,
+            "beta": 2.0,
+            "k": -1.0
+          },
+          {
+            "n_space": 1024,
+            "cfl": 0.25,
+            "beta": 2.0,
+            "k": -1.0
+          },
+          {
+            "n_space": 2048,
+            "cfl": 0.25,
+            "beta": 2.0,
+            "k": -1.0
+          },
+          {
+            "n_space": 4096,
+            "cfl": 0.25,
+            "beta": 2.0,
+            "k": -1.0
+          },
+          {
+            "n_space": 8192,
+            "cfl": 0.25,
+            "beta": 2.0,
+            "k": -1.0
+          },
+          {
+            "n_space": 16384,
+            "cfl": 0.25,
+            "beta": 2.0,
+            "k": -1.0
+          }
+        ]
+      }
+    },
+    {
+      "solver": "euler_1d",
+      "target_parameter": "n_space",
+      "profile": "p2",
+      "precision_config": {
+        "tolerance_rmse": 0.01
+      },
+      "target_config": {
+        "initial_value": 256,
+        "multiplication_factor": 2,
+        "max_iteration_num": 7,
+        "search_range_min": null,
+        "search_range_max": null,
+        "search_range_slice_num": null
+      },
+      "non_target_parameters": {
+        "cfl": 0.25,
+        "beta": 2.0,
+        "k": 0.0
+      },
+      "results": {
+        "converged": false,
+        "optimal_parameter_value": 16384,
+        "total_computational_cost": 806902528,
+        "cost_history": [
+          150784,
+          597504,
+          2375680,
+          9482240,
+          37855232,
+          151330816,
+          605110272
+        ],
+        "parameter_history": [
+          {
+            "n_space": 256,
+            "cfl": 0.25,
+            "beta": 2.0,
+            "k": 0.0
+          },
+          {
+            "n_space": 512,
+            "cfl": 0.25,
+            "beta": 2.0,
+            "k": 0.0
+          },
+          {
+            "n_space": 1024,
+            "cfl": 0.25,
+            "beta": 2.0,
+            "k": 0.0
+          },
+          {
+            "n_space": 2048,
+            "cfl": 0.25,
+            "beta": 2.0,
+            "k": 0.0
+          },
+          {
+            "n_space": 4096,
+            "cfl": 0.25,
+            "beta": 2.0,
+            "k": 0.0
+          },
+          {
+            "n_space": 8192,
+            "cfl": 0.25,
+            "beta": 2.0,
+            "k": 0.0
+          },
+          {
+            "n_space": 16384,
+            "cfl": 0.25,
+            "beta": 2.0,
+            "k": 0.0
+          }
+        ]
+      }
+    },
+    {
+      "solver": "euler_1d",
+      "target_parameter": "n_space",
+      "profile": "p2",
+      "precision_config": {
+        "tolerance_rmse": 0.01
+      },
+      "target_config": {
+        "initial_value": 256,
+        "multiplication_factor": 2,
+        "max_iteration_num": 7,
+        "search_range_min": null,
+        "search_range_max": null,
+        "search_range_slice_num": null
+      },
+      "non_target_parameters": {
+        "cfl": 0.25,
+        "beta": 2.0,
+        "k": 1.0
+      },
+      "results": {
+        "converged": false,
+        "optimal_parameter_value": 16384,
+        "total_computational_cost": 2226989056,
+        "cost_history": [
+          151040,
+          602624,
+          2529280,
+          10620928,
+          46276608,
+          263004160,
+          1903804416
+        ],
+        "parameter_history": [
+          {
+            "n_space": 256,
+            "cfl": 0.25,
+            "beta": 2.0,
+            "k": 1.0
+          },
+          {
+            "n_space": 512,
+            "cfl": 0.25,
+            "beta": 2.0,
+            "k": 1.0
+          },
+          {
+            "n_space": 1024,
+            "cfl": 0.25,
+            "beta": 2.0,
+            "k": 1.0
+          },
+          {
+            "n_space": 2048,
+            "cfl": 0.25,
+            "beta": 2.0,
+            "k": 1.0
+          },
+          {
+            "n_space": 4096,
+            "cfl": 0.25,
+            "beta": 2.0,
+            "k": 1.0
+          },
+          {
+            "n_space": 8192,
+            "cfl": 0.25,
+            "beta": 2.0,
+            "k": 1.0
+          },
+          {
+            "n_space": 16384,
+            "cfl": 0.25,
+            "beta": 2.0,
+            "k": 1.0
+          }
+        ]
+      }
+    },
+    {
+      "solver": "euler_1d",
+      "target_parameter": "k",
+      "profile": "p2",
+      "precision_config": {
+        "tolerance_rmse": 0.01
+      },
+      "target_config": {
+        "initial_value": null,
+        "multiplication_factor": 2,
+        "max_iteration_num": 7,
+        "search_range_min": null,
+        "search_range_max": null,
+        "search_range_slice_num": 11
+      },
+      "non_target_parameters": {
+        "cfl": 0.25,
+        "beta": 1.0,
+        "n_space": 256
+      },
+      "results": {
+        "converged": false,
+        "optimal_parameter_value": 0.0,
+        "total_computational_cost": 806948608,
+        "cost_history": [
+          150784,
+          598528,
+          2375680,
+          9482240,
+          37859328,
+          151339008,
+          605143040
+        ],
+        "parameter_history": [
+          [
+            {
+              "n_space": 256,
+              "cfl": 0.25,
+              "beta": 1.0,
+              "k": -1.0
+            },
+            {
+              "n_space": 512,
+              "cfl": 0.25,
+              "beta": 1.0,
+              "k": -1.0
+            },
+            {
+              "n_space": 1024,
+              "cfl": 0.25,
+              "beta": 1.0,
+              "k": -1.0
+            },
+            {
+              "n_space": 2048,
+              "cfl": 0.25,
+              "beta": 1.0,
+              "k": -1.0
+            },
+            {
+              "n_space": 4096,
+              "cfl": 0.25,
+              "beta": 1.0,
+              "k": -1.0
+            },
+            {
+              "n_space": 8192,
+              "cfl": 0.25,
+              "beta": 1.0,
+              "k": -1.0
+            },
+            {
+              "n_space": 16384,
+              "cfl": 0.25,
+              "beta": 1.0,
+              "k": -1.0
+            }
+          ],
+          [
+            {
+              "n_space": 256,
+              "cfl": 0.25,
+              "beta": 1.0,
+              "k": -0.8
+            },
+            {
+              "n_space": 512,
+              "cfl": 0.25,
+              "beta": 1.0,
+              "k": -0.8
+            },
+            {
+              "n_space": 1024,
+              "cfl": 0.25,
+              "beta": 1.0,
+              "k": -0.8
+            },
+            {
+              "n_space": 2048,
+              "cfl": 0.25,
+              "beta": 1.0,
+              "k": -0.8
+            },
+            {
+              "n_space": 4096,
+              "cfl": 0.25,
+              "beta": 1.0,
+              "k": -0.8
+            },
+            {
+              "n_space": 8192,
+              "cfl": 0.25,
+              "beta": 1.0,
+              "k": -0.8
+            },
+            {
+              "n_space": 16384,
+              "cfl": 0.25,
+              "beta": 1.0,
+              "k": -0.8
+            }
+          ],
+          [
+            {
+              "n_space": 256,
+              "cfl": 0.25,
+              "beta": 1.0,
+              "k": -0.6
+            },
+            {
+              "n_space": 512,
+              "cfl": 0.25,
+              "beta": 1.0,
+              "k": -0.6
+            },
+            {
+              "n_space": 1024,
+              "cfl": 0.25,
+              "beta": 1.0,
+              "k": -0.6
+            },
+            {
+              "n_space": 2048,
+              "cfl": 0.25,
+              "beta": 1.0,
+              "k": -0.6
+            },
+            {
+              "n_space": 4096,
+              "cfl": 0.25,
+              "beta": 1.0,
+              "k": -0.6
+            },
+            {
+              "n_space": 8192,
+              "cfl": 0.25,
+              "beta": 1.0,
+              "k": -0.6
+            },
+            {
+              "n_space": 16384,
+              "cfl": 0.25,
+              "beta": 1.0,
+              "k": -0.6
+            }
+          ],
+          [
+            {
+              "n_space": 256,
+              "cfl": 0.25,
+              "beta": 1.0,
+              "k": -0.4
+            },
+            {
+              "n_space": 512,
+              "cfl": 0.25,
+              "beta": 1.0,
+              "k": -0.4
+            },
+            {
+              "n_space": 1024,
+              "cfl": 0.25,
+              "beta": 1.0,
+              "k": -0.4
+            },
+            {
+              "n_space": 2048,
+              "cfl": 0.25,
+              "beta": 1.0,
+              "k": -0.4
+            },
+            {
+              "n_space": 4096,
+              "cfl": 0.25,
+              "beta": 1.0,
+              "k": -0.4
+            },
+            {
+              "n_space": 8192,
+              "cfl": 0.25,
+              "beta": 1.0,
+              "k": -0.4
+            },
+            {
+              "n_space": 16384,
+              "cfl": 0.25,
+              "beta": 1.0,
+              "k": -0.4
+            }
+          ],
+          [
+            {
+              "n_space": 256,
+              "cfl": 0.25,
+              "beta": 1.0,
+              "k": -0.2
+            },
+            {
+              "n_space": 512,
+              "cfl": 0.25,
+              "beta": 1.0,
+              "k": -0.2
+            },
+            {
+              "n_space": 1024,
+              "cfl": 0.25,
+              "beta": 1.0,
+              "k": -0.2
+            },
+            {
+              "n_space": 2048,
+              "cfl": 0.25,
+              "beta": 1.0,
+              "k": -0.2
+            },
+            {
+              "n_space": 4096,
+              "cfl": 0.25,
+              "beta": 1.0,
+              "k": -0.2
+            },
+            {
+              "n_space": 8192,
+              "cfl": 0.25,
+              "beta": 1.0,
+              "k": -0.2
+            },
+            {
+              "n_space": 16384,
+              "cfl": 0.25,
+              "beta": 1.0,
+              "k": -0.2
+            }
+          ],
+          [
+            {
+              "n_space": 256,
+              "cfl": 0.25,
+              "beta": 1.0,
+              "k": 0.0
+            },
+            {
+              "n_space": 512,
+              "cfl": 0.25,
+              "beta": 1.0,
+              "k": 0.0
+            },
+            {
+              "n_space": 1024,
+              "cfl": 0.25,
+              "beta": 1.0,
+              "k": 0.0
+            },
+            {
+              "n_space": 2048,
+              "cfl": 0.25,
+              "beta": 1.0,
+              "k": 0.0
+            },
+            {
+              "n_space": 4096,
+              "cfl": 0.25,
+              "beta": 1.0,
+              "k": 0.0
+            },
+            {
+              "n_space": 8192,
+              "cfl": 0.25,
+              "beta": 1.0,
+              "k": 0.0
+            },
+            {
+              "n_space": 16384,
+              "cfl": 0.25,
+              "beta": 1.0,
+              "k": 0.0
+            }
+          ],
+          [
+            {
+              "n_space": 256,
+              "cfl": 0.25,
+              "beta": 1.0,
+              "k": 0.2
+            },
+            {
+              "n_space": 512,
+              "cfl": 0.25,
+              "beta": 1.0,
+              "k": 0.2
+            },
+            {
+              "n_space": 1024,
+              "cfl": 0.25,
+              "beta": 1.0,
+              "k": 0.2
+            },
+            {
+              "n_space": 2048,
+              "cfl": 0.25,
+              "beta": 1.0,
+              "k": 0.2
+            },
+            {
+              "n_space": 4096,
+              "cfl": 0.25,
+              "beta": 1.0,
+              "k": 0.2
+            },
+            {
+              "n_space": 8192,
+              "cfl": 0.25,
+              "beta": 1.0,
+              "k": 0.2
+            },
+            {
+              "n_space": 16384,
+              "cfl": 0.25,
+              "beta": 1.0,
+              "k": 0.2
+            }
+          ],
+          [
+            {
+              "n_space": 256,
+              "cfl": 0.25,
+              "beta": 1.0,
+              "k": 0.4
+            },
+            {
+              "n_space": 512,
+              "cfl": 0.25,
+              "beta": 1.0,
+              "k": 0.4
+            },
+            {
+              "n_space": 1024,
+              "cfl": 0.25,
+              "beta": 1.0,
+              "k": 0.4
+            },
+            {
+              "n_space": 2048,
+              "cfl": 0.25,
+              "beta": 1.0,
+              "k": 0.4
+            },
+            {
+              "n_space": 4096,
+              "cfl": 0.25,
+              "beta": 1.0,
+              "k": 0.4
+            },
+            {
+              "n_space": 8192,
+              "cfl": 0.25,
+              "beta": 1.0,
+              "k": 0.4
+            },
+            {
+              "n_space": 16384,
+              "cfl": 0.25,
+              "beta": 1.0,
+              "k": 0.4
+            }
+          ],
+          [
+            {
+              "n_space": 256,
+              "cfl": 0.25,
+              "beta": 1.0,
+              "k": 0.6
+            },
+            {
+              "n_space": 512,
+              "cfl": 0.25,
+              "beta": 1.0,
+              "k": 0.6
+            },
+            {
+              "n_space": 1024,
+              "cfl": 0.25,
+              "beta": 1.0,
+              "k": 0.6
+            },
+            {
+              "n_space": 2048,
+              "cfl": 0.25,
+              "beta": 1.0,
+              "k": 0.6
+            },
+            {
+              "n_space": 4096,
+              "cfl": 0.25,
+              "beta": 1.0,
+              "k": 0.6
+            },
+            {
+              "n_space": 8192,
+              "cfl": 0.25,
+              "beta": 1.0,
+              "k": 0.6
+            },
+            {
+              "n_space": 16384,
+              "cfl": 0.25,
+              "beta": 1.0,
+              "k": 0.6
+            }
+          ],
+          [
+            {
+              "n_space": 256,
+              "cfl": 0.25,
+              "beta": 1.0,
+              "k": 0.8
+            },
+            {
+              "n_space": 512,
+              "cfl": 0.25,
+              "beta": 1.0,
+              "k": 0.8
+            },
+            {
+              "n_space": 1024,
+              "cfl": 0.25,
+              "beta": 1.0,
+              "k": 0.8
+            },
+            {
+              "n_space": 2048,
+              "cfl": 0.25,
+              "beta": 1.0,
+              "k": 0.8
+            },
+            {
+              "n_space": 4096,
+              "cfl": 0.25,
+              "beta": 1.0,
+              "k": 0.8
+            },
+            {
+              "n_space": 8192,
+              "cfl": 0.25,
+              "beta": 1.0,
+              "k": 0.8
+            },
+            {
+              "n_space": 16384,
+              "cfl": 0.25,
+              "beta": 1.0,
+              "k": 0.8
+            }
+          ],
+          [
+            {
+              "n_space": 256,
+              "cfl": 0.25,
+              "beta": 1.0,
+              "k": 1.0
+            },
+            {
+              "n_space": 512,
+              "cfl": 0.25,
+              "beta": 1.0,
+              "k": 1.0
+            },
+            {
+              "n_space": 1024,
+              "cfl": 0.25,
+              "beta": 1.0,
+              "k": 1.0
+            },
+            {
+              "n_space": 2048,
+              "cfl": 0.25,
+              "beta": 1.0,
+              "k": 1.0
+            },
+            {
+              "n_space": 4096,
+              "cfl": 0.25,
+              "beta": 1.0,
+              "k": 1.0
+            },
+            {
+              "n_space": 8192,
+              "cfl": 0.25,
+              "beta": 1.0,
+              "k": 1.0
+            },
+            {
+              "n_space": 16384,
+              "cfl": 0.25,
+              "beta": 1.0,
+              "k": 1.0
+            }
+          ]
+        ]
+      }
+    },
+    {
+      "solver": "euler_1d",
+      "target_parameter": "k",
+      "profile": "p2",
+      "precision_config": {
+        "tolerance_rmse": 0.01
+      },
+      "target_config": {
+        "initial_value": null,
+        "multiplication_factor": 2,
+        "max_iteration_num": 7,
+        "search_range_min": null,
+        "search_range_max": null,
+        "search_range_slice_num": 11
+      },
+      "non_target_parameters": {
+        "cfl": 0.25,
+        "beta": 1.5,
+        "n_space": 256
+      },
+      "results": {
+        "converged": false,
+        "optimal_parameter_value": 0.0,
+        "total_computational_cost": 806923520,
+        "cost_history": [
+          150784,
+          598016,
+          2375680,
+          9482240,
+          37859328,
+          151330816,
+          605126656
+        ],
+        "parameter_history": [
+          [
+            {
+              "n_space": 256,
+              "cfl": 0.25,
+              "beta": 1.5,
+              "k": -1.0
+            },
+            {
+              "n_space": 512,
+              "cfl": 0.25,
+              "beta": 1.5,
+              "k": -1.0
+            },
+            {
+              "n_space": 1024,
+              "cfl": 0.25,
+              "beta": 1.5,
+              "k": -1.0
+            },
+            {
+              "n_space": 2048,
+              "cfl": 0.25,
+              "beta": 1.5,
+              "k": -1.0
+            },
+            {
+              "n_space": 4096,
+              "cfl": 0.25,
+              "beta": 1.5,
+              "k": -1.0
+            },
+            {
+              "n_space": 8192,
+              "cfl": 0.25,
+              "beta": 1.5,
+              "k": -1.0
+            },
+            {
+              "n_space": 16384,
+              "cfl": 0.25,
+              "beta": 1.5,
+              "k": -1.0
+            }
+          ],
+          [
+            {
+              "n_space": 256,
+              "cfl": 0.25,
+              "beta": 1.5,
+              "k": -0.8
+            },
+            {
+              "n_space": 512,
+              "cfl": 0.25,
+              "beta": 1.5,
+              "k": -0.8
+            },
+            {
+              "n_space": 1024,
+              "cfl": 0.25,
+              "beta": 1.5,
+              "k": -0.8
+            },
+            {
+              "n_space": 2048,
+              "cfl": 0.25,
+              "beta": 1.5,
+              "k": -0.8
+            },
+            {
+              "n_space": 4096,
+              "cfl": 0.25,
+              "beta": 1.5,
+              "k": -0.8
+            },
+            {
+              "n_space": 8192,
+              "cfl": 0.25,
+              "beta": 1.5,
+              "k": -0.8
+            },
+            {
+              "n_space": 16384,
+              "cfl": 0.25,
+              "beta": 1.5,
+              "k": -0.8
+            }
+          ],
+          [
+            {
+              "n_space": 256,
+              "cfl": 0.25,
+              "beta": 1.5,
+              "k": -0.6
+            },
+            {
+              "n_space": 512,
+              "cfl": 0.25,
+              "beta": 1.5,
+              "k": -0.6
+            },
+            {
+              "n_space": 1024,
+              "cfl": 0.25,
+              "beta": 1.5,
+              "k": -0.6
+            },
+            {
+              "n_space": 2048,
+              "cfl": 0.25,
+              "beta": 1.5,
+              "k": -0.6
+            },
+            {
+              "n_space": 4096,
+              "cfl": 0.25,
+              "beta": 1.5,
+              "k": -0.6
+            },
+            {
+              "n_space": 8192,
+              "cfl": 0.25,
+              "beta": 1.5,
+              "k": -0.6
+            },
+            {
+              "n_space": 16384,
+              "cfl": 0.25,
+              "beta": 1.5,
+              "k": -0.6
+            }
+          ],
+          [
+            {
+              "n_space": 256,
+              "cfl": 0.25,
+              "beta": 1.5,
+              "k": -0.4
+            },
+            {
+              "n_space": 512,
+              "cfl": 0.25,
+              "beta": 1.5,
+              "k": -0.4
+            },
+            {
+              "n_space": 1024,
+              "cfl": 0.25,
+              "beta": 1.5,
+              "k": -0.4
+            },
+            {
+              "n_space": 2048,
+              "cfl": 0.25,
+              "beta": 1.5,
+              "k": -0.4
+            },
+            {
+              "n_space": 4096,
+              "cfl": 0.25,
+              "beta": 1.5,
+              "k": -0.4
+            },
+            {
+              "n_space": 8192,
+              "cfl": 0.25,
+              "beta": 1.5,
+              "k": -0.4
+            },
+            {
+              "n_space": 16384,
+              "cfl": 0.25,
+              "beta": 1.5,
+              "k": -0.4
+            }
+          ],
+          [
+            {
+              "n_space": 256,
+              "cfl": 0.25,
+              "beta": 1.5,
+              "k": -0.2
+            },
+            {
+              "n_space": 512,
+              "cfl": 0.25,
+              "beta": 1.5,
+              "k": -0.2
+            },
+            {
+              "n_space": 1024,
+              "cfl": 0.25,
+              "beta": 1.5,
+              "k": -0.2
+            },
+            {
+              "n_space": 2048,
+              "cfl": 0.25,
+              "beta": 1.5,
+              "k": -0.2
+            },
+            {
+              "n_space": 4096,
+              "cfl": 0.25,
+              "beta": 1.5,
+              "k": -0.2
+            },
+            {
+              "n_space": 8192,
+              "cfl": 0.25,
+              "beta": 1.5,
+              "k": -0.2
+            },
+            {
+              "n_space": 16384,
+              "cfl": 0.25,
+              "beta": 1.5,
+              "k": -0.2
+            }
+          ],
+          [
+            {
+              "n_space": 256,
+              "cfl": 0.25,
+              "beta": 1.5,
+              "k": 0.0
+            },
+            {
+              "n_space": 512,
+              "cfl": 0.25,
+              "beta": 1.5,
+              "k": 0.0
+            },
+            {
+              "n_space": 1024,
+              "cfl": 0.25,
+              "beta": 1.5,
+              "k": 0.0
+            },
+            {
+              "n_space": 2048,
+              "cfl": 0.25,
+              "beta": 1.5,
+              "k": 0.0
+            },
+            {
+              "n_space": 4096,
+              "cfl": 0.25,
+              "beta": 1.5,
+              "k": 0.0
+            },
+            {
+              "n_space": 8192,
+              "cfl": 0.25,
+              "beta": 1.5,
+              "k": 0.0
+            },
+            {
+              "n_space": 16384,
+              "cfl": 0.25,
+              "beta": 1.5,
+              "k": 0.0
+            }
+          ],
+          [
+            {
+              "n_space": 256,
+              "cfl": 0.25,
+              "beta": 1.5,
+              "k": 0.2
+            },
+            {
+              "n_space": 512,
+              "cfl": 0.25,
+              "beta": 1.5,
+              "k": 0.2
+            },
+            {
+              "n_space": 1024,
+              "cfl": 0.25,
+              "beta": 1.5,
+              "k": 0.2
+            },
+            {
+              "n_space": 2048,
+              "cfl": 0.25,
+              "beta": 1.5,
+              "k": 0.2
+            },
+            {
+              "n_space": 4096,
+              "cfl": 0.25,
+              "beta": 1.5,
+              "k": 0.2
+            },
+            {
+              "n_space": 8192,
+              "cfl": 0.25,
+              "beta": 1.5,
+              "k": 0.2
+            },
+            {
+              "n_space": 16384,
+              "cfl": 0.25,
+              "beta": 1.5,
+              "k": 0.2
+            }
+          ],
+          [
+            {
+              "n_space": 256,
+              "cfl": 0.25,
+              "beta": 1.5,
+              "k": 0.4
+            },
+            {
+              "n_space": 512,
+              "cfl": 0.25,
+              "beta": 1.5,
+              "k": 0.4
+            },
+            {
+              "n_space": 1024,
+              "cfl": 0.25,
+              "beta": 1.5,
+              "k": 0.4
+            },
+            {
+              "n_space": 2048,
+              "cfl": 0.25,
+              "beta": 1.5,
+              "k": 0.4
+            },
+            {
+              "n_space": 4096,
+              "cfl": 0.25,
+              "beta": 1.5,
+              "k": 0.4
+            },
+            {
+              "n_space": 8192,
+              "cfl": 0.25,
+              "beta": 1.5,
+              "k": 0.4
+            },
+            {
+              "n_space": 16384,
+              "cfl": 0.25,
+              "beta": 1.5,
+              "k": 0.4
+            }
+          ],
+          [
+            {
+              "n_space": 256,
+              "cfl": 0.25,
+              "beta": 1.5,
+              "k": 0.6
+            },
+            {
+              "n_space": 512,
+              "cfl": 0.25,
+              "beta": 1.5,
+              "k": 0.6
+            },
+            {
+              "n_space": 1024,
+              "cfl": 0.25,
+              "beta": 1.5,
+              "k": 0.6
+            },
+            {
+              "n_space": 2048,
+              "cfl": 0.25,
+              "beta": 1.5,
+              "k": 0.6
+            },
+            {
+              "n_space": 4096,
+              "cfl": 0.25,
+              "beta": 1.5,
+              "k": 0.6
+            },
+            {
+              "n_space": 8192,
+              "cfl": 0.25,
+              "beta": 1.5,
+              "k": 0.6
+            },
+            {
+              "n_space": 16384,
+              "cfl": 0.25,
+              "beta": 1.5,
+              "k": 0.6
+            }
+          ],
+          [
+            {
+              "n_space": 256,
+              "cfl": 0.25,
+              "beta": 1.5,
+              "k": 0.8
+            },
+            {
+              "n_space": 512,
+              "cfl": 0.25,
+              "beta": 1.5,
+              "k": 0.8
+            },
+            {
+              "n_space": 1024,
+              "cfl": 0.25,
+              "beta": 1.5,
+              "k": 0.8
+            },
+            {
+              "n_space": 2048,
+              "cfl": 0.25,
+              "beta": 1.5,
+              "k": 0.8
+            },
+            {
+              "n_space": 4096,
+              "cfl": 0.25,
+              "beta": 1.5,
+              "k": 0.8
+            },
+            {
+              "n_space": 8192,
+              "cfl": 0.25,
+              "beta": 1.5,
+              "k": 0.8
+            },
+            {
+              "n_space": 16384,
+              "cfl": 0.25,
+              "beta": 1.5,
+              "k": 0.8
+            }
+          ],
+          [
+            {
+              "n_space": 256,
+              "cfl": 0.25,
+              "beta": 1.5,
+              "k": 1.0
+            },
+            {
+              "n_space": 512,
+              "cfl": 0.25,
+              "beta": 1.5,
+              "k": 1.0
+            },
+            {
+              "n_space": 1024,
+              "cfl": 0.25,
+              "beta": 1.5,
+              "k": 1.0
+            },
+            {
+              "n_space": 2048,
+              "cfl": 0.25,
+              "beta": 1.5,
+              "k": 1.0
+            },
+            {
+              "n_space": 4096,
+              "cfl": 0.25,
+              "beta": 1.5,
+              "k": 1.0
+            },
+            {
+              "n_space": 8192,
+              "cfl": 0.25,
+              "beta": 1.5,
+              "k": 1.0
+            },
+            {
+              "n_space": 16384,
+              "cfl": 0.25,
+              "beta": 1.5,
+              "k": 1.0
+            }
+          ]
+        ]
+      }
+    },
+    {
+      "solver": "euler_1d",
+      "target_parameter": "k",
+      "profile": "p2",
+      "precision_config": {
+        "tolerance_rmse": 0.01
+      },
+      "target_config": {
+        "initial_value": null,
+        "multiplication_factor": 2,
+        "max_iteration_num": 7,
+        "search_range_min": null,
+        "search_range_max": null,
+        "search_range_slice_num": 11
+      },
+      "non_target_parameters": {
+        "cfl": 0.25,
+        "beta": 2.0,
+        "n_space": 256
+      },
+      "results": {
+        "converged": false,
+        "optimal_parameter_value": 0.0,
+        "total_computational_cost": 806902528,
+        "cost_history": [
+          150784,
+          597504,
+          2375680,
+          9482240,
+          37855232,
+          151330816,
+          605110272
+        ],
+        "parameter_history": [
+          [
+            {
+              "n_space": 256,
+              "cfl": 0.25,
+              "beta": 2.0,
+              "k": -1.0
+            },
+            {
+              "n_space": 512,
+              "cfl": 0.25,
+              "beta": 2.0,
+              "k": -1.0
+            },
+            {
+              "n_space": 1024,
+              "cfl": 0.25,
+              "beta": 2.0,
+              "k": -1.0
+            },
+            {
+              "n_space": 2048,
+              "cfl": 0.25,
+              "beta": 2.0,
+              "k": -1.0
+            },
+            {
+              "n_space": 4096,
+              "cfl": 0.25,
+              "beta": 2.0,
+              "k": -1.0
+            },
+            {
+              "n_space": 8192,
+              "cfl": 0.25,
+              "beta": 2.0,
+              "k": -1.0
+            },
+            {
+              "n_space": 16384,
+              "cfl": 0.25,
+              "beta": 2.0,
+              "k": -1.0
+            }
+          ],
+          [
+            {
+              "n_space": 256,
+              "cfl": 0.25,
+              "beta": 2.0,
+              "k": -0.8
+            },
+            {
+              "n_space": 512,
+              "cfl": 0.25,
+              "beta": 2.0,
+              "k": -0.8
+            },
+            {
+              "n_space": 1024,
+              "cfl": 0.25,
+              "beta": 2.0,
+              "k": -0.8
+            },
+            {
+              "n_space": 2048,
+              "cfl": 0.25,
+              "beta": 2.0,
+              "k": -0.8
+            },
+            {
+              "n_space": 4096,
+              "cfl": 0.25,
+              "beta": 2.0,
+              "k": -0.8
+            },
+            {
+              "n_space": 8192,
+              "cfl": 0.25,
+              "beta": 2.0,
+              "k": -0.8
+            },
+            {
+              "n_space": 16384,
+              "cfl": 0.25,
+              "beta": 2.0,
+              "k": -0.8
+            }
+          ],
+          [
+            {
+              "n_space": 256,
+              "cfl": 0.25,
+              "beta": 2.0,
+              "k": -0.6
+            },
+            {
+              "n_space": 512,
+              "cfl": 0.25,
+              "beta": 2.0,
+              "k": -0.6
+            },
+            {
+              "n_space": 1024,
+              "cfl": 0.25,
+              "beta": 2.0,
+              "k": -0.6
+            },
+            {
+              "n_space": 2048,
+              "cfl": 0.25,
+              "beta": 2.0,
+              "k": -0.6
+            },
+            {
+              "n_space": 4096,
+              "cfl": 0.25,
+              "beta": 2.0,
+              "k": -0.6
+            },
+            {
+              "n_space": 8192,
+              "cfl": 0.25,
+              "beta": 2.0,
+              "k": -0.6
+            },
+            {
+              "n_space": 16384,
+              "cfl": 0.25,
+              "beta": 2.0,
+              "k": -0.6
+            }
+          ],
+          [
+            {
+              "n_space": 256,
+              "cfl": 0.25,
+              "beta": 2.0,
+              "k": -0.4
+            },
+            {
+              "n_space": 512,
+              "cfl": 0.25,
+              "beta": 2.0,
+              "k": -0.4
+            },
+            {
+              "n_space": 1024,
+              "cfl": 0.25,
+              "beta": 2.0,
+              "k": -0.4
+            },
+            {
+              "n_space": 2048,
+              "cfl": 0.25,
+              "beta": 2.0,
+              "k": -0.4
+            },
+            {
+              "n_space": 4096,
+              "cfl": 0.25,
+              "beta": 2.0,
+              "k": -0.4
+            },
+            {
+              "n_space": 8192,
+              "cfl": 0.25,
+              "beta": 2.0,
+              "k": -0.4
+            },
+            {
+              "n_space": 16384,
+              "cfl": 0.25,
+              "beta": 2.0,
+              "k": -0.4
+            }
+          ],
+          [
+            {
+              "n_space": 256,
+              "cfl": 0.25,
+              "beta": 2.0,
+              "k": -0.2
+            },
+            {
+              "n_space": 512,
+              "cfl": 0.25,
+              "beta": 2.0,
+              "k": -0.2
+            },
+            {
+              "n_space": 1024,
+              "cfl": 0.25,
+              "beta": 2.0,
+              "k": -0.2
+            },
+            {
+              "n_space": 2048,
+              "cfl": 0.25,
+              "beta": 2.0,
+              "k": -0.2
+            },
+            {
+              "n_space": 4096,
+              "cfl": 0.25,
+              "beta": 2.0,
+              "k": -0.2
+            },
+            {
+              "n_space": 8192,
+              "cfl": 0.25,
+              "beta": 2.0,
+              "k": -0.2
+            },
+            {
+              "n_space": 16384,
+              "cfl": 0.25,
+              "beta": 2.0,
+              "k": -0.2
+            }
+          ],
+          [
+            {
+              "n_space": 256,
+              "cfl": 0.25,
+              "beta": 2.0,
+              "k": 0.0
+            },
+            {
+              "n_space": 512,
+              "cfl": 0.25,
+              "beta": 2.0,
+              "k": 0.0
+            },
+            {
+              "n_space": 1024,
+              "cfl": 0.25,
+              "beta": 2.0,
+              "k": 0.0
+            },
+            {
+              "n_space": 2048,
+              "cfl": 0.25,
+              "beta": 2.0,
+              "k": 0.0
+            },
+            {
+              "n_space": 4096,
+              "cfl": 0.25,
+              "beta": 2.0,
+              "k": 0.0
+            },
+            {
+              "n_space": 8192,
+              "cfl": 0.25,
+              "beta": 2.0,
+              "k": 0.0
+            },
+            {
+              "n_space": 16384,
+              "cfl": 0.25,
+              "beta": 2.0,
+              "k": 0.0
+            }
+          ],
+          [
+            {
+              "n_space": 256,
+              "cfl": 0.25,
+              "beta": 2.0,
+              "k": 0.2
+            },
+            {
+              "n_space": 512,
+              "cfl": 0.25,
+              "beta": 2.0,
+              "k": 0.2
+            },
+            {
+              "n_space": 1024,
+              "cfl": 0.25,
+              "beta": 2.0,
+              "k": 0.2
+            },
+            {
+              "n_space": 2048,
+              "cfl": 0.25,
+              "beta": 2.0,
+              "k": 0.2
+            },
+            {
+              "n_space": 4096,
+              "cfl": 0.25,
+              "beta": 2.0,
+              "k": 0.2
+            },
+            {
+              "n_space": 8192,
+              "cfl": 0.25,
+              "beta": 2.0,
+              "k": 0.2
+            },
+            {
+              "n_space": 16384,
+              "cfl": 0.25,
+              "beta": 2.0,
+              "k": 0.2
+            }
+          ],
+          [
+            {
+              "n_space": 256,
+              "cfl": 0.25,
+              "beta": 2.0,
+              "k": 0.4
+            },
+            {
+              "n_space": 512,
+              "cfl": 0.25,
+              "beta": 2.0,
+              "k": 0.4
+            },
+            {
+              "n_space": 1024,
+              "cfl": 0.25,
+              "beta": 2.0,
+              "k": 0.4
+            },
+            {
+              "n_space": 2048,
+              "cfl": 0.25,
+              "beta": 2.0,
+              "k": 0.4
+            },
+            {
+              "n_space": 4096,
+              "cfl": 0.25,
+              "beta": 2.0,
+              "k": 0.4
+            },
+            {
+              "n_space": 8192,
+              "cfl": 0.25,
+              "beta": 2.0,
+              "k": 0.4
+            },
+            {
+              "n_space": 16384,
+              "cfl": 0.25,
+              "beta": 2.0,
+              "k": 0.4
+            }
+          ],
+          [
+            {
+              "n_space": 256,
+              "cfl": 0.25,
+              "beta": 2.0,
+              "k": 0.6
+            },
+            {
+              "n_space": 512,
+              "cfl": 0.25,
+              "beta": 2.0,
+              "k": 0.6
+            },
+            {
+              "n_space": 1024,
+              "cfl": 0.25,
+              "beta": 2.0,
+              "k": 0.6
+            },
+            {
+              "n_space": 2048,
+              "cfl": 0.25,
+              "beta": 2.0,
+              "k": 0.6
+            },
+            {
+              "n_space": 4096,
+              "cfl": 0.25,
+              "beta": 2.0,
+              "k": 0.6
+            },
+            {
+              "n_space": 8192,
+              "cfl": 0.25,
+              "beta": 2.0,
+              "k": 0.6
+            },
+            {
+              "n_space": 16384,
+              "cfl": 0.25,
+              "beta": 2.0,
+              "k": 0.6
+            }
+          ],
+          [
+            {
+              "n_space": 256,
+              "cfl": 0.25,
+              "beta": 2.0,
+              "k": 0.8
+            },
+            {
+              "n_space": 512,
+              "cfl": 0.25,
+              "beta": 2.0,
+              "k": 0.8
+            },
+            {
+              "n_space": 1024,
+              "cfl": 0.25,
+              "beta": 2.0,
+              "k": 0.8
+            },
+            {
+              "n_space": 2048,
+              "cfl": 0.25,
+              "beta": 2.0,
+              "k": 0.8
+            },
+            {
+              "n_space": 4096,
+              "cfl": 0.25,
+              "beta": 2.0,
+              "k": 0.8
+            },
+            {
+              "n_space": 8192,
+              "cfl": 0.25,
+              "beta": 2.0,
+              "k": 0.8
+            },
+            {
+              "n_space": 16384,
+              "cfl": 0.25,
+              "beta": 2.0,
+              "k": 0.8
+            }
+          ],
+          [
+            {
+              "n_space": 256,
+              "cfl": 0.25,
+              "beta": 2.0,
+              "k": 1.0
+            },
+            {
+              "n_space": 512,
+              "cfl": 0.25,
+              "beta": 2.0,
+              "k": 1.0
+            },
+            {
+              "n_space": 1024,
+              "cfl": 0.25,
+              "beta": 2.0,
+              "k": 1.0
+            },
+            {
+              "n_space": 2048,
+              "cfl": 0.25,
+              "beta": 2.0,
+              "k": 1.0
+            },
+            {
+              "n_space": 4096,
+              "cfl": 0.25,
+              "beta": 2.0,
+              "k": 1.0
+            },
+            {
+              "n_space": 8192,
+              "cfl": 0.25,
+              "beta": 2.0,
+              "k": 1.0
+            },
+            {
+              "n_space": 16384,
+              "cfl": 0.25,
+              "beta": 2.0,
+              "k": 1.0
+            }
+          ]
+        ]
+      }
+    },
+    {
+      "solver": "euler_1d",
+      "target_parameter": "beta",
+      "profile": "p2",
+      "precision_config": {
+        "tolerance_rmse": 0.01
+      },
+      "target_config": {
+        "initial_value": null,
+        "multiplication_factor": 2,
+        "max_iteration_num": 7,
+        "search_range_min": null,
+        "search_range_max": null,
+        "search_range_slice_num": 6
+      },
+      "non_target_parameters": {
+        "cfl": 0.25,
+        "k": -1.0,
+        "n_space": 256
+      },
+      "results": {
+        "converged": false,
+        "optimal_parameter_value": 1.0,
+        "total_computational_cost": 807034624,
+        "cost_history": [
+          150784,
+          598528,
+          2375680,
+          9482240,
+          37871616,
+          151363584,
+          605192192
+        ],
+        "parameter_history": [
+          [
+            {
+              "n_space": 256,
+              "cfl": 0.25,
+              "beta": 1.0,
+              "k": -1.0
+            },
+            {
+              "n_space": 512,
+              "cfl": 0.25,
+              "beta": 1.0,
+              "k": -1.0
+            },
+            {
+              "n_space": 1024,
+              "cfl": 0.25,
+              "beta": 1.0,
+              "k": -1.0
+            },
+            {
+              "n_space": 2048,
+              "cfl": 0.25,
+              "beta": 1.0,
+              "k": -1.0
+            },
+            {
+              "n_space": 4096,
+              "cfl": 0.25,
+              "beta": 1.0,
+              "k": -1.0
+            },
+            {
+              "n_space": 8192,
+              "cfl": 0.25,
+              "beta": 1.0,
+              "k": -1.0
+            },
+            {
+              "n_space": 16384,
+              "cfl": 0.25,
+              "beta": 1.0,
+              "k": -1.0
+            }
+          ],
+          [
+            {
+              "n_space": 256,
+              "cfl": 0.25,
+              "beta": 1.2,
+              "k": -1.0
+            },
+            {
+              "n_space": 512,
+              "cfl": 0.25,
+              "beta": 1.2,
+              "k": -1.0
+            },
+            {
+              "n_space": 1024,
+              "cfl": 0.25,
+              "beta": 1.2,
+              "k": -1.0
+            },
+            {
+              "n_space": 2048,
+              "cfl": 0.25,
+              "beta": 1.2,
+              "k": -1.0
+            },
+            {
+              "n_space": 4096,
+              "cfl": 0.25,
+              "beta": 1.2,
+              "k": -1.0
+            },
+            {
+              "n_space": 8192,
+              "cfl": 0.25,
+              "beta": 1.2,
+              "k": -1.0
+            },
+            {
+              "n_space": 16384,
+              "cfl": 0.25,
+              "beta": 1.2,
+              "k": -1.0
+            }
+          ],
+          [
+            {
+              "n_space": 256,
+              "cfl": 0.25,
+              "beta": 1.4,
+              "k": -1.0
+            },
+            {
+              "n_space": 512,
+              "cfl": 0.25,
+              "beta": 1.4,
+              "k": -1.0
+            },
+            {
+              "n_space": 1024,
+              "cfl": 0.25,
+              "beta": 1.4,
+              "k": -1.0
+            },
+            {
+              "n_space": 2048,
+              "cfl": 0.25,
+              "beta": 1.4,
+              "k": -1.0
+            },
+            {
+              "n_space": 4096,
+              "cfl": 0.25,
+              "beta": 1.4,
+              "k": -1.0
+            },
+            {
+              "n_space": 8192,
+              "cfl": 0.25,
+              "beta": 1.4,
+              "k": -1.0
+            },
+            {
+              "n_space": 16384,
+              "cfl": 0.25,
+              "beta": 1.4,
+              "k": -1.0
+            }
+          ],
+          [
+            {
+              "n_space": 256,
+              "cfl": 0.25,
+              "beta": 1.6,
+              "k": -1.0
+            },
+            {
+              "n_space": 512,
+              "cfl": 0.25,
+              "beta": 1.6,
+              "k": -1.0
+            },
+            {
+              "n_space": 1024,
+              "cfl": 0.25,
+              "beta": 1.6,
+              "k": -1.0
+            },
+            {
+              "n_space": 2048,
+              "cfl": 0.25,
+              "beta": 1.6,
+              "k": -1.0
+            },
+            {
+              "n_space": 4096,
+              "cfl": 0.25,
+              "beta": 1.6,
+              "k": -1.0
+            },
+            {
+              "n_space": 8192,
+              "cfl": 0.25,
+              "beta": 1.6,
+              "k": -1.0
+            },
+            {
+              "n_space": 16384,
+              "cfl": 0.25,
+              "beta": 1.6,
+              "k": -1.0
+            }
+          ],
+          [
+            {
+              "n_space": 256,
+              "cfl": 0.25,
+              "beta": 1.8,
+              "k": -1.0
+            },
+            {
+              "n_space": 512,
+              "cfl": 0.25,
+              "beta": 1.8,
+              "k": -1.0
+            },
+            {
+              "n_space": 1024,
+              "cfl": 0.25,
+              "beta": 1.8,
+              "k": -1.0
+            },
+            {
+              "n_space": 2048,
+              "cfl": 0.25,
+              "beta": 1.8,
+              "k": -1.0
+            },
+            {
+              "n_space": 4096,
+              "cfl": 0.25,
+              "beta": 1.8,
+              "k": -1.0
+            },
+            {
+              "n_space": 8192,
+              "cfl": 0.25,
+              "beta": 1.8,
+              "k": -1.0
+            },
+            {
+              "n_space": 16384,
+              "cfl": 0.25,
+              "beta": 1.8,
+              "k": -1.0
+            }
+          ],
+          [
+            {
+              "n_space": 256,
+              "cfl": 0.25,
+              "beta": 2.0,
+              "k": -1.0
+            },
+            {
+              "n_space": 512,
+              "cfl": 0.25,
+              "beta": 2.0,
+              "k": -1.0
+            },
+            {
+              "n_space": 1024,
+              "cfl": 0.25,
+              "beta": 2.0,
+              "k": -1.0
+            },
+            {
+              "n_space": 2048,
+              "cfl": 0.25,
+              "beta": 2.0,
+              "k": -1.0
+            },
+            {
+              "n_space": 4096,
+              "cfl": 0.25,
+              "beta": 2.0,
+              "k": -1.0
+            },
+            {
+              "n_space": 8192,
+              "cfl": 0.25,
+              "beta": 2.0,
+              "k": -1.0
+            },
+            {
+              "n_space": 16384,
+              "cfl": 0.25,
+              "beta": 2.0,
+              "k": -1.0
+            }
+          ]
+        ]
+      }
+    },
+    {
+      "solver": "euler_1d",
+      "target_parameter": "beta",
+      "profile": "p2",
+      "precision_config": {
+        "tolerance_rmse": 0.01
+      },
+      "target_config": {
+        "initial_value": null,
+        "multiplication_factor": 2,
+        "max_iteration_num": 7,
+        "search_range_min": null,
+        "search_range_max": null,
+        "search_range_slice_num": 6
+      },
+      "non_target_parameters": {
+        "cfl": 0.25,
+        "k": 0.0,
+        "n_space": 256
+      },
+      "results": {
+        "converged": false,
+        "optimal_parameter_value": 2.0,
+        "total_computational_cost": 806902528,
+        "cost_history": [
+          150784,
+          597504,
+          2375680,
+          9482240,
+          37855232,
+          151330816,
+          605110272
+        ],
+        "parameter_history": [
+          [
+            {
+              "n_space": 256,
+              "cfl": 0.25,
+              "beta": 1.0,
+              "k": 0.0
+            },
+            {
+              "n_space": 512,
+              "cfl": 0.25,
+              "beta": 1.0,
+              "k": 0.0
+            },
+            {
+              "n_space": 1024,
+              "cfl": 0.25,
+              "beta": 1.0,
+              "k": 0.0
+            },
+            {
+              "n_space": 2048,
+              "cfl": 0.25,
+              "beta": 1.0,
+              "k": 0.0
+            },
+            {
+              "n_space": 4096,
+              "cfl": 0.25,
+              "beta": 1.0,
+              "k": 0.0
+            },
+            {
+              "n_space": 8192,
+              "cfl": 0.25,
+              "beta": 1.0,
+              "k": 0.0
+            },
+            {
+              "n_space": 16384,
+              "cfl": 0.25,
+              "beta": 1.0,
+              "k": 0.0
+            }
+          ],
+          [
+            {
+              "n_space": 256,
+              "cfl": 0.25,
+              "beta": 1.2,
+              "k": 0.0
+            },
+            {
+              "n_space": 512,
+              "cfl": 0.25,
+              "beta": 1.2,
+              "k": 0.0
+            },
+            {
+              "n_space": 1024,
+              "cfl": 0.25,
+              "beta": 1.2,
+              "k": 0.0
+            },
+            {
+              "n_space": 2048,
+              "cfl": 0.25,
+              "beta": 1.2,
+              "k": 0.0
+            },
+            {
+              "n_space": 4096,
+              "cfl": 0.25,
+              "beta": 1.2,
+              "k": 0.0
+            },
+            {
+              "n_space": 8192,
+              "cfl": 0.25,
+              "beta": 1.2,
+              "k": 0.0
+            },
+            {
+              "n_space": 16384,
+              "cfl": 0.25,
+              "beta": 1.2,
+              "k": 0.0
+            }
+          ],
+          [
+            {
+              "n_space": 256,
+              "cfl": 0.25,
+              "beta": 1.4,
+              "k": 0.0
+            },
+            {
+              "n_space": 512,
+              "cfl": 0.25,
+              "beta": 1.4,
+              "k": 0.0
+            },
+            {
+              "n_space": 1024,
+              "cfl": 0.25,
+              "beta": 1.4,
+              "k": 0.0
+            },
+            {
+              "n_space": 2048,
+              "cfl": 0.25,
+              "beta": 1.4,
+              "k": 0.0
+            },
+            {
+              "n_space": 4096,
+              "cfl": 0.25,
+              "beta": 1.4,
+              "k": 0.0
+            },
+            {
+              "n_space": 8192,
+              "cfl": 0.25,
+              "beta": 1.4,
+              "k": 0.0
+            },
+            {
+              "n_space": 16384,
+              "cfl": 0.25,
+              "beta": 1.4,
+              "k": 0.0
+            }
+          ],
+          [
+            {
+              "n_space": 256,
+              "cfl": 0.25,
+              "beta": 1.6,
+              "k": 0.0
+            },
+            {
+              "n_space": 512,
+              "cfl": 0.25,
+              "beta": 1.6,
+              "k": 0.0
+            },
+            {
+              "n_space": 1024,
+              "cfl": 0.25,
+              "beta": 1.6,
+              "k": 0.0
+            },
+            {
+              "n_space": 2048,
+              "cfl": 0.25,
+              "beta": 1.6,
+              "k": 0.0
+            },
+            {
+              "n_space": 4096,
+              "cfl": 0.25,
+              "beta": 1.6,
+              "k": 0.0
+            },
+            {
+              "n_space": 8192,
+              "cfl": 0.25,
+              "beta": 1.6,
+              "k": 0.0
+            },
+            {
+              "n_space": 16384,
+              "cfl": 0.25,
+              "beta": 1.6,
+              "k": 0.0
+            }
+          ],
+          [
+            {
+              "n_space": 256,
+              "cfl": 0.25,
+              "beta": 1.8,
+              "k": 0.0
+            },
+            {
+              "n_space": 512,
+              "cfl": 0.25,
+              "beta": 1.8,
+              "k": 0.0
+            },
+            {
+              "n_space": 1024,
+              "cfl": 0.25,
+              "beta": 1.8,
+              "k": 0.0
+            },
+            {
+              "n_space": 2048,
+              "cfl": 0.25,
+              "beta": 1.8,
+              "k": 0.0
+            },
+            {
+              "n_space": 4096,
+              "cfl": 0.25,
+              "beta": 1.8,
+              "k": 0.0
+            },
+            {
+              "n_space": 8192,
+              "cfl": 0.25,
+              "beta": 1.8,
+              "k": 0.0
+            },
+            {
+              "n_space": 16384,
+              "cfl": 0.25,
+              "beta": 1.8,
+              "k": 0.0
+            }
+          ],
+          [
+            {
+              "n_space": 256,
+              "cfl": 0.25,
+              "beta": 2.0,
+              "k": 0.0
+            },
+            {
+              "n_space": 512,
+              "cfl": 0.25,
+              "beta": 2.0,
+              "k": 0.0
+            },
+            {
+              "n_space": 1024,
+              "cfl": 0.25,
+              "beta": 2.0,
+              "k": 0.0
+            },
+            {
+              "n_space": 2048,
+              "cfl": 0.25,
+              "beta": 2.0,
+              "k": 0.0
+            },
+            {
+              "n_space": 4096,
+              "cfl": 0.25,
+              "beta": 2.0,
+              "k": 0.0
+            },
+            {
+              "n_space": 8192,
+              "cfl": 0.25,
+              "beta": 2.0,
+              "k": 0.0
+            },
+            {
+              "n_space": 16384,
+              "cfl": 0.25,
+              "beta": 2.0,
+              "k": 0.0
+            }
+          ]
+        ]
+      }
+    },
+    {
+      "solver": "euler_1d",
+      "target_parameter": "n_space",
+      "profile": "p3",
+      "precision_config": {
+        "tolerance_rmse": 0.01
+      },
+      "target_config": {
+        "initial_value": 256,
+        "multiplication_factor": 2,
+        "max_iteration_num": 7,
+        "search_range_min": null,
+        "search_range_max": null,
+        "search_range_slice_num": null
+      },
+      "non_target_parameters": {
+        "cfl": 0.25,
+        "beta": 2.0,
+        "k": 1.0
+      },
+      "results": {
+        "converged": false,
+        "optimal_parameter_value": 16384,
+        "total_computational_cost": 129254656,
+        "cost_history": [
+          121600,
+          481792,
+          1925120,
+          8024064,
+          15630336,
+          32309248,
+          70762496
+        ],
+        "parameter_history": [
+          {
+            "n_space": 256,
+            "cfl": 0.25,
+            "beta": 2.0,
+            "k": 1.0
+          },
+          {
+            "n_space": 512,
+            "cfl": 0.25,
+            "beta": 2.0,
+            "k": 1.0
+          },
+          {
+            "n_space": 1024,
+            "cfl": 0.25,
+            "beta": 2.0,
+            "k": 1.0
+          },
+          {
+            "n_space": 2048,
+            "cfl": 0.25,
+            "beta": 2.0,
+            "k": 1.0
+          },
+          {
+            "n_space": 4096,
+            "cfl": 0.25,
+            "beta": 2.0,
+            "k": 1.0
+          },
+          {
+            "n_space": 8192,
+            "cfl": 0.25,
+            "beta": 2.0,
+            "k": 1.0
+          },
+          {
+            "n_space": 16384,
+            "cfl": 0.25,
+            "beta": 2.0,
+            "k": 1.0
+          }
+        ]
+      }
+    }
+  ]
+}

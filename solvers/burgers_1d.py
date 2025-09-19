@@ -22,7 +22,7 @@ class BurgersRoe2(SIMULATOR):
 
         # controllable parameters
         self.cfl = cfg.cfl  # CFL number
-        self.w = cfg.w  # the one parameter for the minmod limiter
+        self.beta = cfg.beta  # Limiter parameter for generalized superbee (was w)
         self.k = cfg.k  # the blending parameter between the central (1) and upwind (-1) fluxes
 
         # Create spatial grid (without endpoint for periodic domain)
@@ -33,7 +33,7 @@ class BurgersRoe2(SIMULATOR):
         self.u = self.initialize_condition(self.case)
 
         # Output directory
-        self.dump_dir = cfg.dump_dir + f"_cfl_{self.cfl}_k_{self.k}_w_{self.w}"
+        self.dump_dir = cfg.dump_dir + f"_cfl_{self.cfl}_k_{self.k}_beta_{self.beta}_n_{self.n_space}"
         if not os.path.exists(self.dump_dir):
             os.makedirs(self.dump_dir)
 
@@ -98,17 +98,10 @@ class BurgersRoe2(SIMULATOR):
         dt = self.cfl * self.dx / (max_speed + 1e-10)
         return dt
 
-    def minmod(self, a, b):
-        """
-        Vectorized minmod flux limiter function.
-        Returns 0 where a and b have different signs,
-        otherwise returns the smaller absolute value with the sign preserved.
-        """
-        # Vectorized implementation
-        result = np.zeros_like(a)
-        mask = a * b > 0
-        result[mask] = np.sign(a[mask]) * np.minimum(np.abs(a[mask]), np.abs(b[mask]))
-        return result
+    def _slope_limiter(self, r):
+        """Generalized superbee limiter function for MUSCL scheme (from Euler solver)"""
+        psi_r = np.maximum(0, np.maximum(np.minimum(self.beta * r, 1.0), np.minimum(r, self.beta)))
+        return psi_r
 
     def get_ghost_cells(self, u):
         """Add ghost cells with periodic boundary conditions"""
@@ -123,46 +116,54 @@ class BurgersRoe2(SIMULATOR):
 
     def step(self, dt):
         """
-        Perform a single time step using 2nd order Roe method with minmod limiter.
-        Fully vectorized implementation.
+        Perform a single time step using 2nd order Roe method with generalized superbee limiter.
+        Updated to use Euler's MUSCL reconstruction approach.
         """
         # Add ghost cells
         ug = self.get_ghost_cells(self.u)
         N = len(self.u)
 
-        # Vectorized slope calculation using minmod limiter
-        left_diff = ug[2:-2] - ug[1:-3]  # u[i] - u[i-1]
-        right_diff = ug[3:-1] - ug[2:-2]  # u[i+1] - u[i]
+        # Compute slopes for all cells using Euler's approach
+        slopes = np.zeros(N + 4)
 
-        # Apply minmod limiter to all interior cells at once
-        slopes_left = np.zeros(N + 4)
-        slopes_right = np.zeros(N + 4)
+        # Vectorized slope computation for all cells (including boundaries)
+        diff_left = ug[2:-2] - ug[1:-3]  # u[i] - u[i-1]
+        diff_right = ug[3:-1] - ug[2:-2]  # u[i+1] - u[i]
 
-        # Compute slopes with weighting factor self.w
-        slopes_left[2:-2] = self.minmod(self.w * left_diff, right_diff)  # j+1/2, -
-        slopes_right[2:-2] = self.minmod(left_diff, self.w * right_diff)  # j-1/2, +
+        # Handle small denominators with vectorized conditionals (from Euler)
+        small_num = np.abs(diff_left) < 1e-8
+        small_den = np.abs(diff_right) < 1e-8
+
+        # Apply conditional logic vectorized
+        diff_left = np.where(small_num, 0.0, diff_left)
+        diff_right = np.where(small_num, 1.0, diff_right)
+        diff_left = np.where(~small_num & (diff_left > 1e-8) & small_den, 1.0, diff_left)
+        diff_right = np.where(~small_num & (diff_left > 1e-8) & small_den, 1.0, diff_right)
+        diff_left = np.where(~small_num & (diff_left < -1e-8) & small_den, -1.0, diff_left)
+        diff_right = np.where(~small_num & (diff_left < -1e-8) & small_den, 1.0, diff_right)
+
+        slopes[2:-2] = self._slope_limiter(diff_left / diff_right)
 
         # Apply periodic boundary conditions to slopes
-        slopes_left[1] = slopes_left[-3]
-        slopes_left[0] = slopes_left[-4]
-        slopes_left[-2] = slopes_left[2]
-        slopes_left[-1] = slopes_left[3]
+        slopes[1] = slopes[-3]
+        slopes[0] = slopes[-4]
+        slopes[-2] = slopes[2]
+        slopes[-1] = slopes[3]
 
-        slopes_right[1] = slopes_right[-3]
-        slopes_right[0] = slopes_right[-4]
-        slopes_right[-2] = slopes_right[2]
-        slopes_right[-1] = slopes_right[3]
+        # Vectorized Left and Right extrapolated u-values at j+1/2 (Euler's approach)
+        u_left = np.zeros(N + 1)
+        u_right = np.zeros(N + 1)
 
-        # Reconstruct left and right states in vectorized form
-        # Indexing explained: u_left[i] corresponds to left state at i-1/2 interface
-        u_left = ug[1:-3] + 0.25 * (1 - self.k) * slopes_right[1:-3] + 0.25 * (1 + self.k) * slopes_left[1:-3]
-        u_right = ug[2:-2] - 0.25 * (1 + self.k) * slopes_right[2:-2] - 0.25 * (1 - self.k) * slopes_left[2:-2]
-
-        # u_left = ug[1:-3] + 0.5 * slopes_left[1:-3]
-        # u_right = ug[2:-2] - 0.5 * slopes_right[2:-2]
-
-        # u_left = ug[1:-3] + 0.5 * slopes_right[0:-4]
-        # u_right = ug[2:-2] - 0.5 * slopes_left[3:-1]
+        # Reconstruction for all interfaces - fully vectorized (adapted from Euler)
+        # Interface i+1/2 connects cells i and i+1 (in original indexing)
+        # In ghost cell indexing: cells i+2 and i+3
+        indices = np.arange(N + 1)
+        u_left[indices] = ug[indices + 1] + 0.25 * (1 + self.k) * slopes[indices + 1] * (
+            ug[indices + 2] - ug[indices + 1]
+        )
+        u_right[indices] = ug[indices + 2] - 0.25 * (1 + self.k) * slopes[indices + 2] * (
+            ug[indices + 3] - ug[indices + 2]
+        )
 
         # Compute Roe fluxes at all interfaces simultaneously
         f_left = 0.5 * u_left**2  # Flux function for Burgers: f(u) = 0.5*u^2
@@ -174,10 +175,7 @@ class BurgersRoe2(SIMULATOR):
         # Vectorized Roe flux formula
         F = 0.5 * (f_left + f_right) - 0.5 * np.abs(a) * (u_right - u_left)
 
-        # Boundary flux for periodic conditions
-        F = np.append(F, F[0])
-
-        # Update solution in vectorized form
+        # Update solution in vectorized form (periodic boundary handling)
         self.u = self.u - (dt / self.dx) * (F[1:] - F[:-1])
 
     def dump(self):
@@ -215,6 +213,10 @@ class BurgersRoe2(SIMULATOR):
             meta = {
                 "cost": cost,
                 "cfl": float(self.cfl),
+                "beta": float(self.beta),
+                "k": float(self.k),
+                "n_space": int(self.n_space),
+                "dx": float(self.dx),
                 "total_steps": int(self.num_steps),
             }
             json.dump(meta, f, indent=4)

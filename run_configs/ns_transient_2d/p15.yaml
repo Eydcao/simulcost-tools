@@ -1,0 +1,26 @@
+# Profile: Boundary Condition 3 with Reynolds Number 6000
+# Description: Channel flow with randomly placed circular obstacles
+
+# -------- Environment Dependents --------
+boundary_condition: 3
+reynolds_num: 6000.0
+vorticity_confinement: 0.0
+total_runtime: 1.0
+no_dye: False
+cpu: False
+visualization: 0
+advection_scheme: "cip"
+
+# -------- Tunable Parameters --------
+resolution: 400
+relaxation_factor: 1.3
+residual_threshold: 1e-2
+cfl: 0.05
+
+# -------- Profile Metadata --------
+profile_name: "p15"
+description: "Channel flow with randomly placed circular obstacles, Re=6000, CIP scheme"
+tags: ["channel_flow", "random_obstacles", "high_reynolds", "cip_scheme"]
+
+# -------- Output --------
+dump_dir: "sim_res/ns_transient_2d/p15"

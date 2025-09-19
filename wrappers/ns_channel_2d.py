@@ -6,9 +6,9 @@ import json
 from scipy.interpolate import RegularGridInterpolator
 
 
-def run_sim_ns_channel_2d(profile, mesh_x, mesh_y, omega_u, omega_v, omega_p, diff_u_threshold, diff_v_threshold, res_iter_v_threshold):
+def run_sim_ns_channel_2d(profile, boundary_type, mesh_x, mesh_y, omega_u, omega_v, omega_p, diff_u_threshold, diff_v_threshold, res_iter_v_threshold, other_params=None):
     """Run the ns_channel_2d simulation with the given parameters."""
-    dir_path = f"sim_res/ns_channel_2d/{profile}_mesh_{mesh_x}_{mesh_y}_relax_{omega_u}_{omega_v}_{omega_p}_error_{diff_u_threshold}_{diff_v_threshold}_itererror_{res_iter_v_threshold}/"
+    dir_path = f"sim_res/ns_channel_2d/{profile}_{boundary_type}_mesh_{mesh_x}_{mesh_y}_relax_{omega_u}_{omega_v}_{omega_p}_error_{diff_u_threshold}_{diff_v_threshold}_itererror_{res_iter_v_threshold}/"
     meta_file_path = os.path.join(dir_path, "meta.json")
 
     # Check if the directory and meta.json file with the key of cost and num_steps exist
@@ -18,20 +18,48 @@ def run_sim_ns_channel_2d(profile, mesh_x, mesh_y, omega_u, omega_v, omega_p, di
             if "cost" in meta and "num_steps" in meta:
                 return meta["cost"], meta["num_steps"]
 
-    # Run the simulation if the directory or meta.json file does not exist
-    cmd = f"python costsci_tools/runners/ns_channel_2d.py --config-name={profile} mesh_x={mesh_x} mesh_y={mesh_y} omega_u={omega_u} omega_v={omega_v} omega_p={omega_p} diff_u_threshold={diff_u_threshold} diff_v_threshold={diff_v_threshold} res_iter_v_threshold={res_iter_v_threshold}"
-    subprocess.run(cmd, shell=True, check=True)
+    # Build command with wall parameters if provided
+    cmd = f"python costsci_tools/runners/ns_channel_2d.py --config-name={profile} mesh_x={mesh_x} mesh_y={mesh_y} omega_u={omega_u} omega_v={omega_v} omega_p={omega_p} diff_u_threshold={diff_u_threshold} diff_v_threshold={diff_v_threshold} res_iter_v_threshold={res_iter_v_threshold} boundary_condition={boundary_type}"
+    
+    # Add wall parameters if provided
+    if other_params:
+        for key, value in other_params.items():
+            cmd += f" other_params.{key}={value}"
+    print(f"Running simulation with command: {cmd}")
+    
+    result = subprocess.run(cmd, shell=True, capture_output=True, text=True)
+    
+    # Check if simulation failed
+    if result.returncode != 0:
+        print(f"Simulation failed with return code {result.returncode}")
+        print(f"Error output: {result.stderr}")
+        # Return a high cost to indicate failure
+        return float('inf'), 0
+
+    # Check if meta.json file was created after simulation
+    if not os.path.exists(meta_file_path):
+        print(f"Warning: meta.json not found at {meta_file_path} after simulation")
+        # Return a high cost to indicate failure
+        return float('inf'), 0
 
     # Load the cost from the meta.json file
-    with open(meta_file_path, "r") as f:
-        meta = json.load(f)
+    try:
+        with open(meta_file_path, "r") as f:
+            meta = json.load(f)
+        
+        if "cost" not in meta or "num_steps" not in meta:
+            print(f"Warning: meta.json missing required keys at {meta_file_path}")
+            return float('inf'), 0
+            
+        return meta["cost"], meta["num_steps"]
+    except (json.JSONDecodeError, IOError) as e:
+        print(f"Error reading meta.json at {meta_file_path}: {e}")
+        return float('inf'), 0
 
-    return meta["cost"], meta["num_steps"]
 
-
-def get_res_ns_channel_2d(profile, mesh_x, mesh_y, omega_u, omega_v, omega_p, diff_u_threshold, diff_v_threshold, res_iter_v_threshold):
+def get_res_ns_channel_2d(profile, boundary_type, mesh_x, mesh_y, omega_u, omega_v, omega_p, diff_u_threshold, diff_v_threshold, res_iter_v_threshold, other_params=None):
     """Load final velocity and pressure fields for given parameters."""
-    dir_path = f"sim_res/ns_channel_2d/{profile}_mesh_{mesh_x}_{mesh_y}_relax_{omega_u}_{omega_v}_{omega_p}_error_{diff_u_threshold}_{diff_v_threshold}_itererror_{res_iter_v_threshold}/"
+    dir_path = f"sim_res/ns_channel_2d/{profile}_{boundary_type}_mesh_{mesh_x}_{mesh_y}_relax_{omega_u}_{omega_v}_{omega_p}_error_{diff_u_threshold}_{diff_v_threshold}_itererror_{res_iter_v_threshold}/"
 
     if not os.path.exists(dir_path):
         os.makedirs(dir_path)
@@ -39,21 +67,28 @@ def get_res_ns_channel_2d(profile, mesh_x, mesh_y, omega_u, omega_v, omega_p, di
     files = [f for f in os.listdir(dir_path) if f.startswith("res_") and f.endswith(".h5")]
     if not files:
         # Trigger a simulation run if no result files are found
-        run_sim_ns_channel_2d(profile, mesh_x, mesh_y, omega_u, omega_v, omega_p, diff_u_threshold, diff_v_threshold, res_iter_v_threshold)
+        cost, num_steps = run_sim_ns_channel_2d(profile, boundary_type, mesh_x, mesh_y, omega_u, omega_v, omega_p, diff_u_threshold, diff_v_threshold, res_iter_v_threshold, other_params)
+        if cost == float('inf'):
+            # Simulation failed, return None to indicate failure
+            return None, None, None
         files = [f for f in os.listdir(dir_path) if f.startswith("res_") and f.endswith(".h5")]
         if not files:
-            raise FileNotFoundError(f"No result files found in {dir_path} after triggering a simulation run.")
+            print(f"Warning: No result files found in {dir_path} after triggering a simulation run.")
+            return None, None, None
 
     files.sort(key=lambda x: int(x.split("_")[1].split(".")[0]))
     latest_file = files[-1]
 
     file_path = os.path.join(dir_path, latest_file)
-    with h5py.File(file_path, "r") as f:
-        U = np.array(f["u"])
-        V = np.array(f["v"])
-        P = np.array(f["p"])
-
-    return U, V, P
+    try:
+        with h5py.File(file_path, "r") as f:
+            U = np.array(f["u"])
+            V = np.array(f["v"])
+            P = np.array(f["p"])
+        return U, V, P
+    except Exception as e:
+        print(f"Error reading result file {file_path}: {e}")
+        return None, None, None
 
 def compute_metrics(u, v, p, length, breadth, mass_tolerance):
     """Compute physical metrics for NS solution."""
@@ -66,7 +101,7 @@ def compute_metrics(u, v, p, length, breadth, mass_tolerance):
     dx = length / mx
     dy = breadth / my
     source[1:my+1, 1:mx+1] = dy * (u[1:my+1, 1:mx+1] - u[1:my+1, 0:mx]) + dx * (v[1:my+1, 1:mx+1] - v[0:my, 1:mx+1])
-    mass = np.sum(source**2)
+    mass = np.sum(source**2) / (my * mx)
     mass_conserved = mass < mass_tolerance
 
     return {
@@ -96,25 +131,44 @@ def interpolate_field(field_src, src_shape, tgt_shape, axis_offsets=(0, 0)):
 
 
 def compare_res_ns_channel_2d(
-    profile1, mesh_x1, mesh_y1, omega_u1, omega_v1, omega_p1, diff_u_threshold1, diff_v_threshold1, res_iter_v_threshold1,
-    profile2, mesh_x2, mesh_y2, omega_u2, omega_v2, omega_p2, diff_u_threshold2, diff_v_threshold2, res_iter_v_threshold2,
+    profile1, boundary_type1, mesh_x1, mesh_y1, omega_u1, omega_v1, omega_p1, diff_u_threshold1, diff_v_threshold1, res_iter_v_threshold1,
+    profile2, boundary_type2, mesh_x2, mesh_y2, omega_u2, omega_v2, omega_p2, diff_u_threshold2, diff_v_threshold2, res_iter_v_threshold2,
     length, breadth,
-    mass_tolerance, u_rmse_tolerance, v_rmse_tolerance, p_rmse_tolerance
+    mass_tolerance, u_rmse_tolerance, v_rmse_tolerance, p_rmse_tolerance,
+    other_params1=None, other_params2=None
 ):
     """
     Compare two sets of results.
     """
-    u1, v1, p1 = get_res_ns_channel_2d(profile1, mesh_x1, mesh_y1, omega_u1, omega_v1, omega_p1, diff_u_threshold1, diff_v_threshold1, res_iter_v_threshold1)
-    u2, v2, p2 = get_res_ns_channel_2d(profile2, mesh_x2, mesh_y2, omega_u2, omega_v2, omega_p2, diff_u_threshold2, diff_v_threshold2, res_iter_v_threshold2)
+    u1, v1, p1 = get_res_ns_channel_2d(profile1, boundary_type1, mesh_x1, mesh_y1, omega_u1, omega_v1, omega_p1, diff_u_threshold1, diff_v_threshold1, res_iter_v_threshold1, other_params1)
+    u2, v2, p2 = get_res_ns_channel_2d(profile2, boundary_type2, mesh_x2, mesh_y2, omega_u2, omega_v2, omega_p2, diff_u_threshold2, diff_v_threshold2, res_iter_v_threshold2, other_params2)
+    
+    # Check if either simulation failed
+    if u1 is None or u2 is None:
+        print("One or both simulations failed, cannot compare results")
+        return False, float('inf'), float('inf'), float('inf'), False, False
 
     # Compute RMSE for velocity and pressure
-    u2_interp = interpolate_field(u2, u2.shape, u1.shape, axis_offsets=(0.0, 0.5))
-    v2_interp = interpolate_field(v2, v2.shape, v1.shape, axis_offsets=(0.5, 0.0))
-    p2_interp = interpolate_field(p2, p2.shape, p1.shape, axis_offsets=(0.0, 0.0))
-    
-    rmse_u = np.sqrt(np.mean((u1 - u2_interp) ** 2))
-    rmse_v = np.sqrt(np.mean((v1 - v2_interp) ** 2))
-    rmse_p = np.sqrt(np.mean((p1 - p2_interp) ** 2))
+    # Interpolate both fields to the element-wise maximum resolution to avoid any downsampling
+    tgt_u_shape = (max(u1.shape[0], u2.shape[0]), max(u1.shape[1], u2.shape[1]))
+    tgt_v_shape = (max(v1.shape[0], v2.shape[0]), max(v1.shape[1], v2.shape[1]))
+    tgt_p_shape = (max(p1.shape[0], p2.shape[0]), max(p1.shape[1], p2.shape[1]))
+
+    def _maybe_interp(field, current_shape, target_shape, axis_offsets):
+        if current_shape == target_shape:
+            return field
+        return interpolate_field(field, current_shape, target_shape, axis_offsets=axis_offsets)
+
+    u1_up = _maybe_interp(u1, u1.shape, tgt_u_shape, axis_offsets=(0.0, 0.5))
+    u2_up = _maybe_interp(u2, u2.shape, tgt_u_shape, axis_offsets=(0.0, 0.5))
+    v1_up = _maybe_interp(v1, v1.shape, tgt_v_shape, axis_offsets=(0.5, 0.0))
+    v2_up = _maybe_interp(v2, v2.shape, tgt_v_shape, axis_offsets=(0.5, 0.0))
+    p1_up = _maybe_interp(p1, p1.shape, tgt_p_shape, axis_offsets=(0.0, 0.0))
+    p2_up = _maybe_interp(p2, p2.shape, tgt_p_shape, axis_offsets=(0.0, 0.0))
+
+    rmse_u = np.sqrt(np.mean((u1_up - u2_up) ** 2))
+    rmse_v = np.sqrt(np.mean((v1_up - v2_up) ** 2))
+    rmse_p = np.sqrt(np.mean((p1_up - p2_up) ** 2))
     
     # Mass conservation check
     mass_conserved1 = compute_metrics(u1, v1, p1, length, breadth, mass_tolerance)["mass_conserved"]
@@ -135,7 +189,8 @@ def compare_res_ns_channel_2d(
 
 if  __name__ == "__main__":
     # Example usage: compare mesh_x=100, mesh_y=50 with mesh_x=200, mesh_y=50
-    profile = "p1"
+    profile = "p7"
+    boundary_type = "back_stair_flow"
     mesh_x1 = 100
     mesh_y1 = 50
     mesh_x2 = 200
@@ -156,8 +211,8 @@ if  __name__ == "__main__":
 
     # Compare results
     is_converged, _, _, _, _, _ = compare_res_ns_channel_2d(
-        profile, mesh_x1, mesh_y1, omega_u, omega_v, omega_p, diff_u_threshold, diff_v_threshold, res_iter_v_threshold,
-        profile, mesh_x2, mesh_y2, omega_u, omega_v, omega_p, diff_u_threshold, diff_v_threshold, res_iter_v_threshold,
+        profile, boundary_type, mesh_x1, mesh_y1, omega_u, omega_v, omega_p, diff_u_threshold, diff_v_threshold, res_iter_v_threshold,
+        profile, boundary_type, mesh_x2, mesh_y2, omega_u, omega_v, omega_p, diff_u_threshold, diff_v_threshold, res_iter_v_threshold,
         length, breadth,
         mass_tolerance, u_rmse_tolerance, v_rmse_tolerance, p_rmse_tolerance
     )

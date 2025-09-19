@@ -1,5 +1,7 @@
 # Euler 1D Equations with 2nd Order MUSCL-Roe Method
 
+## Introduction
+
 This simulation solves the 1D Euler equations for compressible inviscid flow, using a 2nd order MUSCL scheme with Roe flux and generalized superbee limiter:
 
 **Conservative form:**
@@ -9,6 +11,7 @@ Where the conservative variables and flux are:
 $$\mathbf{U} = \begin{pmatrix} \rho \\ \rho u \\ \rho E \end{pmatrix}, \quad \mathbf{F} = \begin{pmatrix} \rho u \\ \rho u^2 + p \\ u(\rho E + p) \end{pmatrix}$$
 
 **Primitive variables:**
+
 - $\rho$ = density
 - $u$ = velocity  
 - $p$ = pressure
@@ -19,7 +22,7 @@ $$p = (\gamma - 1) \rho \left(E - \frac{u^2}{2}\right)$$
 
 where $\gamma$ is the ratio of specific heats.
 
-## Spatial Discretization
+### Spatial Discretization
 
 The spatial discretization uses MUSCL reconstruction with blending parameter $k$:
 
@@ -29,7 +32,7 @@ $$\mathbf{U}^R_{j+\frac{1}{2}} = \mathbf{U}_{j+1} - \frac{1+k}{4} \psi(r_{j+1}) 
 
 where $k$ is a blending coefficient between central ($k=1$) and upwind ($k=-1$) scheme, and $\psi(r)$ is the slope limiter function.
 
-## Slope Limiting
+### Slope Limiting
 
 The slope limiter uses a generalized superbee limiter:
 
@@ -43,7 +46,7 @@ $$r_{j} = \frac{\mathbf{U}_{j+1} - \mathbf{U}_{j}}{\mathbf{U}_{j+2} - \mathbf{U}
 
 This ratio indicates the local non-smoothness, which will be the input into the slope limiter to achieve the TVD condition.
 
-## Flux Computation
+### Flux Computation
 
 The interface flux is computed using the Roe approximate Riemann solver:
 
@@ -55,69 +58,56 @@ where $|\mathbf{A}|$ is the Roe matrix with Roe-averaged quantities.
 
 The case key in the config file solver sets different initial conditions:
 
-1. **sod** - Sod's shock tube problem: 
+1. **sod** - Sod's shock tube problem:
    - Left: $\rho=1.0, u=0.0, p=1.0$
    - Right: $\rho=0.125, u=0.0, p=0.1$
 
-2. **TODO** - Additional test cases (lax, 123, etc.) to be added later
+2. **lax** - Lax problem:
+   - Left: $\rho=0.445, u=0.6977, p=3.528$
+   - Right: $\rho=0.5, u=0.0, p=0.571$
 
-The simulated results are considered correct if both norms $L^2 \leq 0.02$ and $L^{\infty} \leq 0.2$ compared to reference solution, and the solution satisfies the convergence criteria:
+3. **mach_3** - Mach 3 problem:
+   - Left: $\rho=3.857, u=0.92, p=10.333$
+   - Right: $\rho=1.0, u=3.55, p=1.0$
 
-1. **Mass conservation**: the total integral of density remains constant over time
-2. **Energy conservation**: the total energy $\int \rho E \, dx$ should remain constant
-3. **Positivity preservation**: pressure and density must remain positive at all times
-4. **Shock speed consistency**: pressure gradients should not exceed physical bounds
+The simulated results are considered correct if the relative RMSE meets the precision-dependent tolerance (low: 0.08, medium: 0.02, high: 0.01) compared to reference solution, and the solution satisfies the convergence criteria:
 
-## Parameter Tuning Tasks
+1. **Positivity preservation**: pressure and density must remain positive at all times
+2. **Shock speed consistency**: pressure gradients should not exceed physical bounds
+
+## Parameter Tuning Tasks and Dummy Strategy
 
 ### Tasks
 
-1. **CFL Convergence Search (0-shot and iterative)**
+1. **CFL Convergence Search (iterative+0-shot)**
    - CFL (Courant-Friedrichs-Lewy) number is defined as: $CFL = \frac{(|u| + c) \Delta t}{\Delta x}$ where $c = \sqrt{\gamma p/\rho}$ is the speed of sound
-   - For dummy solution, this means halve CFL each round until convergence (self checking criteria is $L^2 \leq 0.02$ and $L^{\infty} \leq 0.2$)
-   - **Note**: This task spans different k selection (k=1,0,-1), plus β selections (β=0.5,1,2), representing different spatial schemes (ie, 9 CFL tasks)
 
-```bash
-# For example, for profile 1, the 9 tasks are:
-# β=0.5, 3 different ks
-python dummy_sols/euler_1d.py --profile p1 --task cfl --k 1 --beta 0.5
-python dummy_sols/euler_1d.py --profile p1 --task cfl --k 0 --beta 0.5
-python dummy_sols/euler_1d.py --profile p1 --task cfl --k -1 --beta 0.5
-# β=1, 3 different ks
-# ...
-# β=2, 3 different ks
-# ...
-```
+2. **n_space Convergence Search (iterative+0-shot)**
+   - n_space determines spatial resolution: $\Delta x = L / n\_space$, where $L$ is domain length
 
-2. **β-Parameter (Composite: ie, 0-shot select β, then iteratively search CFL)**
-   - Composite means the selection of β is 0-shot, but we still need to pay the cost for iteratively finding the convergent results
-   - For dummy solution, this means:
-     - For each β
-     - Conduct a CFL search, and record the search cost
-     - Record the β corresponding to the minimum search cost
-   - **Note**: This task spans different k selection (k=-1,0,1), representing different spatial schemes (ie, 3 β tasks)
+3. **β-Parameter Optimization (0-shot)**
+   - Grid search over β ∈ [1.0, 2.0] with 6 equally spaced values to find the optimal limiter parameter
 
-```bash
-# For example, for profile 1, the 3 tasks are:
-python dummy_sols/euler_1d.py --profile p1 --task beta --k -1
-python dummy_sols/euler_1d.py --profile p1 --task beta --k 0
-python dummy_sols/euler_1d.py --profile p1 --task beta --k 1
-```
+4. **k-Parameter Optimization (0-shot)**
+   - Grid search over k ∈ [-1.0, 1.0] with 11 equally spaced values to find the optimal blending parameter
 
-3. **k-Parameter (Composite: ie, 0-shot select k, then iteratively search CFL)**
-   - Similar to the β-Parameter task, this is a composite task where k selection is 0-shot, followed by iterative CFL search
-   - For dummy solution, this means:
-     - For each k
-     - Conduct a CFL search, and record the search cost
-     - Record the k corresponding to the minimum search cost
-   - **Note**: This task spans different β selection (β=0.5,1,2), representing different limiters (ie, 3 k tasks)
+### Dummy Strategy
 
-```bash
-# For example, for profile 1, the 3 tasks are:
-python dummy_sols/euler_1d.py --profile p1 --task k --beta 0.5
-python dummy_sols/euler_1d.py --profile p1 --task k --beta 1
-python dummy_sols/euler_1d.py --profile p1 --task k --beta 2
-```
+1. **CFL Convergence Search (iterative+0-shot)**
+   - For dummy solution, this means halve CFL each round (multiplication factor: 0.5) starting from 1.0 until convergence
+   - **Non-target parameters**: n_space=256, with β∈{1.0, 1.5, 2.0} and k∈{-1.0, 0.0, 1.0} combinations
+
+2. **n_space Convergence Search (iterative+0-shot)**
+   - For dummy solution, this means doubling n_space each iteration (multiplication factor: 2) starting from 256 until convergence
+   - **Non-target parameters**: CFL=0.25, with β∈{1.0, 1.5, 2.0} and k∈{-1.0, 0.0, 1.0} combinations
+
+3. **β-Parameter Optimization (0-shot)**
+   - For dummy solution, grid search the β that achieves convergence with minimum computational cost
+   - **Non-target parameters**: CFL=0.25, with k∈{-1.0, 0.0, 1.0} combinations, n_space=256 (starting)
+
+4. **k-Parameter Optimization (0-shot)**
+   - For dummy solution, grid search the k that achieves convergence with minimum computational cost
+   - **Non-target parameters**: CFL=0.25, with β∈{1.0, 1.5, 2.0} combinations, n_space=256 (starting)
 
 ## Summarized parameter table for developer only (Not LLM)
 
@@ -128,12 +118,15 @@ python dummy_sols/euler_1d.py --profile p1 --task k --beta 2
 | cfl | Courant-Friedrichs-Lewy number for stability | 0 < cfl ≤ 1 |
 | beta | Limiter parameter for generalized superbee | 1 ≤ beta ≤ 2 |
 | k | Blending parameter between central (k=1) and upwind (k=-1) fluxes | -1 ≤ k ≤ 1 |
+| n_space | Number of grid cells for spatial discretization | 64 ≤ n_space ≤ 2048 |
 
 More Notes:
+
 - $\beta = 1$: minmod limiter (most dissipative)
 - $\beta = 2$: superbee limiter (least dissipative)
 - $\beta$ must not be smaller than 1 otherwise symmetry will be broken
 - When $k = -1$, $\beta$ no longer affects the solution
+- $n\_space$ determines spatial resolution: $\Delta x = L / n\_space$ (smaller $\Delta x$ = finer grid = higher accuracy but higher cost)
 
 ### Other
 
@@ -142,8 +135,34 @@ More Notes:
 | L | Domain length | 1.0 |
 | gamma | Ratio of specific heats | 1.4 |
 | case | Initial condition type | "sod" |
-| n_space | Number of grid cells | 1024 |
 | record_dt | Time interval between recordings | 0.02 |
 | end_frame | Simulation end after certain number of frames | 10 |
 | dump_dir | Directory for output files | "sim_res/euler_1d/p1" |
 | verbose | Enable verbose output | False |
+
+## Checkout
+
+### Summary
+
+- **Benchmarks**:
+  - **p1**: Sod shock tube problem (classic Riemann problem)
+  - **p2**: Lax problem (moderate shock strength)
+  - **p3**: Mach 3 problem (high-speed flow)
+- **Target Parameters**: 4 (CFL, n_space, k, beta)
+- **Precision Levels**: 3 (low: 0.08, medium: 0.02, high: 0.01)
+
+### Task Distribution
+
+Current configuration generates:
+
+- **CFL** (iterative+0-shot): 3 profiles × 9 non-target combos = 27 tasks
+- **n_space** (iterative+0-shot): 3 profiles × 9 non-target combos = 27 tasks  
+- **k** (0-shot): 3 profiles × 3 non-target combos = 9 tasks
+- **beta** (0-shot): 3 profiles × 3 non-target combos = 9 tasks
+- **Total per precision**: 72 tasks
+- **Total tasks**: 216 tasks (across 3 precision levels)
+
+### Dummy Solution Cache
+
+Config for dummy solution cache: `checkouts/euler_1d.yaml`
+Cache script: `checkouts/euler_1d.py`

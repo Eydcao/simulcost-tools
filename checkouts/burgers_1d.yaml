@@ -1,0 +1,86 @@
+solver_info:
+  name: "Burgers 1D"
+  numerical_method: "2nd Order Roe Method with Generalized Superbee Limiter"
+  reference: "Inviscid Burgers equation - simplified compressible flow model"
+
+task_distribution:
+  strategy: "benchmark"
+  total_individuals: 360
+  description: "5 profiles × 4 target parameters × 3 precision levels × 9 non-target combos = 540 tasks (180 per precision level for CFL/n_space, reduced for k/w)"
+
+precision_levels:
+  high:
+    tolerance_rmse: 0.01
+    description: "Most stringent convergence criteria"
+  medium:
+    tolerance_rmse: 0.04
+    description: "Moderate convergence criteria"
+  low:
+    tolerance_rmse: 0.08
+    description: "Relaxed convergence criteria"
+
+profiles:
+  num_profiles: 5
+  active_profiles: ["p1", "p2", "p3", "p4", "p5"]
+  p1:
+    case: "sin"
+    description: "Sinusoidal wave initial condition"
+  p2:
+    case: "rarefaction"
+    description: "Rarefaction wave initial condition"
+  p3:
+    case: "sod"
+    description: "Modified Sod shock tube for Burgers"
+  p4:
+    case: "double_shock"
+    description: "Two interacting shock waves"
+  p5:
+    case: "blast"
+    description: "Interacting blast waves with Gaussian profiles"
+
+target_parameters:
+  cfl:
+    description: "Determine the CFL number for temporal stability - controls time step size relative to grid spacing"
+    search_type: "iterative+0-shot"
+    initial_value: 1.0
+    multiplication_factor: 0.5
+    max_iteration_num: 7
+    non_target_parameters:
+      n_space: 2048             # Fixed grid resolution for CFL convergence studies
+      k: [-1.0, 0.0, 1.0]      # Array for multiple choices of blending parameter
+      beta: [1.0, 1.5, 2.0]    # Array for multiple choices of limiter parameter
+
+  n_space:
+    description: "Number of spatial grid points - determines spatial resolution"
+    search_type: "iterative+0-shot"
+    initial_value: 256
+    multiplication_factor: 2
+    max_iteration_num: 6
+    non_target_parameters:
+      cfl: 0.25                # Fixed stable CFL for spatial convergence studies
+      k: [-1.0, 0.0, 1.0]      # Array for multiple choices
+      beta: [1.0, 1.5, 2.0]    # Array for multiple choices
+
+  k:
+    description: "Spatial scheme blending parameter (1.0=central, -1.0=upwind, 0.0=mixed)"
+    search_type: "0-shot"
+    search_range_min: -1.0
+    search_range_max: 1.0
+    search_range_slice_num: 11
+    max_iteration_num: 7       # For subsequent CFL search after finding optimal k
+    multiplication_factor: 0.5 # For CFL search
+    non_target_parameters:
+      cfl: 0.25                 # Starting CFL for composite search
+      beta: [1.0, 1.5, 2.0]    # Array for multiple choices
+
+  beta:
+    description: "Generalized superbee limiter parameter - controls dissipation (beta>=1, higher=less dissipative)"
+    search_type: "0-shot"
+    search_range_min: 1.0
+    search_range_max: 2.0
+    search_range_slice_num: 6
+    max_iteration_num: 7       # For subsequent CFL search after finding optimal beta
+    multiplication_factor: 0.5 # For CFL search
+    non_target_parameters:
+      cfl: 0.25                 # Starting CFL for composite search
+      k: [-1.0, 0.0, 1.0]      # Array for multiple choices

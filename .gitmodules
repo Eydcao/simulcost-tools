@@ -1,0 +1,3 @@
+[submodule "solvers/epoch"]
+	path = solvers/epoch
+	url = https://github.com/Warwick-Plasma/epoch.git

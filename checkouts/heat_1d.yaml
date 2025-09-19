@@ -1,0 +1,51 @@
+# Heat 1D Solver Checkout Configuration
+# This file centralizes all parameter settings for both documentation and dummy solution generation
+
+solver_info:
+  name: "Heat 1D"
+  numerical_method: "Explicit finite difference scheme for 1D heat conduction"
+  reference: "Standard heat conduction problem with convection boundary conditions"
+
+task_distribution:
+  strategy: "flexible_parameter"
+  total_individuals: 300
+
+precision_levels:
+  low:
+    tolerance_rmse: 0.01
+    description: "Relaxed convergence criteria"
+  medium:
+    tolerance_rmse: 0.001  
+    description: "Moderate convergence criteria"
+  high:
+    tolerance_rmse: 0.0001
+    description: "Most stringent convergence criteria"
+
+profiles:
+  num_profiles: 25
+  # 25 profiles for comprehensive material/condition variations
+  # p1: reference profile, p2-p25: variations in material properties and conditions
+  active_profiles: ["p1", "p2", "p3", "p4", "p5", "p6", "p7", "p8", "p9", "p10", 
+                   "p11", "p12", "p13", "p14", "p15", "p16", "p17", "p18", "p19", "p20",
+                   "p21", "p22", "p23", "p24", "p25"]
+  # active_profiles: ["p1", "p2", "p3"]
+
+# Parameter configurations for each target parameter
+target_parameters:
+  cfl:
+    description: "CFL number for temporal stability in diffusion equation - controls time step size relative to grid spacing squared"
+    search_type: "iterative+0-shot"
+    initial_value: 1.0
+    multiplication_factor: 0.5
+    max_iteration_num: 7
+    non_target_parameters:
+      n_space: [64, 256, 1024]
+
+  n_space:
+    description: "Number of spatial grid points for discretization - determines spatial resolution"
+    search_type: "iterative+0-shot"  
+    initial_value: 64
+    multiplication_factor: 2
+    max_iteration_num: 6
+    non_target_parameters:
+      cfl: 0.25

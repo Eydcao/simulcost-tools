@@ -1,0 +1,28 @@
+defaults:
+  - _self_
+  - override hydra/hydra_logging: none
+  - override hydra/job_logging: none
+
+# Static parameters
+L: 160                # Simulation length [microns]
+L_target: 30          # Length of carbon target [microns]
+a0: 200                # Normalized laser amplitude
+laser_lambda: 1               # Convection coefficient [microns]
+laser_time: 400
+n_target: 8           # Density of target [n_cr]
+
+# Tunable parameters
+nx: 3200          # Number of cells
+dt_mult: 0.95              # time-increment multiplier
+part_cell: 20              # initial number of particles per cell
+
+#Field/Particle Orders
+field_order: 2     # field order {2,3,4}
+particle_order: 3    # particle weighting order {2,3,5}
+
+# Simulator statics
+end_time: 800        # Simulation end length [fs]
+
+# Output configuration
+dump_dir: "sim_res/epoch/p3"  # Directory for output files
+verbose: False          # Enable verbose output
