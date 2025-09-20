@@ -1,0 +1,26 @@
+defaults:
+  - _self_
+  - override hydra/hydra_logging: none
+  - override hydra/job_logging: none
+
+# Environmental/Physics parameters (fixed)
+L: 62.83185307179586       # Domain size (2*pi*10)
+v_star: 0.02               # Diamagnetic drift velocity (2e-2)
+Dx: 10.0                   # Initial condition spatial scale (larger for fast testing)
+
+# Tunable parameters
+N: 256                     # Grid resolution (main accuracy parameter)
+dt: 20.0                   # Time step (main efficiency parameter)
+cg_atol: 1.0e-6           # CG solver absolute tolerance
+cg_maxiter: 1000          # CG solver maximum iterations
+
+# Method selection
+analytical: false          # Use analytical solution (true) or numerical (false)
+
+# Simulator statics
+record_dt: 10.0           # Time interval between recordings (fast testing)
+end_frame: 1              # Number of recording frames
+
+# Output configuration
+dump_dir: "sim_res/hasegawa_mima_linear/p3"  # Directory for output files
+verbose: false            # Enable verbose output
