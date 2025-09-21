@@ -1,10 +1,16 @@
 import hydra
-from omegaconf import DictConfig
-from solvers.hasegawa_mima_linear import HasegawaMimaLinear
+from omegaconf import OmegaConf
+
+import sys
+import os
+
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+from solvers import *
 
 
 @hydra.main(version_base=None, config_path="../run_configs/hasegawa_mima_linear", config_name="p1")
-def main(cfg: DictConfig) -> None:
+def main(cfg) -> None:
     """Main entry point for linear Hasegawa-Mima simulation"""
 
     # Create and run simulation

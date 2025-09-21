@@ -309,11 +309,11 @@ def main():
                             N=task_params["N"],
                             dt=task_params["dt"],
                             tolerance_rmse=precision_vals["tolerance_rmse"],
-                            search_range_min=target_config["search_range"][0],
-                            search_range_max=target_config["search_range"][1],
-                            search_range_slice_num=target_config["search_range_slice_num"],
-                            multiplication_factor=target_config["multiplication_factor"],
-                            max_iteration_num=target_config["max_iteration_num"],
+                            search_range_min=target_config.get("search_range", [1e-8, 1e-3])[0],
+                            search_range_max=target_config.get("search_range", [1e-8, 1e-3])[1],
+                            search_range_slice_num=target_config.get("search_range_slice_num", 6),
+                            multiplication_factor=target_config.get("multiplication_factor", 2),
+                            max_iteration_num=target_config.get("max_iteration_num", 5),
                         )
                         best_param = optimal_param[0] if optimal_param[0] is not None else None
                         if best_param is not None:
@@ -331,8 +331,8 @@ def main():
                             "initial_value": target_config.get("initial_value"),
                             "multiplication_factor": target_config.get("multiplication_factor"),
                             "max_iteration_num": target_config.get("max_iteration_num"),
-                            "search_range_min": target_config.get("search_range", [None, None])[0],
-                            "search_range_max": target_config.get("search_range", [None, None])[1],
+                            "search_range_min": target_config.get("search_range", [None, None])[0] if target_config.get("search_range") else None,
+                            "search_range_max": target_config.get("search_range", [None, None])[1] if target_config.get("search_range") else None,
                             "search_range_slice_num": target_config.get("search_range_slice_num")
                         },
                         "non_target_parameters": task_params.copy(),

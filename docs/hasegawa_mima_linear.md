@@ -40,8 +40,8 @@ where:
 
 ### Tunable Parameters
 - `N`: Grid resolution (main accuracy parameter, default: 256)
-- `dt`: Time step (main efficiency parameter, default: 20.0)
-- `cg_atol`: CG solver tolerance (default: 1e-6)
+- `dt`: Time step (main efficiency parameter, default: 10.0)
+- `cg_atol`: CG solver tolerance (default: 1e-8)
 - `cg_maxiter`: CG solver maximum iterations (default: 1000)
 
 ### Simulation Control
@@ -82,7 +82,11 @@ print(f"Analytical cost: {cost_analytical}")
 ### Configuration Profiles
 
 Default configurations are available in `run_configs/hasegawa_mima_linear/`:
-- `p1.yaml`: Standard configuration
+- `p1.yaml`: Standard monopole configuration (Gaussian blob initial condition)
+- `p2.yaml`: Dipole configuration (Gaussian dipole initial condition)
+- `p3.yaml`: Sinusoidal configuration (Pure sinusoidal initial condition)
+- `p4.yaml`: Mixed configuration (Sinusoidal in x, Gaussian in y)
+- `p5.yaml`: Mixed configuration (Gaussian in x, sinusoidal in y)
 
 Override parameters via command line:
 ```bash
@@ -98,9 +102,9 @@ The solver generates:
 - `coordinates_x`, `coordinates_y`: Spatial coordinates
 - Attributes: `time`, `N`, `dt`, `analytical`, `error`
 
-### JSON Files (`frame_XXXX.json`)
-- Same data as HDF5 in JSON format for easy access
-- Includes complete parameter set
+### PNG Files (`frame_XXXX.png` and `frame_XXXX_spectrum.png`)
+- `frame_XXXX.png`: Field visualization showing phi, analytical solution, and difference
+- `frame_XXXX_spectrum.png`: Power spectrum analysis in k-space
 
 ### Metadata (`meta.json`)
 - `cost`: Computational cost estimate (FLOPs)
@@ -204,29 +208,29 @@ This solver provides an automated parameter optimization task generation system 
 
 ### Task Distribution Strategy
 
-Following the flexible parameter strategy, the solver generates approximately **135 individual tasks** distributed across:
+Following the flexible parameter strategy, the solver generates approximately **225 individual tasks** distributed across:
 
-- **3 profiles** (p1: standard, p2: high_resolution, p3: fast)
+- **5 profiles** (p1: monopole, p2: dipole, p3: sinusoidal, p4: sin_x_gauss_y, p5: gauss_x_sin_y)
 - **3 precision levels** (low, medium, high tolerance)
 - **3 target parameters** (N, dt, cg_atol)
 - **Multiple non-target parameter combinations**
 
 ### Target Parameters and Search Types
 
-#### N (Grid Resolution) - Iterative Search
+#### N (Grid Resolution) - Iterative + 0-shot Search
 - **Description**: Spatial discretization resolution determining accuracy
-- **Search Method**: Iterative refinement starting from N=128
+- **Search Method**: Iterative refinement starting from N=64 + 0-shot exploration
 - **Multiplication Factor**: 2 (doubles resolution each iteration)
-- **Max Iterations**: 5
+- **Max Iterations**: 3 (limits to N: 64, 128, 256)
 - **Non-target Parameters**:
-  - dt: [1.0, 5.0, 10.0]
+  - dt: [5.0, 10.0, 20.0]
   - cg_atol: [1e-4, 1e-5, 1e-6]
 
-#### dt (Time Step) - Iterative Search
+#### dt (Time Step) - Iterative + 0-shot Search
 - **Description**: Temporal discretization controlling numerical stability
-- **Search Method**: Iterative refinement starting from dt=10.0
+- **Search Method**: Iterative refinement starting from dt=10.0 + 0-shot exploration
 - **Multiplication Factor**: 0.5 (halves time step each iteration)
-- **Max Iterations**: 6
+- **Max Iterations**: 3 (limits to dt: 10.0, 5.0, 2.5)
 - **Non-target Parameters**:
   - N: 128 (fixed moderate resolution)
   - cg_atol: [1e-4, 1e-5, 1e-6]
@@ -234,10 +238,10 @@ Following the flexible parameter strategy, the solver generates approximately **
 #### cg_atol (CG Tolerance) - 0-shot Search
 - **Description**: Conjugate gradient solver convergence tolerance
 - **Search Method**: Grid search over logarithmic range [1e-8, 1e-3]
-- **Search Points**: 6 logarithmically spaced values
+- **Search Points**: 4 logarithmically spaced values
 - **Non-target Parameters**:
   - N: 128 (fixed moderate resolution)
-  - dt: [1.0, 5.0, 10.0]
+  - dt: [5.0, 10.0, 20.0]
 
 ### Precision Levels
 
@@ -256,28 +260,38 @@ precision_levels:
 ### Task Breakdown
 
 **Task distribution per precision level:**
-- N parameter: 3 profiles × 9 combinations (3 dt × 3 cg_atol) = 27 tasks
-- dt parameter: 3 profiles × 3 combinations (1 N × 3 cg_atol) = 9 tasks
-- cg_atol parameter: 3 profiles × 3 combinations (1 N × 3 dt) = 9 tasks
-- **Total per precision**: 45 tasks
-- **Total tasks**: 135 tasks (across 3 precision levels)
+- N parameter: 5 profiles × 9 combinations (3 dt × 3 cg_atol) = 45 tasks
+- dt parameter: 5 profiles × 3 combinations (1 N × 3 cg_atol) = 15 tasks
+- cg_atol parameter: 5 profiles × 3 combinations (1 N × 3 dt) = 15 tasks
+- **Total per precision**: 75 tasks
+- **Total tasks**: 225 tasks (across 3 precision levels)
 
 ### Profile Configurations
 
-#### p1 (Standard)
-- Balanced accuracy/efficiency configuration
-- Standard initial condition scale (Dx=5.0)
-- 1 recording frame over 10 time units
+#### p1 (Monopole)
+- Standard monopole (Gaussian blob) initial condition
+- Dx=5.0, 10 recording frames over 10,000 time units
+- Tests convergence for smooth, localized initial conditions
 
-#### p2 (High Resolution)
-- Higher accuracy configuration
-- Smaller initial condition scale (Dx=2.0)
-- 1 recording frame over 10 time units
+#### p2 (Dipole)
+- Dipole (Gaussian dipole) initial condition
+- Dx=5.0, 10 recording frames over 10,000 time units
+- Tests convergence for antisymmetric initial conditions
 
-#### p3 (Fast)
-- Quick testing configuration
-- Larger initial condition scale (Dx=10.0)
-- 1 recording frame over 10 time units
+#### p3 (Sinusoidal)
+- Pure sinusoidal initial condition
+- Dx=5.0, 10 recording frames over 10,000 time units
+- Tests convergence for periodic initial conditions
+
+#### p4 (Mixed: Sin x, Gauss y)
+- Sinusoidal in x, Gaussian in y initial condition
+- Dx=5.0, 10 recording frames over 10,000 time units
+- Tests convergence for partially periodic initial conditions
+
+#### p5 (Mixed: Gauss x, Sin y)
+- Gaussian in x, sinusoidal in y initial condition
+- Dx=5.0, 10 recording frames over 10,000 time units
+- Tests convergence for partially periodic initial conditions
 
 ### Dummy Solution Cache
 

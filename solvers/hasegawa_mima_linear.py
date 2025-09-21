@@ -2,6 +2,7 @@ import numpy as np
 import h5py
 import os
 import json
+import matplotlib.pyplot as plt
 from scipy.sparse import diags, kron, eye
 from scipy.sparse.linalg import cg
 from .base_solver import SIMULATOR
@@ -21,6 +22,7 @@ class HasegawaMimaLinear(SIMULATOR):
 
     def __init__(self, verbose, cfg):
         # Environmental/Physics parameters (fixed)
+        self.case = cfg.case  # Initial condition case
         self.L = cfg.L  # Domain size
         self.v_star = cfg.v_star  # Diamagnetic drift velocity
         self.Dx = cfg.Dx  # Initial condition spatial scale
@@ -32,7 +34,7 @@ class HasegawaMimaLinear(SIMULATOR):
         self.cg_maxiter = cfg.cg_maxiter  # CG solver max iterations
 
         # Method selection
-        self.analytical = getattr(cfg, 'analytical', False)
+        self.analytical = cfg.analytical  # Use analytical solution if True
 
         # Grid setup
         self.dx = self.dy = self.L / self.N
@@ -72,13 +74,48 @@ class HasegawaMimaLinear(SIMULATOR):
 
     def initialize_condition(self):
         """Initialize with Gaussian blob (monopole)"""
-        return 1e-1 * np.exp(-((self.X - self.L/2)**2 + (self.Y - self.L/2)**2) / (2*self.Dx**2))
+        # Support multiple initial condition "cases" read from config as self.case.
+        # If self.case is not provided, default to 'monopole'.
+        case = self.case
+
+        # Common aliases
+        X = self.X
+        Y = self.Y
+        L = self.L
+        Dx = self.Dx
+
+        # Different predefined initial conditions
+        if case == "monopole":
+            # Gaussian monopole centered in the domain
+            phi0 = 1e-1 * np.exp(-((X - L / 2) ** 2 + (Y - L / 2) ** 2) / (2 * Dx**2))
+
+        elif case == "dipole":
+            # Gaussian dipole (odd in x)
+            phi0 = 1e-1 * np.exp(-((X - L / 2) ** 2 + (Y - L / 2) ** 2) / (2 * Dx**2)) * ((X - L / 2) / Dx)
+
+        elif case == "sinusoidal":
+            # Pure sinusoidal in both directions
+            phi0 = 1e-1 * np.sin(0.2 * X) * np.sin(0.3 * Y)
+
+        elif case == "sin_x_gauss_y":
+            # Sinusoidal in x, Gaussian in y
+            phi0 = 1e-1 * np.sin(0.2 * X) * np.exp(-((Y - L / 2) ** 2) / (2 * Dx**2))
+
+        elif case == "gauss_x_sin_y":
+            # Gaussian in x, sinusoidal in y
+            phi0 = 1e-1 * np.exp(-((X - L / 2) ** 2) / (2 * Dx**2)) * np.sin(0.2 * Y)
+
+        else:
+            # raise error for unknown case
+            raise ValueError(f"Unknown initial condition case: {case}")
+
+        return phi0
 
     def setup_numerical_method(self):
         """Setup sparse matrix operators for numerical solution"""
         # Construct 1D Laplacian with periodic BC
         e = np.ones(self.N)
-        L1D = diags([e, -2*e, e], offsets=[-1, 0, 1], shape=(self.N, self.N)).tolil()
+        L1D = diags([e, -2 * e, e], offsets=[-1, 0, 1], shape=(self.N, self.N)).tolil()
         L1D[0, -1] = 1  # Periodic boundary
         L1D[-1, 0] = 1  # Periodic boundary
         L1D /= self.dx**2
@@ -87,13 +124,13 @@ class HasegawaMimaLinear(SIMULATOR):
         L2D = kron(eye(self.N), L1D) + kron(L1D, eye(self.N))
 
         # Helmholtz operator: ∇² - I
-        self.A_sparse = L2D - eye(self.N*self.N)
+        self.A_sparse = L2D - eye(self.N * self.N)
 
         # Derivative operator for ∂φ/∂y
         Dy = diags([1, -1], offsets=[1, -1], shape=(self.N, self.N)).tolil()
         Dy[0, -1] = -1  # Periodic boundary
-        Dy[-1, 0] = 1   # Periodic boundary
-        Dy /= (2 * self.dy)
+        Dy[-1, 0] = 1  # Periodic boundary
+        Dy /= 2 * self.dy
 
         self.Dy_sparse = kron(Dy, eye(self.N))
 
@@ -113,13 +150,14 @@ class HasegawaMimaLinear(SIMULATOR):
         """Solve Helmholtz equation using conjugate gradient"""
         # Use callback to count iterations precisely
         current_iterations = 0
+
         def iteration_callback(x):
             nonlocal current_iterations
             current_iterations += 1
 
-        phi_vec, info = cg(self.A_sparse, q_vec,
-                          atol=self.cg_atol, maxiter=self.cg_maxiter,
-                          callback=iteration_callback)
+        phi_vec, info = cg(
+            self.A_sparse, q_vec, atol=self.cg_atol, maxiter=self.cg_maxiter, callback=iteration_callback
+        )
 
         # Track CG performance precisely
         self.cg_calls += 1
@@ -143,8 +181,8 @@ class HasegawaMimaLinear(SIMULATOR):
         dphidy_vec = self.Dy_sparse @ phi_vec
         self.matvec_operations += 1
 
-        # RHS: -v_star * ∂φ/∂y (negative sign from the equation)
-        return -self.v_star * dphidy_vec
+        # RHS: v_star * ∂φ/∂y (match reference implementation)
+        return self.v_star * dphidy_vec
 
     def step_numerical(self, q_vec, dt):
         """RK4 step for numerical method"""
@@ -183,7 +221,7 @@ class HasegawaMimaLinear(SIMULATOR):
             return 0.0  # No error for analytical solution
 
         # Setup analytical method components if not already done
-        if not hasattr(self, 'KY'):
+        if not hasattr(self, "KY"):
             self.setup_analytical_method()
 
         l2_norms = []
@@ -218,7 +256,6 @@ class HasegawaMimaLinear(SIMULATOR):
         """Initialize simulation"""
         pass
 
-
     def call_back(self):
         """Called after recording"""
         pass
@@ -237,7 +274,7 @@ class HasegawaMimaLinear(SIMULATOR):
             error = 0.0
         else:
             # Setup analytical method components if not already done
-            if not hasattr(self, 'KY'):
+            if not hasattr(self, "KY"):
                 self.setup_analytical_method()
             phi_analytical = self.solve_analytical(self.current_time)
             diff = phi - phi_analytical
@@ -249,40 +286,86 @@ class HasegawaMimaLinear(SIMULATOR):
 
         # Save to HDF5
         output_file = os.path.join(self.dump_dir, f"frame_{self.record_frame:04d}.h5")
-        with h5py.File(output_file, 'w') as f:
-            f.create_dataset('phi', data=phi)
-            f.create_dataset('coordinates_x', data=self.x)
-            f.create_dataset('coordinates_y', data=self.y)
-            f.attrs['time'] = self.current_time
-            f.attrs['N'] = self.N
-            f.attrs['dt'] = self.dt
-            f.attrs['analytical'] = self.analytical
-            f.attrs['error'] = error
+        with h5py.File(output_file, "w") as f:
+            f.create_dataset("phi", data=phi)
+            f.create_dataset("coordinates_x", data=self.x)
+            f.create_dataset("coordinates_y", data=self.y)
+            f.attrs["time"] = self.current_time
+            f.attrs["N"] = self.N
+            f.attrs["dt"] = self.dt
+            f.attrs["analytical"] = self.analytical
+            f.attrs["error"] = error
+        # # Optional plotting (field + analytical + difference, and power spectrum)
+        # if self.verbose:
+        # Prepare grids for plotting
+        X, Y = np.meshgrid(self.x, self.y)
 
-        # Save to JSON for easy access
-        results = {
-            'phi': phi.tolist(),
-            'coordinates_x': self.x.tolist(),
-            'coordinates_y': self.y.tolist(),
-            'time': self.current_time,
-            'error': error,
-            'parameters': {
-                'N': self.N,
-                'dt': self.dt,
-                'L': self.L,
-                'v_star': self.v_star,
-                'Dx': self.Dx,
-                'cg_atol': self.cg_atol,
-                'cg_maxiter': self.cg_maxiter,
-                'analytical': self.analytical
-            }
-        }
+        # Ensure analytical solution is available
+        if not hasattr(self, "KY"):
+            self.setup_analytical_method()
+        phi_analytical = self.solve_analytical(self.current_time)
+        diff = phi - phi_analytical
 
-        json_file = os.path.join(self.dump_dir, f"frame_{self.record_frame:04d}.json")
-        with open(json_file, 'w') as f:
-            json.dump(results, f, indent=2)
+        # Field plot: phi, analytical, difference
+        try:
+            vlim = max(np.abs(phi).max(), np.abs(phi_analytical).max())
+            fig, axes = plt.subplots(1, 3, figsize=(15, 5), constrained_layout=True)
 
-        if self.verbose:
+            im0 = axes[0].pcolormesh(X, Y, phi, cmap="RdBu", shading="auto", vmin=-vlim, vmax=vlim)
+            axes[0].set_title(f"phi (t={self.current_time:.3f})")
+            fig.colorbar(im0, ax=axes[0], label="phi")
+
+            im1 = axes[1].pcolormesh(X, Y, phi_analytical, cmap="RdBu", shading="auto", vmin=-vlim, vmax=vlim)
+            axes[1].set_title("analytical")
+            fig.colorbar(im1, ax=axes[1], label="phi")
+
+            diff_vlim = np.max(np.abs(diff))
+            im2 = axes[2].pcolormesh(X, Y, diff, cmap="bwr", shading="auto", vmin=-diff_vlim, vmax=diff_vlim)
+            axes[2].set_title(f"difference (L2={error:.2e})")
+            fig.colorbar(im2, ax=axes[2], label="Δphi")
+
+            plot_file = os.path.join(self.dump_dir, f"frame_{self.record_frame:04d}.png")
+            fig.suptitle(f"Frame {self.record_frame}: t={self.current_time:.3f}")
+            fig.savefig(plot_file, dpi=200)
+            plt.close(fig)
+        except Exception as e:
+            print(f"Warning: plotting failed: {e}")
+
+        # Power spectrum plot (log power)
+        try:
+            phi_hat = np.fft.fft2(phi)
+            phi_hat_anal = np.fft.fft2(phi_analytical)
+            power = np.log10(np.abs(np.fft.fftshift(phi_hat))**2 + 1e-15)
+            power_anal = np.log10(np.abs(np.fft.fftshift(phi_hat_anal))**2 + 1e-15)
+            power_diff = power - power_anal
+
+            kx = np.fft.fftshift(np.fft.fftfreq(self.N, d=self.dx) * 2 * np.pi)
+            ky = np.fft.fftshift(np.fft.fftfreq(self.N, d=self.dy) * 2 * np.pi)
+            KX, KY = np.meshgrid(kx, ky)
+
+            fig2, axes2 = plt.subplots(1, 3, figsize=(15, 5), constrained_layout=True)
+            vmin = min(power.min(), power_anal.min())
+            vmax = max(power.max(), power_anal.max())
+
+            im0 = axes2[0].pcolormesh(KX, KY, power, cmap="viridis", shading="auto", vmin=vmin, vmax=vmax)
+            axes2[0].set_title("log10 Power (phi)")
+            fig2.colorbar(im0, ax=axes2[0])
+
+            im1 = axes2[1].pcolormesh(KX, KY, power_anal, cmap="viridis", shading="auto", vmin=vmin, vmax=vmax)
+            axes2[1].set_title("log10 Power (analytical)")
+            fig2.colorbar(im1, ax=axes2[1])
+
+            im2 = axes2[2].pcolormesh(KX, KY, power_diff, cmap="RdBu", shading="auto")
+            axes2[2].set_title("Power difference")
+            fig2.colorbar(im2, ax=axes2[2])
+
+            ps_file = os.path.join(self.dump_dir, f"frame_{self.record_frame:04d}_spectrum.png")
+            fig2.suptitle(f"Spectrum Frame {self.record_frame}: t={self.current_time:.3f}")
+            fig2.savefig(ps_file, dpi=200)
+            plt.close(fig2)
+        except Exception as e:
+            print(f"Warning: spectrum plotting failed: {e}")
+
             method_name = "Analytical" if self.analytical else "Numerical"
             print(f"Frame {self.record_frame}: t={self.current_time:.3f}, error={error:.6e}")
 
@@ -300,11 +383,10 @@ class HasegawaMimaLinear(SIMULATOR):
                 "cg_atol": float(self.cg_atol),
                 "cg_maxiter": int(self.cg_maxiter),
                 "analytical": self.analytical,
-                "solve_time": getattr(self, 'solve_time', 0.0),
                 "n_steps": self.num_steps,
                 "cg_iterations_total": self.cg_iterations_total,
                 "cg_calls": self.cg_calls,
-                "matvec_operations": self.matvec_operations
+                "matvec_operations": self.matvec_operations,
             }
             json.dump(meta, f, indent=4)
 
