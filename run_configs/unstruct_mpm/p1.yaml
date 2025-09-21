@@ -1,0 +1,27 @@
+defaults:
+  - _self_
+  - override hydra/hydra_logging: none
+  - override hydra/job_logging: none
+
+case: "cantilever"
+
+envs_params:
+  Lx: 11.0
+  Ly: 8.0
+  gravity: -9.81
+  p_rho: 2.0
+  E: 1.0e5
+  nu: 0.29
+  end_time: 4
+
+##### Tunable parameters #####
+nx: 20
+n_part: 2
+cfl: 0.001
+flip_ratio: 0.95
+
+##### Other fixed parameters #####
+advect_scheme: 0
+verbose: 0
+device: "cpu"
+dump_dir: "sim_res/unstruct_mpm/p1"
