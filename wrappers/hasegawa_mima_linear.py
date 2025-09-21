@@ -208,61 +208,7 @@ def compare_with_analytical(numerical_sim_dir, analytical_sim_dir, save_path=Non
         linf_errors.append(linf_error)
         times.append(num_res['time'])
 
-    # Create comparison visualization
-    if save_path or len(numerical_results) > 0:
-        n_times = len(numerical_results)
-        fig, axes = plt.subplots(n_times, 3, figsize=(15, 5*n_times))
-
-        if n_times == 1:
-            axes = axes.reshape(1, -1)
-
-        # Get coordinates
-        x = numerical_results[0]['coordinates_x']
-        y = numerical_results[0]['coordinates_y']
-        X, Y = np.meshgrid(x, y)
-
-        # Find common color limits
-        all_phi = []
-        for num_res, ana_res in zip(numerical_results, analytical_results):
-            all_phi.extend([num_res['phi'], ana_res['phi']])
-        vmin, vmax = np.min(all_phi), np.max(all_phi)
-
-        for i, (num_res, ana_res) in enumerate(zip(numerical_results, analytical_results)):
-            phi_num = np.array(num_res['phi'])
-            phi_ana = np.array(ana_res['phi'])
-            diff = phi_num - phi_ana
-            t = times[i]
-
-            # Numerical solution
-            im1 = axes[i, 0].pcolormesh(X, Y, phi_num, cmap='RdBu', shading='auto', vmin=vmin, vmax=vmax)
-            axes[i, 0].set_title(f'Numerical t={t:.1f}')
-            axes[i, 0].set_xlabel('x')
-            axes[i, 0].set_ylabel('y')
-            plt.colorbar(im1, ax=axes[i, 0])
-
-            # Analytical solution
-            im2 = axes[i, 1].pcolormesh(X, Y, phi_ana, cmap='RdBu', shading='auto', vmin=vmin, vmax=vmax)
-            axes[i, 1].set_title(f'Analytical t={t:.1f}')
-            axes[i, 1].set_xlabel('x')
-            axes[i, 1].set_ylabel('y')
-            plt.colorbar(im2, ax=axes[i, 1])
-
-            # Difference
-            diff_max = np.max(np.abs(diff))
-            im3 = axes[i, 2].pcolormesh(X, Y, diff, cmap='bwr', shading='auto',
-                                       vmin=-diff_max, vmax=diff_max)
-            axes[i, 2].set_title(f'Difference\nL2={l2_errors[i]:.2e}, L∞={linf_errors[i]:.2e}')
-            axes[i, 2].set_xlabel('x')
-            axes[i, 2].set_ylabel('y')
-            plt.colorbar(im3, ax=axes[i, 2])
-
-        plt.tight_layout()
-
-        if save_path:
-            plt.savefig(save_path, dpi=300, bbox_inches='tight')
-            plt.close()
-        else:
-            plt.show()
+    # Note: Plotting removed from wrapper - visualization happens in solver's dump() method
 
     return {
         "success": True,

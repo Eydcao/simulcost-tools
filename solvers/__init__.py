@@ -6,3 +6,4 @@ from .ns_channel_2d import NSChannel2D
 from .ns_transient_2d import NSTransient2D
 from .diff_react_1d import DiffReact1D
 from .hasegawa_mima_linear import HasegawaMimaLinear
+from .hasegawa_mima_nonlinear import HasegawaMimaNonlinear

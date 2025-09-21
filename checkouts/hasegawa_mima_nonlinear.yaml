@@ -1,0 +1,100 @@
+# Hasegawa-Mima Nonlinear Solver Checkout Configuration
+# This file centralizes all parameter settings for dummy solution generation
+
+solver_info:
+  name: "Hasegawa-Mima Nonlinear"
+  numerical_method: "Pseudo-spectral method with RK4 time integration and 2/3 rule dealiasing"
+  convergence_method: "Resolution convergence checking (traditional method)"
+  reference: "Hasegawa, A. & Mima, K. (1978). Pseudo-three-dimensional turbulence in magnetized nonuniform plasma."
+
+task_distribution:
+  strategy: "simple_parameters"
+  total_individuals: 90  # Full configuration with 5 profiles
+
+precision_levels:
+  low:
+    tolerance_rmse: 0.001
+    description: "Relaxed convergence criteria"
+  medium:
+    tolerance_rmse: 0.0005
+    description: "Moderate convergence criteria"
+  high:
+    tolerance_rmse: 0.0002
+    description: "Stringent convergence criteria"
+
+profiles:
+  num_profiles: 5
+  # Full configuration with all profiles
+  active_profiles: ["p1", "p2", "p3", "p4", "p5"]
+
+# Parameter configurations for each target parameter
+target_parameters:
+  N:
+    description: "Grid resolution - determines spatial accuracy and computational cost"
+    search_type: "iterative"
+    initial_value: 64
+    multiplication_factor: 2
+    max_iteration_num: 3  # Limits to N: 64, 128, 256
+    non_target_parameters:
+      dt: [5.0, 10.0, 20.0]  # Time step options
+
+  dt:
+    description: "Time step size - controls temporal accuracy and numerical stability"
+    search_type: "iterative"
+    initial_value: 10.0
+    multiplication_factor: 0.5
+    max_iteration_num: 3  # Limits to dt: 10.0, 5.0, 2.5
+    non_target_parameters:
+      N: [128]  # Fixed moderate resolution
+
+# Profile definitions for different simulation scenarios
+profile_definitions:
+  p1:
+    name: "standard"
+    description: "Standard monopole configuration with balanced accuracy/efficiency"
+    case: "monopole"  # Gaussian monopole initial condition
+    L: 62.83185307179586  # 2*pi*10
+    v_star: 0.02
+    Dx: 5.0
+    record_dt: 1000.0
+    end_frame: 10
+
+  p2:
+    name: "dipole"
+    description: "Dipole configuration for testing different initial condition types"
+    case: "dipole"  # Gaussian dipole initial condition
+    L: 62.83185307179586
+    v_star: 0.02
+    Dx: 5.0
+    record_dt: 1000.0
+    end_frame: 10
+
+  p3:
+    name: "sinusoidal"
+    description: "Sinusoidal configuration for testing periodic initial conditions"
+    case: "sinusoidal"  # Pure sinusoidal initial condition
+    L: 62.83185307179586
+    v_star: 0.02
+    Dx: 5.0
+    record_dt: 1000.0
+    end_frame: 10
+
+  p4:
+    name: "sin_x_gauss_y"
+    description: "Mixed configuration: sinusoidal in x, Gaussian in y"
+    case: "sin_x_gauss_y"  # Sinusoidal in x, Gaussian in y
+    L: 62.83185307179586
+    v_star: 0.02
+    Dx: 5.0
+    record_dt: 1000.0
+    end_frame: 10
+
+  p5:
+    name: "gauss_x_sin_y"
+    description: "Mixed configuration: Gaussian in x, sinusoidal in y"
+    case: "gauss_x_sin_y"  # Gaussian in x, sinusoidal in y
+    L: 62.83185307179586
+    v_star: 0.02
+    Dx: 5.0
+    record_dt: 1000.0
+    end_frame: 10
