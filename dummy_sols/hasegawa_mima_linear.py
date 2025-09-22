@@ -32,8 +32,16 @@ def compare_solutions(profile, params1, params2, tolerance_rmse):
     method_suffix1 = "_analytical" if params1.get('analytical', False) else "_numerical"
     method_suffix2 = "_analytical" if params2.get('analytical', False) else "_numerical"
 
-    dir1 = f"sim_res/hasegawa_mima_linear/{profile}_N_{params1['N']}_dt_{params1['dt']:.2e}" + method_suffix1
-    dir2 = f"sim_res/hasegawa_mima_linear/{profile}_N_{params2['N']}_dt_{params2['dt']:.2e}" + method_suffix2
+    # Include cg_atol in path for numerical simulations
+    if params1.get('analytical', False):
+        dir1 = f"sim_res/hasegawa_mima_linear/{profile}_N_{params1['N']}_dt_{params1['dt']:.2e}" + method_suffix1
+    else:
+        dir1 = f"sim_res/hasegawa_mima_linear/{profile}_N_{params1['N']}_dt_{params1['dt']:.2e}_cg_{params1['cg_atol']:.2e}" + method_suffix1
+
+    if params2.get('analytical', False):
+        dir2 = f"sim_res/hasegawa_mima_linear/{profile}_N_{params2['N']}_dt_{params2['dt']:.2e}" + method_suffix2
+    else:
+        dir2 = f"sim_res/hasegawa_mima_linear/{profile}_N_{params2['N']}_dt_{params2['dt']:.2e}_cg_{params2['cg_atol']:.2e}" + method_suffix2
 
     error1 = get_error_metric(dir1)
     error2 = get_error_metric(dir2)
@@ -72,7 +80,7 @@ def find_convergent_N(profile, N, dt, cg_atol, tolerance_rmse, multiplication_fa
 
         # Get error metric
         method_suffix = "_numerical"
-        sim_dir = f"sim_res/hasegawa_mima_linear/{profile}_N_{current_N}_dt_{dt:.2e}" + method_suffix
+        sim_dir = f"sim_res/hasegawa_mima_linear/{profile}_N_{current_N}_dt_{dt:.2e}_cg_{cg_atol:.2e}" + method_suffix
         error = get_error_metric(sim_dir)
         error_history.append(error)
 
@@ -125,7 +133,7 @@ def find_convergent_dt(profile, N, dt, cg_atol, tolerance_rmse, multiplication_f
 
         # Get error metric
         method_suffix = "_numerical"
-        sim_dir = f"sim_res/hasegawa_mima_linear/{profile}_N_{N}_dt_{current_dt:.2e}" + method_suffix
+        sim_dir = f"sim_res/hasegawa_mima_linear/{profile}_N_{N}_dt_{current_dt:.2e}_cg_{cg_atol:.2e}" + method_suffix
         error = get_error_metric(sim_dir)
         error_history.append(error)
 

@@ -176,9 +176,8 @@ def compare_resolutions(coarse_sim_dir, fine_sim_dir, save_path=None):
     if not coarse_results:
         return {"success": False, "reason": "No valid results found"}
 
-    # Calculate error metrics between resolutions
+    # Calculate error metrics between resolutions (L2 norm only)
     l2_errors = []
-    linf_errors = []
     times = []
 
     for coarse_res, fine_res in zip(coarse_results, fine_results):
@@ -195,10 +194,8 @@ def compare_resolutions(coarse_sim_dir, fine_sim_dir, save_path=None):
         diff = phi_coarse - phi_fine_downsampled
 
         l2_error = np.sqrt(np.mean(diff**2))
-        linf_error = np.max(np.abs(diff))
 
         l2_errors.append(l2_error)
-        linf_errors.append(linf_error)
         times.append(coarse_res['time'])
 
     # Note: Plotting removed from wrapper - visualization happens in solver's dump() method
@@ -207,11 +204,8 @@ def compare_resolutions(coarse_sim_dir, fine_sim_dir, save_path=None):
         "success": True,
         "times": times,
         "l2_errors": l2_errors,
-        "linf_errors": linf_errors,
         "mean_l2_error": np.mean(l2_errors),
-        "mean_linf_error": np.mean(linf_errors),
-        "max_l2_error": np.max(l2_errors),
-        "max_linf_error": np.max(linf_errors)
+        "max_l2_error": np.max(l2_errors)
     }
 
 

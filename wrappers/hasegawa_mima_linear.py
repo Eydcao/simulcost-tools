@@ -39,8 +39,12 @@ def _find_runner_path():
 
 def run_sim_hasegawa_mima_linear(profile, N, dt, cg_atol=1e-6, analytical=False):
     """Run the Hasegawa-Mima linear simulation with the given parameters if not already simulated."""
-    method_suffix = "_analytical" if analytical else "_numerical"
-    dir_path = f"sim_res/hasegawa_mima_linear/{profile}_N_{N}_dt_{dt:.2e}" + method_suffix + "/"
+    if analytical:
+        method_suffix = "_analytical"
+        dir_path = f"sim_res/hasegawa_mima_linear/{profile}_N_{N}_dt_{dt:.2e}" + method_suffix + "/"
+    else:
+        method_suffix = "_numerical"
+        dir_path = f"sim_res/hasegawa_mima_linear/{profile}_N_{N}_dt_{dt:.2e}_cg_{cg_atol:.2e}" + method_suffix + "/"
     meta_path = os.path.join(dir_path, "meta.json")
 
     # Check if the simulation has already been run
@@ -191,9 +195,8 @@ def compare_with_analytical(numerical_sim_dir, analytical_sim_dir, save_path=Non
     if not numerical_results:
         return {"success": False, "reason": "No valid results found"}
 
-    # Calculate error metrics
+    # Calculate error metrics (L2 norm only)
     l2_errors = []
-    linf_errors = []
     times = []
 
     for num_res, ana_res in zip(numerical_results, analytical_results):
@@ -202,10 +205,8 @@ def compare_with_analytical(numerical_sim_dir, analytical_sim_dir, save_path=Non
         diff = phi_num - phi_ana
 
         l2_error = np.sqrt(np.mean(diff**2))
-        linf_error = np.max(np.abs(diff))
 
         l2_errors.append(l2_error)
-        linf_errors.append(linf_error)
         times.append(num_res['time'])
 
     # Note: Plotting removed from wrapper - visualization happens in solver's dump() method
@@ -214,11 +215,8 @@ def compare_with_analytical(numerical_sim_dir, analytical_sim_dir, save_path=Non
         "success": True,
         "times": times,
         "l2_errors": l2_errors,
-        "linf_errors": linf_errors,
         "mean_l2_error": np.mean(l2_errors),
-        "mean_linf_error": np.mean(linf_errors),
-        "max_l2_error": np.max(l2_errors),
-        "max_linf_error": np.max(linf_errors)
+        "max_l2_error": np.max(l2_errors)
     }
 
 
@@ -284,7 +282,7 @@ def run_parameter_sweep(N_values, dt_values, cg_atol_values=None, config_path=No
 
                 if sim_result["success"]:
                     # Extract simulation directory from parameters
-                    sim_dir = f"sim_res/hasegawa_mima_linear/p1_N_{N}_dt_{dt:.2e}_numerical"
+                    sim_dir = f"sim_res/hasegawa_mima_linear/p1_N_{N}_dt_{dt:.2e}_cg_{cg_atol:.2e}_numerical"
                     error = get_error_metric(sim_dir)
 
                     results.append({

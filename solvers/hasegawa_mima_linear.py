@@ -48,8 +48,12 @@ class HasegawaMimaLinear(SIMULATOR):
         self.matvec_operations = 0  # Track matrix-vector multiplications separately
 
         # Output directory
-        method_suffix = "_analytical" if self.analytical else "_numerical"
-        self.dump_dir = cfg.dump_dir + f"_N_{self.N}_dt_{self.dt:.2e}" + method_suffix
+        if self.analytical:
+            method_suffix = "_analytical"
+            self.dump_dir = cfg.dump_dir + f"_N_{self.N}_dt_{self.dt:.2e}" + method_suffix
+        else:
+            method_suffix = "_numerical"
+            self.dump_dir = cfg.dump_dir + f"_N_{self.N}_dt_{self.dt:.2e}_cg_{self.cg_atol:.2e}" + method_suffix
         if not os.path.exists(self.dump_dir):
             os.makedirs(self.dump_dir)
 
