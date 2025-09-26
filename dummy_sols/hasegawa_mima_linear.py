@@ -163,7 +163,6 @@ def find_convergent_dt(profile, N, dt, cg_atol, tolerance_rmse, multiplication_f
 
     return bool(converged), best_dt, cost_history, param_history
 
-
 def find_optimal_cg_atol(profile, N, dt, tolerance_rmse, search_range_min, search_range_max,
                         search_range_slice_num, multiplication_factor, max_iteration_num):
     """
@@ -178,6 +177,10 @@ def find_optimal_cg_atol(profile, N, dt, tolerance_rmse, search_range_min, searc
     """
     # Generate logarithmically spaced cg_atol values
     cg_atol_values = np.logspace(np.log10(search_range_min), np.log10(search_range_max), search_range_slice_num)
+    # Reserve the values bc we start from the most relaxed (largest) cg_atol
+    cg_atol_values = cg_atol_values[::-1]
+    # print(f"Testing cg_atol values: {cg_atol_values}")
+    # exit()
 
     best_cg_atol = None
     best_N = None
@@ -218,3 +221,42 @@ def find_optimal_cg_atol(profile, N, dt, tolerance_rmse, search_range_min, searc
     optimal_param = (best_cg_atol, best_N) if converged_any else (None, None)
 
     return converged_any, optimal_param, best_cost_history, best_param_history
+
+
+def main():
+    profile = "p1"
+    N = 64
+    dt = 1.0e1
+    tolerance_rmse = 0.001
+    search_range_min = 1e-8
+    search_range_max = 1e0
+    search_range_slice_num = 9
+    multiplication_factor = 2
+    max_iteration_num = 3
+
+    print("Starting temp test of find_optimal_cg_atol with parameters:")
+    print(f"profile={profile}, N={N}, dt={dt:.2e}, tolerance_rmse={tolerance_rmse}")
+    print(f"cg_atol range: {search_range_min:.0e} -> {search_range_max:.0e}, slices={search_range_slice_num}")
+    print(f"multiplication_factor={multiplication_factor}, max_iteration_num={max_iteration_num}")
+
+    converged, optimal_param, cost_history, param_history = find_optimal_cg_atol(
+        profile=profile,
+        N=N,
+        dt=dt,
+        tolerance_rmse=tolerance_rmse,
+        search_range_min=search_range_min,
+        search_range_max=search_range_max,
+        search_range_slice_num=search_range_slice_num,
+        multiplication_factor=multiplication_factor,
+        max_iteration_num=max_iteration_num
+    )
+
+    print("\nTest result:")
+    print(f"converged: {converged}")
+    print(f"optimal_param (cg_atol, N): {optimal_param}")
+    print(f"cost_history: {cost_history}")
+    print(f"param_history: {param_history}")
+
+
+if __name__ == "__main__":
+    main()
