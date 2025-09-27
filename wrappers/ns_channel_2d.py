@@ -6,6 +6,58 @@ import json
 from scipy.interpolate import RegularGridInterpolator
 
 
+def _find_runner_path():
+    """Automatically find the correct path to ns_channel_2d.py runner."""
+    # Get current working directory
+    cwd = os.getcwd()
+
+    # List of possible runner paths relative to different working directories
+    possible_paths = []
+
+    # If working from project root (SimulCost-Bench/)
+    if cwd.endswith('SimulCost-Bench'):
+        possible_paths.extend([
+            "costsci_tools/runners/ns_channel_2d.py",
+            "runners/ns_channel_2d.py"
+        ])
+    # If working from costsci_tools/ subdirectory
+    elif cwd.endswith('costsci_tools') or 'costsci_tools' in cwd:
+        possible_paths.extend([
+            "runners/ns_channel_2d.py",
+            "../runners/ns_channel_2d.py",
+            "costsci_tools/runners/ns_channel_2d.py"
+        ])
+
+    # Add generic fallback paths
+    possible_paths.extend([
+        "runners/ns_channel_2d.py",
+        "costsci_tools/runners/ns_channel_2d.py",
+        "./runners/ns_channel_2d.py",
+        "../runners/ns_channel_2d.py",
+        "../../runners/ns_channel_2d.py"
+    ])
+
+    # Remove duplicates while preserving order
+    seen = set()
+    unique_paths = []
+    for path in possible_paths:
+        if path not in seen:
+            seen.add(path)
+            unique_paths.append(path)
+
+    for path in unique_paths:
+        if os.path.exists(path):
+            return path
+
+    # If none found, raise an error with helpful information
+    raise FileNotFoundError(
+        f"Could not find ns_channel_2d.py runner in any expected location.\n"
+        f"Current working directory: {cwd}\n"
+        f"Searched paths: {unique_paths}\n"
+        f"Please ensure the runner exists or update the search paths."
+    )
+
+
 def run_sim_ns_channel_2d(profile, boundary_type, mesh_x, mesh_y, omega_u, omega_v, omega_p, diff_u_threshold, diff_v_threshold, res_iter_v_threshold, other_params=None):
     """Run the ns_channel_2d simulation with the given parameters."""
     dir_path = f"sim_res/ns_channel_2d/{profile}_{boundary_type}_mesh_{mesh_x}_{mesh_y}_relax_{omega_u}_{omega_v}_{omega_p}_error_{diff_u_threshold}_{diff_v_threshold}_itererror_{res_iter_v_threshold}/"
@@ -18,8 +70,9 @@ def run_sim_ns_channel_2d(profile, boundary_type, mesh_x, mesh_y, omega_u, omega
             if "cost" in meta and "num_steps" in meta:
                 return meta["cost"], meta["num_steps"]
 
-    # Build command with wall parameters if provided
-    cmd = f"python runners/ns_channel_2d.py --config-name={profile} mesh_x={mesh_x} mesh_y={mesh_y} omega_u={omega_u} omega_v={omega_v} omega_p={omega_p} diff_u_threshold={diff_u_threshold} diff_v_threshold={diff_v_threshold} res_iter_v_threshold={res_iter_v_threshold} boundary_condition={boundary_type}"
+    # Build command with parameters using auto-detected runner path
+    runner_path = _find_runner_path()
+    cmd = f"python {runner_path} --config-name={profile} mesh_x={mesh_x} mesh_y={mesh_y} omega_u={omega_u} omega_v={omega_v} omega_p={omega_p} diff_u_threshold={diff_u_threshold} diff_v_threshold={diff_v_threshold} res_iter_v_threshold={res_iter_v_threshold} boundary_condition={boundary_type}"
     
     # Add wall parameters if provided
     if other_params:
