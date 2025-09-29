@@ -10,13 +10,13 @@ from .base import SIM_DOMAIN
 
 @ti.data_oriented
 class SIM_DOMAIN_DISK_COLLISION(SIM_DOMAIN):
-    def __init__(self, dx, n_part, cfl, flip_ratio, advect_scheme, verbose, output_dir, envs_params):
+    def __init__(self, dx, n_part, cfl, radii, flip_ratio, advect_scheme, verbose, output_dir, envs_params):
         CTRL_DATA_CLASS, MPM_FIELD_CLASS = (
             CTRL_DATA_DISK_COLLISION,
             MPM_FIELD_DISK_COLLISION,
         )
         super(SIM_DOMAIN_DISK_COLLISION, self).__init__(
-            dx, n_part, cfl, flip_ratio, advect_scheme, verbose, output_dir, envs_params, CTRL_DATA_CLASS, MPM_FIELD_CLASS
+            dx, n_part, cfl, radii, flip_ratio, advect_scheme, verbose, output_dir, envs_params, CTRL_DATA_CLASS, MPM_FIELD_CLASS
         )
 
     def create_additional_fields(self):

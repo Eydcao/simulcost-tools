@@ -197,11 +197,11 @@ def barycentric_coord_1d(T0, T1, P):
 @ti.func
 def barycentric_coord_2d(T0, T1, T2, P):
     # determinant of original triangle
-    Mat = ti.Matrix([[1.0, T0[0], T0[1]], [1.0, T1[0], T1[1]], [1.0, T2[0], T2[1]]]).cast(ti.f32)
+    Mat = ti.Matrix([[1.0, T0[0], T0[1]], [1.0, T1[0], T1[1]], [1.0, T2[0], T2[1]]]).cast(ti.f64)
     D = Mat.determinant()
     # determinant of using P to replace each vertex
-    D0 = ti.Matrix([[1.0, P[0], P[1]], [1.0, T1[0], T1[1]], [1.0, T2[0], T2[1]]]).cast(ti.f32).determinant()
-    D1 = ti.Matrix([[1.0, T0[0], T0[1]], [1.0, P[0], P[1]], [1.0, T2[0], T2[1]]]).cast(ti.f32).determinant()
+    D0 = ti.Matrix([[1.0, P[0], P[1]], [1.0, T1[0], T1[1]], [1.0, T2[0], T2[1]]]).cast(ti.f64).determinant()
+    D1 = ti.Matrix([[1.0, T0[0], T0[1]], [1.0, P[0], P[1]], [1.0, T2[0], T2[1]]]).cast(ti.f64).determinant()
     D2 = D - D0 - D1
     BC = ti.Vector([D0, D1, D2]) / D
     return BC
@@ -217,7 +217,7 @@ def barycentric_coord_3d(v0, v1, v2, v3, P):
             [1.0, v2[0], v2[1], v2[2]],
             [1.0, v3[0], v3[1], v3[2]],
         ]
-    ).cast(ti.f32)
+    ).cast(ti.f64)
     D = Mat.determinant()
     # determinant of using P to replace each vertex
     D0 = (

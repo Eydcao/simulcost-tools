@@ -24,10 +24,11 @@ def draw_cantilever(dx, envs_params, n_part):
 # override the ctrl data
 @ti.data_oriented
 class CTRL_DATA_CANTILEVER(CTRL_DATA):
-    def __init__(self, dx, n_part, cfl, flip_ratio, advect_scheme, verbose, output_dir, envs_params):
+    def __init__(self, dx, n_part, cfl, radii, flip_ratio, advect_scheme, verbose, output_dir, envs_params):
         self.dx = dx
         self.n_part = n_part
         self.cfl = cfl
+        self.radii = radii
         self.flip_ratio = flip_ratio
         self.advect_scheme = advect_scheme
         self.verbose = verbose

@@ -19,12 +19,13 @@ envs_params:
   p_rho: 1.0
 
 ##### Tunable parameters #####
-nx: 20
+nx: 80
 n_part: 2
 cfl: 0.005
-flip_ratio: 0.95
+radii: 1.5
 
 ##### Other fixed parameters #####
+flip_ratio: 1.0
 advect_scheme: 0
 verbose: 0
 device: "cpu"

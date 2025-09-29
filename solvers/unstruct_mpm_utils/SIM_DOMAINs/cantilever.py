@@ -15,6 +15,7 @@ class SIM_DOMAIN_CANTILEVER(SIM_DOMAIN):
         dx,
         n_part,
         cfl,
+        radii,
         flip_ratio,
         advect_scheme,
         verbose,
@@ -23,7 +24,7 @@ class SIM_DOMAIN_CANTILEVER(SIM_DOMAIN):
         CTRL_DATA_CLASS=CTRL_DATA_CANTILEVER,
         MPM_FIELD_CLASS=MPM_FIELD_CANTILEVER,
     ):
-        super(SIM_DOMAIN_CANTILEVER, self).__init__(dx, n_part, cfl, flip_ratio, advect_scheme, verbose, output_dir, envs_params, CTRL_DATA_CLASS, MPM_FIELD_CLASS)
+        super(SIM_DOMAIN_CANTILEVER, self).__init__(dx, n_part, cfl, radii, flip_ratio, advect_scheme, verbose, output_dir, envs_params, CTRL_DATA_CLASS, MPM_FIELD_CLASS)
 
     def create_additional_fields(self):
         sample_pos = np.array([10.0, 5.0 + 1.0])

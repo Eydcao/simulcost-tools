@@ -6,9 +6,9 @@ import os
 
 @ti.data_oriented
 class SIM_DOMAIN:
-    def __init__(self, nx, n_part, cfl, flip_ratio, advect_scheme, verbose, output_dir, envs_params, CTRL_DATA_CLASS, MPM_FIELD_CLASS):
+    def __init__(self, nx, n_part, cfl, radii, flip_ratio, advect_scheme, verbose, output_dir, envs_params, CTRL_DATA_CLASS, MPM_FIELD_CLASS):
         dx = envs_params["Lx"] / nx
-        self.ctrl_data = CTRL_DATA_CLASS(dx, n_part, cfl, flip_ratio, advect_scheme, verbose, output_dir, envs_params)
+        self.ctrl_data = CTRL_DATA_CLASS(dx, n_part, cfl, radii, flip_ratio, advect_scheme, verbose, output_dir, envs_params)
         self.mpm_field = MPM_FIELD_CLASS(self.ctrl_data)
         self.create_additional_fields()
         self.mpm_field.init_fields()

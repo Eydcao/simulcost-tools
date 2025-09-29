@@ -112,23 +112,23 @@ class MPM_FIELD_BASE:
 
     def init_fields(self):
         # init particle attributes
-        self.x.from_numpy(self.ctrl_data.p_pos.astype(np.float32))
+        self.x.from_numpy(self.ctrl_data.p_pos)
         self.material.from_numpy(self.ctrl_data.p_mat)
-        self.v.from_numpy(self.ctrl_data.p_vel.astype(np.float32))
-        self.F.from_numpy(self.ctrl_data.p_F.astype(np.float32))
-        self.Jp.from_numpy(self.ctrl_data.p_Jp.astype(np.float32))
+        self.v.from_numpy(self.ctrl_data.p_vel)
+        self.F.from_numpy(self.ctrl_data.p_F)
+        self.Jp.from_numpy(self.ctrl_data.p_Jp)
         # print("init particle attributes done")
         # init v attributes
-        self.v_pos.from_numpy(self.ctrl_data.v_pos.astype(np.float32))
+        self.v_pos.from_numpy(self.ctrl_data.v_pos)
         self.v_is_bc.from_numpy(self.ctrl_data.is_bc)
-        self.v_outgoing_normal.from_numpy(self.ctrl_data.outgoing_normal.astype(np.float32))
-        self.v_support_radii.from_numpy(self.ctrl_data.v_support_radii.astype(np.float32))
+        self.v_outgoing_normal.from_numpy(self.ctrl_data.outgoing_normal)
+        self.v_support_radii.from_numpy(self.ctrl_data.v_support_radii)
         # print("init v attributes done")
         # init cell connectivity
         self.N0.from_numpy(self.ctrl_data.cell)
         self.N1_v_idx.from_numpy(self.ctrl_data.N1_v_idx)
         self.N1_v_var.from_numpy(self.ctrl_data.N1_v_var)
-        self.adj_N1_v_N0_v.from_numpy(self.ctrl_data.adj_N1_v_N0_v.astype(np.float32))
+        self.adj_N1_v_N0_v.from_numpy(self.ctrl_data.adj_N1_v_N0_v)
         # print("init cell connectivity done")
         # init hash map
         self.hash2N0_idx.from_numpy(self.ctrl_data.hash2N0_idx)
@@ -137,8 +137,6 @@ class MPM_FIELD_BASE:
         # set_dirichelet TODO
         # init active flag; defualt all zero
         self.deactivated_flag.from_numpy(np.zeros(self.ctrl_data.n_p, dtype=int))
-        # init communication counter
-        self.sum_each_part_neighbor_communication.fill(0.0)
         # print("init active flag done")
 
     @ti.func
@@ -293,9 +291,9 @@ class MPM_FIELD_BASE:
                 else:
                     # calculate the M = ETDInv @ E by summing up the dpos/D outproduct with dpos
                     # since taichi doesnot support dynamic matrix
-                    M = ti.Matrix.zero(ti.f32, self.ctrl_data.DIM + 1, self.ctrl_data.DIM + 1)
+                    M = ti.Matrix.zero(ti.f64, self.ctrl_data.DIM + 1, self.ctrl_data.DIM + 1)
                     # support_radii = self.p_support_radii[p] / 2.0  # NOTE should it be 2 or 1.5
-                    support_radii = self.ctrl_data.dx * 2.0
+                    support_radii = self.ctrl_data.dx * self.ctrl_data.radii
                     # print('support_radii is ', support_radii)
                     self.sum_each_part_neighbor_communication[0] += N_adj * self.ctrl_data.DIM
                     for adj_i in range(adj_v_idx_start, adj_v_idx_end):
@@ -342,7 +340,7 @@ class MPM_FIELD_BASE:
                 #     print('w_sum is ', w_sum)
                 # print('cal Dp below')
                 # cal Dp
-                tmp_Dp = ti.Matrix.zero(ti.f32, self.ctrl_data.DIM, self.ctrl_data.DIM)
+                tmp_Dp = ti.Matrix.zero(ti.f64, self.ctrl_data.DIM, self.ctrl_data.DIM)
                 self.sum_each_part_neighbor_communication[0] += N_adj
                 for adj_i in range(adj_v_idx_start, adj_v_idx_end):
                     v_idx = self.N1_v_var[adj_i]
@@ -394,7 +392,7 @@ class MPM_FIELD_BASE:
                 mu, la = self.ctrl_data.mu_0 * h, self.ctrl_data.lambda_0 * h
                 if self.material[p] == 0:  # liquid
                     mu = 0.0
-                U, sig, V = ti.svd(self.F[p].cast(ti.f32))
+                U, sig, V = ti.svd(self.F[p].cast(ti.f64))
                 J = 1.0
                 I1 = 0.0
                 for d in ti.static(range(self.ctrl_data.DIM)):
@@ -411,8 +409,8 @@ class MPM_FIELD_BASE:
                 elif self.material[p] == 2:
                     # Reconstruct elastic deformation gradient after plasticity
                     self.F[p] = U @ sig @ V.transpose()
-                stress = 2 * mu * (self.F[p].cast(ti.f32) - U @ V.transpose()) @ self.F[p].cast(
-                    ti.f32
+                stress = 2 * mu * (self.F[p].cast(ti.f64) - U @ V.transpose()) @ self.F[p].cast(
+                    ti.f64
                 ).transpose() + ti.Matrix.identity(float, self.ctrl_data.DIM) * la * J * (J - 1)
 
                 # record stress

@@ -32,8 +32,8 @@ def draw_vibration_bar(dx, n_part, envs_params):
             p_in_disk.append(temp_x)
     x = np.array(p_in_disk)
     # vel is 0.75 * sin(0.5 pi * x[0] / Lx)
-    # v0 = 0.75
-    v0 = 0.1
+    v0 = 0.75
+    # v0 = 0.1
     vel = v0 * np.sin(0.5 * np.pi * (x[:, 0] - x_start) / Lxe)
     v = np.zeros_like(x)
     v[:, 0] = vel
@@ -67,9 +67,10 @@ def draw_vibration_bar(dx, n_part, envs_params):
 # override the ctrl data
 @ti.data_oriented
 class CTRL_DATA_VIBRATION_BAR(CTRL_DATA):
-    def __init__(self, dx, n_part, cfl, flip_ratio, advect_scheme, verbose, output_dir, envs_params):
+    def __init__(self, dx, n_part, cfl, radii, flip_ratio, advect_scheme, verbose, output_dir, envs_params):
         self.n_part = n_part
         self.cfl = cfl
+        self.radii = radii
         self.flip_ratio = flip_ratio
         self.dx = dx
         self.advect_scheme = advect_scheme

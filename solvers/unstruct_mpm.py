@@ -42,8 +42,9 @@ class UNSTRUCT_MPM(SIMULATOR):
         self.nx = args["nx"]
         self.n_part = args["n_part"]
         self.cfl = args["cfl"]
-        self.flip_ratio = args["flip_ratio"]
+        self.radii = args["radii"]
         
+        self.flip_ratio = args["flip_ratio"]
         self.advect_scheme = ADV_TYPE(args["advect_scheme"])
         self.verbose = args["verbose"]
         self.device = args["device"]
@@ -54,7 +55,7 @@ class UNSTRUCT_MPM(SIMULATOR):
         
         self.envs_params = args["envs_params"]
         
-        self.sim_domain = SIM_DOMAIN_CLASS(self.nx, self.n_part, self.cfl, self.flip_ratio, self.advect_scheme, self.verbose, self.output_path, self.envs_params)
+        self.sim_domain = SIM_DOMAIN_CLASS(self.nx, self.n_part, self.cfl, self.radii, self.flip_ratio, self.advect_scheme, self.verbose, self.output_path, self.envs_params)
         
         self.cost = 0
         self.is_converged = False
@@ -67,7 +68,7 @@ class UNSTRUCT_MPM(SIMULATOR):
         ti.init(
             arch=DEVICE_HANDLER[args["device"]],
             debug=False,
-            default_fp=ti.f32,
+            default_fp=ti.f64,
             random_seed=1000,
             device_memory_GB=20,
         )
@@ -76,7 +77,7 @@ class UNSTRUCT_MPM(SIMULATOR):
         """Initialize output paths"""
         self.output_path = (
             dump_dir
-            + f"_nx{format_param_for_path(self.nx)}_npart{self.n_part}_cfl{format_param_for_path(self.cfl)}_flipratio{format_param_for_path(self.flip_ratio)}"
+            + f"_nx{format_param_for_path(self.nx)}_npart{self.n_part}_cfl{format_param_for_path(self.cfl)}_radii{format_param_for_path(self.radii)}"
         )
         self.output_path = Path(self.output_path)
         if not os.path.exists(self.output_path):
@@ -89,6 +90,7 @@ class UNSTRUCT_MPM(SIMULATOR):
             f"NX: {format_param_for_path(self.nx)}\n"
             f"N_PART: {self.n_part}\n"
             f"CFL: {format_param_for_path(self.cfl)}\n"
+            f"RADII: {format_param_for_path(self.radii)}\n"
             f"FLIP RATIO: {format_param_for_path(self.flip_ratio)}\n"
             f"ADVECT SCHEME: {self.advect_scheme.value}\n"
             f"VERBOSE: {self.verbose}\n"
@@ -107,6 +109,7 @@ class UNSTRUCT_MPM(SIMULATOR):
             "output_dir": str(self.output_path),
             "n_part": self.n_part,
             "cfl": self.cfl,
+            "radii": self.radii,
             "flip_ratio": self.flip_ratio,
             "is_converged": self.is_converged
         }
