@@ -37,7 +37,7 @@ def _find_runner_path():
     raise FileNotFoundError(f"Could not find hasegawa_mima_linear.py runner. Searched: {possible_paths}")
 
 
-def run_sim_hasegawa_mima_linear(profile, N, dt, cg_atol=1e-6, analytical=False):
+def run_sim_hasegawa_mima_linear(profile, N, dt, cg_atol, analytical):
     """Run the Hasegawa-Mima linear simulation with the given parameters if not already simulated."""
     if analytical:
         method_suffix = "_analytical"
@@ -68,12 +68,12 @@ def run_sim_hasegawa_mima_linear(profile, N, dt, cg_atol=1e-6, analytical=False)
         return meta["cost"]
 
 
-def run_sim_hasegawa_mima_linear_analytical(profile, N):
-    """Run analytical solution (dt and cg_atol don't matter for analytical)"""
-    return run_sim_hasegawa_mima_linear(profile, N, dt=1.0, analytical=True)
+# def run_sim_hasegawa_mima_linear_analytical(profile, N):
+#     """Run analytical solution (dt and cg_atol don't matter for analytical)"""
+#     return run_sim_hasegawa_mima_linear(profile, N, dt=1.0, analytical=True)
 
 
-def run_simulation(config_path=None, N=256, dt=20.0, cg_atol=1e-6, analytical=False, verbose=False, **kwargs):
+def run_simulation(config_path, N, dt, cg_atol, analytical, verbose, **kwargs):
     """
     Run Hasegawa-Mima linear simulation with given parameters.
 
@@ -111,7 +111,7 @@ def run_simulation(config_path=None, N=256, dt=20.0, cg_atol=1e-6, analytical=Fa
         return {"success": False, "error": str(e), "stdout": e.stdout, "stderr": e.stderr}
 
 
-def load_results(sim_dir, frame=0):
+def load_results(sim_dir, frame):
     """
     Load simulation results from output directory.
 
@@ -135,7 +135,6 @@ def load_results(sim_dir, frame=0):
             results['time'] = f.attrs['time']
             results['N'] = f.attrs['N']
             results['dt'] = f.attrs['dt']
-            results['analytical'] = f.attrs['analytical']
 
     if os.path.exists(json_file):
         with open(json_file, 'r') as f:
@@ -145,25 +144,50 @@ def load_results(sim_dir, frame=0):
     return results
 
 
-def get_error_metric(sim_dir):
+def get_error_metric(numerical_sim_dir):
     """
-    Extract error metric from simulation results.
+    Extract error metric by comparing numerical solution with analytical solution.
 
     Args:
-        sim_dir: Simulation output directory
+        numerical_sim_dir: Numerical simulation output directory
 
     Returns:
-        float: Error compared to analytical solution
+        float: Mean L2 error compared to analytical solution, or None if comparison fails
     """
-    meta_file = os.path.join(sim_dir, "meta.json")
-    if os.path.exists(meta_file):
-        with open(meta_file, 'r') as f:
-            meta = json.load(f)
-            return meta.get('error', None)
-    return None
+    # Load metadata to get analytical reference directory
+    meta_file = os.path.join(numerical_sim_dir, "meta.json")
+    if not os.path.exists(meta_file):
+        print(f"Warning: meta.json not found in {numerical_sim_dir}")
+        return None
+
+    with open(meta_file, 'r') as f:
+        meta = json.load(f)
+
+    # Check if this is an analytical run (no error needed)
+    if meta.get('analytical', False):
+        return 0.0
+
+    # Get analytical reference directory
+    analytical_sim_dir = meta.get('analytical_reference_dir', None)
+    if analytical_sim_dir is None:
+        print(f"Warning: analytical_reference_dir not found in metadata")
+        return None
+
+    if not os.path.exists(analytical_sim_dir):
+        print(f"Warning: Analytical reference directory not found: {analytical_sim_dir}")
+        return None
+
+    # Compare numerical and analytical solutions
+    comparison_result = compare_with_analytical(numerical_sim_dir, analytical_sim_dir)
+
+    if comparison_result.get("success", False):
+        return comparison_result.get("mean_l2_error", None)
+    else:
+        print(f"Warning: Comparison failed - {comparison_result.get('reason', 'Unknown reason')}")
+        return None
 
 
-def compare_with_analytical(numerical_sim_dir, analytical_sim_dir, save_path=None):
+def compare_with_analytical(numerical_sim_dir, analytical_sim_dir):
     """
     Compare numerical solution with analytical solution.
 
@@ -220,7 +244,7 @@ def compare_with_analytical(numerical_sim_dir, analytical_sim_dir, save_path=Non
     }
 
 
-def check_success_criteria(sim_dir, target_error=1e-4):
+def check_success_criteria(sim_dir, target_error):
     """
     Check if simulation meets success criteria.
 
@@ -247,7 +271,7 @@ def check_success_criteria(sim_dir, target_error=1e-4):
         return {"success": False, "reason": f"Error checking results: {str(e)}"}
 
 
-def run_parameter_sweep(N_values, dt_values, cg_atol_values=None, config_path=None, **kwargs):
+def run_parameter_sweep(N_values, dt_values, cg_atol_values, config_path, **kwargs):
     """
     Run parameter sweep over numerical parameters.
 
@@ -307,9 +331,9 @@ def run_parameter_sweep(N_values, dt_values, cg_atol_values=None, config_path=No
     return {"sweep_results": results}
 
 
-# Default parameter configurations for different accuracy/cost targets
-DEFAULT_CONFIGS = {
-    "fast": {"N": 64, "dt": 50.0, "cg_atol": 1e-4},      # Fast but less accurate
-    "balanced": {"N": 128, "dt": 20.0, "cg_atol": 1e-5},  # Balanced accuracy/cost
-    "accurate": {"N": 256, "dt": 10.0, "cg_atol": 1e-6},  # High accuracy
-}
+# # Default parameter configurations for different accuracy/cost targets
+# DEFAULT_CONFIGS = {
+#     "fast": {"N": 64, "dt": 50.0, "cg_atol": 1e-4},      # Fast but less accurate
+#     "balanced": {"N": 128, "dt": 20.0, "cg_atol": 1e-5},  # Balanced accuracy/cost
+#     "accurate": {"N": 256, "dt": 10.0, "cg_atol": 1e-6},  # High accuracy
+# }

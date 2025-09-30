@@ -180,6 +180,8 @@ def find_optimal_cg_atol(profile, N, dt, tolerance_rmse, search_range_min, searc
     # Start from the most relaxed (largest) cg_atol for efficiency
     cg_atol_values = cg_atol_values[::-1]
 
+    print(f"Testing cg_atol values: {cg_atol_values}")
+
     param_history = []
     cg_atol_results = []  # Save key info for each cg_atol when converged
 

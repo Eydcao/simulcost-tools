@@ -77,12 +77,13 @@ def create_hasegawa_profiles(case_configs, base_profile_path):
 
 if __name__ == "__main__":
     # Create Hasegawa-Mima profiles for several initial condition cases
+    # Note: p1 = monopole, p3 = sinusoidal (separate, not generated here)
     case_configs = [
         # {"case": "monopole"}, # p1 is this
-        {"case": "dipole"},
-        {"case": "sinusoidal"},
-        {"case": "sin_x_gauss_y"},
-        {"case": "gauss_x_sin_y"},
+        {"case": "dipole"},  # p2
+        # {"case": "sinusoidal"},  # p3 (moved out, separate config)
+        {"case": "sin_x_gauss_y"},  # p4 (was p4, now p3 in generated files)
+        {"case": "gauss_x_sin_y"},  # p5 (was p5, now p4 in generated files)
     ]
 
     profiles = create_hasegawa_profiles(case_configs=case_configs, base_profile_path="./run_configs/hasegawa_mima_linear/p1.yaml")

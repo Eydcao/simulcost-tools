@@ -20,9 +20,9 @@ output_times = [0.0, tmax/3, 2*tmax/3, tmax]
 
 # Initial condition (updated to match solver_inversion.py)
 Dx = 5 # spatial scale of initial condition, should be larger than 1
-phi0 = 1e-1 * np.exp(-((X - L/2)**2 + (Y - L/2)**2)/(2*Dx**2)) # monopole magnitude: 1e-1
+# phi0 = 1e-1 * np.exp(-((X - L/2)**2 + (Y - L/2)**2)/(2*Dx**2)) # monopole magnitude: 1e-1
 # phi0 = 1e-1* np.exp(-((X - L/2)**2 + (Y - L/2)**2)/(2*5**2))*((x-L/2)/Dx) # dipole
-# phi0 = 1e-1* np.sin(0.2*X) * np.sin(0.3*Y) # sinusoidal
+phi0 = 1e-1* np.sin(0.2*X) * np.sin(0.3*Y) # sinusoidal
 # phi0 = 1e-1* np.sin(0.2*X) * np.exp(-((Y - L/2)**2)/(2*Dx**2)) # sinusoidal in x and gaussian in y
 # phi0 = 1e-1* np.exp(-((X - L/2)**2)/(2*Dx**2)) * np.sin(0.2*Y) # gaussian in x and sinusoidal in y
 

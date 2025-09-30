@@ -281,9 +281,9 @@ def run_parameter_sweep(nx_values, ny_values=None, config_path=None, **kwargs):
     return {"sweep_results": results}
 
 
-# Default parameter configurations based on CSV metadata
-DEFAULT_CONFIGS = {
-    "fine": {"nx": 80, "ny": 80},      # Target error ~1e-3
-    "medium": {"nx": 40, "ny": 40},    # Target error ~5e-3
-    "coarse": {"nx": 20, "ny": 20},    # Target error ~1e-2
-}
+# # Default parameter configurations based on CSV metadata
+# DEFAULT_CONFIGS = {
+#     "fine": {"nx": 80, "ny": 80},      # Target error ~1e-3
+#     "medium": {"nx": 40, "ny": 40},    # Target error ~5e-3
+#     "coarse": {"nx": 20, "ny": 20},    # Target error ~1e-2
+# }

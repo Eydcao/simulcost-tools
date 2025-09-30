@@ -62,6 +62,12 @@ class HasegawaMimaLinear(SIMULATOR):
         if not os.path.exists(self.dump_dir):
             os.makedirs(self.dump_dir)
 
+        # Create analytical reference directory for numerical runs
+        if not self.analytical:
+            self.analytical_dir = cfg.dump_dir + f"_N_{self.N}_dt_{self.dt:.2e}_analytical"
+            if not os.path.exists(self.analytical_dir):
+                os.makedirs(self.analytical_dir)
+
         # Initialize solution
         self.phi0 = self.initialize_condition()
 
@@ -196,12 +202,14 @@ class HasegawaMimaLinear(SIMULATOR):
 
         # Track CG performance precisely
         self.cg_calls += 1
+        self.cg_iterations_total += current_iterations
         if info == 0:
             # Successful convergence - use actual iteration count
-            self.cg_iterations_total += current_iterations
+            # self.cg_iterations_total += current_iterations
+            pass
         else:
             # Failed convergence - info contains the number of iterations performed
-            self.cg_iterations_total += info
+            # self.cg_iterations_total += info
             if self.verbose:
                 print(f"Warning: CG solver did not converge after {info} iterations")
 
@@ -253,24 +261,24 @@ class HasegawaMimaLinear(SIMULATOR):
         # Increment step counter for residual tracking
         self.current_step += 1
 
-    def calculate_error_vs_analytical(self):
-        """Calculate error compared to analytical solution (for numerical method)"""
-        if self.analytical:
-            return 0.0  # No error for analytical solution
+    # def calculate_error_vs_analytical(self):
+    #     """Calculate error compared to analytical solution (for numerical method)"""
+    #     if self.analytical:
+    #         return 0.0  # No error for analytical solution
 
-        # Setup analytical method components if not already done
-        if not hasattr(self, "KY"):
-            self.setup_analytical_method()
+    #     # Setup analytical method components if not already done
+    #     if not hasattr(self, "KY"):
+    #         self.setup_analytical_method()
 
-        l2_norms = []
-        for i, t in enumerate(self.actual_snapshot_times):
-            phi_analytical = self.solve_analytical(t)
-            phi_numerical = self.snapshots[i]
-            diff = phi_numerical - phi_analytical
-            l2 = np.sqrt(np.mean(diff**2))
-            l2_norms.append(l2)
+    #     l2_norms = []
+    #     for i, t in enumerate(self.actual_snapshot_times):
+    #         phi_analytical = self.solve_analytical(t)
+    #         phi_numerical = self.snapshots[i]
+    #         diff = phi_numerical - phi_analytical
+    #         l2 = np.sqrt(np.mean(diff**2))
+    #         l2_norms.append(l2)
 
-        return np.mean(l2_norms)
+        # return np.mean(l2_norms)
 
     def estimate_cost(self):
         """Estimate computational cost"""
@@ -307,17 +315,6 @@ class HasegawaMimaLinear(SIMULATOR):
             phi_vec = self.solve_helmholtz_cg(self.q_vec)
             phi = phi_vec.reshape((self.N, self.N))
 
-        # Calculate error vs analytical (if numerical)
-        if self.analytical:
-            error = 0.0
-        else:
-            # Setup analytical method components if not already done
-            if not hasattr(self, "KY"):
-                self.setup_analytical_method()
-            phi_analytical = self.solve_analytical(self.current_time)
-            diff = phi - phi_analytical
-            error = np.sqrt(np.mean(diff**2))
-
         # Store snapshot for later processing
         self.snapshots.append(phi.copy())
         self.actual_snapshot_times.append(self.current_time)
@@ -331,18 +328,44 @@ class HasegawaMimaLinear(SIMULATOR):
             f.attrs["time"] = self.current_time
             f.attrs["N"] = self.N
             f.attrs["dt"] = self.dt
-            f.attrs["analytical"] = self.analytical
-            f.attrs["error"] = error
-        # # Optional plotting (field + analytical + difference, and power spectrum)
-        # if self.verbose:
+
+        # For numerical runs, also save analytical solution for comparison
+        if not self.analytical:
+            analytical_output_file = os.path.join(self.analytical_dir, f"frame_{self.record_frame:04d}.h5")
+
+            # Check if analytical solution already exists
+            if os.path.exists(analytical_output_file):
+                # Load existing analytical solution
+                with h5py.File(analytical_output_file, "r") as f:
+                    phi_analytical = f["phi"][:]
+            else:
+                # Compute and save analytical solution
+                # Setup analytical method components if not already done
+                if not hasattr(self, "KY"):
+                    self.setup_analytical_method()
+                phi_analytical = self.solve_analytical(self.current_time)
+
+                # Save analytical solution to separate directory
+                with h5py.File(analytical_output_file, "w") as f:
+                    f.create_dataset("phi", data=phi_analytical)
+                    f.create_dataset("coordinates_x", data=self.x)
+                    f.create_dataset("coordinates_y", data=self.y)
+                    f.attrs["time"] = self.current_time
+                    f.attrs["N"] = self.N
+                    f.attrs["dt"] = self.dt
+
+            # Calculate error for inline display
+            diff = phi - phi_analytical
+            error = np.sqrt(np.mean(diff**2))
+        else:
+            # For analytical runs, set up plotting variables
+            phi_analytical = phi
+            diff = np.zeros_like(phi)
+            error = 0.0
+
+        # Optional plotting (field + analytical + difference, and power spectrum)
         # Prepare grids for plotting
         X, Y = np.meshgrid(self.x, self.y)
-
-        # Ensure analytical solution is available
-        if not hasattr(self, "KY"):
-            self.setup_analytical_method()
-        phi_analytical = self.solve_analytical(self.current_time)
-        diff = phi - phi_analytical
 
         # Field plot: phi, analytical, difference
         try:
@@ -411,24 +434,36 @@ class HasegawaMimaLinear(SIMULATOR):
     def post_process(self):
         """Post-processing: save metadata"""
         cost = self.estimate_cost()
-        error = self.calculate_error_vs_analytical()
 
+        # Main metadata (compact, for production use)
+        meta = {
+            "cost": cost,
+            "N": int(self.N),
+            "dt": float(self.dt),
+            "cg_atol": float(self.cg_atol),
+            "cg_maxiter": int(self.cg_maxiter),
+            "analytical": self.analytical,
+            "n_steps": self.num_steps,
+            "cg_iterations_total": self.cg_iterations_total,
+            "cg_calls": self.cg_calls,
+            "matvec_operations": self.matvec_operations,
+        }
+
+        # For numerical runs, save analytical directory path in metadata
+        if not self.analytical:
+            meta["analytical_reference_dir"] = self.analytical_dir
+
+        # Save main metadata
         with open(os.path.join(self.dump_dir, "meta.json"), "w") as f:
-            meta = {
-                "cost": cost,
-                "error": error,
-                "N": int(self.N),
-                "dt": float(self.dt),
-                "cg_atol": float(self.cg_atol),
-                "cg_maxiter": int(self.cg_maxiter),
-                "analytical": self.analytical,
-                "n_steps": self.num_steps,
-                "cg_iterations_total": self.cg_iterations_total,
-                "cg_calls": self.cg_calls,
-                "matvec_operations": self.matvec_operations,
-                "cg_residual_trajectories": self.cg_residual_trajectories,
-            }
             json.dump(meta, f, indent=4)
+
+        # Save verbose metadata with CG trajectories if verbose mode is on
+        if self.verbose and self.cg_residual_trajectories:
+            verbose_meta = meta.copy()
+            verbose_meta["cg_residual_trajectories"] = self.cg_residual_trajectories
+            with open(os.path.join(self.dump_dir, "verbose_meta.json"), "w") as f:
+                json.dump(verbose_meta, f, indent=4)
+            print(f"Saved verbose metadata with {len(self.cg_residual_trajectories)} CG residual trajectories")
 
         # Save detailed residual analysis if we have trajectories
         if self.cg_residual_trajectories:
@@ -436,8 +471,6 @@ class HasegawaMimaLinear(SIMULATOR):
 
         if self.verbose:
             print(f"Run cost: {cost}")
-            if self.cg_residual_trajectories:
-                print(f"Saved {len(self.cg_residual_trajectories)} CG residual trajectories for analysis")
 
     def save_residual_analysis(self):
         """Save detailed CG residual trajectory analysis and plots"""

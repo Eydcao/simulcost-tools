@@ -4,7 +4,7 @@ defaults:
   - override hydra/job_logging: none
 
 # Environmental/Physics parameters (fixed)
-case: "sin_x_gauss_y"           # Case identifier
+case: "gauss_x_sin_y"           # Case identifier
 L: 62.83185307179586       # Domain size (2*pi*10)
 v_star: 0.02               # Diamagnetic drift velocity (2e-2)
 Dx: 5.0                    # Initial condition spatial scale

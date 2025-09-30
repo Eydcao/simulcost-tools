@@ -13,7 +13,7 @@ task_distribution:
 
 precision_levels:
   low:
-    tolerance_rmse: 0.001
+    tolerance_rmse: 0.002
     description: "Relaxed convergence criteria"
   medium:
     tolerance_rmse: 0.0005
@@ -23,89 +23,37 @@ precision_levels:
     description: "Stringent convergence criteria"
 
 profiles:
-  num_profiles: 5
-  # Available profiles: p1 (monopole), p2 (dipole), p3 (sinusoidal), p4 (sin_x_gauss_y), p5 (gauss_x_sin_y)
-  active_profiles: ["p1", "p2", "p3", "p4", "p5"]
+  num_profiles: 4
+  # Available profiles: p1 (monopole), p2 (dipole), p3 (sin_x_gauss_y), p4 (gauss_x_sin_y)
+  active_profiles: ["p1", "p2", "p3", "p4"]
 
 # Parameter configurations for each target parameter
 target_parameters:
   N:
     description: "Grid resolution - determines spatial accuracy and computational cost"
     search_type: "iterative+0-shot"
-    initial_value: 64
+    initial_value: 32
     multiplication_factor: 2
-    max_iteration_num: 3  # Limits to N: 64, 128, 256 (avoids 512, 1024+)
+    max_iteration_num: 4  # Limits to N: 32, 64, 128, 256
     non_target_parameters:
-      dt: [5.0, 10.0, 20.0]  # Avoid dt=1.0 which causes very slow simulations
-      cg_atol: [1e-4, 1e-5, 1e-6]  # CG solver tolerance levels
+      dt: [5.0, 20.0, 40.0]  # Avoid dt=1.0 which causes very slow simulations
+      cg_atol: [1e-2, 1e-3, 1e-4]  # CG solver tolerance levels
 
   dt:
     description: "Time step size - controls temporal accuracy and numerical stability"
     search_type: "iterative+0-shot"
-    initial_value: 10.0
+    initial_value: 40.0
     multiplication_factor: 0.5
-    max_iteration_num: 3  # Limits to dt: 10.0, 5.0, 2.5 (avoid 1.25 for performance)
+    max_iteration_num: 4  # Limits to dt: 40,20,10,5
     non_target_parameters:
-      N: 128  # Fixed moderate resolution
-      cg_atol: [1e-4, 1e-5, 1e-6]  # CG solver tolerance levels
+      N: [32, 128]
+      cg_atol: [1e-2, 1e-3, 1e-4]  # CG solver tolerance levels
 
   cg_atol:
     description: "Conjugate Gradient solver absolute tolerance - controls linear solver accuracy"
     search_type: "0-shot"
-    search_range: [1e-6, 1e-2]  # Updated range based on sensitivity analysis
-    search_range_slice_num: 4    # 4 logarithmically spaced values
+    search_range: [1e-4, 1e-0]  # Updated range based on sensitivity analysis
+    search_range_slice_num: 5    # 4 logarithmically spaced values
     non_target_parameters:
-      N: [64, 128, 256]        # Test across different resolutions
-      dt: [5.0, 10.0, 20.0]    # Avoid dt=1.0 which causes very slow simulations
-
-# Profile definitions for different simulation scenarios
-profile_definitions:
-  p1:
-    name: "standard"
-    description: "Standard monopole configuration with balanced accuracy/efficiency"
-    case: "monopole"  # Gaussian monopole initial condition
-    L: 62.83185307179586  # 2*pi*10
-    v_star: 0.02
-    Dx: 5.0
-    record_dt: 1000.0
-    end_frame: 10
-
-  p2:
-    name: "dipole"
-    description: "Dipole configuration for testing different initial condition types"
-    case: "dipole"  # Gaussian dipole initial condition
-    L: 62.83185307179586
-    v_star: 0.02
-    Dx: 5.0  # Match other profiles for consistency
-    record_dt: 1000.0
-    end_frame: 10  # Match other profiles for fair comparison
-
-  p3:
-    name: "sinusoidal"
-    description: "Sinusoidal configuration for testing periodic initial conditions"
-    case: "sinusoidal"  # Pure sinusoidal initial condition
-    L: 62.83185307179586
-    v_star: 0.02
-    Dx: 5.0  # Match other profiles for consistency
-    record_dt: 1000.0
-    end_frame: 10  # Match other profiles for fair comparison
-
-  p4:
-    name: "sin_x_gauss_y"
-    description: "Mixed configuration: sinusoidal in x, Gaussian in y"
-    case: "sin_x_gauss_y"  # Sinusoidal in x, Gaussian in y
-    L: 62.83185307179586
-    v_star: 0.02
-    Dx: 5.0  # Match other profiles for consistency
-    record_dt: 1000.0
-    end_frame: 10  # Match other profiles for fair comparison
-
-  p5:
-    name: "gauss_x_sin_y"
-    description: "Mixed configuration: Gaussian in x, sinusoidal in y"
-    case: "gauss_x_sin_y"  # Gaussian in x, sinusoidal in y
-    L: 62.83185307179586
-    v_star: 0.02
-    Dx: 5.0  # Match other profiles for consistency
-    record_dt: 1000.0
-    end_frame: 10  # Match other profiles for fair comparison
+      N: [32, 128]
+      dt: [5.0, 20.0, 40.0]

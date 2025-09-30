@@ -343,9 +343,9 @@ def run_convergence_study(base_N=64, N_multiplier=2, max_levels=3, dt=10.0, conf
     }
 
 
-# Default parameter configurations for different accuracy/cost targets
-DEFAULT_CONFIGS = {
-    "fast": {"N": 64, "dt": 20.0},      # Fast but coarse resolution
-    "balanced": {"N": 128, "dt": 10.0}, # Balanced accuracy/cost
-    "accurate": {"N": 256, "dt": 5.0},  # High accuracy
-}
+# # Default parameter configurations for different accuracy/cost targets
+# DEFAULT_CONFIGS = {
+#     "fast": {"N": 64, "dt": 20.0},      # Fast but coarse resolution
+#     "balanced": {"N": 128, "dt": 10.0}, # Balanced accuracy/cost
+#     "accurate": {"N": 256, "dt": 5.0},  # High accuracy
+# }
