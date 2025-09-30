@@ -18,4 +18,11 @@ useless/*
 **/*.mp4
 **/*.zip
 **/*.json
+**/*.sdf
+**/*.visit
+**/*.status
+**/*.deck
+**/*.dat
+**/Makefile*
+**/*.backup
 **/output*/*
