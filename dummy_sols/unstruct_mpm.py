@@ -8,7 +8,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from wrappers.unstruct_mpm import run_sim_unstruct_mpm, compare_energies_unstruct_mpm
 
 
-def find_convergent_nx(profile, nx_values, n_part, cfl, flip_ratio, energy_tolerance, case="cantilever"):
+def find_convergent_nx(profile, nx_values, n_part, cfl, radii, energy_tolerance, var_threshold, case="cantilever"):
     """Test nx values from exact_values list until convergence is achieved with fixed other parameters."""
     nx_history = []
     cost_history = []
@@ -18,13 +18,13 @@ def find_convergent_nx(profile, nx_values, n_part, cfl, flip_ratio, energy_toler
     best_nx = None
 
     for i, current_nx in enumerate(nx_values):
-        print(f"\nRunning simulation with nx = {current_nx}, n_part = {n_part}, cfl = {cfl}, flip_ratio = {flip_ratio}")
+        print(f"\nRunning simulation with nx = {current_nx}, n_part = {n_part}, cfl = {cfl}, radii = {radii}")
 
         # Run simulation and load results
-        cost_i, is_converged = run_sim_unstruct_mpm(profile=profile, nx=current_nx, n_part=n_part, cfl=cfl, flip_ratio=flip_ratio, case=case)
+        cost_i, is_converged = run_sim_unstruct_mpm(profile=profile, nx=current_nx, n_part=n_part, cfl=cfl, radii=radii, case=case)
         cost_history.append(cost_i)
         nx_history.append(current_nx)
-        param_history.append({"nx": current_nx, "n_part": n_part, "cfl": cfl, "flip_ratio": flip_ratio})
+        param_history.append({"nx": current_nx, "n_part": n_part, "cfl": cfl, "radii": radii})
 
         # If we have previous results to compare with
         if len(nx_history) > 1:
@@ -36,15 +36,16 @@ def find_convergent_nx(profile, nx_values, n_part, cfl, flip_ratio, energy_toler
                 nx1=prev_nx,
                 n_part1=n_part,
                 cfl1=cfl,
-                flip_ratio1=flip_ratio,
+                radii1=radii,
                 profile2=profile,
                 nx2=current_nx,
                 n_part2=n_part,
                 cfl2=cfl,
-                flip_ratio2=flip_ratio,
+                radii2=radii,
                 case1=case,
                 case2=case,
-                energy_tolerance=energy_tolerance
+                energy_tolerance=energy_tolerance,
+                var_threshold=var_threshold
             )
 
             if is_converged:
@@ -63,7 +64,7 @@ def find_convergent_nx(profile, nx_values, n_part, cfl, flip_ratio, energy_toler
     return converged, best_nx, cost_history, param_history
 
 
-def find_convergent_n_part(profile, nx, n_part, cfl, flip_ratio, energy_tolerance, multiplication_factor, max_iteration_num, case="cantilever"):
+def find_convergent_n_part(profile, nx, n_part, cfl, radii, energy_tolerance, var_threshold, multiplication_factor, max_iteration_num, case="cantilever"):
     """Iteratively increase n_part until convergence is achieved with fixed other parameters."""
     n_part_history = []
     cost_history = []
@@ -74,13 +75,13 @@ def find_convergent_n_part(profile, nx, n_part, cfl, flip_ratio, energy_toleranc
     best_n_part = None
 
     for i in range(max_iteration_num):
-        print(f"\nRunning simulation with nx = {nx}, n_part = {current_n_part}, cfl = {cfl}, flip_ratio = {flip_ratio}")
+        print(f"\nRunning simulation with nx = {nx}, n_part = {current_n_part}, cfl = {cfl}, radii = {radii}")
 
         # Run simulation and load results
-        cost_i, is_converged = run_sim_unstruct_mpm(profile=profile, nx=nx, n_part=current_n_part, cfl=cfl, flip_ratio=flip_ratio, case=case)
+        cost_i, is_converged = run_sim_unstruct_mpm(profile=profile, nx=nx, n_part=current_n_part, cfl=cfl, radii=radii, case=case)
         cost_history.append(cost_i)
         n_part_history.append(current_n_part)
-        param_history.append({"nx": nx, "n_part": current_n_part, "cfl": cfl, "flip_ratio": flip_ratio})
+        param_history.append({"nx": nx, "n_part": current_n_part, "cfl": cfl, "radii": radii})
 
         # If we have previous results to compare with
         if len(n_part_history) > 1:
@@ -92,15 +93,16 @@ def find_convergent_n_part(profile, nx, n_part, cfl, flip_ratio, energy_toleranc
                 nx1=nx,
                 n_part1=prev_n_part,
                 cfl1=cfl,
-                flip_ratio1=flip_ratio,
+                radii1=radii,
                 profile2=profile,
                 nx2=nx,
                 n_part2=current_n_part,
                 cfl2=cfl,
-                flip_ratio2=flip_ratio,
+                radii2=radii,
                 case1=case,
                 case2=case,
-                energy_tolerance=energy_tolerance
+                energy_tolerance=energy_tolerance,
+                var_threshold=var_threshold
             )
 
             if is_converged:
@@ -123,7 +125,7 @@ def find_convergent_n_part(profile, nx, n_part, cfl, flip_ratio, energy_toleranc
     return converged, best_n_part, cost_history, param_history
 
 
-def find_convergent_cfl(profile, nx, n_part, cfl, flip_ratio, energy_tolerance, multiplication_factor, max_iteration_num, case="cantilever"):
+def find_convergent_cfl(profile, nx, n_part, cfl, radii, energy_tolerance, var_threshold, multiplication_factor, max_iteration_num, case="cantilever"):
     """Iteratively reduce CFL number until convergence is achieved."""
     cfl_history = []
     cost_history = []
@@ -134,13 +136,13 @@ def find_convergent_cfl(profile, nx, n_part, cfl, flip_ratio, energy_tolerance, 
     best_cfl = None
 
     for i in range(max_iteration_num):
-        print(f"\nRunning simulation with nx = {nx}, n_part = {n_part}, cfl = {current_cfl}, flip_ratio = {flip_ratio}")
+        print(f"\nRunning simulation with nx = {nx}, n_part = {n_part}, cfl = {current_cfl}, radii = {radii}")
 
         # Run simulation and load results
-        cost_i, is_converged = run_sim_unstruct_mpm(profile=profile, nx=nx, n_part=n_part, cfl=current_cfl, flip_ratio=flip_ratio, case=case)
+        cost_i, is_converged = run_sim_unstruct_mpm(profile=profile, nx=nx, n_part=n_part, cfl=current_cfl, radii=radii, case=case)
         cost_history.append(cost_i)
         cfl_history.append(current_cfl)
-        param_history.append({"nx": nx, "n_part": n_part, "cfl": current_cfl, "flip_ratio": flip_ratio})
+        param_history.append({"nx": nx, "n_part": n_part, "cfl": current_cfl, "radii": radii})
 
         # If we have previous results to compare with
         if len(cfl_history) > 1:
@@ -152,15 +154,16 @@ def find_convergent_cfl(profile, nx, n_part, cfl, flip_ratio, energy_tolerance, 
                 nx1=nx,
                 n_part1=n_part,
                 cfl1=prev_cfl,
-                flip_ratio1=flip_ratio,
+                radii1=radii,
                 profile2=profile,
                 nx2=nx,
                 n_part2=n_part,
                 cfl2=current_cfl,
-                flip_ratio2=flip_ratio,
+                radii2=radii,
                 case1=case,
                 case2=case,
-                energy_tolerance=energy_tolerance
+                energy_tolerance=energy_tolerance,
+                var_threshold=var_threshold
             )
 
             if is_converged:
@@ -183,36 +186,61 @@ def find_convergent_cfl(profile, nx, n_part, cfl, flip_ratio, energy_tolerance, 
     return converged, best_cfl, cost_history, param_history
 
 
-def find_optimal_flip_ratio(profile, nx, n_part, cfl, flip_ratio, energy_tolerance, search_range_min, search_range_max, search_range_slice_num, multiplication_factor, max_iteration_num, case="cantilever"):
-    """Find optimal flip_ratio using grid search."""
-    flip_ratio_values = np.linspace(search_range_min, search_range_max, search_range_slice_num)
+def find_convergent_radii(profile, nx, n_part, cfl, radii, energy_tolerance, var_threshold, search_range_min, search_range_max, search_range_slice_num, multiplication_factor, max_iteration_num, case="cantilever"):
+    """Find convergent radii using grid search with convergence comparison."""
+    radii_values = np.linspace(search_range_min, search_range_max, search_range_slice_num)
     
-    best_flip_ratio = None
-    best_cost = float('inf')
-    converged = False
+    radii_history = []
     cost_history = []
     param_history = []
+    converged = False
+    best_radii = None
 
-    for flip_ratio_val in flip_ratio_values:
-        print(f"\nRunning simulation with nx = {nx}, n_part = {n_part}, cfl = {cfl}, flip_ratio = {flip_ratio_val}")
+    for i, current_radii in enumerate(radii_values):
+        print(f"\nRunning simulation with nx = {nx}, n_part = {n_part}, cfl = {cfl}, radii = {current_radii}")
 
-        # Run simulation
-        cost_i, is_converged = run_sim_unstruct_mpm(profile=profile, nx=nx, n_part=n_part, cfl=cfl, flip_ratio=flip_ratio_val, case=case)
+        # Run simulation and load results
+        cost_i, is_converged = run_sim_unstruct_mpm(profile=profile, nx=nx, n_part=n_part, cfl=cfl, radii=current_radii, case=case)
         cost_history.append(cost_i)
-        param_history.append({"nx": nx, "n_part": n_part, "cfl": cfl, "flip_ratio": flip_ratio_val})
+        radii_history.append(current_radii)
+        param_history.append({"nx": nx, "n_part": n_part, "cfl": cfl, "radii": current_radii})
 
-        # Check if this is the best so far
-        if is_converged and cost_i < best_cost:
-            best_cost = cost_i
-            best_flip_ratio = flip_ratio_val
-            converged = True
+        # If we have previous results to compare with
+        if len(radii_history) > 1:
+            prev_radii = radii_history[-2]
+
+            # Compare with previous results
+            is_converged, metrics1, metrics2, max_energy_diff = compare_energies_unstruct_mpm(
+                profile1=profile,
+                nx1=nx,
+                n_part1=n_part,
+                cfl1=cfl,
+                radii1=prev_radii,
+                profile2=profile,
+                nx2=nx,
+                n_part2=n_part,
+                cfl2=cfl,
+                radii2=current_radii,
+                case1=case,
+                case2=case,
+                energy_tolerance=energy_tolerance,
+                var_threshold=var_threshold
+            )
+
+            if is_converged:
+                print(f"Convergence achieved between radii {prev_radii} and {current_radii}")
+                best_radii = radii_history[-1]  # The current radii that converged
+                converged = True
+                break
+            else:
+                print(f"No convergence between radii {prev_radii} and {current_radii}")
 
     if converged:
-        print(f"\nOptimal flip_ratio found: {best_flip_ratio} (cost: {best_cost})")
+        print(f"\nConvergent radii found: {best_radii}")
     else:
-        print(f"\nNo convergence achieved for any flip_ratio value")
+        print(f"\nNo convergence achieved within {len(radii_values)} radii values")
 
-    return converged, best_flip_ratio, cost_history, param_history
+    return converged, best_radii, cost_history, param_history
 
 
 if __name__ == "__main__":
@@ -221,17 +249,18 @@ if __name__ == "__main__":
     nx_values = [10, 20, 30, 40]  # exact_values from config
     n_part = 2
     cfl = 0.001
-    flip_ratio = 0.95
+    radii = 1.5
     energy_tolerance = 1e-6
-
+    var_threshold = 0.01
     # Test nx convergence
     converged, best_nx, cost_history, param_history = find_convergent_nx(
         profile=profile,
         nx_values=nx_values,
         n_part=n_part,
         cfl=cfl,
-        flip_ratio=flip_ratio,
-        energy_tolerance=energy_tolerance
+        radii=radii,
+        energy_tolerance=energy_tolerance,
+        var_threshold=var_threshold
     )
     
     print(f"NX convergence test: {converged}, best_nx: {best_nx}")

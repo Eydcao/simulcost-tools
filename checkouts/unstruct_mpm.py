@@ -21,7 +21,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from checkouts.config_utils import load_config, build_target_configs
 from dummy_sols.unstruct_mpm import (
-    find_convergent_nx, find_convergent_n_part, find_convergent_cfl, find_optimal_flip_ratio
+    find_convergent_nx, find_convergent_n_part, find_convergent_cfl, find_convergent_radii
 )
 import yaml
 
@@ -163,13 +163,13 @@ def plot_statistics(statistics, output_dir):
         )
         color_idx += 1
 
-    if statistics["optimal_flip_ratio_values"]:
-        flip_ratio_values, flip_ratio_counts = np.unique(list(statistics["optimal_flip_ratio_values"]), return_counts=True)
+    if statistics["optimal_radii_values"]:
+        radii_values, radii_counts = np.unique(list(statistics["optimal_radii_values"]), return_counts=True)
         ax.bar(
-            [f"{f:.3f}" for f in flip_ratio_values],
-            flip_ratio_counts,
+            [f"{r:.3f}" for r in radii_values],
+            radii_counts,
             alpha=0.7,
-            label="flip_ratio parameter",
+            label="radii parameter",
             color=colors[color_idx % len(colors)],
         )
 
@@ -245,11 +245,11 @@ def plot_statistics(statistics, output_dir):
             for cfl, count in zip(cfl_values, cfl_counts):
                 f.write(f"     cfl={cfl:.4f}: {count} times\n")
 
-        if statistics["optimal_flip_ratio_values"]:
-            flip_ratio_values, flip_ratio_counts = np.unique(list(statistics["optimal_flip_ratio_values"]), return_counts=True)
-            f.write("   flip_ratio parameter (0-shot):\n")
-            for flip_ratio, count in zip(flip_ratio_values, flip_ratio_counts):
-                f.write(f"     flip_ratio={flip_ratio:.3f}: {count} times\n")
+        if statistics["optimal_radii_values"]:
+            radii_values, radii_counts = np.unique(list(statistics["optimal_radii_values"]), return_counts=True)
+            f.write("   radii parameter (0-shot):\n")
+            for radii, count in zip(radii_values, radii_counts):
+                f.write(f"     radii={radii:.3f}: {count} times\n")
 
 
 def main():
@@ -265,9 +265,10 @@ def main():
     precision_configs = {}
     for name, info in config["precision_levels"].items():
         # Only process precision levels with numeric values (skip placeholders)
-        if isinstance(info["energy_tolerance"], (int, float)):
+        if isinstance(info["energy_tolerance"], (int, float)) and isinstance(info["var_threshold"], (int, float)):
             precision_configs[name] = {
                 "energy_tolerance": info["energy_tolerance"],
+                "var_threshold": info["var_threshold"],
             }
 
     profiles = config["profiles"]["active_profiles"]
@@ -293,7 +294,7 @@ def main():
         "optimal_nx_values": [],
         "optimal_n_part_values": [],
         "optimal_cfl_values": [],
-        "optimal_flip_ratio_values": [],
+        "optimal_radii_values": [],
     }
 
     # Initialize task collection for datasets
@@ -332,8 +333,9 @@ def main():
                             nx_values=target_config["exact_values"],
                             n_part=task_params["n_part"],
                             cfl=task_params["cfl"],
-                            flip_ratio=task_params["flip_ratio"],
+                            radii=task_params["radii"],
                             energy_tolerance=precision_vals["energy_tolerance"],
+                            var_threshold=precision_vals["var_threshold"],
                             case=case
                         )
                         if best_param is not None:
@@ -345,8 +347,9 @@ def main():
                             nx=task_params["nx"],
                             n_part=target_config["initial_value"],
                             cfl=task_params["cfl"],
-                            flip_ratio=task_params["flip_ratio"],
+                            radii=task_params["radii"],
                             energy_tolerance=precision_vals["energy_tolerance"],
+                            var_threshold=precision_vals["var_threshold"],
                             multiplication_factor=target_config["multiplication_factor"],
                             max_iteration_num=target_config["max_iteration_num"],
                             case=case
@@ -360,8 +363,9 @@ def main():
                             nx=task_params["nx"],
                             n_part=task_params["n_part"],
                             cfl=target_config["initial_value"],
-                            flip_ratio=task_params["flip_ratio"],
+                            radii=task_params["radii"],
                             energy_tolerance=precision_vals["energy_tolerance"],
+                            var_threshold=precision_vals["var_threshold"],
                             multiplication_factor=target_config["multiplication_factor"],
                             max_iteration_num=target_config["max_iteration_num"],
                             case=case
@@ -369,14 +373,15 @@ def main():
                         if best_param is not None:
                             statistics["optimal_cfl_values"].append(best_param)
 
-                    elif target_param == "flip_ratio":
-                        is_converged, best_param, cost_history, param_history = find_optimal_flip_ratio(
+                    elif target_param == "radii":
+                        is_converged, best_param, cost_history, param_history = find_convergent_radii(
                             profile=profile,
                             nx=task_params["nx"],
                             n_part=task_params["n_part"],
                             cfl=task_params["cfl"],
-                            flip_ratio=target_config.get("initial_value", 0.95),
+                            radii=target_config.get("initial_value", 1.5),
                             energy_tolerance=precision_vals["energy_tolerance"],
+                            var_threshold=precision_vals["var_threshold"],
                             search_range_min=target_config["search_range"][0],
                             search_range_max=target_config["search_range"][1],
                             search_range_slice_num=target_config["search_range_slice_num"],
@@ -385,7 +390,7 @@ def main():
                             case=case
                         )
                         if best_param is not None:
-                            statistics["optimal_flip_ratio_values"].append(best_param)
+                            statistics["optimal_radii_values"].append(best_param)
 
                     # Create task record for dataset
                     task_record = {
@@ -393,7 +398,8 @@ def main():
                         "target_parameter": target_param,
                         "profile": profile,
                         "precision_config": {
-                            "energy_tolerance": precision_vals["energy_tolerance"]
+                            "energy_tolerance": precision_vals["energy_tolerance"],
+                            "var_threshold": precision_vals["var_threshold"]
                         },
                         "target_config": {
                             "initial_value": target_config.get("initial_value"),

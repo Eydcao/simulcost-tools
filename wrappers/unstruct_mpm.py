@@ -25,10 +25,10 @@ def format_param_for_path(value):
         return str(value)
 
 
-def run_sim_unstruct_mpm(profile, nx, n_part, cfl, flip_ratio, case="cantilever"):
+def run_sim_unstruct_mpm(profile, nx, n_part, cfl, radii, case="cantilever"):
     """Run the unstruct_mpm simulation with the given parameters if not already simulated."""
     # Create directory path based on parameters (matching solver format)
-    dir_path = f"sim_res/unstruct_mpm/{profile}_nx{format_param_for_path(nx)}_npart{n_part}_cfl{format_param_for_path(cfl)}_flipratio{format_param_for_path(flip_ratio)}/"
+    dir_path = f"sim_res/unstruct_mpm/{profile}_nx{format_param_for_path(nx)}_npart{n_part}_cfl{format_param_for_path(cfl)}_radii{format_param_for_path(radii)}/"
     meta_path = os.path.join(dir_path, "meta.json")
 
     # Check if the simulation has already been run
@@ -40,8 +40,8 @@ def run_sim_unstruct_mpm(profile, nx, n_part, cfl, flip_ratio, case="cantilever"
                 return meta["cost"], meta["is_converged"]
 
     # Run the simulation if not already done
-    print(f"Running new simulation with parameters: nx={nx}, n_part={n_part}, cfl={cfl}, flip_ratio={flip_ratio}, case={case}")
-    cmd = f"python runners/unstruct_mpm.py --config-name={profile} nx={nx} n_part={n_part} cfl={cfl} flip_ratio={flip_ratio} case={case}"
+    print(f"Running new simulation with parameters: nx={nx}, n_part={n_part}, cfl={cfl}, radii={radii}, case={case}")
+    cmd = f"python runners/unstruct_mpm.py --config-name={profile} nx={nx} n_part={n_part} cfl={cfl} radii={radii} case={case}"
     subprocess.run(cmd, shell=True, check=True)
 
     # Load the cost and convergence status from the meta.json file
@@ -53,15 +53,15 @@ def run_sim_unstruct_mpm(profile, nx, n_part, cfl, flip_ratio, case="cantilever"
     return cost, is_converged
 
 
-def get_energies_unstruct_mpm(profile, nx, n_part, cfl, flip_ratio, case="cantilever"):
+def get_energies_unstruct_mpm(profile, nx, n_part, cfl, radii, case="cantilever"):
     """Load energies data for a given parameter set, triggering a simulation if results are missing."""
-    dir_path = f"sim_res/unstruct_mpm/{profile}_nx{format_param_for_path(nx)}_npart{n_part}_cfl{format_param_for_path(cfl)}_flipratio{format_param_for_path(flip_ratio)}/"
+    dir_path = f"sim_res/unstruct_mpm/{profile}_nx{format_param_for_path(nx)}_npart{n_part}_cfl{format_param_for_path(cfl)}_radii{format_param_for_path(radii)}/"
     energies_path = os.path.join(dir_path, "energies.npz")
 
     # Check if energies file exists, otherwise trigger a simulation
     if not os.path.exists(energies_path):
-        print(f"No energies found for parameters: nx={nx}, n_part={n_part}, cfl={cfl}, flip_ratio={flip_ratio}. Triggering simulation.")
-        run_sim_unstruct_mpm(profile=profile, nx=nx, n_part=n_part, cfl=cfl, flip_ratio=flip_ratio, case=case)
+        print(f"No energies found for parameters: nx={nx}, n_part={n_part}, cfl={cfl}, radii={radii}. Triggering simulation.")
+        run_sim_unstruct_mpm(profile=profile, nx=nx, n_part=n_part, cfl=cfl, radii=radii, case=case)
 
     # Load energies data
     energies_data = np.load(energies_path)
@@ -72,10 +72,10 @@ def get_energies_unstruct_mpm(profile, nx, n_part, cfl, flip_ratio, case="cantil
     return return_dict
 
 
-def compare_energies_unstruct_mpm(profile1, nx1, n_part1, cfl1, flip_ratio1, 
-                                  profile2, nx2, n_part2, cfl2, flip_ratio2, 
+def compare_energies_unstruct_mpm(profile1, nx1, n_part1, cfl1, radii1, 
+                                  profile2, nx2, n_part2, cfl2, radii2, 
                                   case1="cantilever", case2="cantilever", 
-                                  energy_tolerance=1e-6):
+                                  energy_tolerance=1e-6, var_threshold=0.01):
     """Compare energies between two unstruct_mpm simulations.
     
     Args:
@@ -83,7 +83,7 @@ def compare_energies_unstruct_mpm(profile1, nx1, n_part1, cfl1, flip_ratio1,
         nx1, nx2: Grid resolution parameters
         n_part1, n_part2: Number of particles per cell
         cfl1, cfl2: CFL numbers
-        flip_ratio1, flip_ratio2: FLIP ratios
+        radii1, radii2: Radii parameters
         case1, case2: Simulation cases
         energy_tolerance: Tolerance for energy comparison
         
@@ -94,16 +94,16 @@ def compare_energies_unstruct_mpm(profile1, nx1, n_part1, cfl1, flip_ratio1,
         avg_energy_diff (float): Average relative energy difference
     """
     # Load energies for both cases
-    energies1 = get_energies_unstruct_mpm(profile1, nx1, n_part1, cfl1, flip_ratio1, case1)
-    energies2 = get_energies_unstruct_mpm(profile2, nx2, n_part2, cfl2, flip_ratio2, case2)
+    energies1 = get_energies_unstruct_mpm(profile1, nx1, n_part1, cfl1, radii1, case1)
+    energies2 = get_energies_unstruct_mpm(profile2, nx2, n_part2, cfl2, radii2, case2)
     
     if energies1 is None or energies2 is None:
         print("Failed to load energies for one or both cases")
         return False, None, None, float('inf')
     
     # Check if simulation failed by checking meta.json
-    dir1 = f"sim_res/unstruct_mpm/{profile1}_nx{format_param_for_path(nx1)}_npart{n_part1}_cfl{format_param_for_path(cfl1)}_flipratio{format_param_for_path(flip_ratio1)}/"
-    dir2 = f"sim_res/unstruct_mpm/{profile2}_nx{format_param_for_path(nx2)}_npart{n_part2}_cfl{format_param_for_path(cfl2)}_flipratio{format_param_for_path(flip_ratio2)}/"
+    dir1 = f"sim_res/unstruct_mpm/{profile1}_nx{format_param_for_path(nx1)}_npart{n_part1}_cfl{format_param_for_path(cfl1)}_radii{format_param_for_path(radii1)}/"
+    dir2 = f"sim_res/unstruct_mpm/{profile2}_nx{format_param_for_path(nx2)}_npart{n_part2}_cfl{format_param_for_path(cfl2)}_radii{format_param_for_path(radii2)}/"
     
     meta1_path = os.path.join(dir1, "meta.json")
     meta2_path = os.path.join(dir2, "meta.json")
@@ -113,14 +113,14 @@ def compare_energies_unstruct_mpm(profile1, nx1, n_part1, cfl1, flip_ratio1,
         with open(meta1_path, "r") as f:
             meta1 = json.load(f)
             if not meta1.get("is_converged", False):
-                print(f"Simulation 1 failed: {profile1}_nx{nx1}_npart{n_part1}_cfl{cfl1}_flipratio{flip_ratio1}")
+                print(f"Simulation 1 failed: {profile1}_nx{nx1}_npart{n_part1}_cfl{cfl1}_radii{radii1}")
                 return False, None, None, float('inf')
     
     if os.path.exists(meta2_path):
         with open(meta2_path, "r") as f:
             meta2 = json.load(f)
             if not meta2.get("is_converged", False):
-                print(f"Simulation 2 failed: {profile2}_nx{nx2}_npart{n_part2}_cfl{cfl2}_flipratio{flip_ratio2}")
+                print(f"Simulation 2 failed: {profile2}_nx{nx2}_npart{n_part2}_cfl{cfl2}_radii{radii2}")
                 return False, None, None, float('inf')
     
     # Compare energies
@@ -151,20 +151,20 @@ def compare_energies_unstruct_mpm(profile1, nx1, n_part1, cfl1, flip_ratio1,
     avg_energy_diff = np.mean(all_relative_diffs) if all_relative_diffs else float('inf')
     
     # Compute metrics for both cases
-    metrics1 = compute_energy_metrics(energies1)
-    metrics2 = compute_energy_metrics(energies2)
+    metrics1 = compute_energy_metrics(energies1, var_threshold)
+    metrics2 = compute_energy_metrics(energies2, var_threshold)
     
     # Check convergence
-    converged = avg_energy_diff < energy_tolerance
+    converged = avg_energy_diff < energy_tolerance and metrics1["energy_conserved"] and metrics2["energy_conserved"]
     
-    print(f"Average relative energy difference: {avg_energy_diff:.2e}")
-    print(f"Energy tolerance: {energy_tolerance:.2e}")
+    print(f"Average relative energy difference: {avg_energy_diff:.2e}, variance: {metrics1['energy_variation']:.2e}")
+    print(f"Energy tolerance: {energy_tolerance:.2e}, var_threshold: {var_threshold:.2e}")
     print(f"Converged: {converged}")
     
     return converged, metrics1, metrics2, avg_energy_diff
 
 
-def compute_energy_metrics(energies):
+def compute_energy_metrics(energies, var_threshold):
     """Compute energy conservation metrics."""
     if energies is None:
         return None
@@ -177,7 +177,7 @@ def compute_energy_metrics(energies):
         if len(tot_energy) > 1:
             # Energy conservation: total energy should be relatively constant
             energy_variation = np.std(tot_energy) / (np.mean(np.abs(tot_energy)) + 1e-12)
-            metrics["energy_conserved"] = energy_variation < 0.01  # 1% variation threshold
+            metrics["energy_conserved"] = energy_variation < var_threshold  # 1% variation threshold
             metrics["energy_variation"] = energy_variation
         else:
             metrics["energy_conserved"] = True
@@ -215,12 +215,12 @@ if __name__ == "__main__":
     nx = 20
     n_part = 2
     cfl = 0.001
-    flip_ratio = 0.95
+    radii = 1.5
     
-    cost, converged = run_sim_unstruct_mpm(profile, nx, n_part, cfl, flip_ratio)
+    cost, converged = run_sim_unstruct_mpm(profile, nx, n_part, cfl, radii)
     print(f"Simulation cost: {cost}, Converged: {converged}")
     
-    energies = get_energies_unstruct_mpm(profile, nx, n_part, cfl, flip_ratio)
+    energies = get_energies_unstruct_mpm(profile, nx, n_part, cfl, radii)
     if energies:
         print(f"Energies loaded: {list(energies.keys())}")
         print(f"Total energy shape: {energies['tot'].shape}")

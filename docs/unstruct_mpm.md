@@ -70,7 +70,7 @@ The solver supports three different simulation cases (profiles):
    - End time: 3.0 seconds
    - Tests impact dynamics
 
-The simulated results are considered correct if they meet the precision-dependent energy tolerance (high: 0.001, medium: 0.05, low: 0.3) and satisfy convergence criteria:
+The simulated results are considered correct if they meet the precision-dependent energy tolerance and satisfy convergence criteria:
 
 1. **Energy conservation**: Total energy should be conserved within tolerance
 2. **Momentum conservation**: Linear and angular momentum should be conserved
@@ -83,40 +83,42 @@ The simulated results are considered correct if they meet the precision-dependen
 1. **nx Grid Resolution Search (0-shot)**
    - nx controls the background grid resolution: $\Delta x = L / nx$ where $L$ is domain length
    - Higher resolution improves accuracy but increases computational cost
-   - **Exact values**: [10, 20, 30, 40]
+   - **Exact values**: [20, 40, 80, 100, 120]
 
 2. **n_part Particle Density Search (iterative+0-shot)**
    - n_part controls the number of particles per grid cell
    - More particles improve material representation but increase computational cost
+   - **Initial value**: 1, **Multiplication factor**: 2.0, **Max iterations**: 5
 
 3. **CFL Stability Search (iterative+0-shot)**
    - CFL number controls time step size for temporal stability
    - **CRITICAL**: CFL should ALWAYS be less than 0.01 to avoid divergence
+   - **Initial value**: 0.01, **Multiplication factor**: 0.5, **Max iterations**: 5
    - Smaller CFL improves stability but increases simulation time
 
-4. **flip_ratio Optimization (0-shot)**
-   - flip_ratio controls the blending between PIC and FLIP methods
-   - Range: [0.95, 1.0] with 5 equally spaced values
-   - Higher values reduce numerical diffusion but may cause instability
+4. **radii Optimization (0-shot)**
+   - radii controls the support radius for particle interactions
+   - **Range**: [1.3, 2.0] with 8 equally spaced values
+   - Affects particle neighbor search and interaction strength
 
 ### Dummy Strategy
 
 1. **nx Grid Resolution Search (0-shot)**
-   - Test exact values [10, 20, 30, 40] to find optimal resolution
-   - **Non-target parameters**: n_part∈{2,4}, cfl=0.001, flip_ratio∈{0.95,1.0}
+   - Test exact values [20, 40, 80, 100, 120] to find optimal resolution
+   - **Non-target parameters**: n_part∈{2,4}, cfl=0.001, radii∈{1.5,2.0}
 
 2. **n_part Particle Density Search (iterative+0-shot)**
    - Double n_part each iteration (multiplication factor: 2) starting from 1 until convergence
-   - **Non-target parameters**: nx∈{15,30}, cfl=0.001, flip_ratio∈{0.95,1.0}
+   - **Non-target parameters**: nx∈{50,100}, cfl=0.001, radii∈{1.5,2.0}
 
 3. **CFL Stability Search (iterative+0-shot)**
    - Halve CFL each iteration (multiplication factor: 0.5) starting from 0.01 until convergence
-   - **Non-target parameters**: nx∈{15,30}, n_part∈{2,4}, flip_ratio∈{0.95,1.0}
+   - **Non-target parameters**: nx∈{50,100}, n_part∈{2,4}, radii∈{1.5,2.0}
    - **WARNING**: CFL must be less than 0.01 to avoid divergence
 
-4. **flip_ratio Optimization (0-shot)**
-   - Grid search over flip_ratio∈{0.95,0.96,0.97,0.98,0.99,1.0} to find optimal value
-   - **Non-target parameters**: nx∈{15,30}, n_part∈{2,4}, cfl=0.001
+4. **radii Optimization (0-shot)**
+   - Grid search over radii∈[1.3, 2.0] with 8 equally spaced values to find optimal value
+   - **Non-target parameters**: nx∈{50,100}, n_part∈{2,4}, cfl=0.001
 
 ## Summarized parameter table for developer only (Not LLM)
 
@@ -124,17 +126,17 @@ The simulated results are considered correct if they meet the precision-dependen
 
 | Parameter | Description | Range |
 |-----------|-------------|-------|
-| nx | Background grid resolution (cells per unit length) | 10 ≤ nx ≤ 40 |
+| nx | Background grid resolution (cells per unit length) | 20 ≤ nx ≤ 120 |
 | n_part | Number of particles per grid cell | 1 ≤ n_part ≤ 32 |
 | cfl | Courant-Friedrichs-Lewy number for temporal stability | 0 < cfl < 0.01 |
-| flip_ratio | Blending parameter between PIC and FLIP methods | 0.95 ≤ flip_ratio ≤ 1.0 |
+| radii | Support radius for particle interactions | 1.3 ≤ radii ≤ 2.0 |
 
 More Notes:
 
 - **nx**: Determines spatial resolution; higher values improve accuracy but increase computational cost quadratically
 - **n_part**: Controls material representation; more particles improve accuracy but increase memory and computation
 - **cfl**: **CRITICAL** - Must be less than 0.01 to avoid numerical divergence; smaller values improve stability
-- **flip_ratio**: Controls numerical diffusion; higher values reduce diffusion but may cause instability
+- **radii**: Controls particle interaction range; affects neighbor search and interaction strength
 
 ### Other
 
@@ -142,7 +144,8 @@ More Notes:
 |-----------|-------------|---------------|
 | case | Simulation case type | "cantilever" |
 | advect_scheme | Advection scheme type | 0 |
-| device | Computing device | "cpu" |
+| flip_ratio | Blending parameter between PIC and FLIP methods | 1.0 |
+| device | Computing device | "gpu" |
 | verbose | Enable verbose output | 0 |
 | dump_dir | Directory for output files | "sim_res/unstruct_mpm/p1" |
 
@@ -154,8 +157,8 @@ More Notes:
   - **p1**: Cantilever beam simulation - beam bending under gravity
   - **p2**: Vibration bar simulation - elastic wave propagation
   - **p3**: Disk collision simulation - impact dynamics
-- **Target Parameters**: 4 (nx, n_part, cfl, flip_ratio)
-- **Precision Levels**: 3 (high: 0.001, medium: 0.05, low: 0.3)
+- **Target Parameters**: 4 (nx, n_part, cfl, radii)
+- **Precision Levels**: 3 (high: 0.01, medium: 0.08, low: 0.3)
 
 ### Task Distribution
 
@@ -164,7 +167,7 @@ Current configuration generates:
 - **nx** (0-shot): 3 profiles × 20 non-target combos = 60 tasks
 - **n_part** (iterative+0-shot): 3 profiles × 20 non-target combos = 60 tasks
 - **cfl** (iterative+0-shot): 3 profiles × 20 non-target combos = 60 tasks
-- **flip_ratio** (0-shot): 3 profiles × 20 non-target combos = 60 tasks
+- **radii** (0-shot): 3 profiles × 20 non-target combos = 60 tasks
 - **Total per precision**: 240 tasks
 - **Total tasks**: 720 tasks (across 3 precision levels)
 
@@ -181,7 +184,13 @@ The computational cost is tracked as:
 - **Communication cost**: $\sum_{each\_part} neighbor\_communication$ (inter-particle interactions)
 - **Total cost**: $n_{part} + \sum_{each\_part} neighbor\_communication$
 
-This provides a measure of computational work that scales with both particle density and inter-particle communication requirements.
+This provides a measure of computational work that scales with both particle density and inter-particle communication requirements. The cost calculation includes:
+
+1. **Particle density cost**: Scales linearly with the number of particles per cell
+2. **Neighbor communication cost**: Accounts for the computational overhead of particle-particle interactions within the support radius
+3. **Spatial hash cost**: Includes the cost of spatial hashing for efficient neighbor search
+
+The total cost provides a comprehensive measure of computational complexity that reflects both the discretization density and the interaction complexity in the unstructured MPM method.
 
 ## Important Notes for LLM Developers
 
