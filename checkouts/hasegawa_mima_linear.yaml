@@ -52,13 +52,11 @@ target_parameters:
   cg_atol:
     description: "Conjugate Gradient solver absolute tolerance - controls linear solver accuracy"
     search_type: "0-shot"
-    search_range: [1e-8, 1e-3]
-    search_range_slice_num: 4  # 4 logarithmically spaced values (reduced from 6)
-    multiplication_factor: 2  # For internal N search
-    max_iteration_num: 3       # For internal N search (reduced from 5)
+    search_range: [1e-6, 1e-2]  # Updated range based on sensitivity analysis
+    search_range_slice_num: 4    # 4 logarithmically spaced values
     non_target_parameters:
-      N: 128      # Fixed moderate resolution
-      dt: [5.0, 10.0, 20.0]  # Avoid dt=1.0 which causes very slow simulations
+      N: [64, 128, 256]        # Test across different resolutions
+      dt: [5.0, 10.0, 20.0]    # Avoid dt=1.0 which causes very slow simulations
 
 # Profile definitions for different simulation scenarios
 profile_definitions:

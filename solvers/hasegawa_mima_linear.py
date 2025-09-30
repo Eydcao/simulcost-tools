@@ -178,7 +178,9 @@ class HasegawaMimaLinear(SIMULATOR):
             self.A_sparse, q_vec, atol=self.cg_atol, maxiter=self.cg_maxiter, callback=iteration_callback
         )
 
-        print(f"CG solver info: {info}, iterations: {current_iterations}")
+        # Only print CG info if verbose mode is enabled
+        if self.verbose:
+            print(f"CG solver info: {info}, iterations: {current_iterations}")
 
         # Store residual trajectory if tracking
         if track_residuals and residual_trajectory:
@@ -402,8 +404,9 @@ class HasegawaMimaLinear(SIMULATOR):
         except Exception as e:
             print(f"Warning: spectrum plotting failed: {e}")
 
-            method_name = "Analytical" if self.analytical else "Numerical"
-            print(f"Frame {self.record_frame}: t={self.current_time:.3f}, error={error:.6e}")
+            if self.verbose:
+                # method_name = "Analytical" if self.analytical else "Numerical"
+                print(f"Frame {self.record_frame}: t={self.current_time:.3f}, error={error:.6e}")
 
     def post_process(self):
         """Post-processing: save metadata"""

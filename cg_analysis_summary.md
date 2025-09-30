@@ -125,31 +125,43 @@ For large systems (N≥256), consider:
 
 ### For `dummy_sols/hasegawa_mima_linear.py`
 
-1. **Update `find_optimal_cg_atol()`**:
-   - Use resolution-dependent search ranges
-   - Reduce search points for N≥256 (diminishing returns)
+**✅ IMPLEMENTED: Updated `find_optimal_cg_atol()`**:
+1. **CHANGED**: Now uses fixed N and dt parameters (0-shot search)
+2. **REMOVED**: Inner N search loop (was causing nested optimization)
+3. **IMPROVED**: Direct cost comparison across cg_atol values
+4. **SIMPLIFIED**: Returns single optimal cg_atol instead of (cg_atol, N) tuple
 
-2. **Update convergence checking**:
-   - Consider iteration count limits in addition to error tolerance
-   - Account for cost scaling in optimization decisions
+**Function signature changes**:
+```python
+# OLD (nested search)
+find_optimal_cg_atol(profile, N, dt, tolerance_rmse, search_range_min,
+                    search_range_max, search_range_slice_num,
+                    multiplication_factor, max_iteration_num)
 
-3. **Add early stopping**:
-   - Detect when further cg_atol refinement provides <5% cost benefit
+# NEW (fixed parameters)
+find_optimal_cg_atol(profile, N, dt, tolerance_rmse, search_range_min,
+                    search_range_max, search_range_slice_num)
+```
 
 ### For `checkouts/hasegawa_mima_linear.yaml`
 
+**✅ IMPLEMENTED: Updated configuration**:
 ```yaml
 target_parameters:
   cg_atol:
-    search_range_by_resolution:
-      N_64: [1e-5, 1e-2]
-      N_128: [1e-5, 1e-2]
-      N_256: [1e-4, 1e-2]
-    slice_num_by_resolution:
-      N_64: 4
-      N_128: 4
-      N_256: 3  # Fewer points due to lower sensitivity
+    description: "Conjugate Gradient solver absolute tolerance - controls linear solver accuracy"
+    search_type: "0-shot"
+    search_range: [1e-6, 1e-2]  # Updated range based on sensitivity analysis
+    search_range_slice_num: 4    # 4 logarithmically spaced values
+    non_target_parameters:
+      N: [64, 128, 256]        # Test across different resolutions
+      dt: [5.0, 10.0, 20.0]    # Multiple time step sizes
 ```
+
+**Key changes**:
+- **Removed**: `multiplication_factor` and `max_iteration_num` (no longer needed)
+- **Updated**: Search range from `[1e-8, 1e-3]` to `[1e-6, 1e-2]`
+- **Added**: Multiple N values to test resolution sensitivity
 
 ## Conclusion
 

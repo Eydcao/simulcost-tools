@@ -164,96 +164,114 @@ def find_convergent_dt(profile, N, dt, cg_atol, tolerance_rmse, multiplication_f
     return bool(converged), best_dt, cost_history, param_history
 
 def find_optimal_cg_atol(profile, N, dt, tolerance_rmse, search_range_min, search_range_max,
-                        search_range_slice_num, multiplication_factor, max_iteration_num):
+                        search_range_slice_num):
     """
     Grid search over cg_atol in log space for optimal CG solver tolerance.
-    For each cg_atol, iterate N until spatial convergence is achieved.
+    Uses fixed N and dt parameters (0-shot optimization).
 
     Returns:
         is_converged_optimal: Whether optimal cg_atol achieved convergence
-        optimal_param: (optimal_cg_atol, optimal_N) or (None, None)
+        optimal_param: optimal_cg_atol or None
         optimal_cost_history: Cost history for optimal cg_atol
         optimal_param_history: Parameter history for optimal cg_atol
     """
     # Generate logarithmically spaced cg_atol values
     cg_atol_values = np.logspace(np.log10(search_range_min), np.log10(search_range_max), search_range_slice_num)
-    # Reserve the values bc we start from the most relaxed (largest) cg_atol
+    # Start from the most relaxed (largest) cg_atol for efficiency
     cg_atol_values = cg_atol_values[::-1]
-    # print(f"Testing cg_atol values: {cg_atol_values}")
-    # exit()
 
-    best_cg_atol = None
-    best_N = None
-    best_cost_history = None
-    best_param_history = None
-    converged_any = False
+    param_history = []
+    cg_atol_results = []  # Save key info for each cg_atol when converged
 
     for cg_atol in cg_atol_values:
         print(f"\n=== Testing cg_atol = {cg_atol:.2e} ===")
 
-        # For each cg_atol, try to find convergent N
-        is_converged, convergent_N, cost_history, param_history = find_convergent_N(
-            profile=profile,
-            N=N,
-            dt=dt,
-            cg_atol=cg_atol,
-            tolerance_rmse=tolerance_rmse,
-            multiplication_factor=multiplication_factor,
-            max_iteration_num=max_iteration_num
-        )
+        # Run single simulation with fixed parameters
+        print(f"Running simulation with N = {N}, dt = {dt}, cg_atol = {cg_atol}")
 
-        if is_converged:
-            print(f"Found convergent solution for cg_atol = {cg_atol:.2e}, N = {convergent_N}")
-            best_cg_atol = cg_atol
-            best_N = convergent_N
-            best_cost_history = cost_history
-            best_param_history = param_history
-            converged_any = True
-            break  # Take the first (most relaxed) cg_atol that works
+        # Run simulation
+        cost = run_sim_hasegawa_mima_linear(profile=profile, N=N, dt=dt, cg_atol=cg_atol, analytical=False)
+
+        # Record parameter combination
+        param_entry = {"N": N, "dt": dt, "cg_atol": cg_atol}
+        param_history.append(param_entry)
+
+        # Get error metric
+        method_suffix = "_numerical"
+        sim_dir = f"sim_res/hasegawa_mima_linear/{profile}_N_{N}_dt_{dt:.2e}_cg_{cg_atol:.2e}" + method_suffix
+        error = get_error_metric(sim_dir)
+
+        if error is not None and error <= tolerance_rmse:
+            print(f"Convergence achieved with cg_atol = {cg_atol:.2e}, error = {error:.6e}")
+
+            # Store this result
+            cg_atol_results.append({
+                "cg_atol": cg_atol,
+                "cost": cost,
+                "error": error,
+                "converged": True
+            })
         else:
-            print(f"No convergent solution found for cg_atol = {cg_atol:.2e}")
+            print(f"No convergence with cg_atol = {cg_atol:.2e}, error = {error}")
 
-    if converged_any:
-        print(f"\nOptimal cg_atol found: {best_cg_atol:.2e} with N = {best_N}")
+            # Store failed result
+            cg_atol_results.append({
+                "cg_atol": cg_atol,
+                "cost": cost,
+                "error": error,
+                "converged": False
+            })
+
+    # Select convergent solution with minimum cost
+    converged_results = [r for r in cg_atol_results if r["converged"]]
+
+    if converged_results:
+        # Choose the solution with minimum cost among converged ones
+        min_cost_idx = int(np.argmin([r["cost"] for r in converged_results]))
+        opt_rec = converged_results[min_cost_idx]
+
+        optimal_cg_atol = opt_rec["cg_atol"]
+        optimal_cost_history = [opt_rec["cost"]]  # Single cost since no iteration
+        is_converged_optimal = True
+
+        print(f"\nOptimal cg_atol found: {optimal_cg_atol:.2e}")
+        print(f"Cost: {opt_rec['cost']}, Error: {opt_rec['error']:.2e}")
     else:
+        optimal_cg_atol = None
+        optimal_cost_history = None
+        is_converged_optimal = False
         print("\nNo convergent cg_atol found in the search range")
 
-    optimal_param = (best_cg_atol, best_N) if converged_any else (None, None)
-
-    return converged_any, optimal_param, best_cost_history, best_param_history
+    return is_converged_optimal, optimal_cg_atol, optimal_cost_history, param_history
 
 
 def main():
     profile = "p1"
-    N = 64
+    N = 128
     dt = 1.0e1
     tolerance_rmse = 0.001
-    search_range_min = 1e-8
-    search_range_max = 1e0
-    search_range_slice_num = 9
-    multiplication_factor = 2
-    max_iteration_num = 3
+    search_range_min = 1e-6
+    search_range_max = 1e-2
+    search_range_slice_num = 5
 
-    print("Starting temp test of find_optimal_cg_atol with parameters:")
+    print("Starting test of find_optimal_cg_atol with parameters:")
     print(f"profile={profile}, N={N}, dt={dt:.2e}, tolerance_rmse={tolerance_rmse}")
     print(f"cg_atol range: {search_range_min:.0e} -> {search_range_max:.0e}, slices={search_range_slice_num}")
-    print(f"multiplication_factor={multiplication_factor}, max_iteration_num={max_iteration_num}")
+    print("Fixed N and dt (0-shot optimization for cg_atol)")
 
-    converged, optimal_param, cost_history, param_history = find_optimal_cg_atol(
+    converged, optimal_cg_atol, cost_history, param_history = find_optimal_cg_atol(
         profile=profile,
         N=N,
         dt=dt,
         tolerance_rmse=tolerance_rmse,
         search_range_min=search_range_min,
         search_range_max=search_range_max,
-        search_range_slice_num=search_range_slice_num,
-        multiplication_factor=multiplication_factor,
-        max_iteration_num=max_iteration_num
+        search_range_slice_num=search_range_slice_num
     )
 
     print("\nTest result:")
     print(f"converged: {converged}")
-    print(f"optimal_param (cg_atol, N): {optimal_param}")
+    print(f"optimal_cg_atol: {optimal_cg_atol}")
     print(f"cost_history: {cost_history}")
     print(f"param_history: {param_history}")
 

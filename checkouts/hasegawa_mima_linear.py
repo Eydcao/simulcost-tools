@@ -304,18 +304,16 @@ def main():
                             statistics["optimal_dt_values"].append(best_param)
 
                     elif target_param == "cg_atol":
-                        is_converged, optimal_param, cost_history, param_history = find_optimal_cg_atol(
+                        is_converged, optimal_cg_atol, cost_history, param_history = find_optimal_cg_atol(
                             profile=profile,
                             N=task_params["N"],
                             dt=task_params["dt"],
                             tolerance_rmse=precision_vals["tolerance_rmse"],
-                            search_range_min=target_config.get("search_range", [1e-8, 1e-3])[0],
-                            search_range_max=target_config.get("search_range", [1e-8, 1e-3])[1],
-                            search_range_slice_num=target_config.get("search_range_slice_num", 6),
-                            multiplication_factor=target_config.get("multiplication_factor", 2),
-                            max_iteration_num=target_config.get("max_iteration_num", 5),
+                            search_range_min=target_config.get("search_range", [1e-6, 1e-2])[0],
+                            search_range_max=target_config.get("search_range", [1e-6, 1e-2])[1],
+                            search_range_slice_num=target_config.get("search_range_slice_num", 4)
                         )
-                        best_param = optimal_param[0] if optimal_param[0] is not None else None
+                        best_param = optimal_cg_atol
                         if best_param is not None:
                             statistics["optimal_cg_atol_values"].append(best_param)
 
