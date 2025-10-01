@@ -16,7 +16,7 @@ $$\{\phi, q\} = \frac{\partial \phi}{\partial x}\frac{\partial q}{\partial y} - 
 - $\phi$ = electrostatic potential
 - $q$ = generalized vorticity
 - $\{\phi, q\}$ = Poisson bracket (nonlinear advection term)
-- $v_*$ = diamagnetic drift velocity
+- $v_*$ = diamagnetic drift velocity (fixed at 0.02)
 - Domain is periodic in both x and y directions
 
 ### Time Integration
@@ -70,7 +70,7 @@ The case key in the config file sets different initial conditions:
 5. **gauss_x_sin_y** - Gaussian in x, sinusoidal in y:
    - $\phi_0 = 0.1 \exp\left(-\frac{(x-L/2)^2}{2D_x^2}\right) \sin(0.2y)$
 
-The simulated results are considered correct if the L2 RMSE (comparing with higher resolution) meets the precision-dependent tolerance (low: 0.001, medium: 0.0005, high: 0.0002).
+The simulated results are considered correct if the L2 RMSE (comparing with higher resolution) meets the precision-dependent tolerance (low: 0.0005, medium: 0.0001, high: 0.00001).
 
 ## Parameter Tuning Tasks and Dummy Strategy
 
@@ -85,12 +85,12 @@ The simulated results are considered correct if the L2 RMSE (comparing with high
 ### Dummy Strategy
 
 1. **N Convergence Search (iterative)**
-   - For dummy solution, this means doubling N each iteration (multiplication factor: 2) starting from 64 until convergence
-   - **Non-target parameters**: dt∈{5.0, 10.0, 20.0}
+   - For dummy solution, this means doubling N each iteration (multiplication factor: 2) starting from 32 until convergence
+   - **Non-target parameters**: dt∈{5.0, 10.0, 20.0, 40.0}
 
 2. **dt Convergence Search (iterative)**
-   - For dummy solution, this means halving dt each iteration (multiplication factor: 0.5) starting from 10.0 until convergence
-   - **Non-target parameters**: N∈{128}
+   - For dummy solution, this means halving dt each iteration (multiplication factor: 0.5) starting from 40.0 until convergence
+   - **Non-target parameters**: N∈{32, 64, 128, 256}
 
 ## Summarized parameter table for developer only (Not LLM)
 
@@ -98,16 +98,16 @@ The simulated results are considered correct if the L2 RMSE (comparing with high
 
 | Parameter | Description | Range |
 |-----------|-------------|-------|
-| N | Grid resolution (number of grid points in each direction) | 64 ≤ N ≤ 256 |
-| dt | Time step for RK4 integration | 2.5 ≤ dt ≤ 20.0 |
+| N | Grid resolution (number of grid points in each direction) | 32 ≤ N ≤ 256 |
+| dt | Time step for RK4 integration | 5.0 ≤ dt ≤ 40.0 |
 
 More Notes:
 
 - Smaller N → coarser grid → lower accuracy but lower cost
 - Larger dt → fewer time steps → risk of instability but lower cost
-- Nonlinear solver is more expensive than linear (no analytical solution)
-- N determines spatial resolution: $\Delta x = L / N$ (larger N = finer grid = higher accuracy but higher cost)
-- dealias_ratio fixed at 2/3 for stability
+- Nonlinear solver uses resolution convergence checking (no analytical solution available)
+- N determines spatial resolution: $\Delta x = \Delta y = L / N$ (larger N = finer grid = higher accuracy but higher cost)
+- dealias_ratio fixed at 2/3 for stability (dealiases nonlinear Poisson bracket terms)
 
 ### Other
 
@@ -134,16 +134,16 @@ More Notes:
   - **p4**: sin_x_gauss_y (sinusoidal in x, Gaussian in y)
   - **p5**: gauss_x_sin_y (Gaussian in x, sinusoidal in y)
 - **Target Parameters**: 2 (N, dt)
-- **Precision Levels**: 3 (low: 0.001, medium: 0.0005, high: 0.0002)
+- **Precision Levels**: 3 (low: 0.0005, medium: 0.0001, high: 0.00001)
 
 ### Task Distribution
 
 Current configuration generates:
 
-- **N** (iterative): 5 profiles × 3 non-target combos (3 dt) = 15 tasks
-- **dt** (iterative): 5 profiles × 1 non-target combo (1 N) = 5 tasks
-- **Total per precision**: 20 tasks
-- **Total tasks**: 60 tasks (across 3 precision levels)
+- **N** (iterative): 5 profiles × 4 non-target combos (4 dt values) = 20 tasks
+- **dt** (iterative): 5 profiles × 4 non-target combos (4 N values) = 20 tasks
+- **Total per precision**: 40 tasks
+- **Total tasks**: 120 tasks (across 3 precision levels)
 
 ### Dummy Solution Cache
 

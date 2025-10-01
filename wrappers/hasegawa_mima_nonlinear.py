@@ -3,7 +3,6 @@ import subprocess
 import h5py
 import numpy as np
 import json
-import matplotlib.pyplot as plt
 
 
 def _find_runner_path():
