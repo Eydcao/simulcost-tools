@@ -13,13 +13,13 @@ task_distribution:
 
 precision_levels:
   low:
-    tolerance_rmse: 0.002
+    tolerance_rmse: 0.01
     description: "Relaxed convergence criteria"
   medium:
-    tolerance_rmse: 0.0005
+    tolerance_rmse: 0.001
     description: "Moderate convergence criteria"
   high:
-    tolerance_rmse: 0.0002
+    tolerance_rmse: 0.0005
     description: "Stringent convergence criteria"
 
 profiles:
@@ -36,8 +36,8 @@ target_parameters:
     multiplication_factor: 2
     max_iteration_num: 4  # Limits to N: 32, 64, 128, 256
     non_target_parameters:
-      dt: [5.0, 20.0, 40.0]  # Avoid dt=1.0 which causes very slow simulations
-      cg_atol: [1e-2, 1e-3, 1e-4]  # CG solver tolerance levels
+      dt: [5.0, 10.0, 20.0, 40.0]  # Avoid dt=1.0 which causes very slow simulations
+      cg_atol: [1e0, 1e-1, 1e-2, 1e-3, 1e-4]  # CG solver tolerance levels
 
   dt:
     description: "Time step size - controls temporal accuracy and numerical stability"
@@ -46,8 +46,8 @@ target_parameters:
     multiplication_factor: 0.5
     max_iteration_num: 4  # Limits to dt: 40,20,10,5
     non_target_parameters:
-      N: [32, 128]
-      cg_atol: [1e-2, 1e-3, 1e-4]  # CG solver tolerance levels
+      N: [32, 64, 128,  256]
+      cg_atol: [1e0, 1e-1, 1e-2, 1e-3, 1e-4]  # CG solver tolerance levels
 
   cg_atol:
     description: "Conjugate Gradient solver absolute tolerance - controls linear solver accuracy"
@@ -55,5 +55,5 @@ target_parameters:
     search_range: [1e-4, 1e-0]  # Updated range based on sensitivity analysis
     search_range_slice_num: 5    # 4 logarithmically spaced values
     non_target_parameters:
-      N: [32, 128]
-      dt: [5.0, 20.0, 40.0]
+      N: [32, 64, 128,  256]
+      dt: [5.0, 10.0, 20.0, 40.0]  # Avoid dt=1.0 which causes very slow simulations
