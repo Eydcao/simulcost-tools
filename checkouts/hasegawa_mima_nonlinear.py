@@ -10,6 +10,7 @@ from collections import defaultdict
 # Add paths for imports
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from dummy_sols.hasegawa_mima_nonlinear import generate_dummy_solution
+from checkouts.config_utils import load_config, build_target_configs
 
 
 def save_datasets(successful_tasks, failed_tasks, output_dir):
@@ -205,64 +206,71 @@ def generate_statistics_summary(statistics, output_dir):
 
 def main():
     print("🚀 Starting Hasegawa-Mima Nonlinear Parameter Search Checkout")
+    print("Loading configuration from hasegawa_mima_nonlinear.yaml...")
 
-    # Full configuration with all 5 profiles
-    profiles = ["p1", "p2", "p3", "p4", "p5"]
-    precision_levels = {
-        "low": {"tolerance_rmse": 5e-9},      # Should accept N=32 (RMSE 3.57e-09 < 5e-9)
-        "medium": {"tolerance_rmse": 2e-9},   # Should reject N=32 (RMSE 3.57e-09 > 2e-9), go to N=64
-        "high": {"tolerance_rmse": 1e-12}     # Should reject N=64, go to N=128+
-    }
+    # Load configuration from YAML
+    config_path = os.path.join(os.path.dirname(__file__), "hasegawa_mima_nonlinear.yaml")
+    config = load_config(config_path)
+    print("✅ Configuration loaded successfully")
 
-    # Target parameters with their search configurations
-    target_params = {
-        "N": {
-            "initial_value": 32,              # Start lower for more variation
-            "multiplication_factor": 2,
-            "max_iteration_num": 4,           # Allow more steps: 32->64->128->256
-            "non_target_params": {"dt": [5.0, 10.0, 20.0, 40.0]}  # More dt values
-        },
-        "dt": {
-            "initial_value": 20.0,            # Start higher for more variation
-            "multiplication_factor": 0.5,
-            "max_iteration_num": 4,           # Allow more steps: 20->10->5->2.5
-            "non_target_params": {"N": [64, 96, 128]}  # More N values for dt optimization
-        }
-    }
+    # Extract configuration sections
+    precision_configs = {}
+    for name, info in config["precision_levels"].items():
+        # Only process precision levels with numeric values (skip placeholders)
+        if isinstance(info["tolerance_rmse"], (int, float)):
+            precision_configs[name] = {
+                "tolerance_rmse": info["tolerance_rmse"],
+            }
+
+    profiles = config["profiles"]["active_profiles"]
+    target_configs = build_target_configs(config)
+
+    print(f"📊 Active precision levels: {list(precision_configs.keys())}")
+    print(f"📁 Active profiles: {profiles}")
+    print(f"🎯 Target parameters: {list(target_configs.keys())}")
+
+    # Change to repository root directory
+    repo_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    os.chdir(repo_root)
+    print(f"Working directory: {os.getcwd()}")
 
     successful_tasks = []
     failed_tasks = []
     task_id = 0
 
-    total_tasks = len(profiles) * len(precision_levels) * sum(
-        len(list(itertools.product(*config["non_target_params"].values())))
-        for config in target_params.values()
+    total_tasks = len(profiles) * len(precision_configs) * sum(
+        len(list(itertools.product(*config["non_target_parameters"].values())))
+        for config in target_configs.values()
     )
 
     print(f"📋 Total tasks to process: {total_tasks}")
 
     start_time = time.time()
 
-    for profile in profiles:
-        for precision_name, precision_config in precision_levels.items():
-            tolerance_rmse = precision_config["tolerance_rmse"]
+    for precision_name, precision_vals in precision_configs.items():
+        print(f"\n--- Processing {precision_name.upper()} precision ---")
 
-            for target_param, param_config in target_params.items():
-                # Generate all combinations of non-target parameters
-                non_target_keys = list(param_config["non_target_params"].keys())
-                non_target_values = list(param_config["non_target_params"].values())
+        for profile in profiles:
+            print(f"  Profile: {profile}")
 
-                for non_target_combo in itertools.product(*non_target_values):
+            for target_param, target_config in target_configs.items():
+                print(f"    Target parameter: {target_param}")
+
+                # Get all non-target parameter names and their value lists
+                non_target_params = target_config["non_target_parameters"]
+                param_names = list(non_target_params.keys())
+                param_values = [non_target_params[name] for name in param_names]
+
+                # Generate all combinations using nested loops (cartesian product)
+                for combination in itertools.product(*param_values):
                     task_id += 1
 
-                    # Build initial parameters
-                    initial_params = {target_param: param_config["initial_value"]}
-                    for key, value in zip(non_target_keys, non_target_combo):
-                        initial_params[key] = value
+                    # Build parameters dictionary
+                    task_params = dict(zip(param_names, combination))
+                    initial_params = {target_param: target_config["initial_value"]}
+                    initial_params.update(task_params)
 
-                    print(f"\n🔄 Task {task_id}/{total_tasks}: {profile}, {precision_name}, {target_param}")
-                    print(f"   Initial params: {initial_params}")
-                    print(f"   Tolerance: {tolerance_rmse}")
+                    print(f"      Task {task_id}/{total_tasks}: Running {target_param} search with params: {task_params}")
 
                     try:
                         # Generate dummy solution trajectory
@@ -270,38 +278,45 @@ def main():
                             profile=profile,
                             target_param=target_param,
                             initial_params=initial_params,
-                            tolerance_rmse=tolerance_rmse,
-                            multiplication_factor=param_config["multiplication_factor"],
-                            max_iteration_num=param_config["max_iteration_num"]
+                            tolerance_rmse=precision_vals["tolerance_rmse"],
+                            multiplication_factor=target_config["multiplication_factor"],
+                            max_iteration_num=target_config["max_iteration_num"]
                         )
 
                         # Create task record
                         task = {
                             "task_id": task_id,
+                            "solver": "hasegawa_mima_nonlinear",
                             "profile": profile,
                             "precision_level": precision_name,
-                            "tolerance_rmse": tolerance_rmse,
+                            "tolerance_rmse": precision_vals["tolerance_rmse"],
                             "target_parameter": target_param,
-                            "initial_params": initial_params,
+                            "target_config": {
+                                "initial_value": target_config["initial_value"],
+                                "multiplication_factor": target_config["multiplication_factor"],
+                                "max_iteration_num": target_config["max_iteration_num"]
+                            },
+                            "non_target_parameters": task_params.copy(),
                             "trajectory": trajectory
                         }
 
                         if trajectory["converged"]:
                             successful_tasks.append(task)
-                            print(f"   ✅ Converged: {target_param}={trajectory['optimal_value']}")
+                            print(f"      ✅ SUCCESS: {target_param}={trajectory['optimal_value']}")
                         else:
                             failed_tasks.append(task)
-                            print(f"   ❌ Failed to converge")
+                            print(f"      ❌ FAILED: No convergence")
 
                     except Exception as e:
-                        print(f"   💥 Error: {str(e)}")
+                        print(f"      💥 Error: {str(e)}")
                         task = {
                             "task_id": task_id,
+                            "solver": "hasegawa_mima_nonlinear",
                             "profile": profile,
                             "precision_level": precision_name,
-                            "tolerance_rmse": tolerance_rmse,
+                            "tolerance_rmse": precision_vals["tolerance_rmse"],
                             "target_parameter": target_param,
-                            "initial_params": initial_params,
+                            "non_target_parameters": task_params.copy(),
                             "error": str(e)
                         }
                         failed_tasks.append(task)
@@ -310,6 +325,7 @@ def main():
     print(f"\n🏁 Checkout completed in {elapsed_time:.2f} seconds")
     print(f"✅ Successful tasks: {len(successful_tasks)}")
     print(f"❌ Failed tasks: {len(failed_tasks)}")
+    print(f"Overall convergence rate: {(len(successful_tasks)/total_tasks*100):.2f}%")
 
     # Generate statistics
     statistics = {
@@ -321,7 +337,7 @@ def main():
     }
 
     # Calculate convergence by precision level
-    for precision in precision_levels.keys():
+    for precision in precision_configs.keys():
         precision_tasks = [t for t in successful_tasks + failed_tasks if t["precision_level"] == precision]
         precision_successful = [t for t in successful_tasks if t["precision_level"] == precision]
         statistics["convergence_by_precision"][precision] = {
@@ -330,7 +346,7 @@ def main():
         }
 
     # Calculate convergence by target parameter
-    for param in target_params.keys():
+    for param in target_configs.keys():
         param_tasks = [t for t in successful_tasks + failed_tasks if t["target_parameter"] == param]
         param_successful = [t for t in successful_tasks if t["target_parameter"] == param]
         avg_cost = 0
@@ -346,17 +362,38 @@ def main():
         }
 
     # Save datasets and generate outputs
-    output_dir = "dataset"
+    output_dir = os.path.join(repo_root, "dataset")
     save_datasets(successful_tasks, failed_tasks, output_dir)
 
     # Generate statistics outputs
-    stats_dir = "outputs/statistics"
+    stats_dir = os.path.join(repo_root, "outputs", "statistics")
     plot_statistics(statistics, stats_dir)
     generate_statistics_summary(statistics, stats_dir)
 
     print(f"\n🎯 Checkout generation complete!")
-    print(f"📊 Check {stats_dir}/ for statistics and plots")
-    print(f"💾 Check {output_dir}/hasegawa_mima_nonlinear/ for task datasets")
+    print(f"📊 Statistics plots saved to: {stats_dir}")
+    print(f"💾 Dataset files saved to: {output_dir}")
+
+    # Expected task calculation for verification
+    expected_total = 0
+    for target_param, target_config in target_configs.items():
+        param_values = [target_config["non_target_parameters"][name] for name in target_config["non_target_parameters"]]
+        combinations_per_target = 1
+        for values in param_values:
+            combinations_per_target *= len(values)
+        expected_total += len(profiles) * combinations_per_target
+
+    print(f"\nTask breakdown:")
+    for target_param, target_config in target_configs.items():
+        param_values = [target_config["non_target_parameters"][name] for name in target_config["non_target_parameters"]]
+        combinations_per_target = 1
+        for values in param_values:
+            combinations_per_target *= len(values)
+        tasks_for_param = len(profiles) * combinations_per_target
+        print(f"  {target_param}: {len(profiles)} profiles × {combinations_per_target} combos = {tasks_for_param}")
+    print(f"  Expected total per precision: {expected_total}")
+    print(f"  Expected total across {len(precision_configs)} precisions: {expected_total * len(precision_configs)}")
+    print(f"  Actual total: {total_tasks}")
 
 
 if __name__ == "__main__":

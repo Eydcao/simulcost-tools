@@ -5,45 +5,7 @@ import os
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from wrappers.hasegawa_mima_nonlinear import run_sim_hasegawa_mima_nonlinear, compare_resolutions
-
-
-def compare_solutions(profile, params1, params2, tolerance_rmse):
-    """
-    Compare two Hasegawa-Mima nonlinear simulations to check for convergence.
-
-    Args:
-        profile: Configuration profile name
-        params1: Dictionary with first simulation parameters (coarse)
-        params2: Dictionary with second simulation parameters (fine)
-        tolerance_rmse: RMSE tolerance for convergence
-
-    Returns:
-        is_converged: Boolean indicating if solutions converged
-        cost1: Cost for first simulation
-        cost2: Cost for second simulation
-        rmse_diff: RMSE difference between solutions
-    """
-    # Run both simulations
-    cost1 = run_sim_hasegawa_mima_nonlinear(profile, **params1)
-    cost2 = run_sim_hasegawa_mima_nonlinear(profile, **params2)
-
-    # Get simulation directories
-    dir1 = f"sim_res/hasegawa_mima_nonlinear/{profile}_N_{params1['N']}_dt_{params1['dt']:.2e}_nonlinear"
-    dir2 = f"sim_res/hasegawa_mima_nonlinear/{profile}_N_{params2['N']}_dt_{params2['dt']:.2e}_nonlinear"
-
-    # Compare resolutions
-    comparison = compare_resolutions(dir1, dir2)
-
-    if not comparison["success"]:
-        return False, cost1, cost2, None
-
-    rmse_diff = comparison["mean_l2_error"]
-
-    # Check if error between resolutions is below tolerance
-    is_converged = rmse_diff <= tolerance_rmse
-
-    return is_converged, cost1, cost2, rmse_diff
+from wrappers.hasegawa_mima_nonlinear import get_results, compare_solutions
 
 
 def find_convergent_N(profile, N, dt, tolerance_rmse, multiplication_factor, max_iteration_num):
@@ -60,8 +22,8 @@ def find_convergent_N(profile, N, dt, tolerance_rmse, multiplication_factor, max
     for i in range(max_iteration_num):
         print(f"\nRunning simulation with N = {current_N}, dt = {dt}")
 
-        # Run simulation at current resolution
-        cost_i = run_sim_hasegawa_mima_nonlinear(profile=profile, N=current_N, dt=dt)
+        # Get simulation results
+        cost_i, _ = get_results(profile=profile, N=current_N, dt=dt)
         cost_history.append(cost_i)
         N_history.append(current_N)
         param_history.append({"N": current_N, "dt": dt})
@@ -130,8 +92,8 @@ def find_convergent_dt(profile, N, dt, tolerance_rmse, multiplication_factor, ma
     for i in range(max_iteration_num):
         print(f"\nRunning simulation with N = {N}, dt = {current_dt}")
 
-        # Run simulation at current time step
-        cost_i = run_sim_hasegawa_mima_nonlinear(profile=profile, N=N, dt=current_dt)
+        # Get simulation results
+        cost_i, _ = get_results(profile=profile, N=N, dt=current_dt)
         cost_history.append(cost_i)
         dt_history.append(current_dt)
         param_history.append({"N": N, "dt": current_dt})
@@ -221,36 +183,3 @@ def generate_dummy_solution(profile, target_param, initial_params, tolerance_rms
         )
     else:
         raise ValueError(f"Unsupported target parameter: {target_param}")
-
-
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Generate dummy solutions for Hasegawa-Mima nonlinear solver")
-    parser.add_argument("--profile", default="p1", help="Configuration profile")
-    parser.add_argument("--target_param", choices=["N", "dt"], default="N", help="Target parameter to optimize")
-    parser.add_argument("--N", type=int, default=64, help="Initial grid resolution")
-    parser.add_argument("--dt", type=float, default=10.0, help="Initial time step")
-    parser.add_argument("--tolerance", type=float, default=1e-3, help="RMSE tolerance for convergence")
-    parser.add_argument("--factor", type=float, default=2.0, help="Multiplication factor")
-    parser.add_argument("--max_iter", type=int, default=3, help="Maximum iterations")
-
-    args = parser.parse_args()
-
-    initial_params = {"N": args.N, "dt": args.dt}
-
-    trajectory = generate_dummy_solution(
-        profile=args.profile,
-        target_param=args.target_param,
-        initial_params=initial_params,
-        tolerance_rmse=args.tolerance,
-        multiplication_factor=args.factor,
-        max_iteration_num=args.max_iter
-    )
-
-    print("\nDummy solution trajectory:")
-    print(f"Parameter: {trajectory['parameter_name']}")
-    print(f"Initial value: {trajectory['initial_value']}")
-    print(f"Optimal value: {trajectory['optimal_value']}")
-    print(f"Converged: {trajectory['converged']}")
-    print(f"Parameter history: {trajectory['parameter_history']}")
-    print(f"Cost history: {trajectory['cost_history']}")
-    print(f"Error history: {trajectory['error_history']}")

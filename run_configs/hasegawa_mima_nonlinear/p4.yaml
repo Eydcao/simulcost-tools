@@ -4,7 +4,7 @@ defaults:
   - override hydra/job_logging: none
 
 # Environmental/Physics parameters (fixed)
-case: "sin_x_gauss_y"      # Case identifier
+case: "sin_x_gauss_y"           # Case identifier
 L: 62.83185307179586       # Domain size (2*pi*10)
 v_star: 0.02               # Diamagnetic drift velocity (2e-2)
 Dx: 5.0                    # Initial condition spatial scale
@@ -14,8 +14,8 @@ N: 128                     # Grid resolution (main accuracy parameter)
 dt: 10.0                   # Time step (main efficiency parameter)
 
 # Simulator statics
-record_dt: 50             # Time interval between recordings (used by base solver)
-end_frame: 2              # Number of recording frames (end_time = record_dt * end_frame)
+record_dt: 10000             # Time interval between recordings (used by base solver)
+end_frame: 10              # Number of recording frames (end_time = record_dt * end_frame)
 
 # Output configuration
 dump_dir: "sim_res/hasegawa_mima_nonlinear/p4"  # Directory for output files

@@ -244,91 +244,91 @@ def compare_with_analytical(numerical_sim_dir, analytical_sim_dir):
     }
 
 
-def check_success_criteria(sim_dir, target_error):
-    """
-    Check if simulation meets success criteria.
+# def check_success_criteria(sim_dir, target_error):
+#     """
+#     Check if simulation meets success criteria.
 
-    Args:
-        sim_dir: Simulation directory
-        target_error: Target error threshold
+#     Args:
+#         sim_dir: Simulation directory
+#         target_error: Target error threshold
 
-    Returns:
-        dict: Success check results
-    """
-    try:
-        error = get_error_metric(sim_dir)
-        if error is None:
-            return {"success": False, "reason": "Could not extract error metric"}
+#     Returns:
+#         dict: Success check results
+#     """
+#     try:
+#         error = get_error_metric(sim_dir)
+#         if error is None:
+#             return {"success": False, "reason": "Could not extract error metric"}
 
-        success = error <= target_error
-        return {
-            "success": success,
-            "error": error,
-            "target_error": target_error,
-            "reason": f"Error {error:.2e} {'<=' if success else '>'} target {target_error:.2e}"
-        }
-    except Exception as e:
-        return {"success": False, "reason": f"Error checking results: {str(e)}"}
+#         success = error <= target_error
+#         return {
+#             "success": success,
+#             "error": error,
+#             "target_error": target_error,
+#             "reason": f"Error {error:.2e} {'<=' if success else '>'} target {target_error:.2e}"
+#         }
+#     except Exception as e:
+#         return {"success": False, "reason": f"Error checking results: {str(e)}"}
 
 
-def run_parameter_sweep(N_values, dt_values, cg_atol_values, config_path, **kwargs):
-    """
-    Run parameter sweep over numerical parameters.
+# def run_parameter_sweep(N_values, dt_values, cg_atol_values, config_path, **kwargs):
+#     """
+#     Run parameter sweep over numerical parameters.
 
-    Args:
-        N_values: List of N values to test
-        dt_values: List of dt values to test
-        cg_atol_values: List of CG tolerance values (optional)
-        config_path: Base config path
-        **kwargs: Additional parameters
+#     Args:
+#         N_values: List of N values to test
+#         dt_values: List of dt values to test
+#         cg_atol_values: List of CG tolerance values (optional)
+#         config_path: Base config path
+#         **kwargs: Additional parameters
 
-    Returns:
-        dict: Sweep results
-    """
-    if cg_atol_values is None:
-        cg_atol_values = [1e-6]
+#     Returns:
+#         dict: Sweep results
+#     """
+#     if cg_atol_values is None:
+#         cg_atol_values = [1e-6]
 
-    results = []
+#     results = []
 
-    for N in N_values:
-        for dt in dt_values:
-            for cg_atol in cg_atol_values:
-                print(f"Running simulation with N={N}, dt={dt}, cg_atol={cg_atol:.2e}")
+#     for N in N_values:
+#         for dt in dt_values:
+#             for cg_atol in cg_atol_values:
+#                 print(f"Running simulation with N={N}, dt={dt}, cg_atol={cg_atol:.2e}")
 
-                sim_result = run_simulation(
-                    config_path=config_path,
-                    N=N,
-                    dt=dt,
-                    cg_atol=cg_atol,
-                    analytical=False,
-                    **kwargs
-                )
+#                 sim_result = run_simulation(
+#                     config_path=config_path,
+#                     N=N,
+#                     dt=dt,
+#                     cg_atol=cg_atol,
+#                     analytical=False,
+#                     **kwargs
+#                 )
 
-                if sim_result["success"]:
-                    # Extract simulation directory from parameters
-                    sim_dir = f"sim_res/hasegawa_mima_linear/p1_N_{N}_dt_{dt:.2e}_cg_{cg_atol:.2e}_numerical"
-                    error = get_error_metric(sim_dir)
+#                 if sim_result["success"]:
+#                     # Extract simulation directory from parameters
+#                     sim_dir = f"sim_res/hasegawa_mima_linear/p1_N_{N}_dt_{dt:.2e}_cg_{cg_atol:.2e}_numerical"
+#                     error = get_error_metric(sim_dir)
 
-                    results.append({
-                        "N": N,
-                        "dt": dt,
-                        "cg_atol": cg_atol,
-                        "error": error,
-                        "sim_dir": sim_dir,
-                        "success": True
-                    })
-                else:
-                    results.append({
-                        "N": N,
-                        "dt": dt,
-                        "cg_atol": cg_atol,
-                        "error": None,
-                        "sim_dir": None,
-                        "success": False,
-                        "error_msg": sim_result.get("error", "Unknown error")
-                    })
+#                     results.append({
+#                         "N": N,
+#                         "dt": dt,
+#                         "cg_atol": cg_atol,
+#                         "error": error,
+#                         "sim_dir": sim_dir,
+#                         "success": True
+#                     })
+#                 else:
+#                     results.append({
+#                         "N": N,
+#                         "dt": dt,
+#                         "cg_atol": cg_atol,
+#                         "error": None,
+#                         "sim_dir": None,
+#                         "success": False,
+#                         "error_msg": sim_result.get("error", "Unknown error")
+#                     })
 
-    return {"sweep_results": results}
+#     return {"sweep_results": results}
 
 
 # # Default parameter configurations for different accuracy/cost targets

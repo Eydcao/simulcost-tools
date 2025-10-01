@@ -9,17 +9,17 @@ solver_info:
 
 task_distribution:
   strategy: "simple_parameters"
-  total_individuals: 90  # Full configuration with 5 profiles
+  total_individuals: 120  # Full configuration with 5 profiles
 
 precision_levels:
   low:
-    tolerance_rmse: 0.001
+    tolerance_rmse: 0.0005
     description: "Relaxed convergence criteria"
   medium:
-    tolerance_rmse: 0.0005
+    tolerance_rmse: 0.0001
     description: "Moderate convergence criteria"
   high:
-    tolerance_rmse: 0.0002
+    tolerance_rmse: 0.00005
     description: "Stringent convergence criteria"
 
 profiles:
@@ -32,69 +32,17 @@ target_parameters:
   N:
     description: "Grid resolution - determines spatial accuracy and computational cost"
     search_type: "iterative"
-    initial_value: 64
+    initial_value: 32
     multiplication_factor: 2
-    max_iteration_num: 3  # Limits to N: 64, 128, 256
+    max_iteration_num: 4  # Limits to N: 32, 64, 128, 256
     non_target_parameters:
-      dt: [5.0, 10.0, 20.0]  # Time step options
+      dt: [5.0, 10.0, 20.0, 40.0]
 
   dt:
     description: "Time step size - controls temporal accuracy and numerical stability"
     search_type: "iterative"
-    initial_value: 10.0
+    initial_value: 40.0
     multiplication_factor: 0.5
-    max_iteration_num: 3  # Limits to dt: 10.0, 5.0, 2.5
+    max_iteration_num: 4  # Limits to dt: 40.0, 20.0, 10.0, 5.0
     non_target_parameters:
-      N: [128]  # Fixed moderate resolution
-
-# Profile definitions for different simulation scenarios
-profile_definitions:
-  p1:
-    name: "standard"
-    description: "Standard monopole configuration with balanced accuracy/efficiency"
-    case: "monopole"  # Gaussian monopole initial condition
-    L: 62.83185307179586  # 2*pi*10
-    v_star: 0.02
-    Dx: 5.0
-    record_dt: 1000.0
-    end_frame: 10
-
-  p2:
-    name: "dipole"
-    description: "Dipole configuration for testing different initial condition types"
-    case: "dipole"  # Gaussian dipole initial condition
-    L: 62.83185307179586
-    v_star: 0.02
-    Dx: 5.0
-    record_dt: 1000.0
-    end_frame: 10
-
-  p3:
-    name: "sinusoidal"
-    description: "Sinusoidal configuration for testing periodic initial conditions"
-    case: "sinusoidal"  # Pure sinusoidal initial condition
-    L: 62.83185307179586
-    v_star: 0.02
-    Dx: 5.0
-    record_dt: 1000.0
-    end_frame: 10
-
-  p4:
-    name: "sin_x_gauss_y"
-    description: "Mixed configuration: sinusoidal in x, Gaussian in y"
-    case: "sin_x_gauss_y"  # Sinusoidal in x, Gaussian in y
-    L: 62.83185307179586
-    v_star: 0.02
-    Dx: 5.0
-    record_dt: 1000.0
-    end_frame: 10
-
-  p5:
-    name: "gauss_x_sin_y"
-    description: "Mixed configuration: Gaussian in x, sinusoidal in y"
-    case: "gauss_x_sin_y"  # Gaussian in x, sinusoidal in y
-    L: 62.83185307179586
-    v_star: 0.02
-    Dx: 5.0
-    record_dt: 1000.0
-    end_frame: 10
+      N: [32, 64, 128, 256]
