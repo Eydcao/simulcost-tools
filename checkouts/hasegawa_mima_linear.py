@@ -330,7 +330,7 @@ def main():
                             "multiplication_factor": target_config["multiplication_factor"],
                             "max_iteration_num": target_config["max_iteration_num"],
                             "search_range_min": target_config["search_range_min"],
-                            "search_range_max": target_config["search_range_min"],
+                            "search_range_max": target_config["search_range_max"],
                             "search_range_slice_num": target_config["search_range_slice_num"]
                         },
                         "non_target_parameters": task_params.copy(),

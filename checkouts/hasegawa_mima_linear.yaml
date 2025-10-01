@@ -53,7 +53,7 @@ target_parameters:
     description: "Conjugate Gradient solver absolute tolerance - controls linear solver accuracy"
     search_type: "0-shot"
     search_range: [1e-4, 1e-0]  # Updated range based on sensitivity analysis
-    search_range_slice_num: 5    # 4 logarithmically spaced values
+    search_range_slice_num: 5    # 5 logarithmically spaced values
     non_target_parameters:
       N: [32, 64, 128,  256]
       dt: [5.0, 10.0, 20.0, 40.0]  # Avoid dt=1.0 which causes very slow simulations

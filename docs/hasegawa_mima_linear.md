@@ -1,325 +1,158 @@
-# Hasegawa-Mima Linear Equation Solver
+# Hasegawa-Mima Linear Equation with RK4 and CG Solver
 
-## Overview
+## Introduction
 
-The Hasegawa-Mima linear solver implements both analytical and numerical solutions for the linearized Hasegawa-Mima equation, which describes drift wave dynamics in plasma physics. This solver is part of the costsci-tools benchmark suite for computational cost analysis.
+This simulation solves the linearized Hasegawa-Mima equation for drift wave dynamics in magnetized plasmas, using 4th-order Runge-Kutta time integration with a Conjugate Gradient solver for the Helmholtz equation:
 
-## Physics Background
+**Governing equation:**
+$$\frac{\partial q}{\partial t} + v_* \frac{\partial \phi}{\partial y} = 0$$
 
-The Hasegawa-Mima equation models drift wave turbulence in magnetized plasmas. The linear version solved here is:
+Where:
+$$q = \nabla^2 \phi - \phi$$
 
-```
-∂q/∂t + v_star * ∂φ/∂y = 0
-```
+**Physical variables:**
 
-where:
-- `q = ∇²φ - φ` is the generalized vorticity
-- `φ` is the electrostatic potential
-- `v_star` is the diamagnetic drift velocity
-- The domain is periodic in both x and y directions
+- $\phi$ = electrostatic potential
+- $q$ = generalized vorticity
+- $v_*$ = diamagnetic drift velocity
+- Domain is periodic in both x and y directions
 
-## Solver Methods
+### Time Integration
 
-### 1. Numerical Method
-- **Time integration**: 4th-order Runge-Kutta (RK4)
-- **Spatial discretization**: Finite differences with periodic boundary conditions
-- **Linear solver**: Conjugate Gradient (CG) for the Helmholtz equation `(∇² - I)φ = q`
-- **Sparse matrices**: Uses scipy.sparse for efficient matrix operations
+4th-order Runge-Kutta (RK4) method for temporal discretization:
 
-### 2. Analytical Method
-- **Spectral solution**: Uses 2D FFT for exact solution in Fourier space
-- **Time evolution**: Direct phase evolution `exp(i * v_star * ky * t / (1 + k²))`
-- **Zero numerical error**: Provides reference solution for validation
+$$q^{n+1} = q^n + \frac{\Delta t}{6}(k_1 + 2k_2 + 2k_3 + k_4)$$
 
-## Parameters
+where $k_i$ are the RK4 stage evaluations of the RHS.
 
-### Environmental Parameters (Fixed)
-- `L`: Domain size (2π × 10 ≈ 62.83)
-- `v_star`: Diamagnetic drift velocity (0.02)
-- `Dx`: Initial condition spatial scale (5.0)
+### Spatial Discretization
 
-### Tunable Parameters
-- `N`: Grid resolution (main accuracy parameter, default: 256)
-- `dt`: Time step (main efficiency parameter, default: 10.0)
-- `cg_atol`: CG solver tolerance (default: 1e-8)
-- `cg_maxiter`: CG solver maximum iterations (default: 1000)
+Finite differences with periodic boundary conditions on a uniform 2D grid:
 
-### Simulation Control
-- `analytical`: Method selection (true/false)
-- `record_dt`: Time interval between recordings (default: 1000.0)
-- `end_frame`: Number of recording frames (default: 10)
+- Grid spacing: $\Delta x = \Delta y = L / N$
+- 2D Laplacian operator: $\nabla^2 \phi$ discretized using 5-point stencil
+- Derivative operator: $\partial \phi / \partial y$ using central differences
 
-## Usage
+### Helmholtz Solver
 
-### Basic Usage
+At each RK4 stage, solve the Helmholtz equation for $\phi$ given $q$:
 
-```bash
-# Analytical solution
-python runners/hasegawa_mima_linear.py analytical=true
+$$(\nabla^2 - I)\phi = q$$
 
-# Numerical solution
-python runners/hasegawa_mima_linear.py analytical=false N=128 dt=10.0
+Solved using sparse Conjugate Gradient (CG) method with:
 
-# Parameter sweep
-python runners/hasegawa_mima_linear.py N=64 dt=50.0 cg_atol=1e-4
-```
+- **cg_atol**: Absolute tolerance for convergence, which is a tunnable parameter
+- **cg_maxiter**: Maximum CG iterations (fixed to be: 1000)
 
-### Python API
+### Analytical Solution
 
-```python
-from wrappers.hasegawa_mima_linear import run_sim_hasegawa_mima_linear
+For validation, an exact spectral solution via 2D FFT is available:
 
-# Run numerical simulation
-cost_numerical = run_sim_hasegawa_mima_linear("p1", N=128, dt=20.0, analytical=False)
+$$\phi(t) = \mathcal{F}^{-1}\left[\hat{\phi}_0 \exp\left(i \frac{v_* k_y t}{1 + k^2}\right)\right]$$
 
-# Run analytical simulation
-cost_analytical = run_sim_hasegawa_mima_linear("p1", N=128, dt=1.0, analytical=True)
+where $\mathcal{F}$ denotes Fourier transform and $k^2 = k_x^2 + k_y^2$.
 
-print(f"Numerical cost: {cost_numerical}")
-print(f"Analytical cost: {cost_analytical}")
-```
+## Test Cases
 
-### Configuration Profiles
+The case key in the config file sets different initial conditions:
 
-Default configurations are available in `run_configs/hasegawa_mima_linear/`:
-- `p1.yaml`: Standard monopole configuration (Gaussian blob initial condition)
-- `p2.yaml`: Dipole configuration (Gaussian dipole initial condition)
-- `p3.yaml`: Sinusoidal configuration (Pure sinusoidal initial condition)
-- `p4.yaml`: Mixed configuration (Sinusoidal in x, Gaussian in y)
-- `p5.yaml`: Mixed configuration (Gaussian in x, sinusoidal in y)
+1. **monopole** - Gaussian monopole centered in domain:
+   - $\phi_0 = 0.1 \exp\left(-\frac{(x-L/2)^2 + (y-L/2)^2}{2D_x^2}\right)$
 
-Override parameters via command line:
-```bash
-python runners/hasegawa_mima_linear.py --config-name=p1 N=512 dt=5.0
-```
+2. **dipole** - Gaussian dipole (odd in x):
+   - $\phi_0 = 0.1 \exp\left(-\frac{(x-L/2)^2 + (y-L/2)^2}{2D_x^2}\right) \cdot \frac{x-L/2}{D_x}$
 
-## Output Files
+3. **sin_x_gauss_y** - Sinusoidal in x, Gaussian in y:
+   - $\phi_0 = 0.1 \sin(0.2x) \exp\left(-\frac{(y-L/2)^2}{2D_x^2}\right)$
 
-The solver generates:
+4. **gauss_x_sin_y** - Gaussian in x, sinusoidal in y:
+   - $\phi_0 = 0.1 \exp\left(-\frac{(x-L/2)^2}{2D_x^2}\right) \sin(0.2y)$
 
-### HDF5 Files (`frame_XXXX.h5`)
-- `phi`: Electrostatic potential field (2D array)
-- `coordinates_x`, `coordinates_y`: Spatial coordinates
-- Attributes: `time`, `N`, `dt`, `analytical`, `error`
-
-### PNG Files (`frame_XXXX.png` and `frame_XXXX_spectrum.png`)
-- `frame_XXXX.png`: Field visualization showing phi, analytical solution, and difference
-- `frame_XXXX_spectrum.png`: Power spectrum analysis in k-space
+The simulated results are considered correct if the L2 RMSE meets the precision-dependent tolerance (low: 0.01, medium: 0.001, high: 0.0005) compared to the analytical solution.
 
-### Metadata (`meta.json`)
-- `cost`: Computational cost estimate (FLOPs)
-- `error`: Mean L2 error vs analytical solution
-- `n_steps`: Total simulation steps
-- `cg_iterations_total`, `cg_calls`: CG solver statistics
+## Parameter Tuning Tasks and Dummy Strategy
 
-## Cost Estimation
+### Tasks
 
-### Numerical Method
-```
-Cost = n_steps × 4 × (CG_cost + sparse_matvec_cost)
-```
-where:
-- `n_steps`: Number of RK4 time steps
-- `4`: RK4 requires 4 RHS evaluations per step
-- `CG_cost`: Average CG iterations × N² operations per iteration
-- `sparse_matvec_cost`: N² operations for sparse matrix-vector multiply
+1. **N Spatial Grid Number (iterative+0-shot)**
+   - N is the grid resolution: $\Delta x = \Delta y = L / N$, where $L$ is domain size
 
-### Analytical Method
-```
-Cost = n_outputs × N² × log₂(N²)
-```
-where:
-- `n_outputs`: Number of output times
-- `N² × log₂(N²)`: Cost of 2D FFT operations
-
-## Error Metrics
-
-The solver computes L2 error against the analytical solution:
-```
-error = √(mean((φ_numerical - φ_analytical)²))
-```
-
-Typical error scaling:
-- Higher resolution (larger N): Lower error
-- Smaller time step (smaller dt): Lower error
-- Tighter CG tolerance (smaller cg_atol): Lower error
-
-## Performance Characteristics
-
-### Computational Complexity
-- **Numerical**: O(N² × n_steps × CG_iterations)
-- **Analytical**: O(N² × log(N²) × n_outputs)
-
-### Memory Usage
-- **Sparse matrices**: O(N²) storage for Laplacian and derivative operators
-- **State vectors**: O(N²) for solution fields
-- **FFT workspace**: O(N²) for analytical method
-
-### Scalability
-- Grid resolution N: Quadratic scaling in memory and operations
-- Time steps: Linear scaling in operations
-- CG iterations: Depends on condition number and tolerance
-
-## Validation
-
-The solver includes built-in validation:
-1. **Analytical vs Numerical**: Compare numerical solution with analytical reference
-2. **Conservation**: Monitor energy/enstrophy conservation properties
-3. **Convergence**: CG solver convergence monitoring
-
-## Example Results
-
-Typical parameter sets and their characteristics:
-
-| Configuration | N   | dt   | Error   | Cost (numerical) | Cost (analytical) |
-|---------------|-----|------|---------|------------------|-------------------|
-| Fast          | 64  | 50.0 | ~1e-3   | ~1e7            | ~1e5             |
-| Balanced      | 128 | 20.0 | ~1e-4   | ~1e8            | ~4e5             |
-| Accurate      | 256 | 10.0 | ~1e-5   | ~1e9            | ~2e6             |
-
-## Troubleshooting
-
-### Common Issues
-
-1. **CG Solver Convergence**
-   - Increase `cg_maxiter` or decrease `cg_atol`
-   - Check for numerical instabilities
-
-2. **High Error**
-   - Decrease time step `dt`
-   - Increase resolution `N`
-   - Tighten CG tolerance `cg_atol`
-
-3. **Memory Issues**
-   - Reduce grid resolution `N`
-   - Use analytical method for large N
-
-### Performance Optimization
-
-1. **For Accuracy**: Decrease `dt`, increase `N`, tighten `cg_atol`
-2. **For Speed**: Increase `dt`, decrease `N`, relax `cg_atol`
-3. **For Large Grids**: Use analytical method when possible
-
-## LLM Parameter Search Task Configuration
-
-### Checkout Procedure
-
-This solver provides an automated parameter optimization task generation system for LLM-based parameter search. The checkout process generates dummy solution datasets for training and evaluation.
-
-### Task Distribution Strategy
-
-Following the flexible parameter strategy, the solver generates approximately **225 individual tasks** distributed across:
-
-- **5 profiles** (p1: monopole, p2: dipole, p3: sinusoidal, p4: sin_x_gauss_y, p5: gauss_x_sin_y)
-- **3 precision levels** (low, medium, high tolerance)
-- **3 target parameters** (N, dt, cg_atol)
-- **Multiple non-target parameter combinations**
-
-### Target Parameters and Search Types
-
-#### N (Grid Resolution) - Iterative + 0-shot Search
-- **Description**: Spatial discretization resolution determining accuracy
-- **Search Method**: Iterative refinement starting from N=64 + 0-shot exploration
-- **Multiplication Factor**: 2 (doubles resolution each iteration)
-- **Max Iterations**: 3 (limits to N: 64, 128, 256)
-- **Non-target Parameters**:
-  - dt: [5.0, 10.0, 20.0]
-  - cg_atol: [1e-4, 1e-5, 1e-6]
-
-#### dt (Time Step) - Iterative + 0-shot Search
-- **Description**: Temporal discretization controlling numerical stability
-- **Search Method**: Iterative refinement starting from dt=10.0 + 0-shot exploration
-- **Multiplication Factor**: 0.5 (halves time step each iteration)
-- **Max Iterations**: 3 (limits to dt: 10.0, 5.0, 2.5)
-- **Non-target Parameters**:
-  - N: 128 (fixed moderate resolution)
-  - cg_atol: [1e-4, 1e-5, 1e-6]
-
-#### cg_atol (CG Tolerance) - 0-shot Search
-- **Description**: Conjugate gradient solver convergence tolerance
-- **Search Method**: Grid search over logarithmic range [1e-8, 1e-3]
-- **Search Points**: 4 logarithmically spaced values
-- **Non-target Parameters**:
-  - N: 128 (fixed moderate resolution)
-  - dt: [5.0, 10.0, 20.0]
-
-### Precision Levels
-
-Convergence tolerances based on error vs analytical solution:
-
-```yaml
-precision_levels:
-  low:
-    tolerance_rmse: 0.001      # Relaxed convergence
-  medium:
-    tolerance_rmse: 0.0005     # Moderate convergence
-  high:
-    tolerance_rmse: 0.0002     # Stringent convergence
-```
-
-### Task Breakdown
-
-**Task distribution per precision level:**
-- N parameter: 5 profiles × 9 combinations (3 dt × 3 cg_atol) = 45 tasks
-- dt parameter: 5 profiles × 3 combinations (1 N × 3 cg_atol) = 15 tasks
-- cg_atol parameter: 5 profiles × 3 combinations (1 N × 3 dt) = 15 tasks
-- **Total per precision**: 75 tasks
-- **Total tasks**: 225 tasks (across 3 precision levels)
-
-### Profile Configurations
-
-#### p1 (Monopole)
-- Standard monopole (Gaussian blob) initial condition
-- Dx=5.0, 10 recording frames over 10,000 time units
-- Tests convergence for smooth, localized initial conditions
-
-#### p2 (Dipole)
-- Dipole (Gaussian dipole) initial condition
-- Dx=5.0, 10 recording frames over 10,000 time units
-- Tests convergence for antisymmetric initial conditions
-
-#### p3 (Sinusoidal)
-- Pure sinusoidal initial condition
-- Dx=5.0, 10 recording frames over 10,000 time units
-- Tests convergence for periodic initial conditions
-
-#### p4 (Mixed: Sin x, Gauss y)
-- Sinusoidal in x, Gaussian in y initial condition
-- Dx=5.0, 10 recording frames over 10,000 time units
-- Tests convergence for partially periodic initial conditions
-
-#### p5 (Mixed: Gauss x, Sin y)
-- Gaussian in x, sinusoidal in y initial condition
-- Dx=5.0, 10 recording frames over 10,000 time units
-- Tests convergence for partially periodic initial conditions
+2. **dt Time Step Size (iterative+0-shot)**
+   - dt is the time step for RK4 integration
+
+3. **cg_atol (0-shot)**
+   - The absolute residual threshold for the CG solver
+
+### Dummy Strategy
+
+1. **N Convergence Search (iterative+0-shot)**
+   - For dummy solution, this means doubling N each iteration (multiplication factor: 2) starting from 32 until convergence
+   - **Non-target parameters**: dt∈{5.0, 10.0, 20.0, 40.0}, cg_atol∈{1e0, 1e-1, 1e-2, 1e-3, 1e-4}
+
+2. **dt Convergence Search (iterative+0-shot)**
+   - For dummy solution, this means halving dt each iteration (multiplication factor: 0.5) starting from 40.0 until convergence
+   - **Non-target parameters**: N∈{32, 64, 128, 256}, cg_atol∈{1e0, 1e-1, 1e-2, 1e-3, 1e-4}
+
+3. **cg_atol Optimization (0-shot)**
+   - For dummy solution, grid search the cg_atol that achieves convergence with minimum computational cost
+   - **Non-target parameters**: N∈{32, 64, 128, 256}, dt∈{5.0, 10.0, 20.0, 40.0}
+
+## Summarized parameter table for developer only (Not LLM)
+
+### Controllable
+
+| Parameter | Description | Range |
+|-----------|-------------|-------|
+| N | Grid resolution (number of grid points in each direction) | 32 ≤ N ≤ 256 |
+| dt | Time step for RK4 integration | 5.0 ≤ dt ≤ 40.0 |
+| cg_atol | Conjugate Gradient solver absolute tolerance | 1e-4 ≤ cg_atol ≤ 1e0 |
+
+More Notes:
+
+- Smaller N → coarser grid → lower accuracy but lower cost
+- Larger dt → fewer time steps → lower accuracy but lower cost
+- Larger cg_atol → fewer CG iterations → lower accuracy but lower cost
+- cg_atol = 1e0 typically gives very inaccurate results due to loose CG convergence
+- N determines spatial resolution: $\Delta x = L / N$ (larger N = finer grid = higher accuracy but higher cost)
+
+### Other
+
+| Parameter | Description | Default Value |
+|-----------|-------------|---------------|
+| L | Domain size | 62.83185307179586 (2π × 10) |
+| v_star | Diamagnetic drift velocity | 0.02 |
+| Dx | Initial condition spatial scale | 5.0 |
+| cg_maxiter | CG solver maximum iterations | 1000 |
+| case | Initial condition type | "monopole" |
+| analytical | Use analytical solution (true) or numerical (false) | false |
+| record_dt | Time interval between recordings | 1000.0 |
+| end_frame | Simulation end after certain number of frames | 10 |
+| dump_dir | Directory for output files | "sim_res/hasegawa_mima_linear/p1" |
+| verbose | Enable verbose output | false |
+
+## Checkout
+
+### Summary
+
+- **Benchmarks**:
+  - **p1**: Monopole (Gaussian blob centered in domain)
+  - **p2**: Dipole (Gaussian dipole initial condition)
+  - **p3**: sin_x_gauss_y (sinusoidal in x, Gaussian in y)
+  - **p4**: gauss_x_sin_y (Gaussian in x, sinusoidal in y)
+- **Target Parameters**: 3 (N, dt, cg_atol)
+- **Precision Levels**: 3 (low: 0.01, medium: 0.001, high: 0.0005)
+
+### Task Distribution
+
+Current configuration generates:
+
+- **N** (iterative+0-shot): 4 profiles × 20 non-target combos = 80 tasks
+- **dt** (iterative+0-shot): 4 profiles × 20 non-target combos = 80 tasks
+- **cg_atol** (0-shot): 4 profiles × 16 non-target combos = 64 tasks
+- **Total per precision**: 224 tasks
+- **Total tasks**: 672 tasks (across 3 precision levels)
 
 ### Dummy Solution Cache
 
 Config for dummy solution cache: `checkouts/hasegawa_mima_linear.yaml`
-
 Cache script: `checkouts/hasegawa_mima_linear.py`
-
-### Running Checkout Generation
-
-```bash
-# Generate all dummy solutions for LLM training
-cd /path/to/costsci-tools
-python checkouts/hasegawa_mima_linear.py
-
-# This will create:
-# - dataset/hasegawa_mima_linear/successful/tasks.json
-# - dataset/hasegawa_mima_linear/failed/tasks.json
-# - outputs/statistics/hasegawa_mima_linear_statistics.png
-# - outputs/statistics/hasegawa_mima_linear_statistics_summary.txt
-```
-
-The generated datasets contain complete parameter optimization trajectories with:
-- Initial parameters and search configurations
-- Convergence results and optimal parameter values
-- Cost histories and computational trajectories
-- Success/failure classifications for LLM training
-
-## References
-
-1. Hasegawa, A. & Mima, K. (1978). "Pseudo-three-dimensional turbulence in magnetized nonuniform plasma." Physics of Fluids, 21(1), 87-92.
-2. Scott, B. (2002). "The nonlinear drift wave instability and its role in tokamak edge turbulence." New Journal of Physics, 4(1), 52.
