@@ -16,19 +16,19 @@ precision_levels:
     energy_tolerance: 0.01
     var_threshold: 0.2
     description: "High precision energy convergence - very challenging"
-  medium:
-    energy_tolerance: 0.08
-    var_threshold: 0.5
-    description: "Medium precision energy convergence - challenging"
-  low:
-    energy_tolerance: 0.3
-    var_threshold: 0.6
-    description: "Low precision energy convergence - achievable"
+  # medium:
+  #   energy_tolerance: 0.08
+  #   var_threshold: 0.5
+  #   description: "Medium precision energy convergence - challenging"
+  # low:
+  #   energy_tolerance: 0.3
+  #   var_threshold: 0.6
+  #   description: "Low precision energy convergence - achievable"
 
 profiles:
   num_profiles: 3
-  # active_profiles: ["p1", "p2", "p3"]
-  active_profiles: ["p1"]
+  active_profiles: ["p1", "p2", "p3"]
+  # active_profiles: ["p1"]
 
 # Target parameters for optimization
 target_parameters:

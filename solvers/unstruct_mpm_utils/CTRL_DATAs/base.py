@@ -24,8 +24,8 @@ class CTRL_DATA:
         self.dx = self.source_json["dx"]
         self.dy = self.source_json["dy"]
         self.dz = self.source_json["dz"]
-        self.hash_dx = np.array([self.dx, self.dy, self.dz]) if self.DIM == 3 else np.array([self.dx, self.dy])
-        self.eps = 1e-4
+        self.hash_dx = 2*np.array([self.dx, self.dy, self.dz]) if self.DIM == 3 else 2*np.array([self.dx, self.dy])
+        self.eps = 1e-5
 
         self.verbose = self.source_json["verbose"]
 

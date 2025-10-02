@@ -26,6 +26,7 @@ useless/*
 **/*.npy
 **/*.npz
 **/*.pkl
+**/*.vtk
 **/Makefile*
 **/*.backup
 **/output*/*

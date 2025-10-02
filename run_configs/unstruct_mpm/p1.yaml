@@ -15,9 +15,9 @@ envs_params:
   end_time: 4
 
 ##### Tunable parameters #####
-nx: 40
+nx: 44
 n_part: 2
-cfl: 0.001
+cfl: 0.0005
 
 ##### Other fixed parameters #####
 flip_ratio: 1.0

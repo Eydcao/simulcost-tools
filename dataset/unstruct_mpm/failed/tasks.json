@@ -2,7 +2,7 @@
   "metadata": {
     "solver": "unstruct_mpm",
     "description": "Failed to converge parameter optimization tasks",
-    "total_tasks": 3
+    "total_tasks": 6
   },
   "tasks": [
     {
@@ -116,10 +116,64 @@
     {
       "solver": "unstruct_mpm",
       "target_parameter": "nx",
-      "profile": "p1",
+      "profile": "p2",
       "precision_config": {
-        "energy_tolerance": 0.08,
-        "var_threshold": 0.5
+        "energy_tolerance": 0.01,
+        "var_threshold": 0.2
+      },
+      "target_config": {
+        "initial_value": 20,
+        "multiplication_factor": 2,
+        "max_iteration_num": 4,
+        "search_range_min": null,
+        "search_range_max": null,
+        "search_range_slice_num": null
+      },
+      "non_target_parameters": {
+        "n_part": 2,
+        "cfl": 0.001
+      },
+      "results": {
+        "converged": false,
+        "optimal_parameter_value": null,
+        "total_computational_cost": 29501264700.0,
+        "cost_history": [
+          71790705.0,
+          281344637.0,
+          2980935567.0,
+          26167193791.0
+        ],
+        "parameter_history": [
+          {
+            "nx": 20,
+            "n_part": 2,
+            "cfl": 0.001
+          },
+          {
+            "nx": 40,
+            "n_part": 2,
+            "cfl": 0.001
+          },
+          {
+            "nx": 80,
+            "n_part": 2,
+            "cfl": 0.001
+          },
+          {
+            "nx": 160,
+            "n_part": 2,
+            "cfl": 0.001
+          }
+        ]
+      }
+    },
+    {
+      "solver": "unstruct_mpm",
+      "target_parameter": "nx",
+      "profile": "p2",
+      "precision_config": {
+        "energy_tolerance": 0.01,
+        "var_threshold": 0.2
       },
       "target_config": {
         "initial_value": 20,
@@ -136,12 +190,120 @@
       "results": {
         "converged": false,
         "optimal_parameter_value": null,
-        "total_computational_cost": 200701026266.0,
+        "total_computational_cost": 117770284029.0,
         "cost_history": [
-          282530524.0,
-          2642148040.0,
-          21138858055.0,
-          176637489647.0
+          235848830.0,
+          1119323835.0,
+          11927012430.0,
+          104488098934.0
+        ],
+        "parameter_history": [
+          {
+            "nx": 20,
+            "n_part": 4,
+            "cfl": 0.001
+          },
+          {
+            "nx": 40,
+            "n_part": 4,
+            "cfl": 0.001
+          },
+          {
+            "nx": 80,
+            "n_part": 4,
+            "cfl": 0.001
+          },
+          {
+            "nx": 160,
+            "n_part": 4,
+            "cfl": 0.001
+          }
+        ]
+      }
+    },
+    {
+      "solver": "unstruct_mpm",
+      "target_parameter": "nx",
+      "profile": "p3",
+      "precision_config": {
+        "energy_tolerance": 0.01,
+        "var_threshold": 0.2
+      },
+      "target_config": {
+        "initial_value": 20,
+        "multiplication_factor": 2,
+        "max_iteration_num": 4,
+        "search_range_min": null,
+        "search_range_max": null,
+        "search_range_slice_num": null
+      },
+      "non_target_parameters": {
+        "n_part": 2,
+        "cfl": 0.001
+      },
+      "results": {
+        "converged": false,
+        "optimal_parameter_value": null,
+        "total_computational_cost": 32051471859.0,
+        "cost_history": [
+          56287423.0,
+          441967631.0,
+          3508624303.0,
+          28044592502.0
+        ],
+        "parameter_history": [
+          {
+            "nx": 20,
+            "n_part": 2,
+            "cfl": 0.001
+          },
+          {
+            "nx": 40,
+            "n_part": 2,
+            "cfl": 0.001
+          },
+          {
+            "nx": 80,
+            "n_part": 2,
+            "cfl": 0.001
+          },
+          {
+            "nx": 160,
+            "n_part": 2,
+            "cfl": 0.001
+          }
+        ]
+      }
+    },
+    {
+      "solver": "unstruct_mpm",
+      "target_parameter": "nx",
+      "profile": "p3",
+      "precision_config": {
+        "energy_tolerance": 0.01,
+        "var_threshold": 0.2
+      },
+      "target_config": {
+        "initial_value": 20,
+        "multiplication_factor": 2,
+        "max_iteration_num": 4,
+        "search_range_min": null,
+        "search_range_max": null,
+        "search_range_slice_num": null
+      },
+      "non_target_parameters": {
+        "n_part": 4,
+        "cfl": 0.001
+      },
+      "results": {
+        "converged": false,
+        "optimal_parameter_value": null,
+        "total_computational_cost": 127989155531.0,
+        "cost_history": [
+          220026793.0,
+          1757139064.0,
+          14015729003.0,
+          111996260671.0
         ],
         "parameter_history": [
           {
