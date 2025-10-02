@@ -22,7 +22,6 @@ envs_params:
 nx: 80
 n_part: 2
 cfl: 0.005
-radii: 1.5
 
 ##### Other fixed parameters #####
 flip_ratio: 1.0

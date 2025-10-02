@@ -23,6 +23,9 @@ useless/*
 **/*.status
 **/*.deck
 **/*.dat
+**/*.npy
+**/*.npz
+**/*.pkl
 **/Makefile*
 **/*.backup
 **/output*/*

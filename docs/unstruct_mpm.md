@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This simulation solves solid mechanics problems using the Material Point Method (MPM) with Taichi-based particle simulation. The MPM is a hybrid Eulerian-Lagrangian method that combines the advantages of both approaches for simulating large deformation problems in solid mechanics.
+This simulation solves solid mechanics problems using the Material Point Method (MPM) on unstructured mesh. The MPM is a hybrid Eulerian-Lagrangian method that combines the advantages of both approaches for simulating large deformation problems in solid mechanics.
 
 **Governing Equations:**
 
@@ -11,6 +11,7 @@ The MPM solves the momentum conservation equation:
 $$\frac{\partial \mathbf{v}}{\partial t} + \mathbf{v} \cdot \nabla \mathbf{v} = \frac{1}{\rho} \nabla \cdot \boldsymbol{\sigma} + \mathbf{g}$$
 
 Where:
+
 - $\mathbf{v}$ = velocity field
 - $\rho$ = density
 - $\boldsymbol{\sigma}$ = stress tensor
@@ -18,15 +19,19 @@ Where:
 
 **Constitutive Relations:**
 
-The stress tensor is computed using linear elasticity:
+The stress tensor is computed using **Corotational Elasticity** (not linear elasticity):
 
-$$\boldsymbol{\sigma} = \frac{E}{1+\nu} \left( \boldsymbol{\epsilon} + \frac{\nu}{1-2\nu} \text{tr}(\boldsymbol{\epsilon}) \mathbf{I} \right)$$
+$$\boldsymbol{\sigma} = 2\mu (\mathbf{F} - \mathbf{R}) \mathbf{F}^T + \lambda J(J-1)\mathbf{I}$$
 
 Where:
+
+- $\mathbf{F}$ = deformation gradient
+- $\mathbf{R}$ = rotation matrix from polar decomposition ($\mathbf{F} = \mathbf{R}\mathbf{S}$)
+- $\mu = \frac{E}{2(1+\nu)}$ = shear modulus
+- $\lambda = \frac{E\nu}{(1+\nu)(1-2\nu)}$ = Lame's first parameter
+- $J = \det(\mathbf{F})$ = volume ratio
 - $E$ = Young's modulus
 - $\nu$ = Poisson's ratio
-- $\boldsymbol{\epsilon}$ = strain tensor
-- $\mathbf{I}$ = identity tensor
 
 ### Spatial Discretization
 
@@ -41,49 +46,80 @@ The MPM uses a background Eulerian grid for solving the momentum equation and La
 
 The time integration uses an explicit scheme with CFL condition for stability:
 
-$$\Delta t = \text{CFL} \cdot \frac{\Delta x}{\max(|\mathbf{v}| + c)}$$
+$$\Delta t = \frac{\text{CFL}}{v_{\text{max,init}} / \Delta x}$$
 
-Where $c$ is the wave speed in the material.
+Where:
+
+- $v_{\text{max,init}}$ = initial maximum velocity (upper bound, as the system has no new input forces)
+- $\Delta x$ = characteristic grid spacing
+- **Note**: Unlike many CFD solvers, this does **not** include sound speed $c$, as the solver uses the initial maximum velocity as the upper bound for stability
 
 ## Test Cases
 
-The solver supports three different simulation cases (profiles):
+The solver supports three different simulation cases (profiles). All units are SI (meters, kg, seconds, Pa, etc.):
 
 1. **p1 - Cantilever Beam Simulation:**
-   - Domain: 11.0 × 8.0 units
-   - Material: E = 1.0×10⁵, ν = 0.29, ρ = 2.0
-   - Gravity: -9.81
-   - End time: 4.0 seconds
-   - Tests beam bending under gravity
+   - **Domain**: 11.0 × 8.0 m
+   - **Material**: E = 1.0×10⁵ Pa, ν = 0.29, ρ = 2.0 kg/m³
+   - **Gravity**: -9.81 m/s²
+   - **Initial conditions**: Beam fixed at left edge (x=0 to 1 m), positioned at y=5 to 7 m, initially at rest (v=0)
+   - **Initial max velocity**: 0.5 m/s (used for CFL calculation)
+   - **End time**: 4.0 s
+   - **Tests**: Beam bending and large deformation under gravity
 
 2. **p2 - Vibration Bar Simulation:**
-   - Domain: 35.0 × 1.0 units (effective: 25.0 × 1.0)
-   - Material: E = 100.0, ν = 0.0, ρ = 1.0
-   - Gravity: 0.0 (no gravity)
-   - End time: 40.0 seconds
-   - Tests elastic wave propagation
+   - **Domain**: 35.0 × 1.0 m (effective material region: 25.0 × 1.0 m starting at x=5 m)
+   - **Material**: E = 100.0 Pa, ν = 0.0, ρ = 1.0 kg/m³
+   - **Gravity**: 0.0 (no gravity)
+   - **Initial conditions**: Sinusoidal velocity field $v_x = 0.75 \sin(0.5\pi x/L_x)$ where $L_x$ is effective length
+   - **Initial max velocity**: 1.0 m/s (used for CFL calculation)
+   - **End time**: 40.0 s
+   - **Tests**: Elastic wave propagation and vibration modes
 
 3. **p3 - Disk Collision Simulation:**
-   - Domain: 1.0 × 1.0 units
-   - Material: E = 1000.0, ν = 0.3, ρ = 1000.0
-   - Gravity: 0.0 (no gravity)
-   - End time: 3.0 seconds
-   - Tests impact dynamics
+   - **Domain**: 1.0 × 1.0 m
+   - **Material**: E = 1000.0 Pa, ν = 0.3, ρ = 1000.0 kg/m³
+   - **Gravity**: 0.0 (no gravity)
+   - **Initial conditions**: Two disks (radius R=0.2 m) moving toward each other with velocities (0.1, 0.1) and (-0.1, -0.1) m/s
+   - **Initial max velocity**: 0.025 m/s (used for CFL calculation, accounting for collision dynamics)
+   - **End time**: 3.0 s
+   - **Tests**: Impact dynamics and contact resolution
 
-The simulated results are considered correct if they meet the precision-dependent energy tolerance and satisfy convergence criteria:
+## Convergence Metrics
 
-1. **Energy conservation**: Total energy should be conserved within tolerance
-2. **Momentum conservation**: Linear and angular momentum should be conserved
-3. **Physical realism**: Deformations should be physically reasonable
+The simulated results are evaluated using two types of metrics:
+
+### Self-Checking Metrics (Individual Simulation Validation)
+
+1. **Energy Conservation**:
+   - Total energy variation over time: $\text{var} = \frac{\sigma(E_{\text{tot}})}{\text{mean}(|E_{\text{tot}}|)} < \text{var\_threshold}$
+   - Where $E_{\text{tot}} = E_{\text{kinetic}} + E_{\text{potential}} + E_{\text{gravitational}}$
+   - Threshold depends on precision level (high: 0.2, medium: 0.5, low: 0.6)
+
+2. **Positivity Preservation**: All energy components (kinetic, potential, gravitational, total) must be ≥ 0
+
+3. **Wall Time Limit**: Simulation must complete within 600 seconds (10 minutes)
+
+### Comparison Metrics (Between Adjacent Parameter Sets)
+
+When comparing two simulations with different parameter values:
+
+1. **Energy L2 Relative Difference**:
+   - For each energy type (pot, kin, gra, tot): $\text{diff}_i = \frac{||E_1^i - E_2^i||_2}{||E_1^i||_2 + ||E_2^i||_2 + \epsilon}$
+   - Average: $\text{avg\_diff} = \text{mean}(\text{diff}_{\text{pot}}, \text{diff}_{\text{kin}}, \text{diff}_{\text{gra}}, \text{diff}_{\text{tot}})$
+
+2. **Convergence Criterion**:
+   - $\text{converged} = (\text{avg\_diff} < \text{energy\_tolerance}) \land \text{energy\_conserved}_1 \land \text{energy\_conserved}_2$
+   - Where energy_tolerance depends on precision level (high: 0.01, medium: 0.08, low: 0.3)
 
 ## Parameter Tuning Tasks and Dummy Strategy
 
 ### Tasks
 
-1. **nx Grid Resolution Search (0-shot)**
+1. **nx Grid Resolution Search (iterative+0-shot)**
    - nx controls the background grid resolution: $\Delta x = L / nx$ where $L$ is domain length
    - Higher resolution improves accuracy but increases computational cost
-   - **Exact values**: [20, 40, 80, 100, 120]
+   - **Initial value**: 20, **Multiplication factor**: 2, **Max iterations**: 5
 
 2. **n_part Particle Density Search (iterative+0-shot)**
    - n_part controls the number of particles per grid cell
@@ -96,29 +132,20 @@ The simulated results are considered correct if they meet the precision-dependen
    - **Initial value**: 0.01, **Multiplication factor**: 0.5, **Max iterations**: 5
    - Smaller CFL improves stability but increases simulation time
 
-4. **radii Optimization (0-shot)**
-   - radii controls the support radius for particle interactions
-   - **Range**: [1.3, 2.0] with 8 equally spaced values
-   - Affects particle neighbor search and interaction strength
-
 ### Dummy Strategy
 
-1. **nx Grid Resolution Search (0-shot)**
-   - Test exact values [20, 40, 80, 100, 120] to find optimal resolution
-   - **Non-target parameters**: n_part∈{2,4}, cfl=0.001, radii∈{1.5,2.0}
+1. **nx Grid Resolution Search (iterative+0-shot)**
+   - Double nx each iteration (multiplication factor: 2) starting from 20 until convergence
+   - **Non-target parameters**: n_part∈{2,4}, cfl=0.001
 
 2. **n_part Particle Density Search (iterative+0-shot)**
    - Double n_part each iteration (multiplication factor: 2) starting from 1 until convergence
-   - **Non-target parameters**: nx∈{50,100}, cfl=0.001, radii∈{1.5,2.0}
+   - **Non-target parameters**: nx∈{50,100}, cfl=0.001
 
 3. **CFL Stability Search (iterative+0-shot)**
    - Halve CFL each iteration (multiplication factor: 0.5) starting from 0.01 until convergence
-   - **Non-target parameters**: nx∈{50,100}, n_part∈{2,4}, radii∈{1.5,2.0}
+   - **Non-target parameters**: nx∈{50,100}, n_part∈{2,4}
    - **WARNING**: CFL must be less than 0.01 to avoid divergence
-
-4. **radii Optimization (0-shot)**
-   - Grid search over radii∈[1.3, 2.0] with 8 equally spaced values to find optimal value
-   - **Non-target parameters**: nx∈{50,100}, n_part∈{2,4}, cfl=0.001
 
 ## Summarized parameter table for developer only (Not LLM)
 
@@ -129,14 +156,13 @@ The simulated results are considered correct if they meet the precision-dependen
 | nx | Background grid resolution (cells per unit length) | 20 ≤ nx ≤ 120 |
 | n_part | Number of particles per grid cell | 1 ≤ n_part ≤ 32 |
 | cfl | Courant-Friedrichs-Lewy number for temporal stability | 0 < cfl < 0.01 |
-| radii | Support radius for particle interactions | 1.3 ≤ radii ≤ 2.0 |
 
 More Notes:
 
 - **nx**: Determines spatial resolution; higher values improve accuracy but increase computational cost quadratically
 - **n_part**: Controls material representation; more particles improve accuracy but increase memory and computation
 - **cfl**: **CRITICAL** - Must be less than 0.01 to avoid numerical divergence; smaller values improve stability
-- **radii**: Controls particle interaction range; affects neighbor search and interaction strength
+- **radii**: Fixed at 1.5 (support radius for particle interactions); not a tunable parameter
 
 ### Other
 
@@ -157,19 +183,18 @@ More Notes:
   - **p1**: Cantilever beam simulation - beam bending under gravity
   - **p2**: Vibration bar simulation - elastic wave propagation
   - **p3**: Disk collision simulation - impact dynamics
-- **Target Parameters**: 4 (nx, n_part, cfl, radii)
+- **Target Parameters**: 3 (nx, n_part, cfl)
 - **Precision Levels**: 3 (high: 0.01, medium: 0.08, low: 0.3)
 
 ### Task Distribution
 
 Current configuration generates:
 
-- **nx** (0-shot): 3 profiles × 20 non-target combos = 60 tasks
-- **n_part** (iterative+0-shot): 3 profiles × 20 non-target combos = 60 tasks
-- **cfl** (iterative+0-shot): 3 profiles × 20 non-target combos = 60 tasks
-- **radii** (0-shot): 3 profiles × 20 non-target combos = 60 tasks
-- **Total per precision**: 240 tasks
-- **Total tasks**: 720 tasks (across 3 precision levels)
+- **nx** (0-shot): 3 profiles × 2 non-target combos = 6 tasks
+- **n_part** (iterative+0-shot): 3 profiles × 2 non-target combos = 6 tasks
+- **cfl** (iterative+0-shot): 3 profiles × 4 non-target combos = 12 tasks
+- **Total per precision**: 24 tasks
+- **Total tasks**: 72 tasks (across 3 precision levels)
 
 ### Dummy Solution Cache
 
@@ -178,19 +203,22 @@ Cache script: `checkouts/unstruct_mpm.py`
 
 ## Cost Analysis
 
-The computational cost is tracked as:
+The computational cost is tracked as a measure of computational complexity:
 
-- **Particle cost**: $n_{part}$ (number of particles per cell)
-- **Communication cost**: $\sum_{each\_part} neighbor\_communication$ (inter-particle interactions)
-- **Total cost**: $n_{part} + \sum_{each\_part} neighbor\_communication$
+$$\text{Total Cost} = n_{\text{particles}} + \sum_{\text{each particle}} n_{\text{neighbor communications}}$$
 
-This provides a measure of computational work that scales with both particle density and inter-particle communication requirements. The cost calculation includes:
+Where:
 
-1. **Particle density cost**: Scales linearly with the number of particles per cell
-2. **Neighbor communication cost**: Accounts for the computational overhead of particle-particle interactions within the support radius
-3. **Spatial hash cost**: Includes the cost of spatial hashing for efficient neighbor search
+- $n_{\text{particles}}$ = total number of particles in the simulation
+- $n_{\text{neighbor communications}}$ = number of particle-particle interactions for each particle within the support radius
 
-The total cost provides a comprehensive measure of computational complexity that reflects both the discretization density and the interaction complexity in the unstructured MPM method.
+This cost metric captures:
+
+1. **Particle Density Cost**: Scales with total number of particles ($n_x \times n_{\text{part}}$ in 1D)
+2. **Neighbor Communication Cost**: Accounts for particle-particle interactions within support radius (controlled by `radii` parameter, fixed at 1.5)
+3. **Spatial Complexity**: Reflects both discretization density (via `nx` and `n_part`) and interaction complexity (via neighbor search on unstructured mesh)
+
+The total cost provides a comprehensive measure of computational work that reflects both the resolution and the interaction complexity in the unstructured MPM method.
 
 ## Important Notes for LLM Developers
 

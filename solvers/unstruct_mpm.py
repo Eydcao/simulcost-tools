@@ -42,7 +42,7 @@ class UNSTRUCT_MPM(SIMULATOR):
         self.nx = args["nx"]
         self.n_part = args["n_part"]
         self.cfl = args["cfl"]
-        self.radii = args["radii"]
+        self.radii = 1.5  # Fixed value, not tunable
         
         self.flip_ratio = args["flip_ratio"]
         self.advect_scheme = ADV_TYPE(args["advect_scheme"])

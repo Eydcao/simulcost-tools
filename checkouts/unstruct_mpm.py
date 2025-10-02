@@ -21,7 +21,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from checkouts.config_utils import load_config, build_target_configs
 from dummy_sols.unstruct_mpm import (
-    find_convergent_nx, find_convergent_n_part, find_convergent_cfl, find_convergent_radii
+    find_convergent_nx, find_convergent_n_part, find_convergent_cfl
 )
 import yaml
 
@@ -161,17 +161,6 @@ def plot_statistics(statistics, output_dir):
             label="cfl parameter",
             color=colors[color_idx % len(colors)],
         )
-        color_idx += 1
-
-    if statistics["optimal_radii_values"]:
-        radii_values, radii_counts = np.unique(list(statistics["optimal_radii_values"]), return_counts=True)
-        ax.bar(
-            [f"{r:.3f}" for r in radii_values],
-            radii_counts,
-            alpha=0.7,
-            label="radii parameter",
-            color=colors[color_idx % len(colors)],
-        )
 
     ax.set_ylabel("Frequency")
     ax.set_title("Optimal Parameter Values (All Tasks)")
@@ -245,12 +234,6 @@ def plot_statistics(statistics, output_dir):
             for cfl, count in zip(cfl_values, cfl_counts):
                 f.write(f"     cfl={cfl:.4f}: {count} times\n")
 
-        if statistics["optimal_radii_values"]:
-            radii_values, radii_counts = np.unique(list(statistics["optimal_radii_values"]), return_counts=True)
-            f.write("   radii parameter (0-shot):\n")
-            for radii, count in zip(radii_values, radii_counts):
-                f.write(f"     radii={radii:.3f}: {count} times\n")
-
 
 def main():
     print("=== Unstruct MPM Dummy Solution Generation ===")
@@ -294,7 +277,6 @@ def main():
         "optimal_nx_values": [],
         "optimal_n_part_values": [],
         "optimal_cfl_values": [],
-        "optimal_radii_values": [],
     }
 
     # Initialize task collection for datasets
@@ -327,15 +309,17 @@ def main():
 
                     print(f"      Running {target_param} search with params: {task_params}")
                     # Call appropriate search function based on target parameter
+                    # Fixed radii = 1.5 for all simulations
                     if target_param == "nx":
                         is_converged, best_param, cost_history, param_history = find_convergent_nx(
                             profile=profile,
-                            nx_values=target_config["exact_values"],
+                            nx=target_config["initial_value"],
                             n_part=task_params["n_part"],
                             cfl=task_params["cfl"],
-                            radii=task_params["radii"],
                             energy_tolerance=precision_vals["energy_tolerance"],
                             var_threshold=precision_vals["var_threshold"],
+                            multiplication_factor=target_config["multiplication_factor"],
+                            max_iteration_num=target_config["max_iteration_num"],
                             case=case
                         )
                         if best_param is not None:
@@ -347,7 +331,6 @@ def main():
                             nx=task_params["nx"],
                             n_part=target_config["initial_value"],
                             cfl=task_params["cfl"],
-                            radii=task_params["radii"],
                             energy_tolerance=precision_vals["energy_tolerance"],
                             var_threshold=precision_vals["var_threshold"],
                             multiplication_factor=target_config["multiplication_factor"],
@@ -363,7 +346,6 @@ def main():
                             nx=task_params["nx"],
                             n_part=task_params["n_part"],
                             cfl=target_config["initial_value"],
-                            radii=task_params["radii"],
                             energy_tolerance=precision_vals["energy_tolerance"],
                             var_threshold=precision_vals["var_threshold"],
                             multiplication_factor=target_config["multiplication_factor"],
@@ -372,25 +354,6 @@ def main():
                         )
                         if best_param is not None:
                             statistics["optimal_cfl_values"].append(best_param)
-
-                    elif target_param == "radii":
-                        is_converged, best_param, cost_history, param_history = find_convergent_radii(
-                            profile=profile,
-                            nx=task_params["nx"],
-                            n_part=task_params["n_part"],
-                            cfl=task_params["cfl"],
-                            radii=target_config.get("initial_value", 1.5),
-                            energy_tolerance=precision_vals["energy_tolerance"],
-                            var_threshold=precision_vals["var_threshold"],
-                            search_range_min=target_config["search_range"][0],
-                            search_range_max=target_config["search_range"][1],
-                            search_range_slice_num=target_config["search_range_slice_num"],
-                            multiplication_factor=target_config.get("multiplication_factor", 1.0),
-                            max_iteration_num=target_config.get("max_iteration_num", 1),
-                            case=case
-                        )
-                        if best_param is not None:
-                            statistics["optimal_radii_values"].append(best_param)
 
                     # Create task record for dataset
                     task_record = {

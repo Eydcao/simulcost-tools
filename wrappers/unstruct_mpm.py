@@ -2,7 +2,11 @@ import os
 import subprocess
 import numpy as np
 import json
+import sys
 from pathlib import Path
+
+# Fixed radii value for all simulations (not a tunable parameter)
+FIXED_RADII = 1.5
 
 def format_param_for_path(value):
     """
@@ -25,10 +29,12 @@ def format_param_for_path(value):
         return str(value)
 
 
-def run_sim_unstruct_mpm(profile, nx, n_part, cfl, radii, case="cantilever"):
-    """Run the unstruct_mpm simulation with the given parameters if not already simulated."""
+def run_sim_unstruct_mpm(profile, nx, n_part, cfl, case="cantilever"):
+    """Run the unstruct_mpm simulation with the given parameters if not already simulated.
+    Note: radii is fixed at FIXED_RADII for all simulations.
+    """
     # Create directory path based on parameters (matching solver format)
-    dir_path = f"sim_res/unstruct_mpm/{profile}_nx{format_param_for_path(nx)}_npart{n_part}_cfl{format_param_for_path(cfl)}_radii{format_param_for_path(radii)}/"
+    dir_path = f"sim_res/unstruct_mpm/{profile}_nx{format_param_for_path(nx)}_npart{n_part}_cfl{format_param_for_path(cfl)}_radii{format_param_for_path(FIXED_RADII)}/"
     meta_path = os.path.join(dir_path, "meta.json")
 
     # Check if the simulation has already been run
@@ -40,8 +46,8 @@ def run_sim_unstruct_mpm(profile, nx, n_part, cfl, radii, case="cantilever"):
                 return meta["cost"], meta["is_converged"]
 
     # Run the simulation if not already done
-    print(f"Running new simulation with parameters: nx={nx}, n_part={n_part}, cfl={cfl}, radii={radii}, case={case}")
-    cmd = f"python runners/unstruct_mpm.py --config-name={profile} nx={nx} n_part={n_part} cfl={cfl} radii={radii} case={case}"
+    print(f"Running new simulation with parameters: nx={nx}, n_part={n_part}, cfl={cfl}, case={case}")
+    cmd = f"{sys.executable} runners/unstruct_mpm.py --config-name={profile} nx={nx} n_part={n_part} cfl={cfl} case={case}"
     subprocess.run(cmd, shell=True, check=True)
 
     # Load the cost and convergence status from the meta.json file
@@ -53,15 +59,17 @@ def run_sim_unstruct_mpm(profile, nx, n_part, cfl, radii, case="cantilever"):
     return cost, is_converged
 
 
-def get_energies_unstruct_mpm(profile, nx, n_part, cfl, radii, case="cantilever"):
-    """Load energies data for a given parameter set, triggering a simulation if results are missing."""
-    dir_path = f"sim_res/unstruct_mpm/{profile}_nx{format_param_for_path(nx)}_npart{n_part}_cfl{format_param_for_path(cfl)}_radii{format_param_for_path(radii)}/"
+def get_energies_unstruct_mpm(profile, nx, n_part, cfl, case="cantilever"):
+    """Load energies data for a given parameter set, triggering a simulation if results are missing.
+    Note: radii is fixed at FIXED_RADII for all simulations.
+    """
+    dir_path = f"sim_res/unstruct_mpm/{profile}_nx{format_param_for_path(nx)}_npart{n_part}_cfl{format_param_for_path(cfl)}_radii{format_param_for_path(FIXED_RADII)}/"
     energies_path = os.path.join(dir_path, "energies.npz")
 
     # Check if energies file exists, otherwise trigger a simulation
     if not os.path.exists(energies_path):
-        print(f"No energies found for parameters: nx={nx}, n_part={n_part}, cfl={cfl}, radii={radii}. Triggering simulation.")
-        run_sim_unstruct_mpm(profile=profile, nx=nx, n_part=n_part, cfl=cfl, radii=radii, case=case)
+        print(f"No energies found for parameters: nx={nx}, n_part={n_part}, cfl={cfl}. Triggering simulation.")
+        run_sim_unstruct_mpm(profile=profile, nx=nx, n_part=n_part, cfl=cfl, case=case)
 
     # Load energies data
     energies_data = np.load(energies_path)
@@ -72,21 +80,21 @@ def get_energies_unstruct_mpm(profile, nx, n_part, cfl, radii, case="cantilever"
     return return_dict
 
 
-def compare_energies_unstruct_mpm(profile1, nx1, n_part1, cfl1, radii1, 
-                                  profile2, nx2, n_part2, cfl2, radii2, 
-                                  case1="cantilever", case2="cantilever", 
+def compare_energies_unstruct_mpm(profile1, nx1, n_part1, cfl1,
+                                  profile2, nx2, n_part2, cfl2,
+                                  case1="cantilever", case2="cantilever",
                                   energy_tolerance=1e-6, var_threshold=0.01):
     """Compare energies between two unstruct_mpm simulations.
-    
+    Note: radii is fixed at FIXED_RADII for all simulations.
+
     Args:
         profile1, profile2: Profile names
         nx1, nx2: Grid resolution parameters
         n_part1, n_part2: Number of particles per cell
         cfl1, cfl2: CFL numbers
-        radii1, radii2: Radii parameters
         case1, case2: Simulation cases
         energy_tolerance: Tolerance for energy comparison
-        
+
     Returns:
         converged (bool): True if energies are within tolerance
         metrics1 (dict): Energy metrics for case 1
@@ -94,16 +102,16 @@ def compare_energies_unstruct_mpm(profile1, nx1, n_part1, cfl1, radii1,
         avg_energy_diff (float): Average relative energy difference
     """
     # Load energies for both cases
-    energies1 = get_energies_unstruct_mpm(profile1, nx1, n_part1, cfl1, radii1, case1)
-    energies2 = get_energies_unstruct_mpm(profile2, nx2, n_part2, cfl2, radii2, case2)
-    
+    energies1 = get_energies_unstruct_mpm(profile1, nx1, n_part1, cfl1, case1)
+    energies2 = get_energies_unstruct_mpm(profile2, nx2, n_part2, cfl2, case2)
+
     if energies1 is None or energies2 is None:
         print("Failed to load energies for one or both cases")
         return False, None, None, float('inf')
-    
+
     # Check if simulation failed by checking meta.json
-    dir1 = f"sim_res/unstruct_mpm/{profile1}_nx{format_param_for_path(nx1)}_npart{n_part1}_cfl{format_param_for_path(cfl1)}_radii{format_param_for_path(radii1)}/"
-    dir2 = f"sim_res/unstruct_mpm/{profile2}_nx{format_param_for_path(nx2)}_npart{n_part2}_cfl{format_param_for_path(cfl2)}_radii{format_param_for_path(radii2)}/"
+    dir1 = f"sim_res/unstruct_mpm/{profile1}_nx{format_param_for_path(nx1)}_npart{n_part1}_cfl{format_param_for_path(cfl1)}_radii{format_param_for_path(FIXED_RADII)}/"
+    dir2 = f"sim_res/unstruct_mpm/{profile2}_nx{format_param_for_path(nx2)}_npart{n_part2}_cfl{format_param_for_path(cfl2)}_radii{format_param_for_path(FIXED_RADII)}/"
     
     meta1_path = os.path.join(dir1, "meta.json")
     meta2_path = os.path.join(dir2, "meta.json")
@@ -113,14 +121,14 @@ def compare_energies_unstruct_mpm(profile1, nx1, n_part1, cfl1, radii1,
         with open(meta1_path, "r") as f:
             meta1 = json.load(f)
             if not meta1.get("is_converged", False):
-                print(f"Simulation 1 failed: {profile1}_nx{nx1}_npart{n_part1}_cfl{cfl1}_radii{radii1}")
+                print(f"Simulation 1 failed: {profile1}_nx{nx1}_npart{n_part1}_cfl{cfl1}")
                 return False, None, None, float('inf')
-    
+
     if os.path.exists(meta2_path):
         with open(meta2_path, "r") as f:
             meta2 = json.load(f)
             if not meta2.get("is_converged", False):
-                print(f"Simulation 2 failed: {profile2}_nx{nx2}_npart{n_part2}_cfl{cfl2}_radii{radii2}")
+                print(f"Simulation 2 failed: {profile2}_nx{nx2}_npart{n_part2}_cfl{cfl2}")
                 return False, None, None, float('inf')
     
     # Compare energies
@@ -215,12 +223,11 @@ if __name__ == "__main__":
     nx = 20
     n_part = 2
     cfl = 0.001
-    radii = 1.5
-    
-    cost, converged = run_sim_unstruct_mpm(profile, nx, n_part, cfl, radii)
+
+    cost, converged = run_sim_unstruct_mpm(profile, nx, n_part, cfl)
     print(f"Simulation cost: {cost}, Converged: {converged}")
-    
-    energies = get_energies_unstruct_mpm(profile, nx, n_part, cfl, radii)
+
+    energies = get_energies_unstruct_mpm(profile, nx, n_part, cfl)
     if energies:
         print(f"Energies loaded: {list(energies.keys())}")
         print(f"Total energy shape: {energies['tot'].shape}")
