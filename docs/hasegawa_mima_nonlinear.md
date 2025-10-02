@@ -5,11 +5,11 @@
 This simulation solves the nonlinear Hasegawa-Mima equation for drift wave turbulence in magnetized plasmas, using a pseudo-spectral method with RK4 time integration and 2/3 rule dealiasing:
 
 **Governing equation:**
-$$\frac{\partial q}{\partial t} + \{\phi, q\} + v_* \frac{\partial \phi}{\partial y} = 0$$
+$$\frac{\partial q}{\partial t} + \left[\{\phi, q\}\right] + v_* \frac{\partial \phi}{\partial y} = 0$$
 
 Where:
 $$q = \nabla^2 \phi - \phi$$
-$$\{\phi, q\} = \frac{\partial \phi}{\partial x}\frac{\partial q}{\partial y} - \frac{\partial \phi}{\partial y}\frac{\partial q}{\partial x}$$
+$$\left[\{\phi, q\} \right]= \frac{\partial \phi}{\partial x}\frac{\partial q}{\partial y} - \frac{\partial \phi}{\partial y}\frac{\partial q}{\partial x}$$
 
 **Physical variables:**
 
@@ -31,7 +31,7 @@ where $k_i$ are the RK4 stage evaluations of the RHS in spectral space.
 
 Pseudo-spectral method using 2D FFT:
 
-- All spatial derivatives computed via spectral differentiation: $\widehat{\partial f/\partial x} = ik_x \hat{f}$
+- All spatial derivatives computed via spectral differentiation: $\partial \hat{f}/\partial x= ik_x \hat{f}$
 - Nonlinear terms computed in physical space then transformed back
 - 2/3 rule dealiasing applied to prevent aliasing errors
 
