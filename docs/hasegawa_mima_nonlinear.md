@@ -8,7 +8,7 @@ This simulation solves the nonlinear Hasegawa-Mima equation for drift wave turbu
 $$\frac{\partial q}{\partial t} + \left[\{\phi, q\}\right] + v_* \frac{\partial \phi}{\partial y} = 0$$
 
 Where:
-$$q = \nabla^2 \phi - \phi$$
+$$q = \nabla^2 \phi - \phi$$,
 $$\left[\{\phi, q\} \right]= \frac{\partial \phi}{\partial x}\frac{\partial q}{\partial y} - \frac{\partial \phi}{\partial y}\frac{\partial q}{\partial x}$$
 
 **Physical variables:**
