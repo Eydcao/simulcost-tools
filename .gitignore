@@ -23,6 +23,7 @@ useless/*
 **/*.status
 **/*.deck
 **/*.dat
+**/*.txt
 **/Makefile*
 **/*.backup
 **/output*/*

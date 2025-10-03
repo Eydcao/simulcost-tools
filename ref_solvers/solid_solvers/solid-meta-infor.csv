@@ -1,0 +1,3 @@
+Name,Author(s),Reference,Tunabla parameters,Success Metric,Metric Levels,TODOs,Comments
+Bar compaction,"Yidong Zhao, Yadi Cao",Fundamental knowledge from elasticity,"Element size. Specifically, ny at line 9",Normalized error of the vertical stress ,"1e-6, 1e-4, 1e-3",,
+Plate with a hole,"Yidong Zhao, Yadi Cao",Applied Mechanics of Solids (https://www.taylorfrancis.com/books/mono/10.1201/9781439802489/applied-mechanics-solids-allan-bower),,Normalized error of the horizontal stress,"1e-3, 5e-3, 1e-2",,
