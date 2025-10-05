@@ -34,9 +34,13 @@ profiles:
 target_parameters:
   nx:
     search_type: "iterative+0-shot"
-    initial_value: 20
+    # Profile-specific initial values (nx = Lx / dx)
+    initial_values:
+      p1: 11   # cantilever: Lx=11.0
+      p2: 35   # vibration_bar: Lx=35.0  
+      p3: 10   # disk_collision: Lx=1.0
     multiplication_factor: 2
-    max_iteration_num: 4 # 20, 40, 80, 160
+    max_iteration_num: 4
     non_target_parameters:
       n_part: [2, 4]
       cfl: 0.001

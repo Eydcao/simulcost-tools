@@ -194,21 +194,28 @@ def find_convergent_cfl(profile, nx, n_part, cfl, energy_tolerance, var_threshol
 if __name__ == "__main__":
     # Example usage
     profile = "p1"
-    nx_values = [10, 20, 30, 40]  # exact_values from config
+    # Profile-specific initial nx values
+    initial_nx_values = {
+        "p1": 11,   # cantilever: Lx=11.0
+        "p2": 35,   # vibration_bar: Lx=35.0
+        "p3": 10    # disk_collision: Lx=1.0
+    }
+    initial_nx = initial_nx_values[profile]
     n_part = 2
     cfl = 0.001
-    radii = 1.5
     energy_tolerance = 1e-6
     var_threshold = 0.01
     # Test nx convergence
     converged, best_nx, cost_history, param_history = find_convergent_nx(
         profile=profile,
-        nx_values=nx_values,
+        nx=initial_nx,  # Use profile-specific initial value
         n_part=n_part,
         cfl=cfl,
-        radii=radii,
         energy_tolerance=energy_tolerance,
-        var_threshold=var_threshold
+        var_threshold=var_threshold,
+        multiplication_factor=2,
+        max_iteration_num=4,
+        case="cantilever"
     )
     
     print(f"NX convergence test: {converged}, best_nx: {best_nx}")

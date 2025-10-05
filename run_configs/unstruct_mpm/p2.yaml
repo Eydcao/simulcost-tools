@@ -19,7 +19,7 @@ envs_params:
   p_rho: 1.0
 
 ##### Tunable parameters #####
-nx: 80
+nx: 70
 n_part: 2
 cfl: 0.005
 

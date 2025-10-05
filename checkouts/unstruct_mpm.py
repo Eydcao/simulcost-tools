@@ -311,9 +311,11 @@ def main():
                     # Call appropriate search function based on target parameter
                     # Fixed radii = 1.5 for all simulations
                     if target_param == "nx":
+                        # Get profile-specific initial nx value
+                        initial_nx = target_config["initial_values"][profile]
                         is_converged, best_param, cost_history, param_history = find_convergent_nx(
                             profile=profile,
-                            nx=target_config["initial_value"],
+                            nx=initial_nx,
                             n_part=task_params["n_part"],
                             cfl=task_params["cfl"],
                             energy_tolerance=precision_vals["energy_tolerance"],
@@ -365,7 +367,7 @@ def main():
                             "var_threshold": precision_vals["var_threshold"]
                         },
                         "target_config": {
-                            "initial_value": target_config.get("initial_value"),
+                            "initial_value": target_config.get("initial_values", {}).get(profile) if target_param == "nx" else target_config.get("initial_value"),
                             "multiplication_factor": target_config.get("multiplication_factor"),
                             "max_iteration_num": target_config.get("max_iteration_num"),
                             "search_range_min": target_config.get("search_range_min"),
