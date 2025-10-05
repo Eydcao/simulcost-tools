@@ -323,6 +323,11 @@ class PlateWithHole(SIMULATOR):
     def post_process(self):
         """Post-processing: save metadata"""
         cost = self.estimate_cost()
+        
+        # Calculate error metric for this simulation
+        u = self.solve()
+        error = self.calculate_stress_error(u)
+        
         with open(os.path.join(self.dump_dir, "meta.json"), "w") as f:
             meta = {
                 "cost": cost,
@@ -330,8 +335,9 @@ class PlateWithHole(SIMULATOR):
                 "ny": int(self.ny),
                 "n_elements": len(self.elements),
                 "n_nodes": self.n_nodes,
-                "n_dof": 2 * self.n_nodes
+                "n_dof": 2 * self.n_nodes,
+                "error": float(error)
             }
             json.dump(meta, f, indent=4)
         if self.verbose:
-            print(f"Run cost: {cost}")
+            print(f"Run cost: {cost}, Error: {error:.6e}")

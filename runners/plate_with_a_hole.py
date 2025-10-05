@@ -1,6 +1,12 @@
 import hydra
 from omegaconf import DictConfig
-from solvers.plate_with_a_hole import PlateWithHole
+
+import sys
+import os
+
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+from solvers.plate_with_a_hole import *
 
 
 @hydra.main(version_base=None, config_path="../run_configs/plate_with_a_hole", config_name="p1")

@@ -1,0 +1,47 @@
+# Plate with Hole Solver Checkout Configuration
+# This file centralizes all parameter settings for both documentation and dummy solution generation
+
+solver_info:
+  name: "Plate with Hole"
+  numerical_method: "2D finite element analysis using 4-node quadrilateral elements"
+  reference: "Classical elasticity benchmark problem"
+
+task_distribution:
+  strategy: "benchmark"
+  total_individuals: 24
+
+precision_levels:
+  high:
+    tolerance_error: 0.001
+    individual_error_tolerance: 0.01
+  medium:
+    tolerance_error: 0.003
+    individual_error_tolerance: 0.015
+  low:
+    tolerance_error: 0.01
+    individual_error_tolerance: 0.05
+
+profiles:
+  num_profiles: 1
+  # Available profiles: p1 (standard plate with hole)
+  active_profiles: ["p1"]
+
+# Parameter configurations for each target parameter
+target_parameters:
+  nx:
+    description: "Number of elements in x direction - determines spatial resolution in x"
+    search_type: "iterative"
+    initial_value: 128
+    multiplication_factor: 2
+    max_iteration_num: 4
+    non_target_parameters:
+      ny: [100, 200, 400]  # Fixed y resolution for efficiency
+
+  ny:
+    description: "Number of elements in y direction - determines spatial resolution in y"
+    search_type: "iterative"
+    initial_value: 128
+    multiplication_factor: 2
+    max_iteration_num: 4
+    non_target_parameters:
+      nx: [100, 200, 400]  # Fixed x resolution for efficiency
