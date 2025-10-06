@@ -1,0 +1,600 @@
+{
+  "metadata": {
+    "solver": "compaction",
+    "description": "Successfully converged parameter optimization tasks",
+    "total_tasks": 14
+  },
+  "tasks": [
+    {
+      "solver": "compaction",
+      "target_parameter": "nx",
+      "profile": "p1",
+      "precision_config": {
+        "tolerance_error": 0.0002,
+        "individual_error_tolerance": 0.0002
+      },
+      "target_config": {
+        "initial_value": 2,
+        "multiplication_factor": 2,
+        "max_iteration_num": 4,
+        "search_range_min": null,
+        "search_range_max": null,
+        "search_range_slice_num": null
+      },
+      "non_target_parameters": {
+        "ny": 40
+      },
+      "results": {
+        "converged": true,
+        "optimal_parameter_value": 16,
+        "total_computational_cost": 5174096,
+        "cost_history": [
+          224356,
+          495780,
+          1200004,
+          3253956
+        ],
+        "parameter_history": [
+          {
+            "nx": 2,
+            "ny": 40
+          },
+          {
+            "nx": 4,
+            "ny": 40
+          },
+          {
+            "nx": 8,
+            "ny": 40
+          },
+          {
+            "nx": 16,
+            "ny": 40
+          }
+        ]
+      }
+    },
+    {
+      "solver": "compaction",
+      "target_parameter": "ny",
+      "profile": "p1",
+      "precision_config": {
+        "tolerance_error": 0.0002,
+        "individual_error_tolerance": 0.0002
+      },
+      "target_config": {
+        "initial_value": 10,
+        "multiplication_factor": 2,
+        "max_iteration_num": 4,
+        "search_range_min": null,
+        "search_range_max": null,
+        "search_range_slice_num": null
+      },
+      "non_target_parameters": {
+        "nx": 4
+      },
+      "results": {
+        "converged": true,
+        "optimal_parameter_value": 80,
+        "total_computational_cost": 2109200,
+        "cost_history": [
+          94020,
+          207940,
+          495780,
+          1311460
+        ],
+        "parameter_history": [
+          {
+            "nx": 4,
+            "ny": 10
+          },
+          {
+            "nx": 4,
+            "ny": 20
+          },
+          {
+            "nx": 4,
+            "ny": 40
+          },
+          {
+            "nx": 4,
+            "ny": 80
+          }
+        ]
+      }
+    },
+    {
+      "solver": "compaction",
+      "target_parameter": "ny",
+      "profile": "p1",
+      "precision_config": {
+        "tolerance_error": 0.0002,
+        "individual_error_tolerance": 0.0002
+      },
+      "target_config": {
+        "initial_value": 10,
+        "multiplication_factor": 2,
+        "max_iteration_num": 4,
+        "search_range_min": null,
+        "search_range_max": null,
+        "search_range_slice_num": null
+      },
+      "non_target_parameters": {
+        "nx": 8
+      },
+      "results": {
+        "converged": true,
+        "optimal_parameter_value": 80,
+        "total_computational_cost": 5310096,
+        "cost_history": [
+          203044,
+          470564,
+          1200004,
+          3436484
+        ],
+        "parameter_history": [
+          {
+            "nx": 8,
+            "ny": 10
+          },
+          {
+            "nx": 8,
+            "ny": 20
+          },
+          {
+            "nx": 8,
+            "ny": 40
+          },
+          {
+            "nx": 8,
+            "ny": 80
+          }
+        ]
+      }
+    },
+    {
+      "solver": "compaction",
+      "target_parameter": "nx",
+      "profile": "p1",
+      "precision_config": {
+        "tolerance_error": 0.001,
+        "individual_error_tolerance": 0.001
+      },
+      "target_config": {
+        "initial_value": 2,
+        "multiplication_factor": 2,
+        "max_iteration_num": 4,
+        "search_range_min": null,
+        "search_range_max": null,
+        "search_range_slice_num": null
+      },
+      "non_target_parameters": {
+        "ny": 20
+      },
+      "results": {
+        "converged": true,
+        "optimal_parameter_value": 4,
+        "total_computational_cost": 305736,
+        "cost_history": [
+          97796,
+          207940
+        ],
+        "parameter_history": [
+          {
+            "nx": 2,
+            "ny": 20
+          },
+          {
+            "nx": 4,
+            "ny": 20
+          }
+        ]
+      }
+    },
+    {
+      "solver": "compaction",
+      "target_parameter": "nx",
+      "profile": "p1",
+      "precision_config": {
+        "tolerance_error": 0.001,
+        "individual_error_tolerance": 0.001
+      },
+      "target_config": {
+        "initial_value": 2,
+        "multiplication_factor": 2,
+        "max_iteration_num": 4,
+        "search_range_min": null,
+        "search_range_max": null,
+        "search_range_slice_num": null
+      },
+      "non_target_parameters": {
+        "ny": 40
+      },
+      "results": {
+        "converged": true,
+        "optimal_parameter_value": 4,
+        "total_computational_cost": 720136,
+        "cost_history": [
+          224356,
+          495780
+        ],
+        "parameter_history": [
+          {
+            "nx": 2,
+            "ny": 40
+          },
+          {
+            "nx": 4,
+            "ny": 40
+          }
+        ]
+      }
+    },
+    {
+      "solver": "compaction",
+      "target_parameter": "ny",
+      "profile": "p1",
+      "precision_config": {
+        "tolerance_error": 0.001,
+        "individual_error_tolerance": 0.001
+      },
+      "target_config": {
+        "initial_value": 10,
+        "multiplication_factor": 2,
+        "max_iteration_num": 4,
+        "search_range_min": null,
+        "search_range_max": null,
+        "search_range_slice_num": null
+      },
+      "non_target_parameters": {
+        "nx": 2
+      },
+      "results": {
+        "converged": true,
+        "optimal_parameter_value": 40,
+        "total_computational_cost": 367468,
+        "cost_history": [
+          45316,
+          97796,
+          224356
+        ],
+        "parameter_history": [
+          {
+            "nx": 2,
+            "ny": 10
+          },
+          {
+            "nx": 2,
+            "ny": 20
+          },
+          {
+            "nx": 2,
+            "ny": 40
+          }
+        ]
+      }
+    },
+    {
+      "solver": "compaction",
+      "target_parameter": "ny",
+      "profile": "p1",
+      "precision_config": {
+        "tolerance_error": 0.001,
+        "individual_error_tolerance": 0.001
+      },
+      "target_config": {
+        "initial_value": 10,
+        "multiplication_factor": 2,
+        "max_iteration_num": 4,
+        "search_range_min": null,
+        "search_range_max": null,
+        "search_range_slice_num": null
+      },
+      "non_target_parameters": {
+        "nx": 4
+      },
+      "results": {
+        "converged": true,
+        "optimal_parameter_value": 40,
+        "total_computational_cost": 797740,
+        "cost_history": [
+          94020,
+          207940,
+          495780
+        ],
+        "parameter_history": [
+          {
+            "nx": 4,
+            "ny": 10
+          },
+          {
+            "nx": 4,
+            "ny": 20
+          },
+          {
+            "nx": 4,
+            "ny": 40
+          }
+        ]
+      }
+    },
+    {
+      "solver": "compaction",
+      "target_parameter": "ny",
+      "profile": "p1",
+      "precision_config": {
+        "tolerance_error": 0.001,
+        "individual_error_tolerance": 0.001
+      },
+      "target_config": {
+        "initial_value": 10,
+        "multiplication_factor": 2,
+        "max_iteration_num": 4,
+        "search_range_min": null,
+        "search_range_max": null,
+        "search_range_slice_num": null
+      },
+      "non_target_parameters": {
+        "nx": 8
+      },
+      "results": {
+        "converged": true,
+        "optimal_parameter_value": 40,
+        "total_computational_cost": 1873612,
+        "cost_history": [
+          203044,
+          470564,
+          1200004
+        ],
+        "parameter_history": [
+          {
+            "nx": 8,
+            "ny": 10
+          },
+          {
+            "nx": 8,
+            "ny": 20
+          },
+          {
+            "nx": 8,
+            "ny": 40
+          }
+        ]
+      }
+    },
+    {
+      "solver": "compaction",
+      "target_parameter": "nx",
+      "profile": "p1",
+      "precision_config": {
+        "tolerance_error": 0.003,
+        "individual_error_tolerance": 0.003
+      },
+      "target_config": {
+        "initial_value": 2,
+        "multiplication_factor": 2,
+        "max_iteration_num": 4,
+        "search_range_min": null,
+        "search_range_max": null,
+        "search_range_slice_num": null
+      },
+      "non_target_parameters": {
+        "ny": 10
+      },
+      "results": {
+        "converged": true,
+        "optimal_parameter_value": 4,
+        "total_computational_cost": 139336,
+        "cost_history": [
+          45316,
+          94020
+        ],
+        "parameter_history": [
+          {
+            "nx": 2,
+            "ny": 10
+          },
+          {
+            "nx": 4,
+            "ny": 10
+          }
+        ]
+      }
+    },
+    {
+      "solver": "compaction",
+      "target_parameter": "nx",
+      "profile": "p1",
+      "precision_config": {
+        "tolerance_error": 0.003,
+        "individual_error_tolerance": 0.003
+      },
+      "target_config": {
+        "initial_value": 2,
+        "multiplication_factor": 2,
+        "max_iteration_num": 4,
+        "search_range_min": null,
+        "search_range_max": null,
+        "search_range_slice_num": null
+      },
+      "non_target_parameters": {
+        "ny": 20
+      },
+      "results": {
+        "converged": true,
+        "optimal_parameter_value": 4,
+        "total_computational_cost": 305736,
+        "cost_history": [
+          97796,
+          207940
+        ],
+        "parameter_history": [
+          {
+            "nx": 2,
+            "ny": 20
+          },
+          {
+            "nx": 4,
+            "ny": 20
+          }
+        ]
+      }
+    },
+    {
+      "solver": "compaction",
+      "target_parameter": "nx",
+      "profile": "p1",
+      "precision_config": {
+        "tolerance_error": 0.003,
+        "individual_error_tolerance": 0.003
+      },
+      "target_config": {
+        "initial_value": 2,
+        "multiplication_factor": 2,
+        "max_iteration_num": 4,
+        "search_range_min": null,
+        "search_range_max": null,
+        "search_range_slice_num": null
+      },
+      "non_target_parameters": {
+        "ny": 40
+      },
+      "results": {
+        "converged": true,
+        "optimal_parameter_value": 4,
+        "total_computational_cost": 720136,
+        "cost_history": [
+          224356,
+          495780
+        ],
+        "parameter_history": [
+          {
+            "nx": 2,
+            "ny": 40
+          },
+          {
+            "nx": 4,
+            "ny": 40
+          }
+        ]
+      }
+    },
+    {
+      "solver": "compaction",
+      "target_parameter": "ny",
+      "profile": "p1",
+      "precision_config": {
+        "tolerance_error": 0.003,
+        "individual_error_tolerance": 0.003
+      },
+      "target_config": {
+        "initial_value": 10,
+        "multiplication_factor": 2,
+        "max_iteration_num": 4,
+        "search_range_min": null,
+        "search_range_max": null,
+        "search_range_slice_num": null
+      },
+      "non_target_parameters": {
+        "nx": 2
+      },
+      "results": {
+        "converged": true,
+        "optimal_parameter_value": 20,
+        "total_computational_cost": 143112,
+        "cost_history": [
+          45316,
+          97796
+        ],
+        "parameter_history": [
+          {
+            "nx": 2,
+            "ny": 10
+          },
+          {
+            "nx": 2,
+            "ny": 20
+          }
+        ]
+      }
+    },
+    {
+      "solver": "compaction",
+      "target_parameter": "ny",
+      "profile": "p1",
+      "precision_config": {
+        "tolerance_error": 0.003,
+        "individual_error_tolerance": 0.003
+      },
+      "target_config": {
+        "initial_value": 10,
+        "multiplication_factor": 2,
+        "max_iteration_num": 4,
+        "search_range_min": null,
+        "search_range_max": null,
+        "search_range_slice_num": null
+      },
+      "non_target_parameters": {
+        "nx": 4
+      },
+      "results": {
+        "converged": true,
+        "optimal_parameter_value": 20,
+        "total_computational_cost": 301960,
+        "cost_history": [
+          94020,
+          207940
+        ],
+        "parameter_history": [
+          {
+            "nx": 4,
+            "ny": 10
+          },
+          {
+            "nx": 4,
+            "ny": 20
+          }
+        ]
+      }
+    },
+    {
+      "solver": "compaction",
+      "target_parameter": "ny",
+      "profile": "p1",
+      "precision_config": {
+        "tolerance_error": 0.003,
+        "individual_error_tolerance": 0.003
+      },
+      "target_config": {
+        "initial_value": 10,
+        "multiplication_factor": 2,
+        "max_iteration_num": 4,
+        "search_range_min": null,
+        "search_range_max": null,
+        "search_range_slice_num": null
+      },
+      "non_target_parameters": {
+        "nx": 8
+      },
+      "results": {
+        "converged": true,
+        "optimal_parameter_value": 20,
+        "total_computational_cost": 673608,
+        "cost_history": [
+          203044,
+          470564
+        ],
+        "parameter_history": [
+          {
+            "nx": 8,
+            "ny": 10
+          },
+          {
+            "nx": 8,
+            "ny": 20
+          }
+        ]
+      }
+    }
+  ]
+}

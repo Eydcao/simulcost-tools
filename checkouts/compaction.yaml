@@ -1,0 +1,47 @@
+# Compaction Solver Checkout Configuration
+# This file centralizes all parameter settings for both documentation and dummy solution generation
+
+solver_info:
+  name: "Compaction"
+  numerical_method: "2D finite element analysis using 4-node quadrilateral elements"
+  reference: "Bar compaction under self-weight - plane strain elasticity problem"
+
+task_distribution:
+  strategy: "benchmark"
+  total_individuals: 24
+
+precision_levels:
+  high:
+    tolerance_error: 2e-4
+    individual_error_tolerance: 2e-4
+  medium:
+    tolerance_error: 1e-3
+    individual_error_tolerance: 1e-3
+  low:
+    tolerance_error: 3e-3
+    individual_error_tolerance: 3e-3
+
+profiles:
+  num_profiles: 1
+  # Available profiles: p1 (standard compaction bar)
+  active_profiles: ["p1"]
+
+# Parameter configurations for each target parameter
+target_parameters:
+  nx:
+    description: "Number of elements in x direction - determines spatial resolution in x"
+    search_type: "iterative"
+    initial_value: 2
+    multiplication_factor: 2
+    max_iteration_num: 4
+    non_target_parameters:
+      ny: [10, 20, 40]  # Fixed y resolution for efficiency
+
+  ny:
+    description: "Number of elements in y direction - determines spatial resolution in y"
+    search_type: "iterative"
+    initial_value: 10
+    multiplication_factor: 2
+    max_iteration_num: 4
+    non_target_parameters:
+      nx: [2, 4, 8]  # Fixed x resolution for efficiency

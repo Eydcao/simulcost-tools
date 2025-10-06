@@ -86,18 +86,3 @@ Checkout outputs in `outputs/statistics/`:
 Datasets are recorded under:
 - `dataset/plate_with_a_hole/successful/tasks.json`
 - `dataset/plate_with_a_hole/failed/tasks.json`
-
-### Troubleshooting
-
-- Error above individual_error_tolerance: increase nx/ny or refinement steps; ensure traction and material parameters are correct.
-- Very coarse meshes near the hole may deactivate too many elements; start with nx, ny ≥ 20.
-- If the wrapper cannot find the runner, inspect `_find_runner_path()` in `wrappers/plate_with_a_hole.py`.
-
-### File Map
-
-- Solver: `solvers/plate_with_a_hole.py`
-- Runner: `runners/plate_with_a_hole.py`
-- Wrapper: `wrappers/plate_with_a_hole.py`
-- Dummy: `dummy_sols/plate_with_a_hole.py`
-- Checkout config: `checkouts/plate_with_a_hole.yaml`
-- Checkout cache script: `checkouts/plate_with_a_hole.py`

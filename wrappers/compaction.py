@@ -37,9 +37,8 @@ def _find_runner_path():
     raise FileNotFoundError(f"Could not find compaction.py runner. Searched: {possible_paths}")
 
 
-def run_sim_compaction(profile, ny):
+def run_sim_compaction(profile, nx, ny):
     """Run the compaction simulation with the given parameters if not already simulated."""
-    nx = 2  # Fixed according to CSV metadata
     dir_path = f"sim_res/compaction/{profile}_nx_{nx}_ny_{ny}/"
     meta_path = os.path.join(dir_path, "meta.json")
 

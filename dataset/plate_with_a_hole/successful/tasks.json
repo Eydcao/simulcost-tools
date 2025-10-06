@@ -1,0 +1,492 @@
+{
+  "metadata": {
+    "solver": "plate_with_a_hole",
+    "description": "Successfully converged parameter optimization tasks",
+    "total_tasks": 12
+  },
+  "tasks": [
+    {
+      "solver": "plate_with_a_hole",
+      "target_parameter": "nx",
+      "profile": "p1",
+      "precision_config": {
+        "tolerance_error": 0.001,
+        "individual_error_tolerance": 0.01
+      },
+      "target_config": {
+        "initial_value": 128,
+        "multiplication_factor": 2,
+        "max_iteration_num": 4,
+        "search_range_min": null,
+        "search_range_max": null,
+        "search_range_slice_num": null
+      },
+      "non_target_parameters": {
+        "ny": 400
+      },
+      "results": {
+        "converged": true,
+        "optimal_parameter_value": 256,
+        "total_computational_cost": 53485669640,
+        "cost_history": [
+          10803268740,
+          42682400900
+        ],
+        "parameter_history": [
+          {
+            "nx": 128,
+            "ny": 400
+          },
+          {
+            "nx": 256,
+            "ny": 400
+          }
+        ]
+      }
+    },
+    {
+      "solver": "plate_with_a_hole",
+      "target_parameter": "nx",
+      "profile": "p1",
+      "precision_config": {
+        "tolerance_error": 0.003,
+        "individual_error_tolerance": 0.015
+      },
+      "target_config": {
+        "initial_value": 128,
+        "multiplication_factor": 2,
+        "max_iteration_num": 4,
+        "search_range_min": null,
+        "search_range_max": null,
+        "search_range_slice_num": null
+      },
+      "non_target_parameters": {
+        "ny": 200
+      },
+      "results": {
+        "converged": true,
+        "optimal_parameter_value": 256,
+        "total_computational_cost": 13512585864,
+        "cost_history": [
+          2739100484,
+          10773485380
+        ],
+        "parameter_history": [
+          {
+            "nx": 128,
+            "ny": 200
+          },
+          {
+            "nx": 256,
+            "ny": 200
+          }
+        ]
+      }
+    },
+    {
+      "solver": "plate_with_a_hole",
+      "target_parameter": "nx",
+      "profile": "p1",
+      "precision_config": {
+        "tolerance_error": 0.003,
+        "individual_error_tolerance": 0.015
+      },
+      "target_config": {
+        "initial_value": 128,
+        "multiplication_factor": 2,
+        "max_iteration_num": 4,
+        "search_range_min": null,
+        "search_range_max": null,
+        "search_range_slice_num": null
+      },
+      "non_target_parameters": {
+        "ny": 400
+      },
+      "results": {
+        "converged": true,
+        "optimal_parameter_value": 256,
+        "total_computational_cost": 53485669640,
+        "cost_history": [
+          10803268740,
+          42682400900
+        ],
+        "parameter_history": [
+          {
+            "nx": 128,
+            "ny": 400
+          },
+          {
+            "nx": 256,
+            "ny": 400
+          }
+        ]
+      }
+    },
+    {
+      "solver": "plate_with_a_hole",
+      "target_parameter": "ny",
+      "profile": "p1",
+      "precision_config": {
+        "tolerance_error": 0.003,
+        "individual_error_tolerance": 0.015
+      },
+      "target_config": {
+        "initial_value": 128,
+        "multiplication_factor": 2,
+        "max_iteration_num": 4,
+        "search_range_min": null,
+        "search_range_max": null,
+        "search_range_slice_num": null
+      },
+      "non_target_parameters": {
+        "nx": 100
+      },
+      "results": {
+        "converged": true,
+        "optimal_parameter_value": 512,
+        "total_computational_cost": 14286918188,
+        "cost_history": [
+          703945572,
+          2744915812,
+          10838056804
+        ],
+        "parameter_history": [
+          {
+            "nx": 100,
+            "ny": 128
+          },
+          {
+            "nx": 100,
+            "ny": 256
+          },
+          {
+            "nx": 100,
+            "ny": 512
+          }
+        ]
+      }
+    },
+    {
+      "solver": "plate_with_a_hole",
+      "target_parameter": "ny",
+      "profile": "p1",
+      "precision_config": {
+        "tolerance_error": 0.003,
+        "individual_error_tolerance": 0.015
+      },
+      "target_config": {
+        "initial_value": 128,
+        "multiplication_factor": 2,
+        "max_iteration_num": 4,
+        "search_range_min": null,
+        "search_range_max": null,
+        "search_range_slice_num": null
+      },
+      "non_target_parameters": {
+        "nx": 200
+      },
+      "results": {
+        "converged": true,
+        "optimal_parameter_value": 512,
+        "total_computational_cost": 56241168844,
+        "cost_history": [
+          2739100484,
+          10773485380,
+          42728582980
+        ],
+        "parameter_history": [
+          {
+            "nx": 200,
+            "ny": 128
+          },
+          {
+            "nx": 200,
+            "ny": 256
+          },
+          {
+            "nx": 200,
+            "ny": 512
+          }
+        ]
+      }
+    },
+    {
+      "solver": "plate_with_a_hole",
+      "target_parameter": "ny",
+      "profile": "p1",
+      "precision_config": {
+        "tolerance_error": 0.003,
+        "individual_error_tolerance": 0.015
+      },
+      "target_config": {
+        "initial_value": 128,
+        "multiplication_factor": 2,
+        "max_iteration_num": 4,
+        "search_range_min": null,
+        "search_range_max": null,
+        "search_range_slice_num": null
+      },
+      "non_target_parameters": {
+        "nx": 400
+      },
+      "results": {
+        "converged": true,
+        "optimal_parameter_value": 512,
+        "total_computational_cost": 223155864972,
+        "cost_history": [
+          10803268740,
+          42682400900,
+          169670195332
+        ],
+        "parameter_history": [
+          {
+            "nx": 400,
+            "ny": 128
+          },
+          {
+            "nx": 400,
+            "ny": 256
+          },
+          {
+            "nx": 400,
+            "ny": 512
+          }
+        ]
+      }
+    },
+    {
+      "solver": "plate_with_a_hole",
+      "target_parameter": "nx",
+      "profile": "p1",
+      "precision_config": {
+        "tolerance_error": 0.01,
+        "individual_error_tolerance": 0.05
+      },
+      "target_config": {
+        "initial_value": 128,
+        "multiplication_factor": 2,
+        "max_iteration_num": 4,
+        "search_range_min": null,
+        "search_range_max": null,
+        "search_range_slice_num": null
+      },
+      "non_target_parameters": {
+        "ny": 100
+      },
+      "results": {
+        "converged": true,
+        "optimal_parameter_value": 256,
+        "total_computational_cost": 3448861384,
+        "cost_history": [
+          703945572,
+          2744915812
+        ],
+        "parameter_history": [
+          {
+            "nx": 128,
+            "ny": 100
+          },
+          {
+            "nx": 256,
+            "ny": 100
+          }
+        ]
+      }
+    },
+    {
+      "solver": "plate_with_a_hole",
+      "target_parameter": "nx",
+      "profile": "p1",
+      "precision_config": {
+        "tolerance_error": 0.01,
+        "individual_error_tolerance": 0.05
+      },
+      "target_config": {
+        "initial_value": 128,
+        "multiplication_factor": 2,
+        "max_iteration_num": 4,
+        "search_range_min": null,
+        "search_range_max": null,
+        "search_range_slice_num": null
+      },
+      "non_target_parameters": {
+        "ny": 200
+      },
+      "results": {
+        "converged": true,
+        "optimal_parameter_value": 256,
+        "total_computational_cost": 13512585864,
+        "cost_history": [
+          2739100484,
+          10773485380
+        ],
+        "parameter_history": [
+          {
+            "nx": 128,
+            "ny": 200
+          },
+          {
+            "nx": 256,
+            "ny": 200
+          }
+        ]
+      }
+    },
+    {
+      "solver": "plate_with_a_hole",
+      "target_parameter": "nx",
+      "profile": "p1",
+      "precision_config": {
+        "tolerance_error": 0.01,
+        "individual_error_tolerance": 0.05
+      },
+      "target_config": {
+        "initial_value": 128,
+        "multiplication_factor": 2,
+        "max_iteration_num": 4,
+        "search_range_min": null,
+        "search_range_max": null,
+        "search_range_slice_num": null
+      },
+      "non_target_parameters": {
+        "ny": 400
+      },
+      "results": {
+        "converged": true,
+        "optimal_parameter_value": 256,
+        "total_computational_cost": 53485669640,
+        "cost_history": [
+          10803268740,
+          42682400900
+        ],
+        "parameter_history": [
+          {
+            "nx": 128,
+            "ny": 400
+          },
+          {
+            "nx": 256,
+            "ny": 400
+          }
+        ]
+      }
+    },
+    {
+      "solver": "plate_with_a_hole",
+      "target_parameter": "ny",
+      "profile": "p1",
+      "precision_config": {
+        "tolerance_error": 0.01,
+        "individual_error_tolerance": 0.05
+      },
+      "target_config": {
+        "initial_value": 128,
+        "multiplication_factor": 2,
+        "max_iteration_num": 4,
+        "search_range_min": null,
+        "search_range_max": null,
+        "search_range_slice_num": null
+      },
+      "non_target_parameters": {
+        "nx": 100
+      },
+      "results": {
+        "converged": true,
+        "optimal_parameter_value": 256,
+        "total_computational_cost": 3448861384,
+        "cost_history": [
+          703945572,
+          2744915812
+        ],
+        "parameter_history": [
+          {
+            "nx": 100,
+            "ny": 128
+          },
+          {
+            "nx": 100,
+            "ny": 256
+          }
+        ]
+      }
+    },
+    {
+      "solver": "plate_with_a_hole",
+      "target_parameter": "ny",
+      "profile": "p1",
+      "precision_config": {
+        "tolerance_error": 0.01,
+        "individual_error_tolerance": 0.05
+      },
+      "target_config": {
+        "initial_value": 128,
+        "multiplication_factor": 2,
+        "max_iteration_num": 4,
+        "search_range_min": null,
+        "search_range_max": null,
+        "search_range_slice_num": null
+      },
+      "non_target_parameters": {
+        "nx": 200
+      },
+      "results": {
+        "converged": true,
+        "optimal_parameter_value": 256,
+        "total_computational_cost": 13512585864,
+        "cost_history": [
+          2739100484,
+          10773485380
+        ],
+        "parameter_history": [
+          {
+            "nx": 200,
+            "ny": 128
+          },
+          {
+            "nx": 200,
+            "ny": 256
+          }
+        ]
+      }
+    },
+    {
+      "solver": "plate_with_a_hole",
+      "target_parameter": "ny",
+      "profile": "p1",
+      "precision_config": {
+        "tolerance_error": 0.01,
+        "individual_error_tolerance": 0.05
+      },
+      "target_config": {
+        "initial_value": 128,
+        "multiplication_factor": 2,
+        "max_iteration_num": 4,
+        "search_range_min": null,
+        "search_range_max": null,
+        "search_range_slice_num": null
+      },
+      "non_target_parameters": {
+        "nx": 400
+      },
+      "results": {
+        "converged": true,
+        "optimal_parameter_value": 256,
+        "total_computational_cost": 53485669640,
+        "cost_history": [
+          10803268740,
+          42682400900
+        ],
+        "parameter_history": [
+          {
+            "nx": 400,
+            "ny": 128
+          },
+          {
+            "nx": 400,
+            "ny": 256
+          }
+        ]
+      }
+    }
+  ]
+}

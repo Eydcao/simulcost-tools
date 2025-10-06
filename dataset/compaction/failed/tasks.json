@@ -1,0 +1,205 @@
+{
+  "metadata": {
+    "solver": "compaction",
+    "description": "Failed to converge parameter optimization tasks",
+    "total_tasks": 4
+  },
+  "tasks": [
+    {
+      "solver": "compaction",
+      "target_parameter": "nx",
+      "profile": "p1",
+      "precision_config": {
+        "tolerance_error": 0.0002,
+        "individual_error_tolerance": 0.0002
+      },
+      "target_config": {
+        "initial_value": 2,
+        "multiplication_factor": 2,
+        "max_iteration_num": 4,
+        "search_range_min": null,
+        "search_range_max": null,
+        "search_range_slice_num": null
+      },
+      "non_target_parameters": {
+        "ny": 10
+      },
+      "results": {
+        "converged": false,
+        "optimal_parameter_value": 16,
+        "total_computational_cost": 809936,
+        "cost_history": [
+          45316,
+          94020,
+          203044,
+          467556
+        ],
+        "parameter_history": [
+          {
+            "nx": 2,
+            "ny": 10
+          },
+          {
+            "nx": 4,
+            "ny": 10
+          },
+          {
+            "nx": 8,
+            "ny": 10
+          },
+          {
+            "nx": 16,
+            "ny": 10
+          }
+        ]
+      }
+    },
+    {
+      "solver": "compaction",
+      "target_parameter": "nx",
+      "profile": "p1",
+      "precision_config": {
+        "tolerance_error": 0.0002,
+        "individual_error_tolerance": 0.0002
+      },
+      "target_config": {
+        "initial_value": 2,
+        "multiplication_factor": 2,
+        "max_iteration_num": 4,
+        "search_range_min": null,
+        "search_range_max": null,
+        "search_range_slice_num": null
+      },
+      "non_target_parameters": {
+        "ny": 20
+      },
+      "results": {
+        "converged": false,
+        "optimal_parameter_value": 16,
+        "total_computational_cost": 1941456,
+        "cost_history": [
+          97796,
+          207940,
+          470564,
+          1165156
+        ],
+        "parameter_history": [
+          {
+            "nx": 2,
+            "ny": 20
+          },
+          {
+            "nx": 4,
+            "ny": 20
+          },
+          {
+            "nx": 8,
+            "ny": 20
+          },
+          {
+            "nx": 16,
+            "ny": 20
+          }
+        ]
+      }
+    },
+    {
+      "solver": "compaction",
+      "target_parameter": "ny",
+      "profile": "p1",
+      "precision_config": {
+        "tolerance_error": 0.0002,
+        "individual_error_tolerance": 0.0002
+      },
+      "target_config": {
+        "initial_value": 10,
+        "multiplication_factor": 2,
+        "max_iteration_num": 4,
+        "search_range_min": null,
+        "search_range_max": null,
+        "search_range_slice_num": null
+      },
+      "non_target_parameters": {
+        "nx": 2
+      },
+      "results": {
+        "converged": false,
+        "optimal_parameter_value": 80,
+        "total_computational_cost": 931344,
+        "cost_history": [
+          45316,
+          97796,
+          224356,
+          563876
+        ],
+        "parameter_history": [
+          {
+            "nx": 2,
+            "ny": 10
+          },
+          {
+            "nx": 2,
+            "ny": 20
+          },
+          {
+            "nx": 2,
+            "ny": 40
+          },
+          {
+            "nx": 2,
+            "ny": 80
+          }
+        ]
+      }
+    },
+    {
+      "solver": "compaction",
+      "target_parameter": "nx",
+      "profile": "p1",
+      "precision_config": {
+        "tolerance_error": 0.001,
+        "individual_error_tolerance": 0.001
+      },
+      "target_config": {
+        "initial_value": 2,
+        "multiplication_factor": 2,
+        "max_iteration_num": 4,
+        "search_range_min": null,
+        "search_range_max": null,
+        "search_range_slice_num": null
+      },
+      "non_target_parameters": {
+        "ny": 10
+      },
+      "results": {
+        "converged": false,
+        "optimal_parameter_value": 16,
+        "total_computational_cost": 809936,
+        "cost_history": [
+          45316,
+          94020,
+          203044,
+          467556
+        ],
+        "parameter_history": [
+          {
+            "nx": 2,
+            "ny": 10
+          },
+          {
+            "nx": 4,
+            "ny": 10
+          },
+          {
+            "nx": 8,
+            "ny": 10
+          },
+          {
+            "nx": 16,
+            "ny": 10
+          }
+        ]
+      }
+    }
+  ]
+}
