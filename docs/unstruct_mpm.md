@@ -201,15 +201,6 @@ Current configuration generates:
 - **Total per precision**: 24 tasks
 - **Total tasks**: 72 tasks (across 3 precision levels)
 
-### Quality-Based Statistics
-
-The statistics now track **quality** instead of raw nx values for better cross-profile comparison:
-
-- **p1 (cantilever)**: `quality = 0.5 * nx / 11`
-- **p2 (vibration_bar)**: `quality = nx / 35`
-- **p3 (disk_collision)**: `quality = 0.025 * nx`
-
-This normalization allows meaningful comparison of solution quality across different profiles with different domain sizes and characteristics.
 
 ### Dummy Solution Cache
 

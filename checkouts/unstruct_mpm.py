@@ -78,26 +78,6 @@ def save_datasets(successful_tasks, failed_tasks, output_dir):
     return success_file, failed_file
 
 
-def calculate_quality(nx, profile):
-    """Calculate quality based on nx and profile.
-    
-    Args:
-        nx: Grid resolution parameter
-        profile: Profile name (p1, p2, p3)
-    
-    Returns:
-        float: Quality value
-    """
-    if profile == "p1":
-        return 0.5 * nx / 11
-    elif profile == "p2":
-        return nx / 35
-    elif profile == "p3":
-        return 0.025 * nx
-    else:
-        raise ValueError(f"Unknown profile: {profile}")
-
-
 def plot_statistics(statistics, output_dir):
     """Plot convergence and optimal parameter statistics"""
     os.makedirs(output_dir, exist_ok=True)
@@ -150,13 +130,13 @@ def plot_statistics(statistics, output_dir):
     colors = ["skyblue", "lightgreen", "lightcoral", "gold"]
     color_idx = 0
 
-    if statistics["optimal_quality_values"]:
-        quality_values, quality_counts = np.unique(list(statistics["optimal_quality_values"]), return_counts=True)
+    if statistics["optimal_nx_values"]:
+        nx_values, nx_counts = np.unique(list(statistics["optimal_nx_values"]), return_counts=True)
         ax.bar(
-            [f"{q:.3f}" for q in quality_values],
-            quality_counts,
+            [str(n) for n in nx_values],
+            nx_counts,
             alpha=0.7,
-            label="quality parameter",
+            label="nx parameter",
             color=colors[color_idx % len(colors)],
         )
         color_idx += 1
@@ -236,11 +216,11 @@ def plot_statistics(statistics, output_dir):
         f.write("\n")
 
         f.write("5. Optimal Parameter Frequencies (All Tasks):\n")
-        if statistics["optimal_quality_values"]:
-            quality_values, quality_counts = np.unique(list(statistics["optimal_quality_values"]), return_counts=True)
-            f.write("   quality parameter (iterative):\n")
-            for quality, count in zip(quality_values, quality_counts):
-                f.write(f"     quality={quality:.3f}: {count} times\n")
+        if statistics["optimal_nx_values"]:
+            nx_values, nx_counts = np.unique(list(statistics["optimal_nx_values"]), return_counts=True)
+            f.write("   nx parameter (iterative):\n")
+            for nx, count in zip(nx_values, nx_counts):
+                f.write(f"     nx={nx}: {count} times\n")
 
         if statistics["optimal_n_part_values"]:
             n_part_values, n_part_counts = np.unique(list(statistics["optimal_n_part_values"]), return_counts=True)
@@ -295,7 +275,6 @@ def main():
         "convergence_by_target": defaultdict(lambda: {"total": 0, "converged": 0, "costs": []}),
         "convergence_by_profile": defaultdict(lambda: {"total": 0, "converged": 0}),
         "optimal_nx_values": [],
-        "optimal_quality_values": [],
         "optimal_n_part_values": [],
         "optimal_cfl_values": [],
     }
@@ -355,8 +334,6 @@ def main():
                         )
                         if best_param is not None:
                             statistics["optimal_nx_values"].append(best_param)
-                            quality = calculate_quality(best_param, profile)
-                            statistics["optimal_quality_values"].append(quality)
 
                     elif target_param == "n_part":
                         is_converged, best_param, cost_history, param_history = find_convergent_n_part(
