@@ -16,7 +16,7 @@ envs_params:
   nu: 0.3
 
 ##### Tunable parameters #####
-nx: 40
+nx: 80
 n_part: 2
 cfl: 0.00125
 

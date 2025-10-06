@@ -77,7 +77,7 @@ class UNSTRUCT_MPM(SIMULATOR):
         """Initialize output paths"""
         self.output_path = (
             dump_dir
-            + f"_nx{format_param_for_path(self.nx)}_npart{self.n_part}_cfl{format_param_for_path(self.cfl)}_radii{format_param_for_path(self.radii)}"
+            + f"_nx{format_param_for_path(self.nx)}_npart{self.n_part}_cfl{format_param_for_path(self.cfl)}"
         )
         self.output_path = Path(self.output_path)
         if not os.path.exists(self.output_path):

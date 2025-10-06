@@ -92,9 +92,12 @@ The simulated results are evaluated using two types of metrics:
 ### Self-Checking Metrics (Individual Simulation Validation)
 
 1. **Energy Conservation**:
-   - Total energy variation over time: $\text{var} = \frac{\sigma(E_{\text{tot}})}{\text{mean}(|E_{\text{tot}}|)} < \text{var\_threshold}$
+   - Total energy variation over time using hybrid approach:
+     - When mean energy is small (< 1e-10): $\text{var} = \sigma(E_{\text{tot}}) < \text{var\_threshold}$ (absolute threshold)
+     - When mean energy is significant: $\text{var} = \frac{\sigma(E_{\text{tot}})}{\text{mean}(|E_{\text{tot}}|)} < \text{var\_threshold}$ (relative threshold)
    - Where $E_{\text{tot}} = E_{\text{kinetic}} + E_{\text{potential}} + E_{\text{gravitational}}$
-   - Threshold depends on precision level (high: 0.2, medium: 0.5, low: 0.6)
+   - Threshold depends on precision level (high: 0.015, medium: 0.02, low: 0.05)
+   - Special handling for disk_collision case: only checks first 50% of time steps due to natural particle diffusion after collision
 
 2. **Positivity Preservation**: All energy components (kinetic, potential, gravitational, total) must be ≥ 0
 
@@ -105,12 +108,13 @@ The simulated results are evaluated using two types of metrics:
 When comparing two simulations with different parameter values:
 
 1. **Energy L2 Relative Difference**:
-   - For each energy type (pot, kin, gra, tot): $\text{diff}_i = \frac{||E_1^i - E_2^i||_2}{||E_1^i||_2 + ||E_2^i||_2 + \epsilon}$
-   - Average: $\text{avg\_diff} = \text{mean}(\text{diff}_{\text{pot}}, \text{diff}_{\text{kin}}, \text{diff}_{\text{gra}}, \text{diff}_{\text{tot}})$
+   - For each energy type (pot, kin, gra): $\text{diff}_i = \frac{||E_1^i - E_2^i||_2}{||E_1^i||_2 + ||E_2^i||_2 + \epsilon}$
+   - Average: $\text{avg\_diff} = \text{mean}(\text{diff}_{\text{pot}}, \text{diff}_{\text{kin}}, \text{diff}_{\text{gra}})$
+   - Note: Total energy (tot) is excluded from comparison to focus on individual energy components
 
 2. **Convergence Criterion**:
    - $\text{converged} = (\text{avg\_diff} < \text{energy\_tolerance}) \land \text{energy\_conserved}_1 \land \text{energy\_conserved}_2$
-   - Where energy_tolerance depends on precision level (high: 0.01, medium: 0.08, low: 0.3)
+   - Where energy_tolerance depends on precision level (high: 0.005, medium: 0.01, low: 0.03)
 
 ## Parameter Tuning Tasks and Dummy Strategy
 
@@ -119,7 +123,8 @@ When comparing two simulations with different parameter values:
 1. **nx Grid Resolution Search (iterative+0-shot)**
    - nx controls the background grid resolution: $\Delta x = L / nx$ where $L$ is domain length
    - Higher resolution improves accuracy but increases computational cost
-   - **Initial value**: 20, **Multiplication factor**: 2, **Max iterations**: 5
+   - **Profile-specific initial values**: p1=11, p2=17.5, p3=20
+   - **Multiplication factor**: 2, **Max iterations**: 4
 
 2. **n_part Particle Density Search (iterative+0-shot)**
    - n_part controls the number of particles per grid cell
@@ -135,16 +140,16 @@ When comparing two simulations with different parameter values:
 ### Dummy Strategy
 
 1. **nx Grid Resolution Search (iterative+0-shot)**
-   - Double nx each iteration (multiplication factor: 2) starting from 20 until convergence
+   - Double nx each iteration (multiplication factor: 2) starting from profile-specific initial values until convergence
    - **Non-target parameters**: n_part∈{2,4}, cfl=0.001
 
 2. **n_part Particle Density Search (iterative+0-shot)**
    - Double n_part each iteration (multiplication factor: 2) starting from 1 until convergence
-   - **Non-target parameters**: nx∈{50,100}, cfl=0.001
+   - **Non-target parameters**: nx∈{p1:[22,44], p2:[35,70], p3:[40,80]}, cfl=0.001
 
 3. **CFL Stability Search (iterative+0-shot)**
    - Halve CFL each iteration (multiplication factor: 0.5) starting from 0.01 until convergence
-   - **Non-target parameters**: nx∈{50,100}, n_part∈{2,4}
+   - **Non-target parameters**: nx∈{p1:[22,44], p2:[35,70], p3:[40,80]}, n_part∈{2,4}
    - **WARNING**: CFL must be less than 0.01 to avoid divergence
 
 ## Summarized parameter table for developer only (Not LLM)
@@ -162,7 +167,7 @@ More Notes:
 - **nx**: Determines spatial resolution; higher values improve accuracy but increase computational cost quadratically
 - **n_part**: Controls material representation; more particles improve accuracy but increase memory and computation
 - **cfl**: **CRITICAL** - Must be less than 0.01 to avoid numerical divergence; smaller values improve stability
-- **radii**: Fixed at 1.5 (support radius for particle interactions); not a tunable parameter
+- **radii**: Fixed at 1.0 (support radius for particle interactions); not a tunable parameter
 
 ### Other
 
@@ -190,11 +195,21 @@ More Notes:
 
 Current configuration generates:
 
-- **nx** (0-shot): 3 profiles × 2 non-target combos = 6 tasks
+- **nx** (iterative+0-shot): 3 profiles × 2 non-target combos = 6 tasks
 - **n_part** (iterative+0-shot): 3 profiles × 2 non-target combos = 6 tasks
 - **cfl** (iterative+0-shot): 3 profiles × 4 non-target combos = 12 tasks
 - **Total per precision**: 24 tasks
 - **Total tasks**: 72 tasks (across 3 precision levels)
+
+### Quality-Based Statistics
+
+The statistics now track **quality** instead of raw nx values for better cross-profile comparison:
+
+- **p1 (cantilever)**: `quality = 0.5 * nx / 11`
+- **p2 (vibration_bar)**: `quality = nx / 35`
+- **p3 (disk_collision)**: `quality = 0.025 * nx`
+
+This normalization allows meaningful comparison of solution quality across different profiles with different domain sizes and characteristics.
 
 ### Dummy Solution Cache
 
@@ -215,7 +230,7 @@ Where:
 This cost metric captures:
 
 1. **Particle Density Cost**: Scales with total number of particles ($n_x \times n_{\text{part}}$ in 1D)
-2. **Neighbor Communication Cost**: Accounts for particle-particle interactions within support radius (controlled by `radii` parameter, fixed at 1.5)
+2. **Neighbor Communication Cost**: Accounts for particle-particle interactions within support radius (controlled by `radii` parameter, fixed at 1.0)
 3. **Spatial Complexity**: Reflects both discretization density (via `nx` and `n_part`) and interaction complexity (via neighbor search on unstructured mesh)
 
 The total cost provides a comprehensive measure of computational work that reflects both the resolution and the interaction complexity in the unstructured MPM method.

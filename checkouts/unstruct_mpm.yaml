@@ -9,21 +9,21 @@ solver_info:
 task_distribution:
   strategy: "benchmark"
   total_individuals: 72
-  description: "3 profiles * 3 precision levels * (6 nx tasks + 6 n_part tasks + 12 cfl tasks) = 72 tasks"
+  description: "3 profiles * 3 precision levels * (2 nx tasks + 2 n_part tasks + 4 cfl tasks) = 72 tasks"
 
 precision_levels:
   high:
-    energy_tolerance: 0.01
-    var_threshold: 0.2
+    energy_tolerance: 0.005
+    var_threshold: 0.015
     description: "High precision energy convergence - very challenging"
-  # medium:
-  #   energy_tolerance: 0.08
-  #   var_threshold: 0.5
-  #   description: "Medium precision energy convergence - challenging"
-  # low:
-  #   energy_tolerance: 0.3
-  #   var_threshold: 0.6
-  #   description: "Low precision energy convergence - achievable"
+  medium:
+    energy_tolerance: 0.01
+    var_threshold: 0.02
+    description: "Medium precision energy convergence - challenging"
+  low:
+    energy_tolerance: 0.03
+    var_threshold: 0.05
+    description: "Low precision energy convergence - achievable"
 
 profiles:
   num_profiles: 3
@@ -37,28 +37,37 @@ target_parameters:
     # Profile-specific initial values (nx = Lx / dx)
     initial_values:
       p1: 11   # cantilever: Lx=11.0
-      p2: 35   # vibration_bar: Lx=35.0  
-      p3: 10   # disk_collision: Lx=1.0
+      p2: 17.5   # vibration_bar: Lx=35.0  
+      p3: 20   # disk_collision: Lx=1.0
     multiplication_factor: 2
     max_iteration_num: 4
     non_target_parameters:
       n_part: [2, 4]
       cfl: 0.001
 
-  # n_part:
-  #   search_type: "iterative+0-shot"
-  #   initial_value: 1
-  #   multiplication_factor: 2.0
-  #   max_iteration_num: 5
-  #   non_target_parameters:
-  #     nx: [50, 100]
-  #     cfl: 0.001
+  n_part:
+    search_type: "iterative+0-shot"
+    initial_value: 1
+    multiplication_factor: 2.0
+    max_iteration_num: 5
+    # Profile-specific non_target nx values
+    non_target_parameters:
+      nx:
+        p1: [22, 44]    # cantilever: medium resolution
+        p2: [35, 70]   # vibration_bar: medium resolution
+        p3: [40, 80]    # disk_collision: medium resolution
+      cfl: 0.001
 
-  # cfl:
-  #   search_type: "iterative+0-shot"
-  #   initial_value: 0.01 # Should ALWAYS be less than 0.01 to avoid divergence
-  #   multiplication_factor: 0.5
-  #   max_iteration_num: 5
-  #   non_target_parameters:
-  #     nx: [50, 100]
-  #     n_part: [2, 4]
+  cfl:
+    search_type: "iterative+0-shot"
+    initial_value: 0.01 # Should ALWAYS be less than 0.01 to avoid divergence
+    multiplication_factor: 0.5
+    max_iteration_num: 5
+    # Profile-specific non_target nx values
+    non_target_parameters:
+      nx:
+        p1: [22, 44]    # cantilever: medium resolution
+        p2: [35, 70]   # vibration_bar: medium resolution
+        p3: [40, 80]    # disk_collision: medium resolution
+      n_part: [2, 4]
+

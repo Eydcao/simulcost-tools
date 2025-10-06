@@ -78,6 +78,26 @@ def save_datasets(successful_tasks, failed_tasks, output_dir):
     return success_file, failed_file
 
 
+def calculate_quality(nx, profile):
+    """Calculate quality based on nx and profile.
+    
+    Args:
+        nx: Grid resolution parameter
+        profile: Profile name (p1, p2, p3)
+    
+    Returns:
+        float: Quality value
+    """
+    if profile == "p1":
+        return 0.5 * nx / 11
+    elif profile == "p2":
+        return nx / 35
+    elif profile == "p3":
+        return 0.025 * nx
+    else:
+        raise ValueError(f"Unknown profile: {profile}")
+
+
 def plot_statistics(statistics, output_dir):
     """Plot convergence and optimal parameter statistics"""
     os.makedirs(output_dir, exist_ok=True)
@@ -130,13 +150,13 @@ def plot_statistics(statistics, output_dir):
     colors = ["skyblue", "lightgreen", "lightcoral", "gold"]
     color_idx = 0
 
-    if statistics["optimal_nx_values"]:
-        nx_values, nx_counts = np.unique(list(statistics["optimal_nx_values"]), return_counts=True)
+    if statistics["optimal_quality_values"]:
+        quality_values, quality_counts = np.unique(list(statistics["optimal_quality_values"]), return_counts=True)
         ax.bar(
-            [str(n) for n in nx_values],
-            nx_counts,
+            [f"{q:.3f}" for q in quality_values],
+            quality_counts,
             alpha=0.7,
-            label="nx parameter",
+            label="quality parameter",
             color=colors[color_idx % len(colors)],
         )
         color_idx += 1
@@ -216,11 +236,11 @@ def plot_statistics(statistics, output_dir):
         f.write("\n")
 
         f.write("5. Optimal Parameter Frequencies (All Tasks):\n")
-        if statistics["optimal_nx_values"]:
-            nx_values, nx_counts = np.unique(list(statistics["optimal_nx_values"]), return_counts=True)
-            f.write("   nx parameter (iterative):\n")
-            for nx, count in zip(nx_values, nx_counts):
-                f.write(f"     nx={nx}: {count} times\n")
+        if statistics["optimal_quality_values"]:
+            quality_values, quality_counts = np.unique(list(statistics["optimal_quality_values"]), return_counts=True)
+            f.write("   quality parameter (iterative):\n")
+            for quality, count in zip(quality_values, quality_counts):
+                f.write(f"     quality={quality:.3f}: {count} times\n")
 
         if statistics["optimal_n_part_values"]:
             n_part_values, n_part_counts = np.unique(list(statistics["optimal_n_part_values"]), return_counts=True)
@@ -275,6 +295,7 @@ def main():
         "convergence_by_target": defaultdict(lambda: {"total": 0, "converged": 0, "costs": []}),
         "convergence_by_profile": defaultdict(lambda: {"total": 0, "converged": 0}),
         "optimal_nx_values": [],
+        "optimal_quality_values": [],
         "optimal_n_part_values": [],
         "optimal_cfl_values": [],
     }
@@ -300,7 +321,15 @@ def main():
                 # Get all non-target parameter names and their value lists
                 non_target_params = target_config["non_target_parameters"]
                 param_names = list(non_target_params.keys())
-                param_values = [non_target_params[name] for name in param_names]
+                # For profile-dependent parameters (like nx), select the correct value for the current profile
+                param_values = []
+                for name in param_names:
+                    values = non_target_params[name]
+                    if name == "nx":
+                        # Use the nx list for the current profile
+                        param_values.append(values[profile])
+                    else:
+                        param_values.append(values)                
 
                 # Generate all combinations using nested loops (cartesian product)
                 for combination in itertools.product(*param_values):
@@ -309,7 +338,7 @@ def main():
 
                     print(f"      Running {target_param} search with params: {task_params}")
                     # Call appropriate search function based on target parameter
-                    # Fixed radii = 1.5 for all simulations
+                    # Fixed radii = 1.0 for all simulations
                     if target_param == "nx":
                         # Get profile-specific initial nx value
                         initial_nx = target_config["initial_values"][profile]
@@ -326,6 +355,8 @@ def main():
                         )
                         if best_param is not None:
                             statistics["optimal_nx_values"].append(best_param)
+                            quality = calculate_quality(best_param, profile)
+                            statistics["optimal_quality_values"].append(quality)
 
                     elif target_param == "n_part":
                         is_converged, best_param, cost_history, param_history = find_convergent_n_part(
@@ -441,7 +472,7 @@ def main():
         param_values = [target_config["non_target_parameters"][name] for name in target_config["non_target_parameters"]]
         combinations_per_target = 1
         for values in param_values:
-            combinations_per_target *= len(values)
+            combinations_per_target *= len(values) if isinstance(values, list) else len(values[profile])
         expected_total += len(profiles) * combinations_per_target
 
     print(f"\nTask breakdown:")
@@ -449,7 +480,7 @@ def main():
         param_values = [target_config["non_target_parameters"][name] for name in target_config["non_target_parameters"]]
         combinations_per_target = 1
         for values in param_values:
-            combinations_per_target *= len(values)
+            combinations_per_target *= len(values) if isinstance(values, list) else len(values[profile])
         tasks_for_param = len(profiles) * combinations_per_target
         print(f"  {target_param}: {len(profiles)} profiles × {combinations_per_target} combos = {tasks_for_param}")
     print(f"  Expected total per precision: {expected_total}")

@@ -87,7 +87,14 @@ def build_target_configs(config):
 
         # Normalize all non-target parameters to lists for consistent iteration
         for key, value in param_info["non_target_parameters"].items():
-            if isinstance(value, list):
+            if isinstance(value, dict):
+                target_config["non_target_parameters"][key] = {}
+                for subkey, subval in value.items():
+                    if isinstance(subval, list):
+                        target_config["non_target_parameters"][key][subkey] = subval
+                    else:
+                        target_config["non_target_parameters"][key][subkey] = [subval]
+            elif isinstance(value, list):
                 target_config["non_target_parameters"][key] = value
             else:
                 target_config["non_target_parameters"][key] = [value]  # Convert single value to list
