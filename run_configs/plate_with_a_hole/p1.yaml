@@ -1,0 +1,26 @@
+defaults:
+  - _self_
+  - override hydra/hydra_logging: none
+  - override hydra/job_logging: none
+
+# Physical parameters
+L: 2.0                 # Half width (quarter model) [m]
+H: 2.0                 # Half height [m]
+R: 0.5                 # Hole radius [m]
+
+# Material properties
+E: 1.0e5               # Young's modulus [Pa]
+nu: 0.3                # Poisson's ratio [-]
+traction: 1000.0       # Applied traction [Pa]
+
+# Mesh parameters (tunable parameter from CSV)
+nx: 40                 # Number of elements in x direction
+ny: 40                 # Number of elements in y direction
+
+# Simulator statics
+record_dt: 1.0         # Not used for static problems
+end_frame: 1           # Single frame for static analysis
+
+# Output configuration
+dump_dir: "sim_res/plate_with_a_hole/p1"  # Directory for output files
+verbose: False         # Enable verbose output
