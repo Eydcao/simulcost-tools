@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This simulation solves solid mechanics problems using the Material Point Method (MPM) on unstructured mesh. The MPM is a hybrid Eulerian-Lagrangian method that combines the advantages of both approaches for simulating large deformation problems in solid mechanics.
+This simulation solves solid mechanics problems using the **explicit** Material Point Method (MPM) on unstructured mesh. The MPM is a hybrid Eulerian-Lagrangian method that combines the advantages of both approaches for simulating large deformation problems in solid mechanics.
 
 **Governing Equations:**
 
@@ -19,7 +19,7 @@ Where:
 
 **Constitutive Relations:**
 
-The stress tensor is computed using **Corotational Elasticity** (not linear elasticity):
+The stress tensor is computed using **Corotational Elasticity**:
 
 $$\boldsymbol{\sigma} = 2\mu (\mathbf{F} - \mathbf{R}) \mathbf{F}^T + \lambda J(J-1)\mathbf{I}$$
 
@@ -35,10 +35,10 @@ Where:
 
 ### Spatial Discretization
 
-The MPM uses a background Eulerian grid for solving the momentum equation and Lagrangian particles for tracking material properties:
+The unstructured MPM uses a background triangle mesh for solving the momentum equation and Lagrangian particles for tracking material properties:
 
-1. **Particle-to-Grid Transfer**: Material properties are transferred from particles to grid nodes
-2. **Grid Update**: Momentum equation is solved on the grid
+1. **Particle-to-Grid Transfer**: Material properties are transferred from particles to mesh vertices
+2. **Grid Update**: Momentum equation is solved on the mesh
 3. **Grid-to-Particle Transfer**: Updated velocities are transferred back to particles
 4. **Particle Update**: Particles are advected and their properties updated
 
@@ -52,7 +52,7 @@ Where:
 
 - $v_{\text{max,init}}$ = initial maximum velocity (upper bound, as the system has no new input forces)
 - $\Delta x$ = characteristic grid spacing
-- **Note**: Unlike many CFD solvers, this does **not** include sound speed $c$, as the solver uses the initial maximum velocity as the upper bound for stability
+- **Note**: this solver uses **explicit** material point methods and uses the initial maximum velocity to calcualted the dt, which is later as fixed for stability.
 
 ## Test Cases
 
@@ -97,9 +97,9 @@ The simulated results are evaluated using two types of metrics:
      - When mean energy is significant: $\text{var} = \frac{\sigma(E_{\text{tot}})}{\text{mean}(|E_{\text{tot}}|)} < \text{var\_threshold}$ (relative threshold)
    - Where $E_{\text{tot}} = E_{\text{kinetic}} + E_{\text{potential}} + E_{\text{gravitational}}$
    - Threshold depends on precision level (high: 0.015, medium: 0.02, low: 0.05)
-   - Special handling for disk_collision case: only checks first 50% of time steps due to natural particle diffusion after collision
+   - Special handling for **disk_collision** case: only checks first 50% of time horizon as in this case the disks will collide each other causing diffusion.
 
-2. **Positivity Preservation**: All energy components (kinetic, potential, gravitational, total) must be ≥ 0
+2. **Positivity Preservation**: kinetic and elastic potential energies must be ≥ 0
 
 3. **Wall Time Limit**: Simulation must complete within 600 seconds (10 minutes)
 
@@ -123,34 +123,33 @@ When comparing two simulations with different parameter values:
 1. **nx Grid Resolution Search (iterative+0-shot)**
    - nx controls the background grid resolution: $\Delta x = L / nx$ where $L$ is domain length
    - Higher resolution improves accuracy but increases computational cost
-   - **Profile-specific initial values**: p1=11, p2=17.5, p3=20
-   - **Multiplication factor**: 2, **Max iterations**: 4
 
 2. **n_part Particle Density Search (iterative+0-shot)**
    - n_part controls the number of particles per grid cell
    - More particles improve material representation but increase computational cost
-   - **Initial value**: 1, **Multiplication factor**: 2.0, **Max iterations**: 5
 
 3. **CFL Stability Search (iterative+0-shot)**
    - CFL number controls time step size for temporal stability
    - **CRITICAL**: CFL should ALWAYS be less than 0.01 to avoid divergence
-   - **Initial value**: 0.01, **Multiplication factor**: 0.5, **Max iterations**: 5
    - Smaller CFL improves stability but increases simulation time
 
 ### Dummy Strategy
 
 1. **nx Grid Resolution Search (iterative+0-shot)**
    - Double nx each iteration (multiplication factor: 2) starting from profile-specific initial values until convergence
+   - **Profile-specific initial values**: p1=11, p2=17.5, p3=20
+   - **Multiplication factor**: 2, **Max iterations**: 4
    - **Non-target parameters**: n_part∈{2,4}, cfl=0.001
 
 2. **n_part Particle Density Search (iterative+0-shot)**
    - Double n_part each iteration (multiplication factor: 2) starting from 1 until convergence
+   - **Initial value**: 1, **Multiplication factor**: 2.0, **Max iterations**: 5
    - **Non-target parameters**: nx∈{p1:[22,44], p2:[35,70], p3:[40,80]}, cfl=0.001
 
 3. **CFL Stability Search (iterative+0-shot)**
    - Halve CFL each iteration (multiplication factor: 0.5) starting from 0.01 until convergence
+   - **Initial value**: 0.01, **Multiplication factor**: 0.5, **Max iterations**: 5
    - **Non-target parameters**: nx∈{p1:[22,44], p2:[35,70], p3:[40,80]}, n_part∈{2,4}
-   - **WARNING**: CFL must be less than 0.01 to avoid divergence
 
 ## Summarized parameter table for developer only (Not LLM)
 
@@ -201,7 +200,6 @@ Current configuration generates:
 - **Total per precision**: 24 tasks
 - **Total tasks**: 72 tasks (across 3 precision levels)
 
-
 ### Dummy Solution Cache
 
 Config for dummy solution cache: `checkouts/unstruct_mpm.yaml`
@@ -225,7 +223,3 @@ This cost metric captures:
 3. **Spatial Complexity**: Reflects both discretization density (via `nx` and `n_part`) and interaction complexity (via neighbor search on unstructured mesh)
 
 The total cost provides a comprehensive measure of computational work that reflects both the resolution and the interaction complexity in the unstructured MPM method.
-
-## Important Notes for LLM Developers
-
-**CRITICAL WARNING**: The CFL parameter must ALWAYS be less than 0.01 to avoid numerical divergence. This is a fundamental stability requirement for the MPM method and should be emphasized in all parameter optimization tasks.
