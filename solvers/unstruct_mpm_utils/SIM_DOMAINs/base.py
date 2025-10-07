@@ -2,7 +2,9 @@ import taichi as ti
 import numpy as np
 import json
 import os
+import time
 
+MAX_WALL_TIME = 600  # 10 minutes in seconds
 
 @ti.data_oriented
 class SIM_DOMAIN:
@@ -13,6 +15,7 @@ class SIM_DOMAIN:
         self.create_additional_fields()
         self.mpm_field.init_fields()
         self.cost = 0
+        self.is_converged = True
 
     def create_additional_fields(self):
         # TODO implement in override
@@ -31,6 +34,7 @@ class SIM_DOMAIN:
         pass
 
     def run(self):
+        time_start = time.time()
         self.pre_process()
 
         # dump background mesh
@@ -40,6 +44,13 @@ class SIM_DOMAIN:
         self.mpm_field.dump(frame)
 
         for frame in range(self.ctrl_data.end_frame + 1):
+            # Check wall time and break if exceeded
+            current_time = time.time()
+            if current_time - time_start > MAX_WALL_TIME:
+                self.is_converged = False
+                print(f"Wall time exceeded {MAX_WALL_TIME} seconds")
+                break
+                
             # print(f"frame {frame}")
 
             step_per_frame = int(self.ctrl_data.frame_dt // self.ctrl_data.dt)

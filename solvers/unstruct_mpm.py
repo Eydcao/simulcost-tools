@@ -22,8 +22,6 @@ CASE_HANDLER = {
 
 DEVICE_HANDLER = {"cpu": ti.cpu, "gpu": ti.gpu, "cuda": ti.cuda}
 
-MAX_WALL_TIME = 600 # 10 minutes
-
 class UNSTRUCT_MPM(SIMULATOR):
     """2D Fluid Simulation with configurable parameters"""
 
@@ -118,14 +116,7 @@ class UNSTRUCT_MPM(SIMULATOR):
 
     
     def run(self):
-        time_start = time.time()
         self.sim_domain.run()
-        time_end = time.time()
-        if self.verbose:
-            print(f"Time taken: {time_end - time_start} seconds")
-        if time_end - time_start > MAX_WALL_TIME:
-            self.is_converged = False
-        else:
-            self.is_converged = True
+        self.is_converged = self.sim_domain.is_converged
         self._dump_meta()
         

@@ -13,7 +13,7 @@ task_distribution:
 
 precision_levels:
   high:
-    energy_tolerance: 0.005
+    energy_tolerance: 0.003
     var_threshold: 0.015
     description: "High precision energy convergence - very challenging"
   medium:
@@ -36,9 +36,9 @@ target_parameters:
     search_type: "iterative+0-shot"
     # Profile-specific initial values (nx = Lx / dx)
     initial_values:
-      p1: 11   # cantilever: Lx=11.0
-      p2: 17.5   # vibration_bar: Lx=35.0  
-      p3: 20   # disk_collision: Lx=1.0
+      p1: 22   # cantilever: Lx=11.0
+      p2: 35   # vibration_bar: Lx=35.0  
+      p3: 40   # disk_collision: Lx=1.0
     multiplication_factor: 2
     max_iteration_num: 4
     non_target_parameters:

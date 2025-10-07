@@ -210,11 +210,10 @@ def compute_energy_metrics(energies, var_threshold, case="cantilever"):
             metrics["energy_variation"] = 0.0
             metrics["energy_check_period"] = "single_step"
     
-    # Check if energies are positive (physical constraint)
-    for energy_type in ["pot", "kin", "gra"]:
+    # Check energy bounds
+    for energy_type in ["pot", "kin", "gra", "tot"]:
         if energy_type in energies:
             energy_values = energies[energy_type]
-            metrics[f"{energy_type}_positive"] = np.all(energy_values >= 0)
             metrics[f"{energy_type}_min"] = np.min(energy_values)
             metrics[f"{energy_type}_max"] = np.max(energy_values)
     
@@ -232,9 +231,11 @@ def print_energy_metrics(case_name, metrics):
     print(f"  Energy variation: {metrics.get('energy_variation', 'N/A'):.2e}")
     print(f"  Energy check period: {metrics.get('energy_check_period', 'N/A')}")
     
-    for energy_type in ["pot", "kin", "gra"]:
-        if f"{energy_type}_positive" in metrics:
-            print(f"  {energy_type.upper()} energy: {metrics[f'{energy_type}_min']:.2e} to {metrics[f'{energy_type}_max']:.2e} (positive: {metrics[f'{energy_type}_positive']})")
+    for energy_type in ["pot", "kin", "gra", "tot"]:
+        if f"{energy_type}_min" in metrics:
+            min_val = metrics[f"{energy_type}_min"]
+            max_val = metrics[f"{energy_type}_max"]
+            print(f"  {energy_type.upper()} energy: {min_val:.2e} to {max_val:.2e}")
 
 
 if __name__ == "__main__":
