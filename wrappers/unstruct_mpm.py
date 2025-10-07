@@ -162,11 +162,14 @@ def compare_energies_unstruct_mpm(profile1, nx1, n_part1, cfl1,
     metrics1 = compute_energy_metrics(energies1, var_threshold, case1)
     metrics2 = compute_energy_metrics(energies2, var_threshold, case2)
     
-    # Check convergence
-    converged = avg_energy_diff < energy_tolerance and metrics1["energy_conserved"] and metrics2["energy_conserved"]
+    # Check convergence - includes energy conservation, positivity, and energy difference
+    converged = (avg_energy_diff < energy_tolerance and 
+                 metrics1["energy_conserved"] and metrics2["energy_conserved"] and
+                 metrics1["energy_positivity_valid"] and metrics2["energy_positivity_valid"])
     
     print(f"Average relative energy difference: {avg_energy_diff:.2e}, variance: {metrics1['energy_variation']:.2e}, {metrics2['energy_variation']:.2e}")
     print(f"Energy tolerance: {energy_tolerance:.2e}, var_threshold: {var_threshold:.2e}")
+    print(f"Energy positivity valid: {metrics1['energy_positivity_valid']}, {metrics2['energy_positivity_valid']}")
     print(f"Converged: {converged}")
     
     return converged, metrics1, metrics2, avg_energy_diff
@@ -178,6 +181,22 @@ def compute_energy_metrics(energies, var_threshold, case="cantilever"):
         return None
         
     metrics = {}
+    
+    # Check energy positivity - kinetic and elastic potential energies must be ≥ 0
+    positivity_violated = False
+    for energy_type in ["kin", "pot"]:  # kinetic and elastic potential energies
+        if energy_type in energies:
+            energy_values = energies[energy_type]
+            min_energy = np.min(energy_values)
+            if min_energy < 0:
+                positivity_violated = True
+                metrics[f"{energy_type}_positivity_violated"] = True
+                metrics[f"{energy_type}_min_negative"] = min_energy
+            else:
+                metrics[f"{energy_type}_positivity_violated"] = False
+                metrics[f"{energy_type}_min_negative"] = 0.0
+    
+    metrics["energy_positivity_valid"] = not positivity_violated
     
     # Check if total energy is conserved (should be approximately constant)
     if "tot" in energies:
@@ -230,6 +249,15 @@ def print_energy_metrics(case_name, metrics):
     print(f"  Energy conserved: {metrics.get('energy_conserved', 'N/A')}")
     print(f"  Energy variation: {metrics.get('energy_variation', 'N/A'):.2e}")
     print(f"  Energy check period: {metrics.get('energy_check_period', 'N/A')}")
+    print(f"  Energy positivity valid: {metrics.get('energy_positivity_valid', 'N/A')}")
+    
+    # Print positivity violation details
+    for energy_type in ["kin", "pot"]:
+        if f"{energy_type}_positivity_violated" in metrics:
+            if metrics[f"{energy_type}_positivity_violated"]:
+                print(f"  {energy_type.upper()} energy positivity VIOLATED: min = {metrics.get(f'{energy_type}_min_negative', 'N/A'):.2e}")
+            else:
+                print(f"  {energy_type.upper()} energy positivity: OK")
     
     for energy_type in ["pot", "kin", "gra", "tot"]:
         if f"{energy_type}_min" in metrics:

@@ -101,7 +101,8 @@ The simulated results are evaluated using two types of metrics:
 
 2. **Positivity Preservation**: kinetic and elastic potential energies must be ≥ 0
 
-3. **Wall Time Limit**: Simulation must complete within 600 seconds (10 minutes)
+3. **Wall Time Limit**: Simulation must complete within 600 seconds (10 minutes).  
+   - This is checked internally by the solver: if the simulation exceeds the wall time limit during execution, it is immediately marked as **not converged** and stopped.
 
 ### Comparison Metrics (Between Adjacent Parameter Sets)
 
@@ -114,7 +115,7 @@ When comparing two simulations with different parameter values:
 
 2. **Convergence Criterion**:
    - $\text{converged} = (\text{avg\_diff} < \text{energy\_tolerance}) \land \text{energy\_conserved}_1 \land \text{energy\_conserved}_2$
-   - Where energy_tolerance depends on precision level (high: 0.005, medium: 0.01, low: 0.03)
+   - Where energy_tolerance depends on precision level (high: 0.003, medium: 0.01, low: 0.03)
 
 ## Parameter Tuning Tasks and Dummy Strategy
 
@@ -137,7 +138,7 @@ When comparing two simulations with different parameter values:
 
 1. **nx Grid Resolution Search (iterative+0-shot)**
    - Double nx each iteration (multiplication factor: 2) starting from profile-specific initial values until convergence
-   - **Profile-specific initial values**: p1=11, p2=17.5, p3=20
+   - **Profile-specific initial values**: p1=22, p2=35, p3=40
    - **Multiplication factor**: 2, **Max iterations**: 4
    - **Non-target parameters**: n_part∈{2,4}, cfl=0.001
 
@@ -157,9 +158,9 @@ When comparing two simulations with different parameter values:
 
 | Parameter | Description | Range |
 |-----------|-------------|-------|
-| nx | Background grid resolution (cells per unit length) | 20 ≤ nx ≤ 120 |
+| nx | Background grid resolution (cells per unit length) | 20 ≤ nx ≤ 300 |
 | n_part | Number of particles per grid cell | 1 ≤ n_part ≤ 32 |
-| cfl | Courant-Friedrichs-Lewy number for temporal stability | 0 < cfl < 0.01 |
+| cfl | Courant-Friedrichs-Lewy number for temporal stability | 0.01 < cfl < 0.0001 |
 
 More Notes:
 
@@ -188,7 +189,7 @@ More Notes:
   - **p2**: Vibration bar simulation - elastic wave propagation
   - **p3**: Disk collision simulation - impact dynamics
 - **Target Parameters**: 3 (nx, n_part, cfl)
-- **Precision Levels**: 3 (high: 0.01, medium: 0.08, low: 0.3)
+- **Precision Levels**: 3 (high, medium, low)
 
 ### Task Distribution
 
