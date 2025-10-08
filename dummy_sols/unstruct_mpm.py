@@ -10,7 +10,7 @@ from wrappers.unstruct_mpm import run_sim_unstruct_mpm, compare_energies_unstruc
 
 def find_convergent_nx(profile, nx, n_part, cfl, energy_tolerance, var_threshold, multiplication_factor, max_iteration_num, case="cantilever"):
     """Iteratively increase nx (grid resolution) until convergence is achieved with fixed other parameters.
-    Note: radii is fixed at 1.5 for all simulations.
+    Note: radii is fixed at 1.0 for all simulations.
     """
     nx_history = []
     cost_history = []
@@ -71,7 +71,7 @@ def find_convergent_nx(profile, nx, n_part, cfl, energy_tolerance, var_threshold
 
 def find_convergent_n_part(profile, nx, n_part, cfl, energy_tolerance, var_threshold, multiplication_factor, max_iteration_num, case="cantilever"):
     """Iteratively increase n_part until convergence is achieved with fixed other parameters.
-    Note: radii is fixed at 1.5 for all simulations.
+    Note: radii is fixed at 1.0 for all simulations.
     """
     n_part_history = []
     cost_history = []
@@ -132,7 +132,7 @@ def find_convergent_n_part(profile, nx, n_part, cfl, energy_tolerance, var_thres
 
 def find_convergent_cfl(profile, nx, n_part, cfl, energy_tolerance, var_threshold, multiplication_factor, max_iteration_num, case="cantilever"):
     """Iteratively reduce CFL number until convergence is achieved.
-    Note: radii is fixed at 1.5 for all simulations.
+    Note: radii is fixed at 1.0 for all simulations.
     """
     cfl_history = []
     cost_history = []
@@ -196,9 +196,9 @@ if __name__ == "__main__":
     profile = "p1"
     # Profile-specific initial nx values
     initial_nx_values = {
-        "p1": 11,   # cantilever: Lx=11.0
+        "p1": 22,   # cantilever: Lx=11.0
         "p2": 35,   # vibration_bar: Lx=35.0
-        "p3": 10    # disk_collision: Lx=1.0
+        "p3": 40    # disk_collision: Lx=1.0
     }
     initial_nx = initial_nx_values[profile]
     n_part = 2

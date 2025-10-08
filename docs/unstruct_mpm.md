@@ -160,13 +160,13 @@ When comparing two simulations with different parameter values:
 |-----------|-------------|-------|
 | nx | Background grid resolution (cells per unit length) | 20 ≤ nx ≤ 300 |
 | n_part | Number of particles per grid cell | 1 ≤ n_part ≤ 32 |
-| cfl | Courant-Friedrichs-Lewy number for temporal stability | 0.01 < cfl < 0.0001 |
+| cfl | Courant-Friedrichs-Lewy number for temporal stability | 0.0001 < cfl < 0.01 |
 
 More Notes:
 
 - **nx**: Determines spatial resolution; higher values improve accuracy but increase computational cost quadratically
 - **n_part**: Controls material representation; more particles improve accuracy but increase memory and computation
-- **cfl**: **CRITICAL** - Must be less than 0.01 to avoid numerical divergence; smaller values improve stability
+- **cfl**: **CRITICAL** - Should ALWAYS be less than 0.01 to avoid numerical divergence; smaller values improve stability
 - **radii**: Fixed at 1.0 (support radius for particle interactions); not a tunable parameter
 
 ### Other
