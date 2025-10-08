@@ -58,6 +58,7 @@ def build_target_configs(config):
         target_config = {
             "search_type": param_info["search_type"],
             "initial_value": param_info.get("initial_value"),
+            "initial_values": param_info.get("initial_values") if isinstance(param_info.get("initial_values"), dict) else None,
             "non_target_parameters": {},
             # Search parameters
             "multiplication_factor": param_info.get("multiplication_factor"),
@@ -86,7 +87,14 @@ def build_target_configs(config):
 
         # Normalize all non-target parameters to lists for consistent iteration
         for key, value in param_info["non_target_parameters"].items():
-            if isinstance(value, list):
+            if isinstance(value, dict):
+                target_config["non_target_parameters"][key] = {}
+                for subkey, subval in value.items():
+                    if isinstance(subval, list):
+                        target_config["non_target_parameters"][key][subkey] = subval
+                    else:
+                        target_config["non_target_parameters"][key][subkey] = [subval]
+            elif isinstance(value, list):
                 target_config["non_target_parameters"][key] = value
             else:
                 target_config["non_target_parameters"][key] = [value]  # Convert single value to list

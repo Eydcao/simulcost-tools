@@ -1,0 +1,28 @@
+defaults:
+  - _self_
+  - override hydra/hydra_logging: none
+  - override hydra/job_logging: none
+
+case: "disk_collision"
+
+envs_params:
+  Lx: 1.0
+  Ly: 1.0
+  R: 0.2
+  end_time: 3.0
+  gravity: 0.0
+  p_rho: 1000.0
+  E: 1000.0
+  nu: 0.3
+
+##### Tunable parameters #####
+nx: 80
+n_part: 2
+cfl: 0.00125
+
+##### Other fixed parameters #####
+flip_ratio: 1.0
+advect_scheme: 0
+verbose: 0
+device: "gpu"
+dump_dir: "sim_res/unstruct_mpm/p3"

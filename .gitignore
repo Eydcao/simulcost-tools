@@ -23,6 +23,10 @@ useless/*
 **/*.status
 **/*.deck
 **/*.dat
+**/*.npy
+**/*.npz
+**/*.pkl
+**/*.vtk
 **/*.txt
 **/Makefile*
 **/*.backup

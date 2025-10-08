@@ -1,0 +1,31 @@
+defaults:
+  - _self_
+  - override hydra/hydra_logging: none
+  - override hydra/job_logging: none
+
+case: "vibration_bar"
+
+envs_params:
+  Lx: 35.0
+  Ly: 1.0
+  Lxe: 25.0
+  Lye: 1.0
+  x_start: 5.0
+  y_start: 0.0
+  end_time: 40.0
+  gravity: 0.0
+  E: 100.0
+  nu: 0.0
+  p_rho: 1.0
+
+##### Tunable parameters #####
+nx: 70
+n_part: 2
+cfl: 0.005
+
+##### Other fixed parameters #####
+flip_ratio: 1.0
+advect_scheme: 0
+verbose: 0
+device: "gpu"
+dump_dir: "sim_res/unstruct_mpm/p2"
