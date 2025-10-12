@@ -31,7 +31,7 @@ def find_convergent_cfl(profile, initial_cfl, initial_n_space, tolerance, max_it
                                       reaction_type, allee_threshold)
         cost_history.append(cost_i)
         cfl_history.append(current_cfl)
-        param_history.append({"cfl": current_cfl, "n_space": n_space, "reaction_type": reaction_type})
+        param_history.append({"cfl": current_cfl, "n_space": n_space, "tol": tol, "min_step": min_step, "initial_step_guess": initial_step_guess})
 
         # If we have previous results to compare with
         if len(cfl_history) > 1:
@@ -107,7 +107,7 @@ def find_convergent_n_space(profile, initial_n_space, cfl, tolerance, max_iter, 
                                       reaction_type, allee_threshold)
         cost_history.append(cost_i)
         n_space_history.append(current_n_space)
-        param_history.append({"cfl": current_cfl, "n_space": current_n_space, "reaction_type": reaction_type})
+        param_history.append({"cfl": current_cfl, "n_space": current_n_space, "tol": tol, "min_step": min_step, "initial_step_guess": initial_step_guess})
 
         # If we have previous results to compare with
         if len(n_space_history) > 1:
@@ -181,7 +181,7 @@ def find_convergent_tolerance(profile, initial_tol, n_space, cfl, tolerance, max
                                       reaction_type, allee_threshold)
         cost_history.append(cost_i)
         tol_history.append(current_tol)
-        param_history.append({"cfl": cfl, "n_space": n_space, "tol": current_tol, "reaction_type": reaction_type})
+        param_history.append({"cfl": cfl, "n_space": n_space, "tol": current_tol, "min_step": min_step, "initial_step_guess": initial_step_guess})
 
         # If we have previous results to compare with
         if len(tol_history) > 1:
