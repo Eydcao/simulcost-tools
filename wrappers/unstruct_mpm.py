@@ -8,6 +8,59 @@ from pathlib import Path
 # Fixed radii value for all simulations (not a tunable parameter)
 FIXED_RADII = 1.0
 
+
+def _find_runner_path():
+    """Automatically find the correct path to unstruct_mpm.py runner."""
+    # Get current working directory
+    cwd = os.getcwd()
+
+    # List of possible runner paths relative to different working directories
+    possible_paths = []
+
+    # If working from project root (SimulCost-Bench/)
+    if cwd.endswith('SimulCost-Bench'):
+        possible_paths.extend([
+            "costsci_tools/runners/unstruct_mpm.py",
+            "runners/unstruct_mpm.py"
+        ])
+    # If working from costsci_tools/ subdirectory
+    elif cwd.endswith('costsci_tools') or 'costsci_tools' in cwd:
+        possible_paths.extend([
+            "runners/unstruct_mpm.py",
+            "../runners/unstruct_mpm.py",
+            "costsci_tools/runners/unstruct_mpm.py"
+        ])
+
+    # Add generic fallback paths
+    possible_paths.extend([
+        "runners/unstruct_mpm.py",
+        "costsci_tools/runners/unstruct_mpm.py",
+        "./runners/unstruct_mpm.py",
+        "../runners/unstruct_mpm.py",
+        "../../runners/unstruct_mpm.py"
+    ])
+
+    # Remove duplicates while preserving order
+    seen = set()
+    unique_paths = []
+    for path in possible_paths:
+        if path not in seen:
+            seen.add(path)
+            unique_paths.append(path)
+
+    for path in unique_paths:
+        if os.path.exists(path):
+            return path
+
+    # If none found, raise an error with helpful information
+    raise FileNotFoundError(
+        f"Could not find unstruct_mpm.py runner in any expected location.\n"
+        f"Current working directory: {cwd}\n"
+        f"Searched paths: {unique_paths}\n"
+        f"Please ensure the runner exists or update the search paths."
+    )
+
+
 def format_param_for_path(value):
     """
     Format parameter values for clean folder/file names.
@@ -47,7 +100,10 @@ def run_sim_unstruct_mpm(profile, nx, n_part, cfl, case="cantilever"):
 
     # Run the simulation if not already done
     print(f"Running new simulation with parameters: nx={nx}, n_part={n_part}, cfl={cfl}, case={case}")
-    cmd = f"{sys.executable} runners/unstruct_mpm.py --config-name={profile} nx={nx} n_part={n_part} cfl={cfl} case={case}"
+
+    # Build command with parameters using auto-detected runner path
+    runner_path = _find_runner_path()
+    cmd = f"{sys.executable} {runner_path} --config-name={profile} nx={nx} n_part={n_part} cfl={cfl} case={case}"
     subprocess.run(cmd, shell=True, check=True)
 
     # Load the cost and convergence status from the meta.json file
