@@ -317,6 +317,10 @@ class FastIPC(SIMULATOR):
     def dump(self):
         particle_pos = self.x.to_numpy()
         particle_vel = self.v.to_numpy()
+
+        if self.dim == 2:
+            particle_pos = np.hstack([particle_pos, np.zeros((self.n_particles, 1))])
+            particle_vel = np.hstack([particle_vel, np.zeros((self.n_particles, 1))])
         
         point_data = {'velocity': particle_vel}
         

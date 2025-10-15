@@ -5,10 +5,10 @@ import hydra
 from omegaconf import DictConfig, OmegaConf
 from solvers.fastipc import FastIPC
 
-@hydra.main(version_base=None, config_path="../run_configs", config_name="config")
+@hydra.main(version_base=None, config_path="../run_configs/fastipc", config_name="default")
 def main(cfg: DictConfig) -> None:
     print(OmegaConf.to_yaml(cfg))
-    solver = FastIPC(verbose=True, cfg=cfg.solver)
+    solver = FastIPC(verbose=True, cfg=cfg)
     solver.run()
 
 if __name__ == "__main__":

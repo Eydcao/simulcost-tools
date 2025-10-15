@@ -1,4 +1,8 @@
-# @package solver
+defaults:
+  - _self_
+  - override hydra/hydra_logging: none
+  - override hydra/job_logging: none
+
 dim: 2
 dt: 0.01
 E: 1e4
@@ -12,3 +16,4 @@ mesh_offset:
 dump_dir: "output"
 record_dt: 0.01
 end_frame: 360
+verbose: True
