@@ -1,0 +1,81 @@
+# Euler 2D Solver Checkout Configuration
+# This file centralizes all parameter settings for both documentation and dummy solution generation
+
+solver_info:
+  name: "Euler 2D"
+  numerical_method: "WENO5 reconstruction with TVD-RK3 time integration and advection-projection scheme"
+  reference: "CSMPM_BOW framework for compressible Euler equations"
+
+# Domain information for each profile (for agent prompt context)
+domain_info:
+  p1:
+    name: "central_boom_2d"
+    domain_size: [1.0, 1.0]  # Square domain
+    aspect_ratio: 1.0
+    description: "Central explosion in square domain"
+  p2:
+    name: "stair_flow_2d"
+    domain_size: [1.0, 0.333]  # Wide domain
+    aspect_ratio: 0.333  # 1/3
+    description: "Stair flow in wide domain (1:3 aspect ratio)"
+  p3:
+    name: "cylinder_boom_with_gravity_side_bounded"
+    domain_size: [1.0, 0.333]  # Wide domain
+    aspect_ratio: 0.333  # 1/3
+    description: "Cylinder explosion with gravity in wide domain (1:3 aspect ratio)"
+  p4:
+    name: "Mach_Diamond_new"
+    domain_size: [1.0, 0.5]  # Moderate domain
+    aspect_ratio: 0.5  # 1/2
+    description: "Mach diamond pattern in moderate domain (1:2 aspect ratio)"
+
+task_distribution:
+  strategy: "benchmark"
+  total_individuals: 144  # 4 profiles × 3 target params × 3 precision levels × 4 non-target combos = 144 tasks
+
+precision_levels:
+  low:
+    tolerance_rmse: 0.30  # Captures most convergences (n_grid: 64->128=0.28, CFL: 0.25->0.125=0.14)
+    description: "Relaxed convergence for coarse grids"
+  medium:
+    tolerance_rmse: 0.22  # Moderate (n_grid: 128->256=0.21, CFL: 0.5->0.25=0.18)
+    description: "Moderate convergence criteria"
+  high:
+    tolerance_rmse: 0.15  # Stringent (CFL: 0.25->0.125=0.14, requires finer grids for n_grid)
+    description: "Stringent convergence for fine grids"
+
+profiles:
+  num_profiles: 4
+  # Available profiles:
+  # p1 (central_boom_2d), p2 (stair_flow_2d), p3 (cylinder_gravity), p4 (mach_diamond)
+  active_profiles: ["p1", "p2", "p3", "p4"]
+
+# Parameter configurations for each target parameter
+target_parameters:
+  n_grid_x:
+    description: "Grid resolution in x-direction - determines spatial accuracy. Agent should reason about dx from domain size. Y-direction resolution (n_grid_y) is computed automatically from aspect ratio."
+    search_type: "iterative+0-shot"
+    initial_value: 16
+    multiplication_factor: 2.0  # Refine: 16 → 32 → 64 → 128 → 256 → 512...
+    max_iteration_num: 6  # Increased to allow reaching finer grids for convergence
+    non_target_parameters:
+      cfl: [0.5, 0.25]  # Test with standard and conservative CFL
+      cg_tolerance: [1.0e-7, 1.0e-6]  # Test with tight and moderate CG tolerance
+
+  cfl:
+    description: "CFL number for timestep stability - controls time step size relative to grid spacing and wave speed (typical range: 0.1-0.9)"
+    search_type: "iterative+0-shot"
+    initial_value: 0.5
+    division_factor: 2.0  # Reduce: 0.5 → 0.25 → 0.125 → 0.0625...
+    max_iteration_num: 5  # Increased to allow reaching smaller CFL for convergence
+    non_target_parameters:
+      n_grid_x: [64, 128]  # Test with moderate and fine grids
+      cg_tolerance: [1.0e-7, 1.0e-6]  # Test with tight and moderate CG tolerance
+
+  cg_tolerance:
+    description: "CG solver convergence tolerance for pressure projection step. Too tight leads to unnecessary iterations; too loose may cause divergence (typical range: 1e-9 to 1e-5)"
+    search_type: "0-shot"
+    search_values: [1.0e-7, 1.0e-6, 1.0e-5]  # From tight to loose (reduced set for testing)
+    non_target_parameters:
+      n_grid_x: [64, 128]  # Test with moderate and fine grids
+      cfl: [0.5, 0.25]  # Test with standard and conservative CFL

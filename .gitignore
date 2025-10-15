@@ -27,6 +27,7 @@ useless/*
 **/*.npz
 **/*.pkl
 **/*.vtk
+**/*.ply
 **/*.txt
 **/Makefile*
 **/*.backup
