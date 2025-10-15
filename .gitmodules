@@ -1,3 +1,6 @@
 [submodule "solvers/epoch"]
 	path = solvers/epoch
 	url = https://github.com/Warwick-Plasma/epoch.git
+[submodule "solvers/fastipc_utils"]
+	path = solvers/fastipc_utils
+	url = git@github.com:Eydcao/fem_transient_utils.git

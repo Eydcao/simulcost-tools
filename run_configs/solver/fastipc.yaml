@@ -1,0 +1,14 @@
+# @package solver
+dim: 2
+dt: 0.01
+E: 1e4
+nu: 0.4
+density: 100
+mesh_file: "../projects/FastIPC/input/Sharkey.obj"
+mesh_scale: 0.6
+mesh_offset:
+  - 0.35
+  - 0.3
+dump_dir: "output"
+record_dt: 0.01
+end_frame: 360
