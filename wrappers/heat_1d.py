@@ -3,9 +3,27 @@ import subprocess
 import h5py
 import numpy as np
 import json
+import sys
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
+
+# Get base directory for simulation results from environment variable
+# If not set, use current directory (maintains backward compatibility)
+SIM_RES_BASE_DIR = os.getenv("SIM_RES_BASE_DIR", None)
+if SIM_RES_BASE_DIR:
+    print(f"✅ Using custom simulation results directory: {SIM_RES_BASE_DIR}")
 
 env = os.environ.copy()
 env["PYTHONPATH"] = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
+
+
+def _get_sim_path(relative_path):
+    """Construct simulation path, using absolute path if SIM_RES_BASE_DIR is set."""
+    if SIM_RES_BASE_DIR:
+        return os.path.join(SIM_RES_BASE_DIR, relative_path)
+    return relative_path
 
 
 def _find_runner_path():
@@ -62,7 +80,7 @@ def _find_runner_path():
 
 def run_sim_heat_1d(profile, cfl, n_space):
     """Run the heat1d simulation with the given CFL number if not already simulated."""
-    dir_path = f"sim_res/heat_1d/{profile}_cfl_{cfl}_nx_{n_space}/"
+    dir_path = _get_sim_path(f"sim_res/heat_1d/{profile}_cfl_{cfl}_nx_{n_space}/")
     meta_path = os.path.join(dir_path, "meta.json")
 
     # Check if the simulation has already been run
@@ -70,11 +88,17 @@ def run_sim_heat_1d(profile, cfl, n_space):
         with open(meta_path, "r") as f:
             meta = json.load(f)
             if "cost" in meta:
+                print(f"Using existing simulation results from {dir_path}")
                 return meta["cost"]
 
     # Run the simulation if not already done
+    print(f"Running new simulation with parameters: cfl={cfl}, n_space={n_space}")
     runner_path = _find_runner_path()
-    cmd = f"python {runner_path} --config-name={profile} cfl={cfl} n_space={n_space}"
+    if SIM_RES_BASE_DIR:
+        dump_dir = os.path.join(SIM_RES_BASE_DIR, f"sim_res/heat_1d/{profile}")
+        cmd = f"{sys.executable} {runner_path} --config-name={profile} cfl={cfl} n_space={n_space} dump_dir={dump_dir}"
+    else:
+        cmd = f"{sys.executable} {runner_path} --config-name={profile} cfl={cfl} n_space={n_space}"
     subprocess.run(cmd, shell=True, check=True, env=env)
 
     # Load the cost from the meta.json file
@@ -87,12 +111,13 @@ def run_sim_heat_1d(profile, cfl, n_space):
 
 def get_res_heat_1d(profile, cfl, n_space):
     """Load all time frames for a given CFL number, triggering a run if files are missing."""
-    dir_path = f"sim_res/heat_1d/{profile}_cfl_{cfl}_nx_{n_space}/"
+    dir_path = _get_sim_path(f"sim_res/heat_1d/{profile}_cfl_{cfl}_nx_{n_space}/")
     results = []
 
     # Check if the first result file exists, trigger a run if not
     file_path = os.path.join(dir_path, "res_0.h5")
     if not os.path.exists(file_path):
+        print(f"No results found for parameters: cfl={cfl}, n_space={n_space}. Triggering simulation.")
         run_sim_heat_1d(profile, cfl, n_space)
 
     # Sort files by time frame

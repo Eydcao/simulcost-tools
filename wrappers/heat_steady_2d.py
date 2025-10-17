@@ -5,9 +5,26 @@ import numpy as np
 import json
 from scipy.interpolate import RegularGridInterpolator
 import sys
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
+
+# Get base directory for simulation results from environment variable
+# If not set, use current directory (maintains backward compatibility)
+SIM_RES_BASE_DIR = os.getenv("SIM_RES_BASE_DIR", None)
+if SIM_RES_BASE_DIR:
+    print(f"✅ Using custom simulation results directory: {SIM_RES_BASE_DIR}")
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from solvers.utils import format_param_for_path
+
+
+def _get_sim_path(relative_path):
+    """Construct simulation path, using absolute path if SIM_RES_BASE_DIR is set."""
+    if SIM_RES_BASE_DIR:
+        return os.path.join(SIM_RES_BASE_DIR, relative_path)
+    return relative_path
 
 
 def _find_runner_path():
@@ -64,7 +81,7 @@ def _find_runner_path():
 
 def run_sim_heat_steady_2d(profile, dx, relax, error_threshold, t_init):
     """Run the heat_steady_2d simulation with the given parameters if not already simulated."""
-    dir_path = f"sim_res/heat_steady_2d/{profile}_dx_{format_param_for_path(dx)}_relax_{format_param_for_path(relax)}_Tinit_{format_param_for_path(t_init)}_error_{format_param_for_path(error_threshold)}/"
+    dir_path = _get_sim_path(f"sim_res/heat_steady_2d/{profile}_dx_{format_param_for_path(dx)}_relax_{format_param_for_path(relax)}_Tinit_{format_param_for_path(t_init)}_error_{format_param_for_path(error_threshold)}/")
     meta_path = os.path.join(dir_path, "meta.json")
 
     # Check if the simulation has already been run
@@ -80,7 +97,11 @@ def run_sim_heat_steady_2d(profile, dx, relax, error_threshold, t_init):
         f"Running new simulation with parameters: dx={dx}, relax={relax}, error_threshold={error_threshold}, T_init={t_init}"
     )
     runner_path = _find_runner_path()
-    cmd = f"python {runner_path} --config-name={profile} dx={dx} relax={relax} error_threshold={error_threshold} T_init={t_init}"
+    if SIM_RES_BASE_DIR:
+        dump_dir = os.path.join(SIM_RES_BASE_DIR, f"sim_res/heat_steady_2d/{profile}")
+        cmd = f"{sys.executable} {runner_path} --config-name={profile} dx={dx} relax={relax} error_threshold={error_threshold} T_init={t_init} dump_dir={dump_dir}"
+    else:
+        cmd = f"{sys.executable} {runner_path} --config-name={profile} dx={dx} relax={relax} error_threshold={error_threshold} T_init={t_init}"
     subprocess.run(cmd, shell=True, check=True)
 
     # Load the cost and num_steps from the meta.json file
@@ -93,7 +114,7 @@ def run_sim_heat_steady_2d(profile, dx, relax, error_threshold, t_init):
 
 
 def get_res_heat_steady_2d(profile, dx, relax, error_threshold, t_init):
-    dir_path = f"sim_res/heat_steady_2d/{profile}_dx_{format_param_for_path(dx)}_relax_{format_param_for_path(relax)}_Tinit_{format_param_for_path(t_init)}_error_{format_param_for_path(error_threshold)}/"
+    dir_path = _get_sim_path(f"sim_res/heat_steady_2d/{profile}_dx_{format_param_for_path(dx)}_relax_{format_param_for_path(relax)}_Tinit_{format_param_for_path(t_init)}_error_{format_param_for_path(error_threshold)}/")
     meta_path = os.path.join(dir_path, "meta.json")
 
     # Check if meta.json exists and contains 'cost', otherwise trigger a simulation
