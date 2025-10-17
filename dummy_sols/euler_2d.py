@@ -11,59 +11,8 @@ import json
 from pathlib import Path
 
 
-# TODO this should have been in the wrapper, remove this and use wrapper properly
-def run_sim_euler_2d(profile, testcase, n_grid_x, start_frame=0, end_frame=180, cfl=None, cg_tolerance=None):
-    """Run the euler_2d simulation with the given parameters if not already simulated."""
-    aspect_ratios = {0: 1.0, 1: 1.0/3.0, 2: 1.0/3.0, 3: 1.0/2.0}
-    n_grid_y = int(round(aspect_ratios[testcase] * n_grid_x))
-
-    cfl_str = f"{cfl:.3f}" if cfl is not None else "default"
-    cgtol_str = f"{cg_tolerance:.1e}" if cg_tolerance is not None else "default"
-    dir_path = f"sim_res/euler_2d/{profile}_cfl_{cfl_str}_cgtol_{cgtol_str}_nx_{n_grid_x}/"
-    meta_path = os.path.join(dir_path, "meta.json")
-
-    if os.path.exists(meta_path):
-        with open(meta_path, "r") as f:
-            meta = json.load(f)
-            if "cost" in meta:
-                print(f"Using existing simulation results from {dir_path}")
-                return meta["cost"]
-
-    print(f"Running new simulation with parameters: testcase={testcase}, n_grid_x={n_grid_x}, frames={start_frame}-{end_frame}, cfl={cfl}, cg_tolerance={cg_tolerance}")
-    cmd = f"python runners/euler_2d.py --config-name={profile} testcase={testcase} n_grid_x={n_grid_x} start_frame={start_frame} end_frame={end_frame}"
-    if cfl is not None:
-        cmd += f" cfl={cfl}"
-    if cg_tolerance is not None:
-        cmd += f" cg_tolerance={cg_tolerance}"
-    subprocess.run(cmd, shell=True, check=True)
-
-    with open(meta_path, "r") as f:
-        meta = json.load(f)
-        cost = meta["cost"]
-
-    return cost
-
-
-def compare_res_euler_2d(
-    profile1, testcase1, n_grid_x1,
-    profile2, testcase2, n_grid_x2,
-    rmse_tolerance,
-    start_frame=0, end_frame=180,
-    cfl1=None, cg_tolerance1=None,
-    cfl2=None, cg_tolerance2=None
-):
-    # TODO: this is repeatitive, the wrapper does not do anything special, just call the imported func directly
-    """Compare two sets of results using relative error norms."""
-    # Import here to avoid circular dependency
-    from wrappers.euler_2d import compare_res_euler_2d as compare_func
-    return compare_func(
-        profile1, testcase1, n_grid_x1,
-        profile2, testcase2, n_grid_x2,
-        rmse_tolerance,
-        start_frame, end_frame,
-        cfl1, cg_tolerance1,
-        cfl2, cg_tolerance2
-    )
+# Import wrapper functions directly to avoid duplication
+from wrappers.euler_2d import run_sim_euler_2d, compare_res_euler_2d
 
 
 def find_convergent_n_grid_x(

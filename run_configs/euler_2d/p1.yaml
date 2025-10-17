@@ -5,6 +5,8 @@ defaults:
 
 # Test case selection
 testcase: 0           # 0=central_explosion, 1=stair_flow, 2=cylinder_gravity, 3=mach_diamond
+testcase_name: "central_boom_2d"
+aspect_ratio: 1.0     # Aspect ratio for this testcase (Ny = aspect_ratio * Nx)
 
 # Numerical parameters (tunable)
 n_grid_x: 64          # Grid resolution in x-direction (y-direction computed from aspect ratio)
@@ -14,7 +16,7 @@ cg_tolerance: 1.0e-7  # CG solver convergence tolerance for pressure projection 
 # Simulation statics (non-tunable - define the task)
 start_frame: 0        # Starting frame number
 end_frame: 20         # Ending frame number
-record_dt: 0.025      # Time interval between recordings (20 frames * 0.025s = 0.5s total)
+record_dt: 0.075      # Time interval between recordings (20 frames * 0.025s = 0.5s total)
 
 # Output configuration
 dump_dir: "sim_res/euler_2d/p1"  # Directory for output files

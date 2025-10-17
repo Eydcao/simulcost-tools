@@ -3,9 +3,13 @@ import subprocess
 import numpy as np
 import json
 import struct
+import sys
 from pathlib import Path
+from scipy.interpolate import RegularGridInterpolator
 
-# TODO remove all default arg make them required
+# Add parent directory to path for imports
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from solvers.utils import compute_relative_error
 
 def _find_runner_path():
     """Automatically find the correct path to euler_2d.py runner."""
@@ -56,11 +60,20 @@ def _find_runner_path():
     )
 
 
-def run_sim_euler_2d(profile, testcase, n_grid_x, start_frame=0, end_frame=180, cfl=None, cg_tolerance=None):
+def _get_aspect_ratio_from_config(profile):
+    """Load aspect ratio from profile config file"""
+    import yaml
+    config_path = f"run_configs/euler_2d/{profile}.yaml"
+    with open(config_path, "r") as f:
+        cfg = yaml.safe_load(f)
+    return cfg["aspect_ratio"]
+
+
+def run_sim_euler_2d(profile, testcase, n_grid_x, start_frame, end_frame, cfl, cg_tolerance):
     """Run the euler_2d simulation with the given parameters if not already simulated."""
-    # Determine Ny from testcase aspect ratio
-    aspect_ratios = {0: 1.0, 1: 1.0/3.0, 2: 1.0/3.0, 3: 1.0/2.0} # TODO this should be an env var and in cfg
-    n_grid_y = int(round(aspect_ratios[testcase] * n_grid_x))
+    # Determine Ny from profile config
+    aspect_ratio = _get_aspect_ratio_from_config(profile)
+    n_grid_y = int(round(aspect_ratio * n_grid_x))
 
     # Directory path includes all tunable parameters: profile, cfl, cg_tolerance, n_grid_x
     # Format similar to euler_1d: {profile}_cfl_{cfl}_cgtol_{cg_tol}_nx_{nx}
@@ -170,10 +183,10 @@ def read_vtk_structured(vtk_path):
     return data
 
 
-def get_res_euler_2d(profile, testcase, n_grid_x, start_frame=0, end_frame=180, cfl=None, cg_tolerance=None):
+def get_res_euler_2d(profile, testcase, n_grid_x, start_frame, end_frame, cfl, cg_tolerance):
     """Load all time frames for a given parameter set, triggering a simulation if results are missing."""
-    aspect_ratios = {0: 1.0, 1: 1.0/3.0, 2: 1.0/3.0, 3: 1.0/2.0}
-    n_grid_y = int(round(aspect_ratios[testcase] * n_grid_x))
+    aspect_ratio = _get_aspect_ratio_from_config(profile)
+    n_grid_y = int(round(aspect_ratio * n_grid_x))
 
     # Use same directory naming as run_sim_euler_2d
     cfl_str = f"{cfl:.3f}" if cfl is not None else "default"
@@ -258,13 +271,65 @@ def print_euler_2d_metrics(name, metrics):
     print(f"Pressure range: [{metrics['pressure_range'][0]:.6f}, {metrics['pressure_range'][1]:.6f}]")
 
 
+def interpolate_field_2d(field_src_flat, nx_src, ny_src, nx_tgt, ny_tgt, aspect_ratio):
+    """
+    Interpolates a 2D field from source grid to target grid.
+
+    The C++ code stores data in row-major order (y varies fastest for structured grid).
+    Cell centers are at positions (i+0.5)*dx, (j+0.5)*dy where i,j are grid indices.
+    Ghost cells exist at boundaries but are not included in the output VTK files.
+
+    Args:
+        field_src_flat: Flattened 1D array from VTK file (length nx_src * ny_src)
+        nx_src: Number of cells in x-direction for source grid
+        ny_src: Number of cells in y-direction for source grid
+        nx_tgt: Number of cells in x-direction for target grid
+        ny_tgt: Number of cells in y-direction for target grid
+        aspect_ratio: Domain aspect ratio (Ly / Lx)
+
+    Returns:
+        Flattened interpolated field on target grid (length nx_tgt * ny_tgt)
+    """
+    # Reshape flattened data to 2D grid (ny, nx) - row-major order
+    field_src_2d = field_src_flat.reshape((ny_src, nx_src))
+
+    # Create cell-centered coordinates for source grid
+    # Domain: x in [0, 1], y in [0, aspect_ratio]
+    # Cell centers at (i+0.5)*dx, (j+0.5)*dy
+    x_src = np.linspace(0.5/nx_src, 1.0 - 0.5/nx_src, nx_src)
+    y_src = np.linspace(0.5/ny_src, aspect_ratio - 0.5/ny_src, ny_src)
+
+    # Create interpolator (note: RegularGridInterpolator expects (y, x) order for 2D)
+    interp = RegularGridInterpolator(
+        (y_src, x_src),
+        field_src_2d,
+        method='linear',
+        bounds_error=False,
+        fill_value=None  # Use extrapolation at boundaries
+    )
+
+    # Create cell-centered coordinates for target grid
+    x_tgt = np.linspace(0.5/nx_tgt, 1.0 - 0.5/nx_tgt, nx_tgt)
+    y_tgt = np.linspace(0.5/ny_tgt, aspect_ratio - 0.5/ny_tgt, ny_tgt)
+
+    # Create meshgrid for target points (indexing='ij' gives (ny, nx) shape)
+    yy_tgt, xx_tgt = np.meshgrid(y_tgt, x_tgt, indexing='ij')
+
+    # Interpolate
+    points = np.stack([yy_tgt.ravel(), xx_tgt.ravel()], axis=-1)
+    field_tgt_2d = interp(points).reshape((ny_tgt, nx_tgt))
+
+    # Flatten back to 1D for consistency with VTK format
+    return field_tgt_2d.ravel()
+
+
 def compare_res_euler_2d(
     profile1, testcase1, n_grid_x1,
     profile2, testcase2, n_grid_x2,
     rmse_tolerance,
-    start_frame=0, end_frame=180,
-    cfl1=None, cg_tolerance1=None,
-    cfl2=None, cg_tolerance2=None
+    start_frame, end_frame,
+    cfl1, cg_tolerance1,
+    cfl2, cg_tolerance2
 ):
     """Compare two sets of results using relative error norms and physical metrics.
 
@@ -290,33 +355,55 @@ def compare_res_euler_2d(
     data1 = res1[final_frame]
     data2 = res2[final_frame]
 
-    eps = 1e-12
+    # Get grid dimensions for both cases
+    aspect_ratio1 = _get_aspect_ratio_from_config(profile1)
+    aspect_ratio2 = _get_aspect_ratio_from_config(profile2)
+    nx1 = n_grid_x1
+    ny1 = int(round(aspect_ratio1 * nx1))
+    nx2 = n_grid_x2
+    ny2 = int(round(aspect_ratio2 * nx2))
 
-    def relative_error(a, b):
-        """Compute relative error using mean values as denominator"""
-        # TODO: I have noticed this func is used in multiple places, should be a common utility
-        mean_a = np.mean(np.abs(a))
-        mean_b = np.mean(np.abs(b))
-        denom = 0.5 * (mean_a + mean_b) + eps
-        return np.abs(a - b) / denom
+    # Check that aspect ratios match (we're only comparing same testcases)
+    if abs(aspect_ratio1 - aspect_ratio2) > 1e-6:
+        raise ValueError(f"Cannot compare different aspect ratios: {aspect_ratio1} vs {aspect_ratio2}")
 
-    # Sample the fields (use every Nth point for comparison if grid sizes differ)
-    n1 = len(data1['density'])
-    n2 = len(data2['density'])
+    n_points1 = len(data1['density'])
+    n_points2 = len(data2['density'])
 
-    if n1 == n2:
+    # Verify expected grid sizes
+    if n_points1 != nx1 * ny1:
+        print(f"Warning: data1 has {n_points1} points, expected {nx1 * ny1} = {nx1}x{ny1}")
+    if n_points2 != nx2 * ny2:
+        print(f"Warning: data2 has {n_points2} points, expected {nx2 * ny2} = {nx2}x{ny2}")
+
+    if n_points1 == n_points2:
         # Same grid size, direct comparison
-        density_err = relative_error(data1['density'], data2['density'])
-        pressure_err = relative_error(data1['pressure'], data2['pressure'])
+        density_err = compute_relative_error(data1['density'], data2['density'])
+        pressure_err = compute_relative_error(data1['pressure'], data2['pressure'])
     else:
-        # Different grid sizes - use coarser grid sampling
-        # TODO this is wrong, should use finer grid; another TODO: check all other solvers to see if anything else is using coarser grid interpolation.
-        n_samples = min(n1, n2)
-        idx1 = np.linspace(0, n1-1, n_samples, dtype=int)
-        idx2 = np.linspace(0, n2-1, n_samples, dtype=int)
+        # Different grid sizes - interpolate coarser grid to finer grid for accurate 2D comparison
+        if n_points1 < n_points2:
+            # data1 is coarser, interpolate to data2's finer grid
+            density1_interp = interpolate_field_2d(
+                data1['density'], nx1, ny1, nx2, ny2, aspect_ratio1
+            )
+            pressure1_interp = interpolate_field_2d(
+                data1['pressure'], nx1, ny1, nx2, ny2, aspect_ratio1
+            )
 
-        density_err = relative_error(data1['density'][idx1], data2['density'][idx2])
-        pressure_err = relative_error(data1['pressure'][idx1], data2['pressure'][idx2])
+            density_err = compute_relative_error(density1_interp, data2['density'])
+            pressure_err = compute_relative_error(pressure1_interp, data2['pressure'])
+        else:
+            # data2 is coarser, interpolate to data1's finer grid
+            density2_interp = interpolate_field_2d(
+                data2['density'], nx2, ny2, nx1, ny1, aspect_ratio2
+            )
+            pressure2_interp = interpolate_field_2d(
+                data2['pressure'], nx2, ny2, nx1, ny1, aspect_ratio2
+            )
+
+            density_err = compute_relative_error(data1['density'], density2_interp)
+            pressure_err = compute_relative_error(data1['pressure'], pressure2_interp)
 
     # Combined RMSE
     combined_err = (density_err + pressure_err) / 2.0
@@ -347,13 +434,15 @@ if __name__ == "__main__":
     # Example usage
     testcase = 0
     n_grid_x = 32
+    cfl = 0.5
+    cg_tolerance = 1e-7
 
     # Run a simulation
-    cost = run_sim_euler_2d("p1", testcase=testcase, n_grid_x=n_grid_x, start_frame=0, end_frame=10)
+    cost = run_sim_euler_2d("p1", testcase, n_grid_x, start_frame=0, end_frame=10, cfl=cfl, cg_tolerance=cg_tolerance)
     print(f"Simulation cost: {cost}")
 
     # Load results
-    results = get_res_euler_2d("p1", testcase=testcase, n_grid_x=n_grid_x, start_frame=0, end_frame=10)
+    results = get_res_euler_2d("p1", testcase, n_grid_x, start_frame=0, end_frame=10, cfl=cfl, cg_tolerance=cg_tolerance)
     print(f"Loaded {len(results)} frames")
 
     # Compute metrics
