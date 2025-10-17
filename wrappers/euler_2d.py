@@ -5,6 +5,7 @@ import json
 import struct
 from pathlib import Path
 
+# TODO remove all default arg make them required
 
 def _find_runner_path():
     """Automatically find the correct path to euler_2d.py runner."""
@@ -58,7 +59,7 @@ def _find_runner_path():
 def run_sim_euler_2d(profile, testcase, n_grid_x, start_frame=0, end_frame=180, cfl=None, cg_tolerance=None):
     """Run the euler_2d simulation with the given parameters if not already simulated."""
     # Determine Ny from testcase aspect ratio
-    aspect_ratios = {0: 1.0, 1: 1.0/3.0, 2: 1.0/3.0, 3: 1.0/2.0}
+    aspect_ratios = {0: 1.0, 1: 1.0/3.0, 2: 1.0/3.0, 3: 1.0/2.0} # TODO this should be an env var and in cfg
     n_grid_y = int(round(aspect_ratios[testcase] * n_grid_x))
 
     # Directory path includes all tunable parameters: profile, cfl, cg_tolerance, n_grid_x
@@ -96,6 +97,7 @@ def run_sim_euler_2d(profile, testcase, n_grid_x, start_frame=0, end_frame=180, 
 
 def read_vtk_structured(vtk_path):
     """Read binary VTK structured grid file and extract data."""
+    # TODO should not this be handled by meshio?
     with open(vtk_path, 'rb') as f:
         # Read ASCII header until POINT_DATA
         while True:
@@ -292,6 +294,7 @@ def compare_res_euler_2d(
 
     def relative_error(a, b):
         """Compute relative error using mean values as denominator"""
+        # TODO: I have noticed this func is used in multiple places, should be a common utility
         mean_a = np.mean(np.abs(a))
         mean_b = np.mean(np.abs(b))
         denom = 0.5 * (mean_a + mean_b) + eps
@@ -307,6 +310,7 @@ def compare_res_euler_2d(
         pressure_err = relative_error(data1['pressure'], data2['pressure'])
     else:
         # Different grid sizes - use coarser grid sampling
+        # TODO this is wrong, should use finer grid; another TODO: check all other solvers to see if anything else is using coarser grid interpolation.
         n_samples = min(n1, n2)
         idx1 = np.linspace(0, n1-1, n_samples, dtype=int)
         idx2 = np.linspace(0, n2-1, n_samples, dtype=int)

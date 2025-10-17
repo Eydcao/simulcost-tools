@@ -11,6 +11,7 @@ import json
 from pathlib import Path
 
 
+# TODO this should have been in the wrapper, remove this and use wrapper properly
 def run_sim_euler_2d(profile, testcase, n_grid_x, start_frame=0, end_frame=180, cfl=None, cg_tolerance=None):
     """Run the euler_2d simulation with the given parameters if not already simulated."""
     aspect_ratios = {0: 1.0, 1: 1.0/3.0, 2: 1.0/3.0, 3: 1.0/2.0}
@@ -51,6 +52,7 @@ def compare_res_euler_2d(
     cfl1=None, cg_tolerance1=None,
     cfl2=None, cg_tolerance2=None
 ):
+    # TODO: this is repeatitive, the wrapper does not do anything special, just call the imported func directly
     """Compare two sets of results using relative error norms."""
     # Import here to avoid circular dependency
     from wrappers.euler_2d import compare_res_euler_2d as compare_func

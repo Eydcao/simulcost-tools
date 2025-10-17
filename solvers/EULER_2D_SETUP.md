@@ -120,7 +120,7 @@ Once set up, the gas_2d binary can be used with different test cases and paramet
 
 ```bash
 # Basic syntax
-./gas_2d testcase [start_frame] [end_frame] [N_grid_x]
+./gas_2d testcase [start_frame] [end_frame] [N_grid_x] # TODO this seems to be outdated
 
 # Test cases:
 # 0 - Central explosion (circular high-pressure region)
