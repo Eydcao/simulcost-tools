@@ -18,8 +18,7 @@ Install the required dependencies:
 
 ```bash
 sudo apt-get update
-sudo apt-get install -y cmake build-essential libeigen3-dev libtbb-dev \
-    python3-dev python3-numpy python3-matplotlib
+sudo apt-get install -y cmake build-essential libeigen3-dev libtbb-dev python3-dev python3-numpy python3-matplotlib
 ```
 
 ### Run Setup Script
@@ -74,8 +73,7 @@ If you need to set up the solver manually or troubleshoot the automated script:
 
 ```bash
 sudo apt-get update
-sudo apt-get install -y cmake build-essential libeigen3-dev libtbb-dev \
-    python3-dev python3-numpy python3-matplotlib
+sudo apt-get install -y cmake build-essential libeigen3-dev libtbb-dev python3-dev python3-numpy python3-matplotlib
 ```
 
 ### 2. Navigate to CSMPM_BOW Directory
@@ -111,6 +109,7 @@ Expected output: `Examples/gas_2d` binary (~580 KB)
 ```
 
 Expected output:
+
 - Log messages showing simulation progress
 - Creates directory `central_boom_2d_16_16/`
 - Generates PLY files and optionally VTK files
@@ -138,16 +137,19 @@ Once set up, the gas_2d binary can be used with different test cases and paramet
 ### Output Files
 
 The binary creates output in automatically named directories:
+
 - `central_boom_2d_{Nx}_{Ny}/` - PLY point cloud files
 - `central_boom_2d_{Nx}_{Ny}/vtk/` - VTK structured grid files (if enabled)
 
 Each output includes:
+
 - **gas_{frame}.ply** - Point cloud with density, pressure, velocity, schlieren
 - **gas_density_{frame}.vtk** - VTK files for ParaView visualization
 
 ## Solver Features
 
 ### Physics
+
 - Compressible Euler equations for ideal gas
 - 2D Cartesian grids
 - High-order WENO reconstruction (2nd/3rd order)
@@ -156,12 +158,14 @@ Each output includes:
 - Gravity and source terms support
 
 ### Numerical Methods
+
 - Grid-based finite volume method
 - Adaptive time stepping with CFL condition
 - Linear projection for constraint enforcement
 - Parallel execution with TBB
 
 ### Boundary Conditions
+
 - Inlet (prescribed flow)
 - Outlet (extrapolation)
 - Wall (no-slip/slip)
@@ -187,18 +191,21 @@ These parameters control the trade-off between accuracy and computational cost.
 ### Compilation Errors
 
 **Eigen3 Not Found:**
+
 ```bash
 # Manually specify Eigen3 path
 cmake .. -DEigen3_DIR=/usr/share/eigen3/cmake
 ```
 
 **TBB Not Found:**
+
 ```bash
 # Ensure TBB is installed
 sudo apt-get install libtbb-dev
 ```
 
 **C++17 Support:**
+
 ```bash
 # Check compiler version (need GCC >= 7.0)
 g++ --version
@@ -207,16 +214,19 @@ g++ --version
 ### Runtime Errors
 
 **Binary Not Found:**
+
 ```bash
 # Verify binary exists
 ls -lh solvers/euler_2d_utils/CSMPM_BOW/build/Examples/gas_2d
 ```
 
 **Output Directory Errors:**
+
 - Ensure write permissions in the working directory
 - Check available disk space: `df -h`
 
 **Segmentation Faults:**
+
 - Try smaller grid resolution
 - Check memory availability
 - Rebuild in Debug mode for more info: `cmake .. -DCMAKE_BUILD_TYPE=Debug`
@@ -242,6 +252,7 @@ See `wrappers/euler_2d.py` for the Python interface implementation.
 ## References
 
 For more detailed information:
+
 - **BUILD.md** - Comprehensive build instructions and troubleshooting
 - **DEPENDENCIES.md** - Dependency installation details
 - **QUICKSTART.md** - 5-minute getting started guide
