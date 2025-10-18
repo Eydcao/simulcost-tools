@@ -4,19 +4,90 @@ import h5py
 import numpy as np
 import json
 import sys
+from pathlib import Path
+from dotenv import load_dotenv
+
 sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 from solvers.utils import format_param_for_path
 
+# Load environment variables from .env file
+load_dotenv()
+
 env = os.environ.copy()
 env["PYTHONPATH"] = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
+
+# Get base directory for simulation results from environment variable
+# If not set, use current directory (maintains backward compatibility)
+SIM_RES_BASE_DIR = os.getenv("SIM_RES_BASE_DIR", None)
+if SIM_RES_BASE_DIR:
+    print(f"✅ Using custom simulation results directory: {SIM_RES_BASE_DIR}")
+
+
+def _get_sim_path(relative_path):
+    """Construct simulation path, using absolute path if SIM_RES_BASE_DIR is set."""
+    if SIM_RES_BASE_DIR:
+        return os.path.join(SIM_RES_BASE_DIR, relative_path)
+    return relative_path
+
+
+def _find_runner_path():
+    """Automatically find the correct path to diff_react_1d.py runner."""
+    # Get current working directory
+    cwd = os.getcwd()
+
+    # List of possible runner paths relative to different working directories
+    possible_paths = []
+
+    # If working from project root (SimulCost-Bench/)
+    if cwd.endswith('SimulCost-Bench'):
+        possible_paths.extend([
+            "costsci_tools/runners/diff_react_1d.py",
+            "runners/diff_react_1d.py"
+        ])
+    # If working from costsci_tools/ subdirectory
+    elif cwd.endswith('costsci_tools') or 'costsci_tools' in cwd:
+        possible_paths.extend([
+            "runners/diff_react_1d.py",
+            "../runners/diff_react_1d.py",
+            "costsci_tools/runners/diff_react_1d.py"
+        ])
+
+    # Add generic fallback paths
+    possible_paths.extend([
+        "runners/diff_react_1d.py",
+        "costsci_tools/runners/diff_react_1d.py",
+        "./runners/diff_react_1d.py",
+        "../runners/diff_react_1d.py",
+        "../../runners/diff_react_1d.py"
+    ])
+
+    # Remove duplicates while preserving order
+    seen = set()
+    unique_paths = []
+    for path in possible_paths:
+        if path not in seen:
+            seen.add(path)
+            unique_paths.append(path)
+
+    for path in unique_paths:
+        if os.path.exists(path):
+            return path
+
+    # If none found, raise an error with helpful information
+    raise FileNotFoundError(
+        f"Could not find diff_react_1d.py runner in any expected location.\n"
+        f"Current working directory: {cwd}\n"
+        f"Searched paths: {unique_paths}\n"
+        f"Please ensure the runner exists or update the search paths."
+    )
 
 
 def run_sim_diff_react_1d(profile, n_space, cfl, tol, min_step, initial_step_guess, reaction_type="fisher", allee_threshold=None):
     """Run the diff_react_1d simulation with the given parameters if not already simulated."""
     # Build directory path based on parameters
     param_str = f"_nspace{n_space}_cfl{format_param_for_path(cfl)}_tol{format_param_for_path(tol)}_minstep{format_param_for_path(min_step)}_initstep{format_param_for_path(initial_step_guess)}"
-    
-    dir_path = f"sim_res/diff_react_1d/{profile}{param_str}/"
+
+    dir_path = _get_sim_path(f"sim_res/diff_react_1d/{profile}{param_str}/")
     meta_path = os.path.join(dir_path, "meta.json")
 
     # Check if the simulation has already been run
@@ -29,7 +100,15 @@ def run_sim_diff_react_1d(profile, n_space, cfl, tol, min_step, initial_step_gue
 
     # Run the simulation if not already done
     print(f"Running new simulation with parameters: n_space={n_space}, cfl={cfl}, tol={tol}, min_step={min_step}, initial_step_guess={initial_step_guess}, reaction_type={reaction_type}")
-    cmd = f"python runners/diff_react_1d.py --config-name={profile} n_space={n_space} cfl={cfl} tol={tol} min_step={min_step} initial_step_guess={initial_step_guess} reaction_type={reaction_type}"
+
+    # Build command with parameters using auto-detected runner path
+    runner_path = _find_runner_path()
+    if SIM_RES_BASE_DIR:
+        dump_dir = os.path.join(SIM_RES_BASE_DIR, f"sim_res/diff_react_1d/{profile}")
+        cmd = f"{sys.executable} {runner_path} --config-name={profile} n_space={n_space} cfl={cfl} tol={tol} min_step={min_step} initial_step_guess={initial_step_guess} reaction_type={reaction_type} dump_dir={dump_dir}"
+    else:
+        cmd = f"{sys.executable} {runner_path} --config-name={profile} n_space={n_space} cfl={cfl} tol={tol} min_step={min_step} initial_step_guess={initial_step_guess} reaction_type={reaction_type}"
+
     if allee_threshold is not None:
         cmd += f" allee_threshold={allee_threshold}"
     subprocess.run(cmd, shell=True, check=True, env=env)
@@ -46,8 +125,8 @@ def get_res_diff_react_1d(profile, n_space, cfl, tol, min_step, initial_step_gue
     """Load all time frames for a given parameter set, triggering a simulation if results are missing."""
     # Build directory path based on parameters
     param_str = f"_nspace{n_space}_cfl{format_param_for_path(cfl)}_tol{format_param_for_path(tol)}_minstep{format_param_for_path(min_step)}_initstep{format_param_for_path(initial_step_guess)}"
-    
-    dir_path = f"sim_res/diff_react_1d/{profile}{param_str}/"
+
+    dir_path = _get_sim_path(f"sim_res/diff_react_1d/{profile}{param_str}/")
     results = {}
     X = None
 
