@@ -4,6 +4,24 @@ import h5py
 import numpy as np
 import json
 from scipy.interpolate import RegularGridInterpolator
+import sys
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
+
+# Get base directory for simulation results from environment variable
+# If not set, use current directory (maintains backward compatibility)
+SIM_RES_BASE_DIR = os.getenv("SIM_RES_BASE_DIR", None)
+if SIM_RES_BASE_DIR:
+    print(f"✅ Using custom simulation results directory: {SIM_RES_BASE_DIR}")
+
+
+def _get_sim_path(relative_path):
+    """Construct simulation path, using absolute path if SIM_RES_BASE_DIR is set."""
+    if SIM_RES_BASE_DIR:
+        return os.path.join(SIM_RES_BASE_DIR, relative_path)
+    return relative_path
 
 
 def _find_runner_path():
@@ -70,7 +88,7 @@ def run_sim_ns_transient_2d(
     other_params=None,
 ):
     """Run the ns_transient_2d simulation with the given parameters."""
-    dir_path = f"sim_res/ns_transient_2d/{profile}_bc{boundary_condition}_res{resolution}_re{reynolds_num}_cfl{cfl}_relax{relaxation_factor}_residual{residual_threshold}_runtime{total_runtime}/"
+    dir_path = _get_sim_path(f"sim_res/ns_transient_2d/{profile}_bc{boundary_condition}_res{resolution}_re{reynolds_num}_cfl{cfl}_relax{relaxation_factor}_residual{residual_threshold}_runtime{total_runtime}/")
     meta_file_path = os.path.join(dir_path, "meta.json")
 
     # Check if the directory and meta.json file with the key of cost and num_steps exist
@@ -78,11 +96,19 @@ def run_sim_ns_transient_2d(
         with open(meta_file_path, "r") as f:
             meta = json.load(f)
             if "cost" in meta and "num_steps" in meta:
+                print(f"Using existing simulation results from {dir_path}")
                 return meta["cost"], meta["num_steps"]
+
+    # Run the simulation if not already done
+    print(f"Running new simulation with parameters: resolution={resolution}, reynolds_num={reynolds_num}, cfl={cfl}")
 
     # Build command with parameters using auto-detected runner path
     runner_path = _find_runner_path()
-    cmd = f"python {runner_path} --config-name={profile} boundary_condition={boundary_condition} resolution={resolution} reynolds_num={reynolds_num} cfl={cfl} relaxation_factor={relaxation_factor} residual_threshold={residual_threshold} total_runtime={total_runtime}"
+    if SIM_RES_BASE_DIR:
+        dump_dir = os.path.join(SIM_RES_BASE_DIR, f"sim_res/ns_transient_2d/{profile}")
+        cmd = f"{sys.executable} {runner_path} --config-name={profile} boundary_condition={boundary_condition} resolution={resolution} reynolds_num={reynolds_num} cfl={cfl} relaxation_factor={relaxation_factor} residual_threshold={residual_threshold} total_runtime={total_runtime} dump_dir={dump_dir}"
+    else:
+        cmd = f"{sys.executable} {runner_path} --config-name={profile} boundary_condition={boundary_condition} resolution={resolution} reynolds_num={reynolds_num} cfl={cfl} relaxation_factor={relaxation_factor} residual_threshold={residual_threshold} total_runtime={total_runtime}"
 
     # Add other parameters if provided
     if other_params:
@@ -124,7 +150,7 @@ def get_res_ns_transient_2d(
     other_params=None,
 ):
     """Load final velocity and pressure fields for given parameters."""
-    dir_path = f"sim_res/ns_transient_2d/{profile}_bc{boundary_condition}_res{resolution}_re{reynolds_num}_cfl{cfl}_relax{relaxation_factor}_residual{residual_threshold}_runtime{total_runtime}/"
+    dir_path = _get_sim_path(f"sim_res/ns_transient_2d/{profile}_bc{boundary_condition}_res{resolution}_re{reynolds_num}_cfl{cfl}_relax{relaxation_factor}_residual{residual_threshold}_runtime{total_runtime}/")
 
     if not os.path.exists(dir_path):
         os.makedirs(dir_path)

@@ -4,6 +4,25 @@ import h5py
 import numpy as np
 import json
 from scipy.interpolate import RegularGridInterpolator
+import sys
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
+
+# Get base directory for simulation results from environment variable
+# If not set, use current directory (maintains backward compatibility)
+SIM_RES_BASE_DIR = os.getenv("SIM_RES_BASE_DIR", None)
+if SIM_RES_BASE_DIR:
+    print(f"✅ Using custom simulation results directory: {SIM_RES_BASE_DIR}")
+
+
+def _get_sim_path(relative_path):
+    """Construct simulation path, using absolute path if SIM_RES_BASE_DIR is set."""
+    if SIM_RES_BASE_DIR:
+        return os.path.join(SIM_RES_BASE_DIR, relative_path)
+    return relative_path
+
 
 def _find_runner_path():
     """Automatically find the correct path to epoch.py runner."""
@@ -58,7 +77,7 @@ def _find_runner_path():
 
 
 def runEpoch(profile, nx, dt_mult, nPart, field_order, particle_order):
-    dir_path = (
+    dir_path = _get_sim_path(
         f"sim_res/epoch/{profile}_nx_{nx}_dtmult_{dt_mult}_part_{nPart}_fieldO_{field_order}_partO_{particle_order}/"
     )
     meta_file = os.path.join(dir_path, "meta.json")
@@ -68,11 +87,17 @@ def runEpoch(profile, nx, dt_mult, nPart, field_order, particle_order):
         with open(meta_file, "r") as f:
             meta = json.load(f)
             if "cost" in meta:
+                print(f"Using existing simulation results from {dir_path}")
                 return meta["cost"]
 
     # Run the simulation if not already done
+    print(f"Running new simulation with parameters: nx={nx}, dt_mult={dt_mult}, nPart={nPart}")
     runner_path = _find_runner_path()
-    cmd = f"python {runner_path}  --config-name={profile} nx={nx} dt_mult={dt_mult} part_cell={nPart} field_order={field_order} particle_order={particle_order}"
+    if SIM_RES_BASE_DIR:
+        dump_dir = os.path.join(SIM_RES_BASE_DIR, f"sim_res/epoch/{profile}")
+        cmd = f"{sys.executable} {runner_path} --config-name={profile} nx={nx} dt_mult={dt_mult} part_cell={nPart} field_order={field_order} particle_order={particle_order} dump_dir={dump_dir}"
+    else:
+        cmd = f"{sys.executable} {runner_path} --config-name={profile} nx={nx} dt_mult={dt_mult} part_cell={nPart} field_order={field_order} particle_order={particle_order}"
     subprocess.run(cmd, shell=True, check=True)
 
     # Load the cost from the meta.json file
@@ -85,15 +110,15 @@ def runEpoch(profile, nx, dt_mult, nPart, field_order, particle_order):
 
 def get_res_epoch(profile, nx, dt_mult, nPart, field_order, particle_order):
 
-    dir_path = (
+    dir_path = _get_sim_path(
         f"sim_res/epoch/{profile}_nx_{nx}_dtmult_{dt_mult}_part_{nPart}_fieldO_{field_order}_partO_{particle_order}/"
     )
 
-    meta_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), dir_path)
-    results_file = os.path.join(meta_path, "res.h5")
-    meta_file = os.path.join(meta_path, "meta.json")
+    results_file = os.path.join(dir_path, "res.h5")
+    meta_file = os.path.join(dir_path, "meta.json")
 
     if not os.path.exists(results_file):
+        print(f"No results found for parameters: nx={nx}, dt_mult={dt_mult}, nPart={nPart}. Triggering simulation.")
         runEpoch(profile, nx, dt_mult, nPart, field_order, particle_order)
 
     results = []
