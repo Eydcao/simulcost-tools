@@ -8,7 +8,7 @@ from solvers.fastipc import FastIPC
 @hydra.main(version_base=None, config_path="../run_configs/fastipc", config_name="default")
 def main(cfg: DictConfig) -> None:
     print(OmegaConf.to_yaml(cfg))
-    solver = FastIPC(verbose=True, cfg=cfg)
+    solver = FastIPC(verbose=cfg.verbose, cfg=cfg)
     solver.run()
 
 if __name__ == "__main__":

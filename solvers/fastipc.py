@@ -22,8 +22,9 @@ class FastIPC(SIMULATOR):
         self.mu = self.E / (2 * (1 + self.nu))
         self.density = cfg.density
         self.dt = cfg.dt
+        self.nx = cfg.nx
 
-        mesh = meshio.read(cfg.mesh_file)
+        mesh = self._get_mesh(self.nx, cfg)
         self.mesh_particles = mesh.points
         self.mesh_elements = mesh.cells[0].data
         self.mesh_scale = cfg.mesh_scale
@@ -33,7 +34,7 @@ class FastIPC(SIMULATOR):
         self.n_elements = len(self.mesh_elements)
 
         self.real = ti.f64
-        ti.init(arch=ti.cpu, default_fp=self.real)
+        ti.init(arch=ti.cpu, default_fp=self.real, verbose=self.verbose)
 
         self.cnt = ti.field(dtype=ti.i32, shape=())
         self.x = ti.Vector.field(self.dim, dtype=self.real)
@@ -56,8 +57,41 @@ class FastIPC(SIMULATOR):
         self.data_sol = ti.field(self.real, shape=self.n_particles * self.dim)
         
         self.dump_dir = cfg.dump_dir
+        self.fixed_nodes = []
         if not os.path.exists(self.dump_dir):
             os.makedirs(self.dump_dir)
+
+    def _get_mesh(self, nx, cfg):
+        mesh_path = f"output/mesh/cantilever_nx{nx}.obj"
+        if os.path.exists(mesh_path):
+            return meshio.read(mesh_path)
+        
+        Lx = cfg.envs_params.Lx
+        Ly = cfg.envs_params.Ly
+        n_gx_e = nx
+        n_gy_e = int(nx * Ly / Lx)
+        dx = Lx / n_gx_e
+        dy = Ly / n_gy_e
+
+        x_start = 0.0
+        y_start = 5.0
+
+        n_vertices = (n_gx_e + 1) * (n_gy_e + 1)
+        v_pos = np.zeros((n_vertices, 2), dtype=float)
+        for i in range(n_gx_e + 1):
+            for j in range(n_gy_e + 1):
+                v_pos[i * (n_gy_e + 1) + j] = np.array([x_start + dx * i, y_start + dy * j])
+
+        from scipy.spatial import Delaunay
+        tri = Delaunay(v_pos)
+        cells = [("triangle", tri.simplices)]
+        
+        # Add a z-coordinate of 0 to make the points 3D
+        points_3d = np.hstack([v_pos, np.zeros((v_pos.shape[0], 1))])
+
+        mesh = meshio.Mesh(points_3d, cells)
+        mesh.write(mesh_path)
+        return mesh
 
     @ti.func
     def compute_T(self, i):
@@ -262,7 +296,6 @@ class FastIPC(SIMULATOR):
         for i in range(self.n_particles):
             for d in ti.static(range(self.dim)):
                 residual = ti.max(residual, ti.abs(self.data_sol[i * self.dim + d]))
-        print("Search Direction Residual : ", residual / dt)
         return residual
 
     def pre_process(self):
@@ -272,46 +305,57 @@ class FastIPC(SIMULATOR):
         self.compute_restT_and_m()
         self.zero.fill(0)
 
+        for i in range(self.n_particles):
+            if self.mesh_particles[i, 0] < 1e-6:
+                self.fixed_nodes.append(i)
+
     def cal_dt(self):
         return self.dt
 
     def step(self, dt):
         self.compute_xn_and_xTilde(dt)
-        while True:
-            self.data_mat.fill(0)
-            self.data_rhs.fill(0)
-            self.data_sol.fill(0)
-            self.compute_hessian_and_gradient(dt)
+        self.data_mat.fill(0)
+        self.data_rhs.fill(0)
+        self.data_sol.fill(0)
+        self.compute_hessian_and_gradient(dt)
 
-            if self.verbose:
-                print("Total entries: ", self.cnt[None])
-            mat = self.data_mat.to_numpy()
-            row, col, val = mat[0, :self.cnt[None]], mat[1, :self.cnt[None]], mat[2, :self.cnt[None]]
-            rhs = self.data_rhs.to_numpy()
-            n = self.n_particles * self.dim
-            A = scipy.sparse.csr_matrix((val, (row, col)), shape=(n, n))
-            A = scipy.sparse.lil_matrix(A)
-            D = np.array([i for i in range(12 * self.dim)])
-            A[:, D] = 0
-            A[D, :] = 0
-            A = scipy.sparse.csr_matrix(A)
-            A += scipy.sparse.csr_matrix((np.ones(len(D)), (D, D)), shape=(n, n))
-            rhs[D] = 0
-            self.data_sol.from_numpy(scipy.sparse.linalg.spsolve(A, rhs))
+        if self.verbose:
+            print("Total entries: ", self.cnt[None])
+        mat = self.data_mat.to_numpy()
+        row, col, val = mat[0, :self.cnt[None]], mat[1, :self.cnt[None]], mat[2, :self.cnt[None]]
+        rhs = self.data_rhs.to_numpy()
+        n = self.n_particles * self.dim
+        A = scipy.sparse.csr_matrix((val, (row, col)), shape=(n, n))
+        A = scipy.sparse.lil_matrix(A)
+        
+        D = []
+        for node_idx in self.fixed_nodes:
+            D.append(node_idx * self.dim)
+            D.append(node_idx * self.dim + 1)
+        D = np.array(D)
 
-            if self.verbose:
-                print('residual : ', self.output_residual(dt))
-            if self.output_residual(dt) < 1e-2 * dt:
-                break
-            E0 = self.compute_energy(dt)
-            self.save_xPrev()
-            alpha = 1.0
+        A[:, D] = 0
+        A[D, :] = 0
+        A = scipy.sparse.csr_matrix(A)
+        A += scipy.sparse.csr_matrix((np.ones(len(D)), (D, D)), shape=(n, n))
+        rhs[D] = 0
+        self.data_sol.from_numpy(scipy.sparse.linalg.spsolve(A, rhs))
+
+        residual = self.output_residual(dt)
+        if self.verbose:
+            print(f'residual : {residual}')
+        if residual < 1e-2 * dt:
+            self.compute_v(dt)
+            return
+        E0 = self.compute_energy(dt)
+        self.save_xPrev()
+        alpha = 1.0
+        self.apply_sol(alpha)
+        E = self.compute_energy(dt)
+        while E > E0:
+            alpha *= 0.5
             self.apply_sol(alpha)
             E = self.compute_energy(dt)
-            while E > E0:
-                alpha *= 0.5
-                self.apply_sol(alpha)
-                E = self.compute_energy(dt)
         self.compute_v(dt)
 
     def dump(self):
