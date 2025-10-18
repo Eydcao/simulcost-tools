@@ -2,10 +2,10 @@ import os
 import subprocess
 import numpy as np
 import json
-import struct
 import sys
 from pathlib import Path
 from scipy.interpolate import RegularGridInterpolator
+import meshio
 
 # Add parent directory to path for imports
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -69,11 +69,72 @@ def _get_aspect_ratio_from_config(profile):
     return cfg["aspect_ratio"]
 
 
+def _compute_ny_from_cpp_logic(aspect_ratio, nx):
+    """
+    Compute ny using the exact C++ logic from gas_2d.cpp.
+
+    C++ code (lines 54-58):
+        int Ny = std::round(aspect_ratio_y * Nx);
+        EulerSim::Array<int, dim, 1> bbmin{ -Nx / 2, -Ny / 2 };
+        EulerSim::Array<int, dim, 1> bbmax{ Nx / 2, Ny / 2 };
+
+    The actual grid size is (bbmax - bbmin), where division is C++ integer division (truncates toward zero).
+    For odd Ny, this truncates: (Ny/2) - (-Ny/2) = Ny - 1
+    For even Ny, this preserves: (Ny/2) - (-Ny/2) = Ny
+
+    IMPORTANT: C++ integer division truncates toward zero, not floor division!
+    - C++: -11 / 2 = -5 (truncates toward zero)
+    - Python //: -11 // 2 = -6 (floor division)
+    Use int(x / 2) instead of x // 2 for negative numbers.
+
+    Args:
+        aspect_ratio: Domain aspect ratio (Ly / Lx)
+        nx: Number of grid cells in x
+
+    Returns:
+        Actual ny value that C++ will use (accounting for integer division)
+    """
+    Ny_temp = int(round(aspect_ratio * nx))
+    # Simulate C++ integer division (truncate toward zero, NOT floor division)
+    bbmin_y = int(-Ny_temp / 2)
+    bbmax_y = int(Ny_temp / 2)
+    ny_actual = bbmax_y - bbmin_y
+    return ny_actual
+
+
+def _extract_interior_cells(field_flat, nx, ny):
+    """
+    Extract interior cells from VTK STRUCTURED_POINTS data.
+
+    VTK exports (nx+4) × (ny+4) points. We want to extract only the interior nx × ny cells.
+    The ghost_layer=2 means 2 ghost points on each side, so interior cells are at indices [2:nx+2, 2:ny+2].
+
+    Args:
+        field_flat: Flattened 1D array from VTK ((nx+4)*(ny+4) points)
+        nx: Number of interior cells in x
+        ny: Number of interior cells in y
+
+    Returns:
+        Flattened 1D array of interior cells only (nx*ny values)
+    """
+    ghost_layer = 2
+    nx_pts = nx + 2 * ghost_layer
+    ny_pts = ny + 2 * ghost_layer
+
+    # Reshape to 2D (y-major, x-fastest)
+    field_2d = field_flat.reshape((ny_pts, nx_pts))
+
+    # Extract interior [ghost_layer:-ghost_layer] in both dimensions
+    interior_2d = field_2d[ghost_layer:ghost_layer+ny, ghost_layer:ghost_layer+nx]
+
+    return interior_2d.ravel()
+
+
 def run_sim_euler_2d(profile, testcase, n_grid_x, start_frame, end_frame, cfl, cg_tolerance):
     """Run the euler_2d simulation with the given parameters if not already simulated."""
-    # Determine Ny from profile config
+    # Determine Ny from profile config using exact C++ logic
     aspect_ratio = _get_aspect_ratio_from_config(profile)
-    n_grid_y = int(round(aspect_ratio * n_grid_x))
+    n_grid_y = _compute_ny_from_cpp_logic(aspect_ratio, n_grid_x)
 
     # Directory path includes all tunable parameters: profile, cfl, cg_tolerance, n_grid_x
     # Format similar to euler_1d: {profile}_cfl_{cfl}_cgtol_{cg_tol}_nx_{nx}
@@ -109,76 +170,32 @@ def run_sim_euler_2d(profile, testcase, n_grid_x, start_frame, end_frame, cfl, c
 
 
 def read_vtk_structured(vtk_path):
-    """Read binary VTK structured grid file and extract data."""
-    # TODO should not this be handled by meshio?
-    with open(vtk_path, 'rb') as f:
-        # Read ASCII header until POINT_DATA
-        while True:
-            line = f.readline().decode('ascii').strip()
-            if line.startswith('POINT_DATA'):
-                num_points = int(line.split()[1])
-                break
+    """Read binary VTK structured grid file and extract data using meshio.
 
-        data = {}
+    Returns:
+        dict: Dictionary containing field data arrays
+            - 'density', 'pressure', 'velocity_x', 'velocity_y': field arrays (flattened 1D)
+    """
+    mesh = meshio.read(vtk_path)
 
-        # Parse data sections
-        while True:
-            # Read next line (might be field header or empty)
-            pos_before = f.tell()
-            try:
-                line_bytes = f.readline()
-                if not line_bytes:
-                    break
-                line = line_bytes.decode('ascii').strip()
-            except:
-                break
+    data = {}
 
-            if not line:
-                continue
-
-            if line.startswith('SCALARS'):
-                # SCALARS field_name type components
-                parts = line.split()
-                field_name = parts[1]
-                dtype = parts[2]
-
-                # Read LOOKUP_TABLE line
-                f.readline()
-
-                # Read binary data
-                bytes_per_val = 8 if dtype == 'double' else 4
-                binary_data = f.read(num_points * bytes_per_val)
-                if dtype == 'double':
-                    field_data = np.frombuffer(binary_data, dtype='>f8')
-                else:
-                    field_data = np.frombuffer(binary_data, dtype='>f4')
-
-                data[field_name] = field_data
-
-                # Skip the trailing newline after binary data
-                f.read(1)
-
-            elif line.startswith('VECTORS'):
-                # VECTORS field_name type
-                parts = line.split()
-                field_name = parts[1]
-                dtype = parts[2]
-
-                # Read 3-component vectors
-                bytes_per_val = 8 if dtype == 'double' else 4
-                binary_data = f.read(num_points * 3 * bytes_per_val)
-                if dtype == 'double':
-                    vector_data = np.frombuffer(binary_data, dtype='>f8')
-                else:
-                    vector_data = np.frombuffer(binary_data, dtype='>f4')
-
-                # Reshape to (num_points, 3) and extract 2D components
-                vector_data = vector_data.reshape((num_points, 3))
-                data[f"{field_name}_x"] = vector_data[:, 0]
-                data[f"{field_name}_y"] = vector_data[:, 1]
-
-                # Skip the trailing newline after binary data
-                f.read(1)
+    # Extract point data (scalars and vectors)
+    if mesh.point_data:
+        for field_name, field_values in mesh.point_data.items():
+            # Flatten the array and handle different shapes
+            if field_values.ndim == 2:
+                if field_values.shape[1] == 1:
+                    # Scalar field stored as (N, 1) - flatten to 1D
+                    data[field_name] = field_values.ravel()
+                elif field_values.shape[1] == 3:
+                    # Vector field (3 components) - extract x,y components
+                    data[f"{field_name}_x"] = field_values[:, 0]
+                    data[f"{field_name}_y"] = field_values[:, 1]
+                    # z-component available as field_values[:, 2] if needed
+            elif field_values.ndim == 1:
+                # Already 1D scalar field
+                data[field_name] = field_values
 
     return data
 
@@ -186,7 +203,7 @@ def read_vtk_structured(vtk_path):
 def get_res_euler_2d(profile, testcase, n_grid_x, start_frame, end_frame, cfl, cg_tolerance):
     """Load all time frames for a given parameter set, triggering a simulation if results are missing."""
     aspect_ratio = _get_aspect_ratio_from_config(profile)
-    n_grid_y = int(round(aspect_ratio * n_grid_x))
+    n_grid_y = _compute_ny_from_cpp_logic(aspect_ratio, n_grid_x)
 
     # Use same directory naming as run_sim_euler_2d
     cfl_str = f"{cfl:.3f}" if cfl is not None else "default"
@@ -275,31 +292,45 @@ def interpolate_field_2d(field_src_flat, nx_src, ny_src, nx_tgt, ny_tgt, aspect_
     """
     Interpolates a 2D field from source grid to target grid.
 
-    The C++ code stores data in row-major order (y varies fastest for structured grid).
-    Cell centers are at positions (i+0.5)*dx, (j+0.5)*dy where i,j are grid indices.
-    Ghost cells exist at boundaries but are not included in the output VTK files.
+    The VTK exports STRUCTURED_POINTS (vertices) with ghost_layer=2.
+    For nx interior cells, VTK exports (nx+4) points in x and (ny+4) points in y.
+    The points are stored with x-fastest ordering (standard for VTK).
+    C++ uses round() + integer division to calculate ny (see _compute_ny_from_cpp_logic).
 
     Args:
-        field_src_flat: Flattened 1D array from VTK file (length nx_src * ny_src)
-        nx_src: Number of cells in x-direction for source grid
-        ny_src: Number of cells in y-direction for source grid
-        nx_tgt: Number of cells in x-direction for target grid
-        ny_tgt: Number of cells in y-direction for target grid
+        field_src_flat: Flattened 1D array from VTK file ((nx_src+4)*(ny_src+4) points)
+        nx_src: Number of interior cells in x-direction (without ghosts)
+        ny_src: Number of interior cells in y-direction (without ghosts)
+        nx_tgt: Number of interior cells in x-direction for target
+        ny_tgt: Number of interior cells in y-direction for target
         aspect_ratio: Domain aspect ratio (Ly / Lx)
 
     Returns:
-        Flattened interpolated field on target grid (length nx_tgt * ny_tgt)
+        Flattened interpolated field on target grid interior (nx_tgt * ny_tgt values)
     """
-    # Reshape flattened data to 2D grid (ny, nx) - row-major order
-    field_src_2d = field_src_flat.reshape((ny_src, nx_src))
+    # VTK dimensions: (nx+4) × (ny+4) points with ghost_layer=2
+    ghost_layer = 2
+    nx_src_pts = nx_src + 2 * ghost_layer
+    ny_src_pts = ny_src + 2 * ghost_layer
 
-    # Create cell-centered coordinates for source grid
-    # Domain: x in [0, 1], y in [0, aspect_ratio]
-    # Cell centers at (i+0.5)*dx, (j+0.5)*dy
-    x_src = np.linspace(0.5/nx_src, 1.0 - 0.5/nx_src, nx_src)
-    y_src = np.linspace(0.5/ny_src, aspect_ratio - 0.5/ny_src, ny_src)
+    # Reshape flattened data to 2D grid
+    # VTK uses x-fastest ordering, so for 2D: shape is (ny_pts, nx_pts)
+    field_src_2d = field_src_flat.reshape((ny_src_pts, nx_src_pts))
 
-    # Create interpolator (note: RegularGridInterpolator expects (y, x) order for 2D)
+    # VTK origin and spacing tell us the coordinate system
+    # Interior domain: x in [0, 1], y in [0, aspect_ratio]
+    # dx = 1.0 / nx_src, dy = aspect_ratio / ny_src
+    dx_src = 1.0 / nx_src
+    dy_src = aspect_ratio / ny_src
+
+    # VTK ORIGIN is at (-1.5 + bbmin)*dx from C++ code (line 487)
+    # With bbmin=0: origin = -1.5*dx, which is -1.5 grid spacings from zero
+    # Points are at origin + i*spacing for i=0,1,2,...
+    # So point 0 is at -1.5*dx, point 1 at -0.5*dx, point 2 at 0.5*dx (first interior cell center)
+    x_src = np.array([(-1.5 + i) * dx_src for i in range(nx_src_pts)])
+    y_src = np.array([(-1.5 + j) * dy_src for j in range(ny_src_pts)])
+
+    # Create interpolator (RegularGridInterpolator expects (y, x) order for 2D)
     interp = RegularGridInterpolator(
         (y_src, x_src),
         field_src_2d,
@@ -308,9 +339,11 @@ def interpolate_field_2d(field_src_flat, nx_src, ny_src, nx_tgt, ny_tgt, aspect_
         fill_value=None  # Use extrapolation at boundaries
     )
 
-    # Create cell-centered coordinates for target grid
-    x_tgt = np.linspace(0.5/nx_tgt, 1.0 - 0.5/nx_tgt, nx_tgt)
-    y_tgt = np.linspace(0.5/ny_tgt, aspect_ratio - 0.5/ny_tgt, ny_tgt)
+    # Create coordinates for target grid (interior cell centers only)
+    dx_tgt = 1.0 / nx_tgt
+    dy_tgt = aspect_ratio / ny_tgt
+    x_tgt = np.array([(i + 0.5) * dx_tgt for i in range(nx_tgt)])
+    y_tgt = np.array([(j + 0.5) * dy_tgt for j in range(ny_tgt)])
 
     # Create meshgrid for target points (indexing='ij' gives (ny, nx) shape)
     yy_tgt, xx_tgt = np.meshgrid(y_tgt, x_tgt, indexing='ij')
@@ -319,7 +352,16 @@ def interpolate_field_2d(field_src_flat, nx_src, ny_src, nx_tgt, ny_tgt, aspect_
     points = np.stack([yy_tgt.ravel(), xx_tgt.ravel()], axis=-1)
     field_tgt_2d = interp(points).reshape((ny_tgt, nx_tgt))
 
-    # Flatten back to 1D for consistency with VTK format
+    # For output, match the VTK format of target grid
+    nx_tgt_pts = nx_tgt + 4
+    ny_tgt_pts = ny_tgt + 3
+
+    # If we need to return the same format as input (points), we'd need to interpolate to points
+    # For now, return flattened data matching the target's expected VTK point count
+    # But actually, for comparison we want cell-centered data, so return interior points
+    # Actually, let's just return what makes sense for comparison: interior cell values
+    # Flatten back to 1D - but this will be nx_tgt * ny_tgt, not the VTK point count
+    # That's OK because we're comparing interior regions only
     return field_tgt_2d.ravel()
 
 
@@ -358,32 +400,48 @@ def compare_res_euler_2d(
     # Get grid dimensions for both cases
     aspect_ratio1 = _get_aspect_ratio_from_config(profile1)
     aspect_ratio2 = _get_aspect_ratio_from_config(profile2)
-    nx1 = n_grid_x1
-    ny1 = int(round(aspect_ratio1 * nx1))
-    nx2 = n_grid_x2
-    ny2 = int(round(aspect_ratio2 * nx2))
+    nx1 = n_grid_x1  # Interior cells only
+    ny1 = _compute_ny_from_cpp_logic(aspect_ratio1, nx1)  # Use exact C++ logic
+    nx2 = n_grid_x2  # Interior cells only
+    ny2 = _compute_ny_from_cpp_logic(aspect_ratio2, nx2)  # Use exact C++ logic
 
     # Check that aspect ratios match (we're only comparing same testcases)
     if abs(aspect_ratio1 - aspect_ratio2) > 1e-6:
         raise ValueError(f"Cannot compare different aspect ratios: {aspect_ratio1} vs {aspect_ratio2}")
 
+    # VTK STRUCTURED_POINTS exports points (vertices) with ghost_layer=2
+    # Pattern: (nx+4) × (ny+4) points (C++ uses round() + integer division for ny calculation)
+    ghost_layer = 2
+    n_points1_expected = (nx1 + 2*ghost_layer) * (ny1 + 2*ghost_layer)
+    n_points2_expected = (nx2 + 2*ghost_layer) * (ny2 + 2*ghost_layer)
+
     n_points1 = len(data1['density'])
     n_points2 = len(data2['density'])
 
     # Verify expected grid sizes
-    if n_points1 != nx1 * ny1:
-        print(f"Warning: data1 has {n_points1} points, expected {nx1 * ny1} = {nx1}x{ny1}")
-    if n_points2 != nx2 * ny2:
-        print(f"Warning: data2 has {n_points2} points, expected {nx2 * ny2} = {nx2}x{ny2}")
+    print(f"Case 1: nx={nx1}, ny={ny1}, VTK points={n_points1} (expected {n_points1_expected} = ({nx1}+{2*ghost_layer})×({ny1}+{2*ghost_layer}))")
+    print(f"Case 2: nx={nx2}, ny={ny2}, VTK points={n_points2} (expected {n_points2_expected} = ({nx2}+{2*ghost_layer})×({ny2}+{2*ghost_layer}))")
+
+    if n_points1 != n_points1_expected:
+        print(f"Warning: data1 has {n_points1} points, expected {n_points1_expected}")
+    if n_points2 != n_points2_expected:
+        print(f"Warning: data2 has {n_points2} points, expected {n_points2_expected}")
 
     if n_points1 == n_points2:
-        # Same grid size, direct comparison
-        density_err = compute_relative_error(data1['density'], data2['density'])
-        pressure_err = compute_relative_error(data1['pressure'], data2['pressure'])
+        # Same grid size - extract interior cells only (no ghost cells)
+        print("Same grid size detected - comparing interior cells only (excluding ghosts)")
+        density1_interior = _extract_interior_cells(data1['density'], nx1, ny1)
+        density2_interior = _extract_interior_cells(data2['density'], nx2, ny2)
+        pressure1_interior = _extract_interior_cells(data1['pressure'], nx1, ny1)
+        pressure2_interior = _extract_interior_cells(data2['pressure'], nx2, ny2)
+
+        density_err = compute_relative_error(density1_interior, density2_interior)
+        pressure_err = compute_relative_error(pressure1_interior, pressure2_interior)
     else:
-        # Different grid sizes - interpolate coarser grid to finer grid for accurate 2D comparison
+        # Different grid sizes - interpolate coarser grid to finer grid, then compare interior cells
         if n_points1 < n_points2:
             # data1 is coarser, interpolate to data2's finer grid
+            # interpolate_field_2d returns interior cells only (nx2 * ny2 values)
             density1_interp = interpolate_field_2d(
                 data1['density'], nx1, ny1, nx2, ny2, aspect_ratio1
             )
@@ -391,10 +449,15 @@ def compare_res_euler_2d(
                 data1['pressure'], nx1, ny1, nx2, ny2, aspect_ratio1
             )
 
-            density_err = compute_relative_error(density1_interp, data2['density'])
-            pressure_err = compute_relative_error(pressure1_interp, data2['pressure'])
+            # Extract interior cells from data2 to match interpolated data
+            density2_interior = _extract_interior_cells(data2['density'], nx2, ny2)
+            pressure2_interior = _extract_interior_cells(data2['pressure'], nx2, ny2)
+
+            density_err = compute_relative_error(density1_interp, density2_interior)
+            pressure_err = compute_relative_error(pressure1_interp, pressure2_interior)
         else:
             # data2 is coarser, interpolate to data1's finer grid
+            # interpolate_field_2d returns interior cells only (nx1 * ny1 values)
             density2_interp = interpolate_field_2d(
                 data2['density'], nx2, ny2, nx1, ny1, aspect_ratio2
             )
@@ -402,8 +465,12 @@ def compare_res_euler_2d(
                 data2['pressure'], nx2, ny2, nx1, ny1, aspect_ratio2
             )
 
-            density_err = compute_relative_error(data1['density'], density2_interp)
-            pressure_err = compute_relative_error(data1['pressure'], pressure2_interp)
+            # Extract interior cells from data1 to match interpolated data
+            density1_interior = _extract_interior_cells(data1['density'], nx1, ny1)
+            pressure1_interior = _extract_interior_cells(data1['pressure'], nx1, ny1)
+
+            density_err = compute_relative_error(density1_interior, density2_interp)
+            pressure_err = compute_relative_error(pressure1_interior, pressure2_interp)
 
     # Combined RMSE
     combined_err = (density_err + pressure_err) / 2.0
