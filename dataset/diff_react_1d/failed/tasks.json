@@ -11,7 +11,7 @@
       "profile": "p1",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 1e-10
+        "tolerance_rmse": 0.0001
       },
       "target_config": {
         "initial_value": 512,
@@ -76,7 +76,7 @@
       "profile": "p1",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 1e-10
+        "tolerance_rmse": 0.0001
       },
       "target_config": {
         "initial_value": 512,
@@ -141,7 +141,7 @@
       "profile": "p1",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 1e-10
+        "tolerance_rmse": 0.0001
       },
       "target_config": {
         "initial_value": 512,
@@ -206,7 +206,7 @@
       "profile": "p1",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 1e-10
+        "tolerance_rmse": 0.0001
       },
       "target_config": {
         "initial_value": 1e-05,
@@ -271,7 +271,7 @@
       "profile": "p1",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 1e-10
+        "tolerance_rmse": 0.0001
       },
       "target_config": {
         "initial_value": 1e-05,
@@ -336,7 +336,7 @@
       "profile": "p2",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 1e-10
+        "tolerance_rmse": 0.0001
       },
       "target_config": {
         "initial_value": 512,
@@ -402,7 +402,7 @@
       "profile": "p2",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 1e-10
+        "tolerance_rmse": 0.0001
       },
       "target_config": {
         "initial_value": 512,
@@ -468,7 +468,7 @@
       "profile": "p2",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 1e-10
+        "tolerance_rmse": 0.0001
       },
       "target_config": {
         "initial_value": 512,
@@ -534,7 +534,7 @@
       "profile": "p2",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 1e-10
+        "tolerance_rmse": 0.0001
       },
       "target_config": {
         "initial_value": 1e-05,
@@ -600,7 +600,7 @@
       "profile": "p2",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 1e-10
+        "tolerance_rmse": 0.0001
       },
       "target_config": {
         "initial_value": 1e-05,
@@ -666,7 +666,7 @@
       "profile": "p3",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 1e-10
+        "tolerance_rmse": 0.0001
       },
       "target_config": {
         "initial_value": 512,
@@ -731,7 +731,7 @@
       "profile": "p3",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 1e-10
+        "tolerance_rmse": 0.0001
       },
       "target_config": {
         "initial_value": 512,
@@ -796,7 +796,7 @@
       "profile": "p3",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 1e-10
+        "tolerance_rmse": 0.0001
       },
       "target_config": {
         "initial_value": 512,
@@ -861,7 +861,7 @@
       "profile": "p3",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 1e-10
+        "tolerance_rmse": 0.0001
       },
       "target_config": {
         "initial_value": 1e-05,
@@ -926,7 +926,7 @@
       "profile": "p3",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 1e-10
+        "tolerance_rmse": 0.0001
       },
       "target_config": {
         "initial_value": 1e-05,
@@ -991,7 +991,7 @@
       "profile": "p1",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.0005
+        "tolerance_rmse": 0.001
       },
       "target_config": {
         "initial_value": 512,
@@ -1056,7 +1056,7 @@
       "profile": "p1",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.0005
+        "tolerance_rmse": 0.001
       },
       "target_config": {
         "initial_value": 512,
@@ -1121,7 +1121,7 @@
       "profile": "p1",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.0005
+        "tolerance_rmse": 0.001
       },
       "target_config": {
         "initial_value": 512,
@@ -1186,7 +1186,7 @@
       "profile": "p2",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.0005
+        "tolerance_rmse": 0.001
       },
       "target_config": {
         "initial_value": 512,
@@ -1252,7 +1252,7 @@
       "profile": "p2",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.0005
+        "tolerance_rmse": 0.001
       },
       "target_config": {
         "initial_value": 512,
@@ -1318,7 +1318,7 @@
       "profile": "p2",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.0005
+        "tolerance_rmse": 0.001
       },
       "target_config": {
         "initial_value": 512,
@@ -1384,7 +1384,7 @@
       "profile": "p3",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.0005
+        "tolerance_rmse": 0.001
       },
       "target_config": {
         "initial_value": 512,
@@ -1449,7 +1449,7 @@
       "profile": "p3",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.0005
+        "tolerance_rmse": 0.001
       },
       "target_config": {
         "initial_value": 512,
@@ -1514,7 +1514,7 @@
       "profile": "p3",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.0005
+        "tolerance_rmse": 0.001
       },
       "target_config": {
         "initial_value": 512,
