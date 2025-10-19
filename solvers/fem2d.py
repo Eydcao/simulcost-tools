@@ -29,8 +29,11 @@ class FEM2D(SIMULATOR):
         self.gravity = cfg.envs_params.get('gravity', -9.8)
 
         # Newton solver parameters
+        # newton_v_res_tol: velocity-like residual tolerance
+        # Convergence criterion: |Δx| / dt < newton_v_res_tol
+        # where Δx is the position correction from Newton solver
         self.max_newton_iter = cfg.max_newton_iter
-        self.newton_residual_threshold = cfg.newton_residual_threshold
+        self.newton_v_res_tol = cfg.newton_v_res_tol
 
         mesh = self._get_mesh(self.nx, cfg)
         self.mesh_particles = mesh.points
@@ -68,6 +71,11 @@ class FEM2D(SIMULATOR):
         self.fixed_nodes = []
         if not os.path.exists(self.dump_dir):
             os.makedirs(self.dump_dir)
+
+        # Cost counters for tracking computational work
+        self.cnt_hessian_gradient = 0  # Counts hessian+gradient assembly (cost: n_elements each)
+        self.cnt_energy = 0             # Counts energy evaluation (cost: n_elements each)
+        self.cnt_linear_solve = 0       # Counts sparse linear solve (cost: (n_particles*dim)^2 each)
 
     def _get_mesh(self, nx, cfg):
         mesh_path = f"output/mesh/{self.case}_nx{nx}.obj"
@@ -307,6 +315,12 @@ class FEM2D(SIMULATOR):
 
     @ti.kernel
     def output_residual(self, dt: ti.f64) -> ti.f64:
+        """
+        Compute the maximum position correction from Newton solver.
+        Returns |Δx|_∞ where Δx is the search direction.
+        Note: convergence is checked against |Δx| < newton_v_res_tol * dt,
+        which is equivalent to checking velocity-like residual |Δx|/dt < newton_v_res_tol
+        """
         residual = 0.0
         for i in range(self.n_particles):
             for d in ti.static(range(self.dim)):
@@ -369,6 +383,7 @@ class FEM2D(SIMULATOR):
 
             # Assemble Hessian and gradient
             self.compute_hessian_and_gradient(dt)
+            self.cnt_hessian_gradient += 1
 
             if self.verbose:
                 print(f"  Newton iter {newton_iter}: Total entries: {self.cnt[None]}")
@@ -386,9 +401,18 @@ class FEM2D(SIMULATOR):
             for node_idx in self.fixed_nodes:
                 D.append(node_idx * self.dim)
                 D.append(node_idx * self.dim + 1)
+
+            # For vibration_bar: constrain all Y DOFs (1D vibration, no Y motion)
+            if self.case == 'vibration_bar':
+                for node_idx in range(self.n_particles):
+                    D.append(node_idx * self.dim + 1)  # Y component
+
             D = np.array(D, dtype=np.int32)
 
-            # Only apply BC if there are fixed nodes
+            # Remove duplicates
+            D = np.unique(D)
+
+            # Only apply BC if there are fixed DOFs
             if len(D) > 0:
                 A[:, D] = 0
                 A[D, :] = 0
@@ -400,26 +424,31 @@ class FEM2D(SIMULATOR):
 
             # Solve linear system
             self.data_sol.from_numpy(scipy.sparse.linalg.spsolve(A, rhs))
+            self.cnt_linear_solve += 1
 
             # Check convergence criterion
+            # residual is |Δx|_∞, we check if |Δx|/dt < newton_v_res_tol
             residual = self.output_residual(dt)
             if self.verbose:
-                print(f'  Newton iter {newton_iter}: residual = {residual}')
+                print(f'  Newton iter {newton_iter}: |Δx| = {residual:.6e}, |Δx|/dt = {residual/dt:.6e}')
 
-            converged = residual < self.newton_residual_threshold * dt
+            converged = residual < self.newton_v_res_tol * dt
 
             # Line search: ensure energy decreases (always perform, even if converged)
             E0 = self.compute_energy(dt)
+            self.cnt_energy += 1
             self.save_xPrev()
             alpha = 1.0
             self.apply_sol(alpha)
             E = self.compute_energy(dt)
+            self.cnt_energy += 1
 
             line_search_iter = 0
             while E > E0 and line_search_iter < 20:
                 alpha *= 0.5
                 self.apply_sol(alpha)
                 E = self.compute_energy(dt)
+                self.cnt_energy += 1
                 line_search_iter += 1
 
             if self.verbose and line_search_iter > 0:
@@ -456,13 +485,62 @@ class FEM2D(SIMULATOR):
         meshio.write(f'{self.dump_dir}/frame_{self.record_frame:06d}.vtk', mesh)
 
     def post_process(self):
-        cost = self.num_steps * self.n_particles * self.n_elements
+        """
+        Calculate total computational cost based on operation counts.
+
+        Cost breakdown (per element operation counts for 2D):
+        - Hessian+Gradient assembly: ~804 ops per element per call
+          (includes SVD, stress derivative with 4D tensor, assembly)
+        - Energy evaluation: ~54 ops per element per call
+          (includes SVD, energy function)
+        - Sparse linear solve: O((n_particles * dim)^2) per call
+
+        Detailed per-element costs:
+        - compute_energy: compute_T(4) + matmul(12) + vol0(3) + SVD(25) + energy(10) = 54
+        - compute_hessian_gradient: compute_T(4) + matmul(12) + vol0(3) + dPdF(330)
+          + P(35) + intermediate_assembly(72) + hessian_assembly(312) + gradient_assembly(36) = 804
+
+        Total cost = cnt_hessian_gradient * n_elements * 804
+                   + cnt_energy * n_elements * 54
+                   + cnt_linear_solve * (n_particles * dim)^2
+        """
+        n_dof = self.n_particles * self.dim
+
+        # Cost constants per element (for 2D)
+        cost_per_hessian_gradient = 804  # operations per element
+        cost_per_energy = 54             # operations per element
+
+        cost_hessian_gradient = self.cnt_hessian_gradient * self.n_elements * cost_per_hessian_gradient
+        cost_energy = self.cnt_energy * self.n_elements * cost_per_energy
+        cost_linear_solve = self.cnt_linear_solve * n_dof * n_dof
+
+        total_cost = cost_hessian_gradient + cost_energy + cost_linear_solve
+
         with open(os.path.join(self.dump_dir, "meta.json"), "w") as f:
             meta = {
-                "cost": cost,
+                "cost": int(total_cost),
+                "cost_breakdown": {
+                    "hessian_gradient": int(cost_hessian_gradient),
+                    "energy": int(cost_energy),
+                    "linear_solve": int(cost_linear_solve),
+                },
+                "operation_counts": {
+                    "cnt_hessian_gradient": int(self.cnt_hessian_gradient),
+                    "cnt_energy": int(self.cnt_energy),
+                    "cnt_linear_solve": int(self.cnt_linear_solve),
+                },
                 "total_steps": int(self.num_steps),
+                "n_particles": int(self.n_particles),
+                "n_elements": int(self.n_elements),
+                "n_dof": int(n_dof),
             }
             import json
             json.dump(meta, f, indent=4)
+
         if self.verbose:
-            print(f"Run cost: {cost}")
+            print(f"\nCost Summary:")
+            print(f"  Hessian+Gradient assemblies: {self.cnt_hessian_gradient} × {self.n_elements} × {cost_per_hessian_gradient} = {cost_hessian_gradient}")
+            print(f"  Energy evaluations: {self.cnt_energy} × {self.n_elements} × {cost_per_energy} = {cost_energy}")
+            print(f"  Linear solves: {self.cnt_linear_solve} × {n_dof}^2 = {cost_linear_solve}")
+            print(f"  Total cost: {total_cost}")
+            print(f"  Average Newton iters per step: {self.cnt_hessian_gradient / self.num_steps:.2f}")

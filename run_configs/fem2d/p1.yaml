@@ -6,7 +6,9 @@ defaults:
 # Tunable Parameters
 nx: 20
 dt: 0.0005
-newton_residual_threshold: 0.01
+# newton_v_res_tol: velocity-like residual tolerance for Newton convergence
+# Convergence criterion: |Δx|/dt < newton_v_res_tol, where Δx is position correction
+newton_v_res_tol: 0.01
 
 # Environmental Parameters
 dim: 2
