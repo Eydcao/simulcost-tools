@@ -77,6 +77,11 @@ class FEM2D(SIMULATOR):
         self.cnt_energy = 0             # Counts energy evaluation (cost: n_elements each)
         self.cnt_linear_solve = 0       # Counts sparse linear solve (cost: (n_particles*dim)^2 each)
 
+        # Energy tracking for convergence analysis
+        self.energy_log_kin = []
+        self.energy_log_pot = []
+        self.energy_log_tot = []
+
     def _get_mesh(self, nx, cfg):
         mesh_path = f"output/mesh/{self.case}_nx{nx}.obj"
         if os.path.exists(mesh_path):
@@ -164,6 +169,37 @@ class FEM2D(SIMULATOR):
             else:
                 total_energy += elasticity_energy(ti.Vector([sig[0, 0], sig[1, 1], sig[2, 2]]), self.la, self.mu) * dt * dt * vol0
         return total_energy
+
+    @ti.kernel
+    def compute_kinetic_energy(self) -> ti.f64:
+        """Compute kinetic energy: 0.5 * m * v^2"""
+        kin_energy = 0.0
+        for i in range(self.n_particles):
+            kin_energy += 0.5 * self.m[i] * self.v[i].norm_sqr()
+        return kin_energy
+
+    @ti.kernel
+    def compute_elastic_potential_energy(self) -> ti.f64:
+        """Compute elastic potential energy"""
+        pot_energy = 0.0
+        for e in range(self.n_elements):
+            F = self.compute_T(e) @ self.restT[e].inverse()
+            vol0 = self.restT[e].determinant() / self.dim / (self.dim - 1)
+            U, sig, V = svd(F)
+            if ti.static(self.dim == 2):
+                pot_energy += elasticity_energy(ti.Vector([sig[0, 0], sig[1, 1]]), self.la, self.mu) * vol0
+            else:
+                pot_energy += elasticity_energy(ti.Vector([sig[0, 0], sig[1, 1], sig[2, 2]]), self.la, self.mu) * vol0
+        return pot_energy
+
+    def log_energies(self):
+        """Compute and log kinetic, potential, and total energies"""
+        kin = self.compute_kinetic_energy()
+        pot = self.compute_elastic_potential_energy()
+        tot = kin + pot
+        self.energy_log_kin.append(kin)
+        self.energy_log_pot.append(pot)
+        self.energy_log_tot.append(tot)
 
     @ti.kernel
     def compute_hessian_and_gradient(self, dt: ti.f64):
@@ -501,6 +537,9 @@ class FEM2D(SIMULATOR):
         self.compute_v(dt)
 
     def dump(self):
+        # Log energies for convergence analysis
+        self.log_energies()
+
         particle_pos = self.x.to_numpy()
         particle_vel = self.v.to_numpy()
 
@@ -574,6 +613,15 @@ class FEM2D(SIMULATOR):
             import json
             json.dump(meta, f, indent=4)
 
+        # Save energies for convergence analysis
+        energies_path = os.path.join(self.dump_dir, "energies.npz")
+        np.savez(
+            energies_path,
+            kin=np.array(self.energy_log_kin),
+            pot=np.array(self.energy_log_pot),
+            tot=np.array(self.energy_log_tot),
+        )
+
         if self.verbose:
             print(f"\nCost Summary:")
             print(f"  Hessian+Gradient assemblies: {self.cnt_hessian_gradient} × {self.n_elements} × {cost_per_hessian_gradient} = {cost_hessian_gradient}")
@@ -581,3 +629,8 @@ class FEM2D(SIMULATOR):
             print(f"  Linear solves: {self.cnt_linear_solve} × {n_dof}^2 = {cost_linear_solve}")
             print(f"  Total cost: {total_cost}")
             print(f"  Average Newton iters per step: {self.cnt_hessian_gradient / self.num_steps:.2f}")
+            print(f"\nEnergy conservation:")
+            if len(self.energy_log_tot) > 1:
+                energy_variation = np.std(self.energy_log_tot) / (np.mean(np.abs(self.energy_log_tot)) + 1e-12)
+                print(f"  Total energy variation (CV): {energy_variation:.2e}")
+                print(f"  Energy range: {np.min(self.energy_log_tot):.6e} to {np.max(self.energy_log_tot):.6e}")

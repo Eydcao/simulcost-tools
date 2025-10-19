@@ -1,0 +1,79 @@
+# FEM2D Checkout Configuration
+# This file centralizes all parameter settings for both documentation and dummy solution generation
+
+solver_info:
+  name: "FEM2D"
+  numerical_method: "2D Finite Element Method with implicit Newton solver and corotated elasticity"
+  reference: "Implicit FEM with line search for nonlinear elasticity problems"
+
+task_distribution:
+  strategy: "benchmark"
+  total_individuals: 60
+  description: "3 profiles * 3 precision levels * (2 nx tasks + 2 dt tasks + 2 newton_v_res_tol tasks) = 54 tasks"
+
+precision_levels:
+  high:
+    energy_tolerance: 0.003
+    var_threshold: 0.015
+    description: "High precision energy convergence - very challenging"
+  medium:
+    energy_tolerance: 0.01
+    var_threshold: 0.02
+    description: "Medium precision energy convergence - challenging"
+  low:
+    energy_tolerance: 0.03
+    var_threshold: 0.05
+    description: "Low precision energy convergence - achievable"
+
+profiles:
+  num_profiles: 3
+  active_profiles: ["p1", "p2", "p3"]
+  # active_profiles: ["p1"]
+
+# Target parameters for optimization
+target_parameters:
+  nx:
+    search_type: "iterative+0-shot"
+    # Profile-specific initial values
+    initial_values:
+      p1: 20   # cantilever: Lx=10.0, Ly=2.0
+      p2: 70   # vibration_bar: Lx=25.0, Ly=1.0
+      p3: 20   # twisting_column: Lx=2.0, Ly=10.0
+    multiplication_factor: 2
+    max_iteration_num: 4
+    non_target_parameters:
+      dt:
+        p1: [0.0005, 0.00025]  # cantilever
+        p2: [0.005, 0.0025]     # vibration_bar
+        p3: [0.001, 0.0005]     # twisting_column
+
+  dt:
+    search_type: "iterative+0-shot"
+    # Profile-specific initial values
+    initial_values:
+      p1: 0.0005  # cantilever
+      p2: 0.005   # vibration_bar
+      p3: 0.001   # twisting_column
+    multiplication_factor: 0.5
+    max_iteration_num: 4
+    # Profile-specific non_target nx values
+    non_target_parameters:
+      nx:
+        p1: [20, 40]   # cantilever
+        p2: [70, 140]  # vibration_bar
+        p3: [20, 40]   # twisting_column
+
+  newton_v_res_tol:
+    search_type: "0-shot"
+    search_range: [0.001, 0.1]  # Logarithmic spacing from tight to loose tolerance
+    search_range_slice_num: 5
+    # Profile-specific non_target parameters
+    non_target_parameters:
+      nx:
+        p1: [20, 40]   # cantilever
+        p2: [70, 140]  # vibration_bar
+        p3: [20, 40]   # twisting_column
+      dt:
+        p1: [0.0005, 0.00025]  # cantilever
+        p2: [0.005, 0.0025]     # vibration_bar
+        p3: [0.001, 0.0005]     # twisting_column
