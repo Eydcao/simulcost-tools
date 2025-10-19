@@ -93,6 +93,9 @@ class FEM2D(SIMULATOR):
         if self.case == 'vibration_bar':
             x_start = cfg.envs_params.get('x_start', 0.0)
             y_start = cfg.envs_params.get('y_start', 0.0)
+        elif self.case == 'twisting_column':
+            x_start = 0.0
+            y_start = 0.0
         else:  # cantilever
             x_start = 0.0
             y_start = 5.0
@@ -346,6 +349,31 @@ class FEM2D(SIMULATOR):
                 initial_v[i, 0] = v0 * np.sin(0.5 * np.pi * x_rel / Lx)
 
             self.v.from_numpy(initial_v)
+        elif self.case == 'twisting_column':
+            # Twisting motion: create rotational velocity field around center
+            # v_x = -omega * (y - y_center)
+            # v_y = omega * (x - x_center)
+            amplitude = self.cfg.envs_params.get('initial_twist_amplitude', 1.0)
+            Lx = self.cfg.envs_params.Lx
+            Ly = self.cfg.envs_params.Ly
+            x_center = Lx / 2.0
+            y_center = Ly / 2.0
+
+            initial_v = np.zeros((self.n_particles, 2))
+            for i in range(self.n_particles):
+                x_pos = self.mesh_particles[i, 0]
+                y_pos = self.mesh_particles[i, 1]
+                # Rotational velocity field (counterclockwise)
+                # Scale by distance from center to create differential rotation
+                dx = x_pos - x_center
+                dy = y_pos - y_center
+                r = np.sqrt(dx*dx + dy*dy)
+                # Linear velocity profile: v = omega * r, scaled by height
+                y_factor = (y_pos / Ly)  # 0 at bottom, 1 at top
+                initial_v[i, 0] = -amplitude * dy * y_factor
+                initial_v[i, 1] = amplitude * dx * y_factor
+
+            self.v.from_numpy(initial_v)
         else:
             # Default: zero initial velocity
             self.v.fill(0)
@@ -365,6 +393,15 @@ class FEM2D(SIMULATOR):
 
             for i in range(self.n_particles):
                 if self.mesh_particles[i, 0] < x_start + bc_dist_dx:
+                    self.fixed_nodes.append(i)
+        elif self.case == 'twisting_column':
+            # Fix bottom edge (y < small tolerance)
+            Ly = self.cfg.envs_params.Ly
+            dy = Ly / int(self.nx * Ly / self.cfg.envs_params.Lx)
+            bc_dist_dy = 0.05 * dy
+
+            for i in range(self.n_particles):
+                if self.mesh_particles[i, 1] < bc_dist_dy:
                     self.fixed_nodes.append(i)
 
     def cal_dt(self):
