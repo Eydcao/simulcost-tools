@@ -6,22 +6,26 @@ defaults:
 # Tunable Parameters
 nx: 20
 dt: 0.0005
+newton_residual_threshold: 0.01
 
-# Simulation Scene Parameters
+# Environmental Parameters
 dim: 2
 E: 1e5
 nu: 0.29
 density: 2.0
 envs_params:
-  Lx: 11.0
-  Ly: 8.0
+  Lx: 10.0
+  Ly: 2.0
+  gravity: -9.8
 mesh_scale: 1.0
 mesh_offset:
   - 0.0
   - 0.0
 
-# Output Parameters
-dump_dir: "output_cantilever"
+# Simulator statics
 record_dt: 0.02
 end_frame: 200
+max_newton_iter: 10
+
+dump_dir: "sim_res/fem2d/p1"
 verbose: False

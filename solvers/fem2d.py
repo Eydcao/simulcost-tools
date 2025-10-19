@@ -11,10 +11,10 @@ from .fastipc_utils.common.math.math_tools import *
 
 
 @ti.data_oriented
-class FastIPC(SIMULATOR):
+class FEM2D(SIMULATOR):
     def __init__(self, verbose, cfg):
         super().__init__(verbose, cfg)
-        
+
         self.dim = cfg.dim
         self.E = cfg.E
         self.nu = cfg.nu
@@ -23,6 +23,14 @@ class FastIPC(SIMULATOR):
         self.density = cfg.density
         self.dt = cfg.dt
         self.nx = cfg.nx
+
+        # Case type and gravity
+        self.case = cfg.get('case', 'cantilever')
+        self.gravity = cfg.envs_params.get('gravity', -9.8)
+
+        # Newton solver parameters
+        self.max_newton_iter = cfg.max_newton_iter
+        self.newton_residual_threshold = cfg.newton_residual_threshold
 
         mesh = self._get_mesh(self.nx, cfg)
         self.mesh_particles = mesh.points
@@ -62,10 +70,10 @@ class FastIPC(SIMULATOR):
             os.makedirs(self.dump_dir)
 
     def _get_mesh(self, nx, cfg):
-        mesh_path = f"output/mesh/cantilever_nx{nx}.obj"
+        mesh_path = f"output/mesh/{self.case}_nx{nx}.obj"
         if os.path.exists(mesh_path):
             return meshio.read(mesh_path)
-        
+
         Lx = cfg.envs_params.Lx
         Ly = cfg.envs_params.Ly
         n_gx_e = nx
@@ -73,8 +81,13 @@ class FastIPC(SIMULATOR):
         dx = Lx / n_gx_e
         dy = Ly / n_gy_e
 
-        x_start = 0.0
-        y_start = 5.0
+        # Get starting position based on case
+        if self.case == 'vibration_bar':
+            x_start = cfg.envs_params.get('x_start', 0.0)
+            y_start = cfg.envs_params.get('y_start', 0.0)
+        else:  # cantilever
+            x_start = 0.0
+            y_start = 5.0
 
         n_vertices = (n_gx_e + 1) * (n_gy_e + 1)
         v_pos = np.zeros((n_vertices, 2), dtype=float)
@@ -85,11 +98,12 @@ class FastIPC(SIMULATOR):
         from scipy.spatial import Delaunay
         tri = Delaunay(v_pos)
         cells = [("triangle", tri.simplices)]
-        
+
         # Add a z-coordinate of 0 to make the points 3D
         points_3d = np.hstack([v_pos, np.zeros((v_pos.shape[0], 1))])
 
         mesh = meshio.Mesh(points_3d, cells)
+        os.makedirs(os.path.dirname(mesh_path), exist_ok=True)
         mesh.write(mesh_path)
         return mesh
 
@@ -120,7 +134,8 @@ class FastIPC(SIMULATOR):
         for i in range(self.n_particles):
             self.xn[i] = self.x[i]
             self.xTilde[i] = self.x[i] + dt * self.v[i]
-            self.xTilde[i][1] -= dt * dt * 9.8
+            # Apply gravity (gravity is negative for downward)
+            self.xTilde[i][1] += dt * dt * self.gravity
 
     @ti.kernel
     def compute_energy(self, dt: ti.f64) -> ti.f64:
@@ -300,62 +315,123 @@ class FastIPC(SIMULATOR):
 
     def pre_process(self):
         self.x.from_numpy(self.mesh_particles)
-        self.v.fill(0)
         self.vertices.from_numpy(self.mesh_elements)
         self.compute_restT_and_m()
         self.zero.fill(0)
 
-        for i in range(self.n_particles):
-            if self.mesh_particles[i, 0] < 1e-6:
-                self.fixed_nodes.append(i)
+        # Set initial velocity based on case
+        if self.case == 'vibration_bar':
+            # Sinusoidal initial velocity: v_x = amplitude * sin(0.5 * pi * x / Lx)
+            v0 = self.cfg.envs_params.get('initial_velocity_amplitude', 0.75)
+            Lx = self.cfg.envs_params.Lx
+            x_start = self.cfg.envs_params.get('x_start', 0.0)
+
+            initial_v = np.zeros((self.n_particles, 2))
+            for i in range(self.n_particles):
+                x_rel = self.mesh_particles[i, 0] - x_start
+                initial_v[i, 0] = v0 * np.sin(0.5 * np.pi * x_rel / Lx)
+
+            self.v.from_numpy(initial_v)
+        else:
+            # Default: zero initial velocity
+            self.v.fill(0)
+
+        # Set boundary conditions based on case
+        if self.case == 'cantilever':
+            # Fix left edge (x < 1e-6)
+            for i in range(self.n_particles):
+                if self.mesh_particles[i, 0] < 1e-6:
+                    self.fixed_nodes.append(i)
+        elif self.case == 'vibration_bar':
+            # Fix left edge (x < x_start + small tolerance)
+            x_start = self.cfg.envs_params.get('x_start', 0.0)
+            Lx = self.cfg.envs_params.Lx
+            dx = Lx / self.nx
+            bc_dist_dx = 0.05 * dx
+
+            for i in range(self.n_particles):
+                if self.mesh_particles[i, 0] < x_start + bc_dist_dx:
+                    self.fixed_nodes.append(i)
 
     def cal_dt(self):
         return self.dt
 
     def step(self, dt):
+        # Initialize state for this timestep
         self.compute_xn_and_xTilde(dt)
-        self.data_mat.fill(0)
-        self.data_rhs.fill(0)
-        self.data_sol.fill(0)
-        self.compute_hessian_and_gradient(dt)
 
-        if self.verbose:
-            print("Total entries: ", self.cnt[None])
-        mat = self.data_mat.to_numpy()
-        row, col, val = mat[0, :self.cnt[None]], mat[1, :self.cnt[None]], mat[2, :self.cnt[None]]
-        rhs = self.data_rhs.to_numpy()
-        n = self.n_particles * self.dim
-        A = scipy.sparse.csr_matrix((val, (row, col)), shape=(n, n))
-        A = scipy.sparse.lil_matrix(A)
-        
-        D = []
-        for node_idx in self.fixed_nodes:
-            D.append(node_idx * self.dim)
-            D.append(node_idx * self.dim + 1)
-        D = np.array(D)
+        # Newton iteration loop
+        for newton_iter in range(self.max_newton_iter):
+            # Reset system matrices and vectors
+            self.data_mat.fill(0)
+            self.data_rhs.fill(0)
+            self.data_sol.fill(0)
 
-        A[:, D] = 0
-        A[D, :] = 0
-        A = scipy.sparse.csr_matrix(A)
-        A += scipy.sparse.csr_matrix((np.ones(len(D)), (D, D)), shape=(n, n))
-        rhs[D] = 0
-        self.data_sol.from_numpy(scipy.sparse.linalg.spsolve(A, rhs))
+            # Assemble Hessian and gradient
+            self.compute_hessian_and_gradient(dt)
 
-        residual = self.output_residual(dt)
-        if self.verbose:
-            print(f'residual : {residual}')
-        if residual < 1e-2 * dt:
-            self.compute_v(dt)
-            return
-        E0 = self.compute_energy(dt)
-        self.save_xPrev()
-        alpha = 1.0
-        self.apply_sol(alpha)
-        E = self.compute_energy(dt)
-        while E > E0:
-            alpha *= 0.5
+            if self.verbose:
+                print(f"  Newton iter {newton_iter}: Total entries: {self.cnt[None]}")
+
+            # Convert to sparse matrix format
+            mat = self.data_mat.to_numpy()
+            row, col, val = mat[0, :self.cnt[None]], mat[1, :self.cnt[None]], mat[2, :self.cnt[None]]
+            rhs = self.data_rhs.to_numpy()
+            n = self.n_particles * self.dim
+            A = scipy.sparse.csr_matrix((val, (row, col)), shape=(n, n))
+            A = scipy.sparse.lil_matrix(A)
+
+            # Apply boundary conditions (Dirichlet BC on fixed nodes)
+            D = []
+            for node_idx in self.fixed_nodes:
+                D.append(node_idx * self.dim)
+                D.append(node_idx * self.dim + 1)
+            D = np.array(D, dtype=np.int32)
+
+            # Only apply BC if there are fixed nodes
+            if len(D) > 0:
+                A[:, D] = 0
+                A[D, :] = 0
+                A = scipy.sparse.csr_matrix(A)
+                A += scipy.sparse.csr_matrix((np.ones(len(D)), (D, D)), shape=(n, n))
+                rhs[D] = 0
+            else:
+                A = scipy.sparse.csr_matrix(A)
+
+            # Solve linear system
+            self.data_sol.from_numpy(scipy.sparse.linalg.spsolve(A, rhs))
+
+            # Check convergence criterion
+            residual = self.output_residual(dt)
+            if self.verbose:
+                print(f'  Newton iter {newton_iter}: residual = {residual}')
+
+            converged = residual < self.newton_residual_threshold * dt
+
+            # Line search: ensure energy decreases (always perform, even if converged)
+            E0 = self.compute_energy(dt)
+            self.save_xPrev()
+            alpha = 1.0
             self.apply_sol(alpha)
             E = self.compute_energy(dt)
+
+            line_search_iter = 0
+            while E > E0 and line_search_iter < 20:
+                alpha *= 0.5
+                self.apply_sol(alpha)
+                E = self.compute_energy(dt)
+                line_search_iter += 1
+
+            if self.verbose and line_search_iter > 0:
+                print(f"  Line search: {line_search_iter} iters, alpha = {alpha}")
+
+            # After applying solution, check if we should stop iterating
+            if converged:
+                if self.verbose:
+                    print(f"  Newton converged at iteration {newton_iter}")
+                break
+
+        # After Newton loop (converged or max iterations reached), update velocity
         self.compute_v(dt)
 
     def dump(self):
@@ -365,9 +441,17 @@ class FastIPC(SIMULATOR):
         if self.dim == 2:
             particle_pos = np.hstack([particle_pos, np.zeros((self.n_particles, 1))])
             particle_vel = np.hstack([particle_vel, np.zeros((self.n_particles, 1))])
-        
-        point_data = {'velocity': particle_vel}
-        
+
+        # Create boundary condition flag (1 = Dirichlet BC, 0 = free)
+        is_bc = np.zeros(self.n_particles)
+        for node_idx in self.fixed_nodes:
+            is_bc[node_idx] = 1.0
+
+        point_data = {
+            'velocity': particle_vel,
+            'is_bc': is_bc
+        }
+
         mesh = meshio.Mesh(points=particle_pos, cells={'triangle': self.mesh_elements}, point_data=point_data)
         meshio.write(f'{self.dump_dir}/frame_{self.record_frame:06d}.vtk', mesh)
 

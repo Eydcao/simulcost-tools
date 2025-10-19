@@ -1,0 +1,37 @@
+defaults:
+  - _self_
+  - override hydra/hydra_logging: none
+  - override hydra/job_logging: none
+
+# Case type
+case: "vibration_bar"
+
+# Tunable Parameters
+nx: 70
+dt: 0.005
+newton_residual_threshold: 0.01
+
+# Environmental Parameters
+dim: 2
+E: 100.0
+nu: 0.0
+density: 1.0
+envs_params:
+  Lx: 25.0
+  Ly: 1.0
+  x_start: 5.0
+  y_start: 0.0
+  gravity: 0.0
+  initial_velocity_amplitude: 0.75
+mesh_scale: 1.0
+mesh_offset:
+  - 0.0
+  - 0.0
+
+# Simulator statics
+record_dt: 0.2
+end_frame: 200
+max_newton_iter: 10
+
+dump_dir: "sim_res/fem2d/p2"
+verbose: False
