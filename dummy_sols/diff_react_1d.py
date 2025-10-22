@@ -6,18 +6,14 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from wrappers import *
 
 
-def find_convergent_cfl(profile, initial_cfl, initial_n_space, tolerance, max_iter, multiplication_factor, 
+def find_convergent_cfl(profile, initial_cfl, n_space, tol, min_step, initial_step_guess, tolerance, max_iter, multiplication_factor, 
                        reaction_type="fisher", allee_threshold=None):
     """Iteratively reduce CFL number until convergence is achieved."""
     cfl_history = []
     cost_history = []
     param_history = []
 
-    # Fix the n_space and other parameters for the CFL searching
-    n_space = initial_n_space
-    tol = 1e-9
-    min_step = 1e-3
-    initial_step_guess = 1.0
+    # Use provided non-target parameters (do not override)
 
     current_cfl = initial_cfl
     converged = False
@@ -82,18 +78,15 @@ def find_convergent_cfl(profile, initial_cfl, initial_n_space, tolerance, max_it
     return bool(is_converged), best_cfl, cost_history, param_history
 
 
-def find_convergent_n_space(profile, initial_n_space, cfl, tolerance, max_iter, multiplication_factor,
+def find_convergent_n_space(profile, initial_n_space, cfl, tol, min_step, initial_step_guess, tolerance, max_iter, multiplication_factor,
                            reaction_type="fisher", allee_threshold=None):
     """Iteratively increase n_space number until convergence is achieved."""
     n_space_history = []
     cost_history = []
     param_history = []
 
-    # Fix the CFL and other parameters for the n_space searching
+    # Use provided non-target parameters (do not override)
     current_cfl = cfl
-    tol = 1e-9
-    min_step = 1e-3
-    initial_step_guess = 1.0
 
     current_n_space = initial_n_space
     converged = False
@@ -158,16 +151,14 @@ def find_convergent_n_space(profile, initial_n_space, cfl, tolerance, max_iter, 
     return bool(is_converged), best_n_space, cost_history, param_history
 
 
-def find_convergent_tolerance(profile, initial_tol, n_space, cfl, tolerance, max_iter, multiplication_factor,
+def find_convergent_tolerance(profile, initial_tol, n_space, cfl, min_step, initial_step_guess, tolerance, max_iter, multiplication_factor,
                             reaction_type="fisher", allee_threshold=None):
     """Iteratively tighten tolerance until convergence is achieved."""
     tol_history = []
     cost_history = []
     param_history = []
 
-    # Fix other parameters for the tolerance searching
-    min_step = 1e-3
-    initial_step_guess = 1.0
+    # Use provided non-target parameters (do not override)
 
     current_tol = initial_tol
     converged = False
@@ -276,179 +267,3 @@ if __name__ == "__main__":
     print(f"Total cost: {sum(cfl_costs) + sum(nspace_costs) + sum(tol_costs)}")
 
 
-def find_convergent_min_step(profile, initial_min_step, n_space, cfl, tolerance, max_iter, multiplication_factor, 
-                            reaction_type="fisher", allee_threshold=None):
-    """
-    Find convergent min_step parameter for DiffReact1D solver.
-    
-    Args:
-        profile: Profile name (p1, p2, p3)
-        initial_min_step: Initial min_step value to test
-        n_space: Number of spatial grid points
-        cfl: CFL number
-        tolerance: RMSE tolerance for convergence
-        max_iter: Maximum number of iterations
-        multiplication_factor: Factor to multiply min_step by each iteration
-        reaction_type: Type of reaction term
-        allee_threshold: Threshold for Allee effect (if applicable)
-    
-    Returns:
-        tuple: (is_converged, best_min_step, cost_history, min_step_history)
-    """
-    print(f"\n=== Finding convergent min_step for profile {profile} ===")
-    print(f"Initial min_step: {initial_min_step}")
-    print(f"Other parameters: n_space={n_space}, cfl={cfl}, tolerance={tolerance}")
-    
-    min_step_history = [initial_min_step]
-    cost_history = []
-    converged = False
-    best_min_step = None
-    
-    # Fixed parameters
-    tol = 1e-9
-    initial_step_guess = 1.0
-    
-    for i in range(max_iter):
-        current_min_step = min_step_history[-1]
-        print(f"\nIteration {i+1}: Testing min_step = {current_min_step}")
-        
-        # Run simulation with current min_step
-        cost = run_sim_diff_react_1d(
-            profile=profile,
-            n_space=n_space,
-            cfl=cfl,
-            tol=tol,
-            min_step=current_min_step,
-            initial_step_guess=initial_step_guess,
-            reaction_type=reaction_type,
-            allee_threshold=allee_threshold
-        )
-        cost_history.append(cost)
-        print(f"Simulation completed with cost: {cost}")
-        
-        # Check convergence with previous iteration
-        if i > 0:
-            is_converged, _, _, _ = compare_res_diff_react_1d(
-                profile, n_space, cfl, tol, min_step_history[-2], initial_step_guess,
-                profile, n_space, cfl, tol, current_min_step, initial_step_guess,
-                tolerance, reaction_type, reaction_type, allee_threshold, allee_threshold
-            )
-            if is_converged:
-                best_min_step = min_step_history[-2]
-                converged = True
-                print(f"Convergence found between min_step {min_step_history[-2]} and {current_min_step}")
-                break
-        else:
-            print(f"First iteration with min_step {current_min_step}, no previous value to compare")
-        
-        # Prepare next min_step using multiplication factor
-        from solvers.utils import format_param_for_path
-        current_min_step = float(format_param_for_path(current_min_step * multiplication_factor))
-        min_step_history.append(current_min_step)
-    
-    if not converged and len(min_step_history) > 1:
-        # Check if last two simulations converged
-        is_converged, _, _, _ = compare_res_diff_react_1d(
-            profile, n_space, cfl, tol, min_step_history[-2], initial_step_guess,
-            profile, n_space, cfl, tol, min_step_history[-1], initial_step_guess,
-            tolerance, reaction_type, reaction_type, allee_threshold, allee_threshold
-        )
-        if is_converged:
-            best_min_step = min_step_history[-2]
-            converged = True
-    
-    if converged:
-        print(f"\nConvergent min_step found: {best_min_step}")
-    else:
-        print(f"\nNo convergent min_step found in {max_iter} iterations")
-    
-    return converged, best_min_step, cost_history, min_step_history
-
-
-def find_convergent_initial_step_guess(profile, initial_step_guess, n_space, cfl, tolerance, max_iter, multiplication_factor,
-                                     reaction_type="fisher", allee_threshold=None):
-    """
-    Find convergent initial_step_guess parameter for DiffReact1D solver.
-    
-    Args:
-        profile: Profile name (p1, p2, p3)
-        initial_step_guess: Initial step guess value to test
-        n_space: Number of spatial grid points
-        cfl: CFL number
-        tolerance: RMSE tolerance for convergence
-        max_iter: Maximum number of iterations
-        multiplication_factor: Factor to multiply initial_step_guess by each iteration
-        reaction_type: Type of reaction term
-        allee_threshold: Threshold for Allee effect (if applicable)
-    
-    Returns:
-        tuple: (is_converged, best_initial_step_guess, cost_history, initial_step_guess_history)
-    """
-    print(f"\n=== Finding convergent initial_step_guess for profile {profile} ===")
-    print(f"Initial initial_step_guess: {initial_step_guess}")
-    print(f"Other parameters: n_space={n_space}, cfl={cfl}, tolerance={tolerance}")
-    
-    initial_step_guess_history = [initial_step_guess]
-    cost_history = []
-    converged = False
-    best_initial_step_guess = None
-    
-    # Fixed parameters
-    tol = 1e-9
-    min_step = 1e-3
-    
-    for i in range(max_iter):
-        current_initial_step_guess = initial_step_guess_history[-1]
-        print(f"\nIteration {i+1}: Testing initial_step_guess = {current_initial_step_guess}")
-        
-        # Run simulation with current initial_step_guess
-        cost = run_sim_diff_react_1d(
-            profile=profile,
-            n_space=n_space,
-            cfl=cfl,
-            tol=tol,
-            min_step=min_step,
-            initial_step_guess=current_initial_step_guess,
-            reaction_type=reaction_type,
-            allee_threshold=allee_threshold
-        )
-        cost_history.append(cost)
-        print(f"Simulation completed with cost: {cost}")
-        
-        # Check convergence with previous iteration
-        if i > 0:
-            is_converged, _, _, _ = compare_res_diff_react_1d(
-                profile, n_space, cfl, tol, min_step, initial_step_guess_history[-2],
-                profile, n_space, cfl, tol, min_step, current_initial_step_guess,
-                tolerance, reaction_type, reaction_type, allee_threshold, allee_threshold
-            )
-            if is_converged:
-                best_initial_step_guess = initial_step_guess_history[-2]
-                converged = True
-                print(f"Convergence found between initial_step_guess {initial_step_guess_history[-2]} and {current_initial_step_guess}")
-                break
-        else:
-            print(f"First iteration with initial_step_guess {current_initial_step_guess}, no previous value to compare")
-        
-        # Prepare next initial_step_guess using multiplication factor
-        from solvers.utils import format_param_for_path
-        current_initial_step_guess = float(format_param_for_path(current_initial_step_guess * multiplication_factor))
-        initial_step_guess_history.append(current_initial_step_guess)
-    
-    if not converged and len(initial_step_guess_history) > 1:
-        # Check if last two simulations converged
-        is_converged, _, _, _ = compare_res_diff_react_1d(
-            profile, n_space, cfl, tol, min_step, initial_step_guess_history[-2],
-            profile, n_space, cfl, tol, min_step, initial_step_guess_history[-1],
-            tolerance, reaction_type, reaction_type, allee_threshold, allee_threshold
-        )
-        if is_converged:
-            best_initial_step_guess = initial_step_guess_history[-2]
-            converged = True
-    
-    if converged:
-        print(f"\nConvergent initial_step_guess found: {best_initial_step_guess}")
-    else:
-        print(f"\nNo convergent initial_step_guess found in {max_iter} iterations")
-    
-    return converged, best_initial_step_guess, cost_history, initial_step_guess_history
