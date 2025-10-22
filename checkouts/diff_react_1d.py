@@ -9,7 +9,7 @@ from collections import defaultdict
 
 # Add paths for imports
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from dummy_sols.diff_react_1d import find_convergent_cfl, find_convergent_n_space, find_convergent_tolerance, find_convergent_min_step, find_convergent_initial_step_guess
+from dummy_sols.diff_react_1d import find_convergent_cfl, find_convergent_n_space, find_convergent_tolerance
 from wrappers.diff_react_1d import run_sim_diff_react_1d
 from checkouts.config_utils import load_config, build_target_configs
 import yaml
@@ -26,7 +26,9 @@ def get_profile_environment_params(profile):
                 'reaction_type': config.get('reaction_type'),
                 'record_dt': config.get('record_dt'),
                 'end_frame': config.get('end_frame'),
-                'max_iter': config.get('max_iter')
+                'max_iter': config.get('max_iter'),
+                'min_step': config.get('min_step'),
+                'initial_step_guess': config.get('initial_step_guess')
             }
             
             # Check if all required parameters are present
@@ -36,6 +38,8 @@ def get_profile_environment_params(profile):
 
             if env_params["reaction_type"] == "allee":
                 env_params["allee_threshold"] = config.get('allee_threshold')
+            else:
+                env_params["allee_threshold"] = None
                 
             return env_params
     except FileNotFoundError:
@@ -173,27 +177,6 @@ def plot_statistics(statistics, output_dir):
         )
         color_idx += 1
 
-    if statistics["optimal_min_step_values"]:
-        min_step_values, min_step_counts = np.unique(list(statistics["optimal_min_step_values"]), return_counts=True)
-        ax.bar(
-            [f"{m:.1e}" for m in min_step_values],
-            min_step_counts,
-            alpha=0.7,
-            label="min_step parameter",
-            color=colors[color_idx % len(colors)],
-        )
-        color_idx += 1
-
-    if statistics["optimal_initial_step_guess_values"]:
-        initial_step_guess_values, initial_step_guess_counts = np.unique(list(statistics["optimal_initial_step_guess_values"]), return_counts=True)
-        ax.bar(
-            [f"{i:.4f}" for i in initial_step_guess_values],
-            initial_step_guess_counts,
-            alpha=0.7,
-            label="initial_step_guess parameter",
-            color=colors[color_idx % len(colors)],
-        )
-        color_idx += 1
 
     ax.set_ylabel("Frequency")
     ax.set_title("Optimal Parameter Values (All Tasks)")
@@ -264,19 +247,6 @@ def plot_statistics(statistics, output_dir):
                 percentage = (count / total_tol * 100) if total_tol > 0 else 0
                 f.write(f"  tol: {tol:.1e} (appears {percentage:.1f}% of the time)\n")
 
-        if statistics["optimal_min_step_values"]:
-            min_step_values, min_step_counts = np.unique(list(statistics["optimal_min_step_values"]), return_counts=True)
-            total_min_step = len(statistics["optimal_min_step_values"])
-            for min_step, count in zip(min_step_values, min_step_counts):
-                percentage = (count / total_min_step * 100) if total_min_step > 0 else 0
-                f.write(f"  min_step: {min_step:.1e} (appears {percentage:.1f}% of the time)\n")
-
-        if statistics["optimal_initial_step_guess_values"]:
-            initial_step_guess_values, initial_step_guess_counts = np.unique(list(statistics["optimal_initial_step_guess_values"]), return_counts=True)
-            total_initial_step_guess = len(statistics["optimal_initial_step_guess_values"])
-            for initial_step_guess, count in zip(initial_step_guess_values, initial_step_guess_counts):
-                percentage = (count / total_initial_step_guess * 100) if total_initial_step_guess > 0 else 0
-                f.write(f"  initial_step_guess: {initial_step_guess:.4f} (appears {percentage:.1f}% of the time)\n")
 
 
 def main():
@@ -291,8 +261,8 @@ def main():
     # Extract configuration sections
     precision_configs = {}
     for name, info in config["precision_levels"].items():
-        # Only process precision levels with numeric values (skip placeholders)
-        if isinstance(info["tolerance_rmse"], (int, float)):
+        # Only process precision levels with tolerance_rmse dictionary (skip placeholders)
+        if isinstance(info["tolerance_rmse"], dict):
             precision_configs[name] = {
                 "tolerance_rmse": info["tolerance_rmse"],
             }
@@ -320,8 +290,6 @@ def main():
         "optimal_cfl_values": [],
         "optimal_n_space_values": [],
         "optimal_tol_values": [],
-        "optimal_min_step_values": [],
-        "optimal_initial_step_guess_values": [],
     }
 
     # Initialize task collection for datasets
@@ -372,10 +340,15 @@ def main():
                         is_converged, best_param, cost_history, param_history = find_convergent_cfl(
                             profile=profile,
                             initial_cfl=target_config["initial_value"],
-                            initial_n_space=task_params["n_space"],
-                            tolerance=precision_vals["tolerance_rmse"],
+                            n_space=task_params["n_space"],
+                            tol=task_params["tol"],
+                            min_step=env_params["min_step"],
+                            initial_step_guess=env_params["initial_step_guess"],
+                            tolerance=precision_vals["tolerance_rmse"][target_param],
                             max_iter=target_config["max_iteration_num"],
                             multiplication_factor=target_config["multiplication_factor"],
+                            reaction_type=env_params["reaction_type"],
+                            allee_threshold=env_params["allee_threshold"],
                         )
                         if best_param is not None:
                             statistics["optimal_cfl_values"].append(best_param)
@@ -385,9 +358,14 @@ def main():
                             profile=profile,
                             initial_n_space=target_config["initial_value"],
                             cfl=task_params["cfl"],
-                            tolerance=precision_vals["tolerance_rmse"],
+                            tol=task_params["tol"],
+                            min_step=env_params["min_step"],
+                            initial_step_guess=env_params["initial_step_guess"],
+                            tolerance=precision_vals["tolerance_rmse"][target_param],
                             max_iter=target_config["max_iteration_num"],
                             multiplication_factor=target_config["multiplication_factor"],
+                            reaction_type=env_params["reaction_type"],
+                            allee_threshold=env_params["allee_threshold"],
                         )
                         if best_param is not None:
                             statistics["optimal_n_space_values"].append(best_param)
@@ -398,79 +376,16 @@ def main():
                             initial_tol=target_config["initial_value"],
                             n_space=task_params["n_space"],
                             cfl=task_params["cfl"],
-                            tolerance=precision_vals["tolerance_rmse"],
+                            min_step=env_params["min_step"],
+                            initial_step_guess=env_params["initial_step_guess"],
+                            tolerance=precision_vals["tolerance_rmse"][target_param],
                             max_iter=target_config["max_iteration_num"],
                             multiplication_factor=target_config["multiplication_factor"],
+                            reaction_type=env_params["reaction_type"],
+                            allee_threshold=env_params["allee_threshold"],
                         )
                         if best_param is not None:
                             statistics["optimal_tol_values"].append(best_param)
-
-                    elif target_param == "min_step":
-                        is_converged, best_param, cost_history, param_history = find_convergent_min_step(
-                            profile=profile,
-                            initial_min_step=target_config["initial_value"],
-                            n_space=task_params["n_space"],
-                            cfl=task_params["cfl"],
-                            tolerance=precision_vals["tolerance_rmse"],
-                            max_iter=target_config["max_iteration_num"],
-                            multiplication_factor=target_config["multiplication_factor"],
-                        )
-                        if best_param is not None:
-                            statistics["optimal_min_step_values"].append(best_param)
-
-                    elif target_param == "initial_step_guess":
-                        # Handle 0-shot search with exact_values
-                        if "exact_values" in target_config:
-                            initial_step_guess_values = target_config["exact_values"]
-                            print(f"Using exact_values from YAML for initial_step_guess: {initial_step_guess_values}")
-                            
-                            # Test each exact value and find the best one
-                            best_converged = False
-                            best_param = None
-                            best_cost = float('inf')
-                            cost_history = []
-                            param_history = []
-                            
-                            for initial_step_guess in initial_step_guess_values:
-                                try:
-                                    cost = run_sim_diff_react_1d(
-                                        profile=profile,
-                                        n_space=task_params["n_space"],
-                                        cfl=task_params["cfl"],
-                                        tol=task_params["tol"],
-                                        min_step=task_params["min_step"],
-                                        initial_step_guess=initial_step_guess,
-                                        reaction_type=task_params.get("reaction_type", "fisher"),
-                                        allee_threshold=task_params.get("allee_threshold")
-                                    )
-                                    cost_history.append(cost)
-                                    param_history.append(initial_step_guess)
-                                    
-                                    if cost < best_cost:
-                                        best_cost = cost
-                                        best_param = initial_step_guess
-                                        best_converged = True
-                                        
-                                except Exception as e:
-                                    print(f"Simulation failed with initial_step_guess {initial_step_guess}: {e}")
-                                    cost_history.append(float('inf'))
-                                    param_history.append(initial_step_guess)
-                            
-                            is_converged = best_converged
-                        else:
-                            # Fallback to iterative search
-                            is_converged, best_param, cost_history, param_history = find_convergent_initial_step_guess(
-                                profile=profile,
-                                initial_step_guess=target_config["initial_value"],
-                                n_space=task_params["n_space"],
-                                cfl=task_params["cfl"],
-                                tolerance=precision_vals["tolerance_rmse"],
-                                max_iter=target_config["max_iteration_num"],
-                                multiplication_factor=target_config["multiplication_factor"],
-                            )
-                        
-                        if best_param is not None:
-                            statistics["optimal_initial_step_guess_values"].append(best_param)
 
                     # Create task record for dataset
                     task_record = {

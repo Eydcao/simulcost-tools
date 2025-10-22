@@ -437,7 +437,7 @@ class DiffReact1D(SIMULATOR):
         )
         
         # Output directory
-        self.dump_dir = cfg.dump_dir + f"_nspace{self.n_space}_cfl{format_param_for_path(self.cfl)}_tol{format_param_for_path(self.tol)}_minstep{format_param_for_path(self.min_step)}_initstep{format_param_for_path(self.initial_step_guess)}"
+        self.dump_dir = cfg.dump_dir + f"_nspace{self.n_space}_cfl{format_param_for_path(self.cfl)}_tol{format_param_for_path(self.tol)}"
         if not os.path.exists(self.dump_dir):
             os.makedirs(self.dump_dir)
         
@@ -466,7 +466,8 @@ class DiffReact1D(SIMULATOR):
         dt_reaction = 0.1  # Conservative choice
         
         # Use the more restrictive timestep
-        dt = min(dt_diffusion, dt_reaction)
+        # dt = min(dt_diffusion, dt_reaction)
+        dt = dt_diffusion
         
         # Ensure we don't exceed the recording interval
         dt = min(dt, self.record_dt / 10)
