@@ -101,15 +101,14 @@ def run_sim_diff_react_1d(profile, n_space, cfl, tol, min_step, initial_step_gue
 
     # Run the simulation if not already done
     print(f"Running new simulation with parameters: n_space={n_space}, cfl={cfl}, tol={tol}, reaction_type={reaction_type}")
-    cmd = f"python runners/diff_react_1d.py --config-name={profile} n_space={n_space} cfl={cfl} tol={tol} reaction_type={reaction_type}"
 
     # Build command with parameters using auto-detected runner path
     runner_path = _find_runner_path()
     if SIM_RES_BASE_DIR:
         dump_dir = os.path.join(SIM_RES_BASE_DIR, f"sim_res/diff_react_1d/{profile}")
-        cmd = f"python runners/diff_react_1d.py --config-name={profile} n_space={n_space} cfl={cfl} tol={tol} reaction_type={reaction_type} dump_dir={dump_dir}"
+        cmd = f"{sys.executable} {runner_path} --config-name={profile} n_space={n_space} cfl={cfl} tol={tol} reaction_type={reaction_type} dump_dir={dump_dir}"
     else:
-        cmd = f"python runners/diff_react_1d.py --config-name={profile} n_space={n_space} cfl={cfl} tol={tol} reaction_type={reaction_type}"
+        cmd = f"{sys.executable} {runner_path} --config-name={profile} n_space={n_space} cfl={cfl} tol={tol} reaction_type={reaction_type}"
 
     if allee_threshold is not None:
         cmd += f" allee_threshold={allee_threshold}"
