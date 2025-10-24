@@ -4,9 +4,9 @@ defaults:
   - override hydra/job_logging: none
 
 # Test case selection
-testcase: 3           # 0=central_explosion, 1=stair_flow, 2=cylinder_gravity, 3=mach_diamond
+testcase: 2           # 0=central_explosion, 1=stair_flow, 2=mach_diamond (Note: cylinder_gravity was removed)
 testcase_name: "Mach_Diamond"
-aspect_ratio: 0.5     # Aspect ratio for this testcase (Ny = aspect_ratio * Nx)
+aspect_ratio: 0.328125  # Aspect ratio for this testcase (Ny = aspect_ratio * Nx) - Mach Diamond uses 42/128
 
 # Numerical parameters (tunable)
 n_grid_x: 64          # Grid resolution in x-direction (y-direction computed from aspect ratio)

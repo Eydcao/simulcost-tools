@@ -1,0 +1,23 @@
+defaults:
+  - _self_
+  - override hydra/hydra_logging: none
+  - override hydra/job_logging: none
+
+# Test case selection
+testcase: 3           # Sod shock tube (2D version of 1D testcase 0)
+testcase_name: "sod_tube_2d"
+aspect_ratio: 0.015625     # 1/64 - gives exactly 1 interior cell in y for nx=64 (aspect ratio = 1/nx)
+
+# Numerical parameters (tunable)
+n_grid_x: 64          # Grid resolution in x-direction (y-direction = 1 interior cell to mimic 1D)
+cfl: 0.5              # CFL number for timestep stability (typical range: 0.1-0.9)
+cg_tolerance: 1.0e-7  # CG solver convergence tolerance for pressure projection (typical range: 1e-5 to 1e-9)
+
+# Simulation statics (non-tunable - define the task)
+start_frame: 0        # Starting frame number
+end_frame: 10         # Ending frame number (matches 1D)
+record_dt: 0.02       # Time interval between recordings (matches 1D frame_dt)
+
+# Output configuration
+dump_dir: "sim_res/euler_2d/p4"  # Directory for output files
+verbose: False        # Enable verbose output
