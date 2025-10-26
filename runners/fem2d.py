@@ -1,6 +1,14 @@
 import sys
 import os
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
+
+# Add repository root to Python path
+repo_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+sys.path.append(repo_root)
+
+# Add fastipc_utils to Python path for internal imports
+fastipc_utils_path = os.path.join(repo_root, 'solvers', 'fastipc_utils')
+sys.path.append(fastipc_utils_path)
+
 import hydra
 from omegaconf import DictConfig, OmegaConf
 from solvers.fem2d import FEM2D
