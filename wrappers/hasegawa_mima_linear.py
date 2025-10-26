@@ -4,6 +4,24 @@ import h5py
 import numpy as np
 import json
 import matplotlib.pyplot as plt
+import sys
+from pathlib import Path
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
+
+# Get base directory for simulation results from environment variable
+# If not set, use current directory (maintains backward compatibility)
+SIM_RES_BASE_DIR = os.getenv("SIM_RES_BASE_DIR", None)
+if SIM_RES_BASE_DIR:
+    print(f"✅ Using custom simulation results directory: {SIM_RES_BASE_DIR}")
+
+def _get_sim_path(relative_path):
+    """Construct simulation path, using absolute path if SIM_RES_BASE_DIR is set."""
+    if SIM_RES_BASE_DIR:
+        return os.path.join(SIM_RES_BASE_DIR, relative_path)
+    return relative_path
 
 
 def _find_runner_path():
@@ -41,10 +59,10 @@ def run_sim_hasegawa_mima_linear(profile, N, dt, cg_atol, analytical):
     """Run the Hasegawa-Mima linear simulation with the given parameters if not already simulated."""
     if analytical:
         method_suffix = "_analytical"
-        dir_path = f"sim_res/hasegawa_mima_linear/{profile}_N_{N}_dt_{dt:.2e}" + method_suffix + "/"
+        dir_path = _get_sim_path(f"sim_res/hasegawa_mima_linear/{profile}_N_{N}_dt_{dt:.2e}" + method_suffix + "/")
     else:
         method_suffix = "_numerical"
-        dir_path = f"sim_res/hasegawa_mima_linear/{profile}_N_{N}_dt_{dt:.2e}_cg_{cg_atol:.2e}" + method_suffix + "/"
+        dir_path = _get_sim_path(f"sim_res/hasegawa_mima_linear/{profile}_N_{N}_dt_{dt:.2e}_cg_{cg_atol:.2e}" + method_suffix + "/")
     meta_path = os.path.join(dir_path, "meta.json")
 
     # Check if the simulation has already been run
@@ -59,7 +77,11 @@ def run_sim_hasegawa_mima_linear(profile, N, dt, cg_atol, analytical):
     method_name = "analytical" if analytical else "numerical"
     print(f"Running new {method_name} simulation with parameters: N={N}, dt={dt}, cg_atol={cg_atol:.2e}")
     runner_path = _find_runner_path()
-    cmd = f"PYTHONPATH=/home/yadi/costsci-tools python {runner_path} --config-name={profile} N={N} dt={dt} cg_atol={cg_atol} analytical={analytical}"
+    if SIM_RES_BASE_DIR:
+        dump_dir = os.path.join(SIM_RES_BASE_DIR, f"sim_res/hasegawa_mima_linear/{profile}")
+        cmd = f"PYTHONPATH=/home/yadi/costsci-tools {sys.executable} {runner_path} --config-name={profile} N={N} dt={dt} cg_atol={cg_atol} analytical={analytical} dump_dir={dump_dir}"
+    else:
+        cmd = f"PYTHONPATH=/home/yadi/costsci-tools {sys.executable} {runner_path} --config-name={profile} N={N} dt={dt} cg_atol={cg_atol} analytical={analytical}"
     subprocess.run(cmd, shell=True, check=True)
 
     # Read the meta.json to get cost
@@ -306,7 +328,7 @@ def compare_with_analytical(numerical_sim_dir, analytical_sim_dir):
 
 #                 if sim_result["success"]:
 #                     # Extract simulation directory from parameters
-#                     sim_dir = f"sim_res/hasegawa_mima_linear/p1_N_{N}_dt_{dt:.2e}_cg_{cg_atol:.2e}_numerical"
+#                     sim_dir = _get_sim_path(f"sim_res/hasegawa_mima_linear/p1_N_{N}_dt_{dt:.2e}_cg_{cg_atol:.2e}_numerical")
 #                     error = get_error_metric(sim_dir)
 
 #                     results.append({
