@@ -4,19 +4,19 @@ defaults:
   - override hydra/job_logging: none
 
 # Test case selection
-testcase: 2           # 0=central_explosion, 1=stair_flow, 2=mach_diamond (Note: cylinder_gravity was removed)
-testcase_name: "Mach_Diamond"
-aspect_ratio: 0.328125  # Aspect ratio for this testcase (Ny = aspect_ratio * Nx) - Mach Diamond uses 42/128
+testcase: 2           # Sod shock tube (2D version of 1D testcase 0)
+# testcase_name: "sod_tube_2d"
+# Aspect ratio is hardcoded in C++ gas_2d.cpp (testcase 3: 1/Nx for 1D-like behavior with ny=2)
 
 # Numerical parameters (tunable)
-n_grid_x: 64          # Grid resolution in x-direction (y-direction computed from aspect ratio)
+n_grid_x: 64          # Grid resolution in x-direction (y-direction = 1 interior cell to mimic 1D)
 cfl: 0.5              # CFL number for timestep stability (typical range: 0.1-0.9)
 cg_tolerance: 1.0e-7  # CG solver convergence tolerance for pressure projection (typical range: 1e-5 to 1e-9)
 
 # Simulation statics (non-tunable - define the task)
 start_frame: 0        # Starting frame number
-end_frame: 20         # Ending frame number
-record_dt: 0.105      # Time interval between recordings (20 frames * 0.035s = 0.7s total)
+end_frame: 10         # Ending frame number (matches 1D)
+record_dt: 0.02       # Time interval between recordings (matches 1D frame_dt)
 
 # Output configuration
 dump_dir: "sim_res/euler_2d/p3"  # Directory for output files

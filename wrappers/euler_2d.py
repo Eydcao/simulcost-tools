@@ -2,14 +2,19 @@ import os
 import subprocess
 import numpy as np
 import json
-import sys
-from pathlib import Path
 from scipy.interpolate import RegularGridInterpolator
 import meshio
 
-# Add parent directory to path for imports
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from solvers.utils import compute_nrmse
+def _compute_nrmse_maxabs(field_low, field_high, eps=1e-12):
+    # Compute RMSE
+    diff = field_low - field_high
+    rmse = np.sqrt(np.mean(diff ** 2))
+
+    # Normalize by max absolute value of high-res field
+    max_abs_high = np.max(np.abs(field_high)) + eps  # Add eps to avoid division by zero
+
+    return rmse / max_abs_high
+
 
 def _find_runner_path():
     """Automatically find the correct path to euler_2d.py runner."""
@@ -60,235 +65,142 @@ def _find_runner_path():
     )
 
 
-def _extract_interior_cells(field_flat, nx, ny):
+def _read_vtk_structured(vtk_path, nx, ny):
     """
-    Extract interior cells from VTK STRUCTURED_POINTS data.
+    Read binary VTK structured grid file and extract INTERIOR-ONLY data.
 
-    VTK exports (nx+4) × (ny+4) points. We want to extract only the interior nx × ny cells.
-    The ghost_layer=2 means 2 ghost points on each side, so interior cells are at indices [2:nx+2, 2:ny+2].
+    This function reads the raw data, which includes ghost cells,
+    and immediately extracts the interior (nx * ny) cells.
 
     Args:
-        field_flat: Flattened 1D array from VTK ((nx+4)*(ny+4) points)
-        nx: Number of interior cells in x
-        ny: Number of interior cells in y
+        vtk_path (str): Path to the VTK file.
+        nx (int): Number of *interior* cells in x.
+        ny (int): Number of *interior* cells in y.
 
     Returns:
-        Flattened 1D array of interior cells only (nx*ny values)
+        dict: Dictionary containing INTERIOR-ONLY field data.
+              Fields are 2D numpy arrays (ny, nx).
     """
+    mesh = meshio.read(vtk_path)
+    data = {}
+    
     ghost_layer = 2
     nx_pts = nx + 2 * ghost_layer
     ny_pts = ny + 2 * ghost_layer
 
-    # Reshape to 2D (y-major, x-fastest)
-    field_2d = field_flat.reshape((ny_pts, nx_pts))
-
-    # Extract interior [ghost_layer:-ghost_layer] in both dimensions
-    interior_2d = field_2d[ghost_layer:ghost_layer+ny, ghost_layer:ghost_layer+nx]
-
-    return interior_2d.ravel()
-
-
-def _read_grid_dims_from_meta(profile, n_grid_x, cfl, cg_tolerance):
-    """Read n_grid_x and n_grid_y from meta.json.
-
-    Returns:
-        tuple: (n_grid_x, n_grid_y) read from the simulation's meta.json
-    """
-    cfl_str = f"{cfl:.3f}" if cfl is not None else "default"
-    cgtol_str = f"{cg_tolerance:.1e}" if cg_tolerance is not None else "default"
-    dir_path = f"sim_res/euler_2d/{profile}_cfl_{cfl_str}_cgtol_{cgtol_str}_nx_{n_grid_x}/"
-    meta_path = os.path.join(dir_path, "meta.json")
-
-    if not os.path.exists(meta_path):
-        raise FileNotFoundError(f"meta.json not found at {meta_path}. Run simulation first.")
-
-    with open(meta_path, "r") as f:
-        meta = json.load(f)
-        return meta["n_grid_x"], meta["n_grid_y"]
-
-
-def run_sim_euler_2d(profile, testcase, n_grid_x, start_frame, end_frame, cfl, cg_tolerance):
-    """Run the euler_2d simulation with the given parameters if not already simulated."""
-    # Directory path includes all tunable parameters: profile, cfl, cg_tolerance, n_grid_x
-    # Format similar to euler_1d: {profile}_cfl_{cfl}_cgtol_{cg_tol}_nx_{nx}
-    # NOTE: n_grid_y is determined by C++ based on aspect ratio, recorded in meta.json
-    cfl_str = f"{cfl:.3f}" if cfl is not None else "default"
-    cgtol_str = f"{cg_tolerance:.1e}" if cg_tolerance is not None else "default"
-    dir_path = f"sim_res/euler_2d/{profile}_cfl_{cfl_str}_cgtol_{cgtol_str}_nx_{n_grid_x}/"
-    meta_path = os.path.join(dir_path, "meta.json")
-
-    # Check if the simulation has already been run
-    if os.path.exists(meta_path):
-        with open(meta_path, "r") as f:
-            meta = json.load(f)
-            if "cost" in meta:
-                print(f"Using existing simulation results from {dir_path}")
-                return meta["cost"]
-
-    # Run the simulation if not already done
-    print(f"Running new simulation with parameters: testcase={testcase}, n_grid_x={n_grid_x}, frames={start_frame}-{end_frame}, cfl={cfl}, cg_tolerance={cg_tolerance}")
-    runner_path = _find_runner_path()
-    cmd = f"python {runner_path} --config-name={profile} testcase={testcase} n_grid_x={n_grid_x} start_frame={start_frame} end_frame={end_frame}"
-    if cfl is not None:
-        cmd += f" cfl={cfl}"
-    if cg_tolerance is not None:
-        cmd += f" cg_tolerance={cg_tolerance}"
-    subprocess.run(cmd, shell=True, check=True)
-
-    # Load the cost from the meta.json file
-    with open(meta_path, "r") as f:
-        meta = json.load(f)
-        cost = meta["cost"]
-
-    return cost
-
-
-def read_vtk_structured(vtk_path):
-    """Read binary VTK structured grid file and extract data using meshio.
-
-    Returns:
-        dict: Dictionary containing field data arrays and grid dimensions
-            - 'density', 'pressure', 'velocity_x', 'velocity_y': field arrays (flattened 1D)
-            - 'nx_pts', 'ny_pts': VTK grid dimensions (points including ghosts)
-            - 'nx', 'ny': Interior cell dimensions (VTK points - 4, since ghost_layer=2)
-    """
-    mesh = meshio.read(vtk_path)
-
-    data = {}
-
-    # Extract point data (scalars and vectors)
     if mesh.point_data:
-        for field_name, field_values in mesh.point_data.items():
-            # Flatten the array and handle different shapes
-            if field_values.ndim == 2:
-                if field_values.shape[1] == 1:
+        for field_name, field_values_raw in mesh.point_data.items():
+            
+            # --- Helper to extract interior 2D field ---
+            def extract(raw_flat_field):
+                # Reshape to 2D (y-major, x-fastest)
+                field_2d = raw_flat_field.reshape((ny_pts, nx_pts))
+                # Extract interior [ghost_layer:-ghost_layer]
+                interior_2d = field_2d[ghost_layer:ghost_layer+ny, ghost_layer:ghost_layer+nx]
+                # --- MODIFIED: Return 2D array ---
+                return interior_2d
+            # ------------------------------------------------
+
+            # Handle different shapes
+            if field_values_raw.ndim == 2:
+                if field_values_raw.shape[1] == 1:
                     # Scalar field stored as (N, 1) - flatten to 1D
-                    data[field_name] = field_values.ravel()
-                elif field_values.shape[1] == 3:
+                    data[field_name] = extract(field_values_raw.ravel())
+                elif field_values_raw.shape[1] == 3:
                     # Vector field (3 components) - extract x,y components
-                    data[f"{field_name}_x"] = field_values[:, 0]
-                    data[f"{field_name}_y"] = field_values[:, 1]
+                    data[f"{field_name}_x"] = extract(field_values_raw[:, 0])
+                    data[f"{field_name}_y"] = extract(field_values_raw[:, 1])
                     # z-component available as field_values[:, 2] if needed
-            elif field_values.ndim == 1:
+            elif field_values_raw.ndim == 1:
                 # Already 1D scalar field
-                data[field_name] = field_values
+                data[field_name] = extract(field_values_raw)
 
     return data
 
+def get_res_euler_2d(profile, n_grid_x, cfl, cg_tolerance):
+    """
+    Load all time frames for a given parameter set, triggering a simulation
+    if results are missing.
 
-def get_res_euler_2d(profile, testcase, n_grid_x, start_frame, end_frame, cfl, cg_tolerance):
-    """Load all time frames for a given parameter set, triggering a simulation if results are missing."""
-
-    # Use same directory naming as run_sim_euler_2d
+    Returns a tuple: (results, cost)
+    - results (dict): Dict of {frame: data_dict}. Data is INTERIOR-ONLY
+                      and stored in 2D (ny, nx) arrays.
+    - cost (float): Simulation cost.
+    """
+    # --- 1. Define paths ---
     cfl_str = f"{cfl:.3f}" if cfl is not None else "default"
     cgtol_str = f"{cg_tolerance:.1e}" if cg_tolerance is not None else "default"
     dir_path = f"sim_res/euler_2d/{profile}_cfl_{cfl_str}_cgtol_{cgtol_str}_nx_{n_grid_x}/"
+    meta_path = os.path.join(dir_path, "meta.json")
     vtk_dir = os.path.join(dir_path, "vtk")
+    
+    # --- 2. Check for valid cache or run simulation ---
+    if not os.path.exists(meta_path):
+        print(f"No meta.json. Running new simulation: n_grid_x={n_grid_x}, cfl={cfl}, cg_tolerance={cg_tolerance}") 
+        runner_path = _find_runner_path()
+        cmd = f"python {runner_path} --config-name={profile} n_grid_x={n_grid_x} cfl={cfl} cg_tolerance={cg_tolerance}"
+        subprocess.run(cmd, shell=True, check=True)
+    else:
+        # Check if meta.json is valid (has 'cost')
+        with open(meta_path, "r") as f:
+            meta = json.load(f)
+            if "cost" not in meta:
+                print(f"Invalid meta.json. Running new simulation: n_grid_x={n_grid_x}, cfl={cfl}, cg_tolerance={cg_tolerance}") 
+                runner_path = _find_runner_path()
+                cmd = f"python {runner_path} --config-name={profile} n_grid_x={n_grid_x} cfl={cfl} cg_tolerance={cg_tolerance}"
+                subprocess.run(cmd, shell=True, check=True)
+            else:
+                print(f"Using existing simulation results from {dir_path}")
+
+    # --- 3. Load meta and VTK results (files *must* exist now) ---
+    with open(meta_path, "r") as f:
+        meta = json.load(f)
+        cost = meta["cost"]
+        nx = meta["parameters"]["n_grid_x"]
+        ny = meta["parameters"]["n_grid_y"]
+    
     results = {}
-
-    # Check if at least one result file exists, otherwise trigger a simulation
-    if not os.path.exists(vtk_dir) or not any(
-        fname.startswith("gas_frame_") and fname.endswith(".vtk") for fname in os.listdir(vtk_dir)
-    ):
-        print(
-            f"No results found for parameters: testcase={testcase}, n_grid_x={n_grid_x}, cfl={cfl}, cg_tolerance={cg_tolerance}. Triggering simulation."
-        )
-        run_sim_euler_2d(profile, testcase, n_grid_x, start_frame, end_frame, cfl, cg_tolerance)
-
-    # Load all VTK files
     files = [f for f in os.listdir(vtk_dir) if f.startswith("gas_frame_") and f.endswith(".vtk")]
     files.sort(key=lambda x: int(x.split("_")[2].split(".")[0]))
-
+    
     for file_name in files:
         file_path = os.path.join(vtk_dir, file_name)
         frame_number = int(file_name.split("_")[2].split(".")[0])
+        
+        # Pass nx, ny to reader, which returns INTERIOR-ONLY 2D data
+        data = _read_vtk_structured(file_path, nx, ny)
+        results[frame_number] = data
 
-        try:
-            data = read_vtk_structured(file_path)
-            results[frame_number] = data
-        except Exception as e:
-            print(f"Warning: Failed to read {file_path}: {e}")
-
-    return results
-
-
-def compute_euler_2d_metrics(results):
-    """Compute physical metrics for Euler 2D solution.
-
-    Args:
-        results: Dictionary with frame_id -> {x, y, density, pressure, ux, uy}
-
-    Returns:
-        Dictionary containing:
-        - positivity_preserved: bool array if pressure/density stay positive at all timesteps
-        - pressure_range: (min, max) pressure across all frames
-        - density_range: (min, max) density across all frames
-    """
-    frames = sorted(results.keys())
-    if len(frames) < 2:
-        return {}
-
-    # Extract time series data
-    density_mins = []
-    density_maxs = []
-    pressure_mins = []
-    pressure_maxs = []
-
-    for f in frames:
-        density_mins.append(np.min(results[f]['density']))
-        density_maxs.append(np.max(results[f]['density']))
-        pressure_mins.append(np.min(results[f]['pressure']))
-        pressure_maxs.append(np.max(results[f]['pressure']))
-
-    # Positivity preservation
-    positivity_preserved = np.all(np.array(density_mins) > 0) and np.all(np.array(pressure_mins) > 0)
-
-    return {
-        "positivity_preserved": positivity_preserved,
-        "pressure_range": (np.min(pressure_mins), np.max(pressure_maxs)),
-        "density_range": (np.min(density_mins), np.max(density_maxs)),
-    }
+    # --- MODIFIED: Return only results and cost ---
+    return results, cost
 
 
-def print_euler_2d_metrics(name, metrics):
-    """Print summary statistics for Euler 2D metrics"""
-    print(f"\n--- {name} Metrics ---")
-    if not metrics:
-        print("No metrics available (insufficient data)")
-        return
-
-    print(f"Positivity preserved: {metrics['positivity_preserved']}")
-    print(f"Density range: [{metrics['density_range'][0]:.6f}, {metrics['density_range'][1]:.6f}]")
-    print(f"Pressure range: [{metrics['pressure_range'][0]:.6f}, {metrics['pressure_range'][1]:.6f}]")
-
-
-def interpolate_field_2d_interior(field_src_interior, nx_src, ny_src, nx_tgt, ny_tgt, aspect_ratio):
+def _interpolate_field_2d_interior(
+    field_src_2d, nx_src, ny_src, nx_tgt, ny_tgt
+):
     """
     Interpolates a 2D field from source grid to target grid.
 
     CLEAN VERSION: Operates on interior-only data (no ghost cells).
-    This function expects both input and output to be interior cells only.
+    This function expects both input and output to be 2D interior arrays.
 
     Args:
-        field_src_interior: Flattened 1D array of INTERIOR cells only (nx_src * ny_src values)
+        field_src_2d: 2D array of INTERIOR cells only (ny_src, nx_src)
         nx_src: Number of interior cells in x-direction for source
         ny_src: Number of interior cells in y-direction for source
         nx_tgt: Number of interior cells in x-direction for target
         ny_tgt: Number of interior cells in y-direction for target
-        aspect_ratio: Domain aspect ratio (Ly / Lx)
 
     Returns:
-        Flattened interpolated field on target grid interior (nx_tgt * ny_tgt values)
+        Interpolated 2D field on target grid interior (ny_tgt, nx_tgt)
     """
-    # Reshape interior data to 2D (y-major, x-fastest)
-    field_src_2d = field_src_interior.reshape((ny_src, nx_src))
+    # --- MODIFIED: field_src_2d is already 2D, no reshape needed ---
 
     # Grid spacing
     dx_src = 1.0 / nx_src
-    dy_src = aspect_ratio / ny_src
+    dy_src = dx_src
 
     # Create coordinates for source grid (interior cell centers)
-    # Cell centers are at (i+0.5)*dx for i=0,1,...,nx_src-1
     x_src = np.array([(i + 0.5) * dx_src for i in range(nx_src)])
     y_src = np.array([(j + 0.5) * dy_src for j in range(ny_src)])
 
@@ -303,7 +215,7 @@ def interpolate_field_2d_interior(field_src_interior, nx_src, ny_src, nx_tgt, ny
 
     # Create coordinates for target grid (interior cell centers)
     dx_tgt = 1.0 / nx_tgt
-    dy_tgt = aspect_ratio / ny_tgt
+    dy_tgt = dx_tgt
     x_tgt = np.array([(i + 0.5) * dx_tgt for i in range(nx_tgt)])
     y_tgt = np.array([(j + 0.5) * dy_tgt for j in range(ny_tgt)])
 
@@ -314,15 +226,14 @@ def interpolate_field_2d_interior(field_src_interior, nx_src, ny_src, nx_tgt, ny
     points = np.stack([yy_tgt.ravel(), xx_tgt.ravel()], axis=-1)
     field_tgt_2d = interp(points).reshape((ny_tgt, nx_tgt))
 
-    # Return flattened interior data
-    return field_tgt_2d.ravel()
+    # --- MODIFIED: Return 2D array ---
+    return field_tgt_2d
 
 
 def compare_res_euler_2d(
-    profile1, testcase1, n_grid_x1,
-    profile2, testcase2, n_grid_x2,
+    profile1, n_grid_x1_in,
+    profile2, n_grid_x2_in,
     rmse_tolerance,
-    start_frame, end_frame,
     cfl1, cg_tolerance1,
     cfl2, cg_tolerance2
 ):
@@ -334,134 +245,101 @@ def compare_res_euler_2d(
         metrics2 (dict): Metrics for case 2.
         rmse (float): RMSE of relative difference.
     """
-    res1 = get_res_euler_2d(profile1, testcase1, n_grid_x1, start_frame, end_frame, cfl1, cg_tolerance1)
-    res2 = get_res_euler_2d(profile2, testcase2, n_grid_x2, start_frame, end_frame, cfl2, cg_tolerance2)
+    # --- MODIFIED: get_res now returns only (results, cost) ---
+    res1, _ = get_res_euler_2d(profile1, n_grid_x1_in, cfl1, cg_tolerance1)
+    res2, _ = get_res_euler_2d(profile2, n_grid_x2_in, cfl2, cg_tolerance2)
 
-    # Get common frames
+    # --- MODIFIED: Strict check for matching frames ---
     frames1 = set(res1.keys())
     frames2 = set(res2.keys())
-    common_frames = sorted(frames1 & frames2)
+    if frames1 != frames2:
+        raise ValueError(
+            f"Frame sets do not match.\n"
+            f"Frames 1 ({len(frames1)}): {sorted(list(frames1))}\n"
+            f"Frames 2 ({len(frames2)}): {sorted(list(frames2))}"
+        )
 
-    if len(common_frames) == 0:
-        raise ValueError("No common frames found between the two simulations")
+    if len(frames1) == 0:
+        raise ValueError("No frames found in simulation results")
 
     # Compare density and pressure fields at final frame
+    common_frames = sorted(list(frames1)) # Use sorted list from set
     final_frame = common_frames[-1]
     data1 = res1[final_frame]
     data2 = res2[final_frame]
 
-    # Read grid dimensions directly from meta.json (C++ determined these based on aspect ratio)
-    nx1, ny1 = _read_grid_dims_from_meta(profile1, n_grid_x1, cfl1, cg_tolerance1)
-    nx2, ny2 = _read_grid_dims_from_meta(profile2, n_grid_x2, cfl2, cg_tolerance2)
+    # --- MODIFIED: Data is already 2D interior-only ---
+    density1_interior = data1['density']
+    density2_interior = data2['density']
+    pressure1_interior = data1['pressure']
+    pressure2_interior = data2['pressure']
+    
+    # --- MODIFIED: Infer nx, ny from shape ---
+    # Shape is (ny, nx) due to (y_src, x_src) interpolation order
+    ny1, nx1 = density1_interior.shape
+    ny2, nx2 = density2_interior.shape
 
-    # Compute aspect ratio from actual grid dimensions (for interpolation)
-    aspect_ratio1 = ny1 / nx1
-    aspect_ratio2 = ny2 / nx2
-
-    # Check that aspect ratios are similar (we're only comparing same testcases)
-    if abs(aspect_ratio1 - aspect_ratio2) > 0.1:  # Relaxed tolerance for different resolutions
-        print(f"Warning: Different aspect ratios detected: {aspect_ratio1:.4f} vs {aspect_ratio2:.4f}")
-
-    # VTK STRUCTURED_POINTS exports points (vertices) with ghost_layer=2
-    # Pattern: (nx+4) × (ny+4) points (C++ uses round() + integer division for ny calculation)
-    ghost_layer = 2
-    n_points1_expected = (nx1 + 2*ghost_layer) * (ny1 + 2*ghost_layer)
-    n_points2_expected = (nx2 + 2*ghost_layer) * (ny2 + 2*ghost_layer)
-
-    n_points1 = len(data1['density'])
-    n_points2 = len(data2['density'])
-
-    # Verify expected grid sizes
-    print(f"Case 1: nx={nx1}, ny={ny1}, VTK points={n_points1} (expected {n_points1_expected} = ({nx1}+{2*ghost_layer})×({ny1}+{2*ghost_layer}))")
-    print(f"Case 2: nx={nx2}, ny={ny2}, VTK points={n_points2} (expected {n_points2_expected} = ({nx2}+{2*ghost_layer})×({ny2}+{2*ghost_layer}))")
-
-    if n_points1 != n_points1_expected:
-        print(f"Warning: data1 has {n_points1} points, expected {n_points1_expected}")
-    if n_points2 != n_points2_expected:
-        print(f"Warning: data2 has {n_points2} points, expected {n_points2_expected}")
-
-    # CLEAN APPROACH: Extract interior cells first for BOTH grids
-    # This gives us clean interior-only data to work with
-    density1_interior = _extract_interior_cells(data1['density'], nx1, ny1)
-    density2_interior = _extract_interior_cells(data2['density'], nx2, ny2)
-    pressure1_interior = _extract_interior_cells(data1['pressure'], nx1, ny1)
-    pressure2_interior = _extract_interior_cells(data2['pressure'], nx2, ny2)
-
-    if n_points1 == n_points2:
+    # --- MODIFIED: Compare shapes ---
+    if (ny1, nx1) == (ny2, nx2):
         # Same grid size - direct comparison of interior cells
-        print("Same grid size detected - comparing interior cells directly")
+        print(f"Same grid size detected ({nx1}x{ny1}) - comparing directly")
         # Use NRMSE: both fields are same resolution, use either for normalization
-        density_nrmse = compute_nrmse(density1_interior, density2_interior)
-        pressure_nrmse = compute_nrmse(pressure1_interior, pressure2_interior)
+        density_nrmse = _compute_nrmse_maxabs(density1_interior, density2_interior)
+        pressure_nrmse = _compute_nrmse_maxabs(pressure1_interior, pressure2_interior)
     else:
         # Different grid sizes - interpolate coarser to finer, then compare
-        # Now using the clean interpolate_field_2d_interior function
-        if n_points1 < n_points2:
+        # Now using the clean _interpolate_field_2d_interior function
+        if (nx1 * ny1) < (nx2 * ny2):
             # data1 is coarser, interpolate to data2's finer grid
             print(f"Interpolating coarse grid ({nx1}x{ny1}) to fine grid ({nx2}x{ny2})")
-            density1_interp = interpolate_field_2d_interior(
-                density1_interior, nx1, ny1, nx2, ny2, aspect_ratio1
+            
+            # --- MODIFIED: Pass 2D fields directly ---
+            density1_interp = _interpolate_field_2d_interior(
+                density1_interior, nx1, ny1, nx2, ny2
             )
-            pressure1_interp = interpolate_field_2d_interior(
-                pressure1_interior, nx1, ny1, nx2, ny2, aspect_ratio1
+            pressure1_interp = _interpolate_field_2d_interior(
+                pressure1_interior, nx1, ny1, nx2, ny2
             )
 
             # Use NRMSE: data2 is finer (higher res), use it for normalization
-            density_nrmse = compute_nrmse(density1_interp, density2_interior)
-            pressure_nrmse = compute_nrmse(pressure1_interp, pressure2_interior)
+            density_nrmse = _compute_nrmse_maxabs(density1_interp, density2_interior)
+            pressure_nrmse = _compute_nrmse_maxabs(pressure1_interp, pressure2_interior)
         else:
             # data2 is coarser, interpolate to data1's finer grid
             print(f"Interpolating coarse grid ({nx2}x{ny2}) to fine grid ({nx1}x{ny1})")
-            density2_interp = interpolate_field_2d_interior(
-                density2_interior, nx2, ny2, nx1, ny1, aspect_ratio2
+            
+            # --- MODIFIED: Pass 2D fields directly ---
+            density2_interp = _interpolate_field_2d_interior(
+                density2_interior, nx2, ny2, nx1, ny1
             )
-            pressure2_interp = interpolate_field_2d_interior(
-                pressure2_interior, nx2, ny2, nx1, ny1, aspect_ratio2
+            pressure2_interp = _interpolate_field_2d_interior(
+                pressure2_interior, nx2, ny2, nx1, ny1
             )
 
             # Use NRMSE: data1 is finer (higher res), use it for normalization
-            density_nrmse = compute_nrmse(density2_interp, density1_interior)
-            pressure_nrmse = compute_nrmse(pressure2_interp, pressure1_interior)
+            density_nrmse = _compute_nrmse_maxabs(density2_interp, density1_interior)
+            pressure_nrmse = _compute_nrmse_maxabs(pressure2_interp, pressure1_interior)
 
     # Average NRMSE across channels (density and pressure)
     rmse = (density_nrmse + pressure_nrmse) / 2.0
 
-    # Compute metrics
-    metrics1 = compute_euler_2d_metrics(res1)
-    metrics2 = compute_euler_2d_metrics(res2)
-
     # Convergence criteria
-    # Note: positivity check disabled for central explosion case which has vacuum regions
     converged = (
         rmse < rmse_tolerance
-        # Positivity check removed: central explosion expands into vacuum (zero density/pressure at boundaries)
-        # and metrics1.get("positivity_preserved", True)
-        # and metrics2.get("positivity_preserved", True)
     )
-
-    print_euler_2d_metrics("Case 1", metrics1)
-    print_euler_2d_metrics("Case 2", metrics2)
 
     print(f"RMSE (relative): {rmse}")
 
-    return converged, metrics1, metrics2, rmse
+    return converged, rmse
 
 
-if __name__ == "__main__":
-    # Example usage
-    testcase = 0
-    n_grid_x = 32
-    cfl = 0.5
-    cg_tolerance = 1e-7
-
-    # Run a simulation
-    cost = run_sim_euler_2d("p1", testcase, n_grid_x, start_frame=0, end_frame=10, cfl=cfl, cg_tolerance=cg_tolerance)
-    print(f"Simulation cost: {cost}")
-
-    # Load results
-    results = get_res_euler_2d("p1", testcase, n_grid_x, start_frame=0, end_frame=10, cfl=cfl, cg_tolerance=cg_tolerance)
-    print(f"Loaded {len(results)} frames")
-
-    # Compute metrics
-    metrics = compute_euler_2d_metrics(results)
-    print_euler_2d_metrics("Test", metrics)
+if __name__=="__main__":
+    ps= ["p1","p2","p3","p4","p5"]
+    for p in ps:
+        print(compare_res_euler_2d(
+            p, 32,
+            p, 64,
+            0.01,
+            0.25, 1e-6,
+            0.25, 1e-6)
+        )

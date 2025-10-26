@@ -4,9 +4,9 @@ defaults:
   - override hydra/job_logging: none
 
 # Test case selection
-testcase: 3           # Sod shock tube (2D version of 1D testcase 0)
-testcase_name: "sod_tube_2d"
-aspect_ratio: 0.015625     # 1/64 - gives exactly 1 interior cell in y for nx=64 (aspect ratio = 1/nx)
+testcase: 3           # Lax shock tube (2D version of 1D testcase 1)
+# testcase_name: "lax_tube_2d"
+# Aspect ratio is hardcoded in C++ gas_2d.cpp (testcase 4: 1/Nx for 1D-like behavior with ny=2)
 
 # Numerical parameters (tunable)
 n_grid_x: 64          # Grid resolution in x-direction (y-direction = 1 interior cell to mimic 1D)
@@ -16,7 +16,7 @@ cg_tolerance: 1.0e-7  # CG solver convergence tolerance for pressure projection 
 # Simulation statics (non-tunable - define the task)
 start_frame: 0        # Starting frame number
 end_frame: 10         # Ending frame number (matches 1D)
-record_dt: 0.02       # Time interval between recordings (matches 1D frame_dt)
+record_dt: 0.012       # Time interval between recordings (matches 1D frame_dt)
 
 # Output configuration
 dump_dir: "sim_res/euler_2d/p4"  # Directory for output files

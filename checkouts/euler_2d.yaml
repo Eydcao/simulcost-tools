@@ -19,14 +19,24 @@ domain_info:
     aspect_ratio: 0.333  # 1/3
     description: "Stair flow in wide domain (1:3 aspect ratio)"
   p3:
-    name: "Mach_Diamond"
-    domain_size: [1.0, 0.5]  # Moderate domain
-    aspect_ratio: 0.5  # 1/2
-    description: "Mach diamond pattern in moderate domain (1:2 aspect ratio)"
+    name: "sod_tube_2d"
+    domain_size: [1.0, 1/64]  # 1D-like domain
+    aspect_ratio: 1/64  # Very thin to mimic 1D
+    description: "Sod shock tube (1D-like behavior in 2D)"
+  p4:
+    name: "lax_tube_2d"
+    domain_size: [1.0, 1/64]  # 1D-like domain
+    aspect_ratio: 1/64  # Very thin to mimic 1D
+    description: "Lax shock tube (1D-like behavior in 2D)"
+  p5:
+    name: "mach_3_2d"
+    domain_size: [1.0, 1/64]  # 1D-like domain
+    aspect_ratio: 1/64  # Very thin to mimic 1D
+    description: "Mach 3 problem (1D-like behavior in 2D)"
 
 task_distribution:
   strategy: "benchmark"
-  total_individuals: 108  # 3 profiles × 3 target params × 3 precision levels × 4 non-target combos = 108 tasks
+  total_individuals: 180  # 5 profiles × 3 target params × 3 precision levels × 4 non-target combos = 180 tasks
 
 precision_levels:
   low:
@@ -40,10 +50,10 @@ precision_levels:
     description: "Stringent convergence for fine grids"
 
 profiles:
-  num_profiles: 3
+  num_profiles: 5
   # Available profiles:
-  # p1 (central_boom_2d), p2 (stair_flow_2d), p3 (Mach_Diamond)
-  active_profiles: ["p1", "p2", "p3"]
+  # p1 (central_boom_2d), p2 (stair_flow_2d), p3 (sod_tube_2d), p4 (lax_tube_2d), p5 (mach_3_2d)
+  active_profiles: ["p1", "p2", "p3", "p4", "p5"]
 
 # Parameter configurations for each target parameter
 target_parameters:
@@ -69,8 +79,10 @@ target_parameters:
 
   cg_tolerance:
     description: "CG solver convergence tolerance for pressure projection step. Too tight leads to unnecessary iterations; too loose may cause divergence (typical range: 1e-9 to 1e-5)"
-    search_type: "0-shot"
-    search_values: [1.0e-7, 1.0e-6, 1.0e-5]  # From tight to loose (reduced set for testing)
+    search_type: "iterative+0-shot"
+    initial_value: 1.0e-2
+    division_factor: 10.0  # Tighten: 1e-2 → 1e-3 → 1e-4 → 1e-5 → 1e-6
+    max_iteration_num: 5  # Stop at 1e-6 (found to have 100% success)
     non_target_parameters:
       n_grid_x: [64, 128]  # Test with moderate and fine grids
       cfl: [0.5, 0.25]  # Test with standard and conservative CFL

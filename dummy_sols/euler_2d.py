@@ -80,7 +80,7 @@ def find_convergent_n_grid_x(
         if len(param_history) > 1:
             prev_n_grid_x = param_history[-2]["n_grid_x"]
 
-            is_converged, _, _, rmse = compare_res_euler_2d(
+            is_converged, rmse = compare_res_euler_2d(
                 profile,
                 testcase,
                 prev_n_grid_x,
@@ -178,7 +178,7 @@ def find_convergent_cfl(
         if len(param_history) > 1:
             prev_cfl = param_history[-2]["cfl"]
 
-            is_converged, _, _, rmse = compare_res_euler_2d(
+            is_converged, rmse = compare_res_euler_2d(
                 profile,
                 testcase,
                 n_grid_x,
@@ -211,15 +211,17 @@ def find_convergent_cfl(
     return bool(converged), best_cfl, cost_history, param_history
 
 
-def grid_search_cg_tolerance(
+def find_convergent_cg_tol(
     profile,
     testcase,
     n_grid_x,
     cfl,
-    cg_tolerance_values,
+    cg_tolerance,
     start_frame,
     end_frame,
     tolerance_rmse,
+    division_factor,
+    max_iteration_num,
 ):
     """Grid search over cg_tolerance values, selecting the one with minimum cost that maintains convergence.
 
@@ -231,7 +233,7 @@ def grid_search_cg_tolerance(
         testcase: Test case number (0-3)
         n_grid_x: Grid resolution in x-direction (fixed)
         cfl: CFL number (fixed)
-        cg_tolerance_values: List of cg_tolerance values to try
+        cg_tolerance_values: Initial of cg_tolerance values to try
         start_frame: Starting frame
         end_frame: Ending frame
         tolerance_rmse: RMSE tolerance for convergence check
@@ -275,7 +277,7 @@ def grid_search_cg_tolerance(
         if len(param_history) > 1:
             prev_cg_tolerance = param_history[-2]["cg_tolerance"]
 
-            is_converged, _, _, rmse = compare_res_euler_2d(
+            is_converged, rmse = compare_res_euler_2d(
                 profile,
                 testcase,
                 n_grid_x,
@@ -303,94 +305,3 @@ def grid_search_cg_tolerance(
         best_cg_tolerance = param_history[-1]["cg_tolerance"]
 
     return bool(converged), best_cg_tolerance, cost_history, param_history
-
-
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Dummy solver for Euler 2D simulations")
-    parser.add_argument(
-        "--task",
-        type=str,
-        default="n_grid_x",
-        choices=["n_grid_x", "cfl", "cg_tolerance"],
-        help="Which parameter to optimize",
-    )
-    parser.add_argument("--profile", type=str, default="p1", help="Profile name (p1, p2, p3, p4)")
-    parser.add_argument("--testcase", type=int, default=0, help="Test case (0, 1, 2, 3)")
-    parser.add_argument("--n_grid_x", type=int, default=16, help="Initial grid resolution")
-    parser.add_argument("--cfl", type=float, default=0.5, help="Initial CFL number")
-    parser.add_argument("--cg_tolerance", type=float, default=1e-7, help="Initial CG tolerance")
-    parser.add_argument("--start_frame", type=int, default=0, help="Start frame")
-    parser.add_argument("--end_frame", type=int, default=20, help="End frame")
-    parser.add_argument("--tolerance_rmse", type=float, default=0.05, help="RMSE tolerance for convergence")
-    parser.add_argument("--max_iteration_num", type=int, default=5, help="Maximum iterations for iterative search")
-
-    args = parser.parse_args()
-
-    if args.task == "n_grid_x":
-        print(f"\n{'='*60}")
-        print(f"Finding convergent n_grid_x for profile {args.profile}")
-        print(f"{'='*60}")
-        converged, best_n_grid_x, cost_history, param_history = find_convergent_n_grid_x(
-            args.profile,
-            args.testcase,
-            args.n_grid_x,
-            args.cfl,
-            args.cg_tolerance,
-            args.start_frame,
-            args.end_frame,
-            args.tolerance_rmse,
-            multiplication_factor=2.0,
-            max_iteration_num=args.max_iteration_num,
-        )
-        print(f"\n{'='*60}")
-        print(f"Results:")
-        print(f"Converged: {converged}")
-        print(f"Best n_grid_x: {best_n_grid_x}")
-        print(f"Cost history: {cost_history}")
-        print(f"{'='*60}")
-
-    elif args.task == "cfl":
-        print(f"\n{'='*60}")
-        print(f"Finding convergent CFL for profile {args.profile}")
-        print(f"{'='*60}")
-        converged, best_cfl, cost_history, param_history = find_convergent_cfl(
-            args.profile,
-            args.testcase,
-            args.n_grid_x,
-            args.cfl,
-            args.cg_tolerance,
-            args.start_frame,
-            args.end_frame,
-            args.tolerance_rmse,
-            division_factor=2.0,
-            max_iteration_num=args.max_iteration_num,
-        )
-        print(f"\n{'='*60}")
-        print(f"Results:")
-        print(f"Converged: {converged}")
-        print(f"Best CFL: {best_cfl}")
-        print(f"Cost history: {cost_history}")
-        print(f"{'='*60}")
-
-    elif args.task == "cg_tolerance":
-        print(f"\n{'='*60}")
-        print(f"Grid search for optimal cg_tolerance for profile {args.profile}")
-        print(f"{'='*60}")
-        # Define candidate cg_tolerance values (from tight to loose)
-        cg_tolerance_values = [1e-9, 1e-8, 1e-7, 1e-6, 1e-5]
-        converged, best_cg_tolerance, cost_history, param_history = grid_search_cg_tolerance(
-            args.profile,
-            args.testcase,
-            args.n_grid_x,
-            args.cfl,
-            cg_tolerance_values,
-            args.start_frame,
-            args.end_frame,
-            args.tolerance_rmse,
-        )
-        print(f"\n{'='*60}")
-        print(f"Results:")
-        print(f"Converged: {converged}")
-        print(f"Best cg_tolerance: {best_cg_tolerance}")
-        print(f"Cost history: {cost_history}")
-        print(f"{'='*60}")
