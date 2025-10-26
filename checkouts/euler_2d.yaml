@@ -1,88 +1,38 @@
-# Euler 2D Solver Checkout Configuration
-# This file centralizes all parameter settings for both documentation and dummy solution generation
-
-solver_info:
-  name: "Euler 2D"
-  numerical_method: "WENO5 reconstruction with TVD-RK3 time integration and advection-projection scheme"
-  reference: "CSMPM_BOW framework for compressible Euler equations"
-
-# Domain information for each profile (for agent prompt context)
-domain_info:
-  p1:
-    name: "central_boom_2d"
-    domain_size: [1.0, 1.0]  # Square domain
-    aspect_ratio: 1.0
-    description: "Central explosion in square domain"
-  p2:
-    name: "stair_flow_2d"
-    domain_size: [1.0, 0.333]  # Wide domain
-    aspect_ratio: 0.333  # 1/3
-    description: "Stair flow in wide domain (1:3 aspect ratio)"
-  p3:
-    name: "sod_tube_2d"
-    domain_size: [1.0, 1/64]  # 1D-like domain
-    aspect_ratio: 1/64  # Very thin to mimic 1D
-    description: "Sod shock tube (1D-like behavior in 2D)"
-  p4:
-    name: "lax_tube_2d"
-    domain_size: [1.0, 1/64]  # 1D-like domain
-    aspect_ratio: 1/64  # Very thin to mimic 1D
-    description: "Lax shock tube (1D-like behavior in 2D)"
-  p5:
-    name: "mach_3_2d"
-    domain_size: [1.0, 1/64]  # 1D-like domain
-    aspect_ratio: 1/64  # Very thin to mimic 1D
-    description: "Mach 3 problem (1D-like behavior in 2D)"
-
-task_distribution:
-  strategy: "benchmark"
-  total_individuals: 180  # 5 profiles × 3 target params × 3 precision levels × 4 non-target combos = 180 tasks
-
 precision_levels:
   low:
-    tolerance_rmse: 0.12  # Relaxed - captures n_grid 32->64 (~0.11), cfl 0.5->0.25 (~0.06)
-    description: "Relaxed convergence for coarse grids"
+    tolerance_rmse: 0.12
   medium:
-    tolerance_rmse: 0.08  # Moderate - captures n_grid 16->32 with loose cg_tol (~0.09), requires finer for others
-    description: "Moderate convergence criteria"
+    tolerance_rmse: 0.08
   high:
-    tolerance_rmse: 0.06  # Stringent - requires very fine grids or very small CFL
-    description: "Stringent convergence for fine grids"
+    tolerance_rmse: 0.06
 
 profiles:
-  num_profiles: 5
-  # Available profiles:
-  # p1 (central_boom_2d), p2 (stair_flow_2d), p3 (sod_tube_2d), p4 (lax_tube_2d), p5 (mach_3_2d)
   active_profiles: ["p1", "p2", "p3", "p4", "p5"]
 
-# Parameter configurations for each target parameter
 target_parameters:
-  n_grid_x:
-    description: "Grid resolution in x-direction - determines spatial accuracy. Agent should reason about dx from domain size. Y-direction resolution (n_grid_y) is computed automatically from aspect ratio."
-    search_type: "iterative+0-shot"
-    initial_value: 16
-    multiplication_factor: 2.0  # Refine: 16 → 32 → 64 → 128 → 256 → 512...
-    max_iteration_num: 6  # Increased to allow reaching finer grids for convergence
-    non_target_parameters:
-      cfl: [0.5, 0.25]  # Test with standard and conservative CFL
-      cg_tolerance: [1.0e-7, 1.0e-6]  # Test with tight and moderate CG tolerance
-
   cfl:
-    description: "CFL number for timestep stability - controls time step size relative to grid spacing and wave speed (typical range: 0.1-0.9)"
     search_type: "iterative+0-shot"
     initial_value: 0.5
-    division_factor: 2.0  # Reduce: 0.5 → 0.25 → 0.125 → 0.0625...
-    max_iteration_num: 5  # Increased to allow reaching smaller CFL for convergence
+    multiplication_factor: 0.5  # Corrected from division_factor: 2.0
+    max_iteration_num: 5
     non_target_parameters:
-      n_grid_x: [64, 128]  # Test with moderate and fine grids
-      cg_tolerance: [1.0e-7, 1.0e-6]  # Test with tight and moderate CG tolerance
+      n_grid_x: [32, 64, 128]
+      cg_tolerance: [1.0e-7, 1.0e-6]
 
   cg_tolerance:
-    description: "CG solver convergence tolerance for pressure projection step. Too tight leads to unnecessary iterations; too loose may cause divergence (typical range: 1e-9 to 1e-5)"
     search_type: "iterative+0-shot"
     initial_value: 1.0e-2
-    division_factor: 10.0  # Tighten: 1e-2 → 1e-3 → 1e-4 → 1e-5 → 1e-6
-    max_iteration_num: 5  # Stop at 1e-6 (found to have 100% success)
+    multiplication_factor: 0.1  # Corrected from division_factor: 10.0
+    max_iteration_num: 5
     non_target_parameters:
-      n_grid_x: [64, 128]  # Test with moderate and fine grids
-      cfl: [0.5, 0.25]  # Test with standard and conservative CFL
+      n_grid_x: [64, 128]
+      cfl: [0.5, 0.25]
+
+  n_grid_x:
+    search_type: "iterative+0-shot"
+    initial_value: 16
+    multiplication_factor: 2.0
+    max_iteration_num: 6
+    non_target_parameters:
+      cfl: [0.5, 0.25]
+      cg_tolerance: [1.0e-7, 1.0e-6]

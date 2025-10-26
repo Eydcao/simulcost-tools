@@ -9,8 +9,7 @@ from collections import defaultdict
 
 # Add paths for imports
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-# TODO import is out of date now
-from dummy_sols.euler_2d import find_convergent_n_grid_x, find_convergent_cfl, grid_search_cg_tolerance
+from dummy_sols.euler_2d import find_convergent_n_grid_x, find_convergent_cfl, find_convergent_cg_tol
 from checkouts.config_utils import load_config, build_target_configs
 
 
@@ -170,7 +169,7 @@ def plot_statistics(statistics, output_dir):
             cg_tol_values, cg_tol_counts = np.unique(
                 list(statistics["optimal_cg_tolerance_values"]), return_counts=True
             )
-            f.write("   cg_tolerance parameter (0-shot):\n")
+            f.write("   cg_tolerance parameter (iterative):\n")
             for cg_tol, count in zip(cg_tol_values, cg_tol_counts):
                 f.write(f"     cg_tolerance={cg_tol:.0e}: {count} times\n")
 
@@ -221,7 +220,7 @@ def save_datasets(successful_tasks, failed_tasks, output_dir):
     return success_file, failed_file
 
 
-def run_checkout(config_path, output_dir="dataset", profiles_to_test=None):
+def run_checkout(config_path, output_dir="dataset"):
     """
     Run the complete checkout process for Euler 2D solver.
 
@@ -235,8 +234,8 @@ def run_checkout(config_path, output_dir="dataset", profiles_to_test=None):
 
     # Get active profiles
     active_profiles = config["profiles"]["active_profiles"]
-    if profiles_to_test:
-        active_profiles = [p for p in active_profiles if p in profiles_to_test]
+    # if profiles_to_test:
+    #     active_profiles = [p for p in active_profiles if p in profiles_to_test]
 
     print(f"{'='*80}")
     print(f"Euler 2D Solver Checkout")
@@ -304,21 +303,9 @@ def run_checkout(config_path, output_dir="dataset", profiles_to_test=None):
         target_param = task_config["target_parameter"]
         tolerance_rmse = task_config["tolerance_rmse"]
 
-        # Extract testcase and end_frame from profile config
-        # Load the profile config to get the correct end_frame
-        import yaml
-
-        profile_config_path = f"run_configs/euler_2d/{profile}.yaml"
-        with open(profile_config_path, "r") as f:
-            profile_config = yaml.safe_load(f)
-
-        # TODO obselete now;
-        testcase = profile_config["testcase"]
-        end_frame = profile_config["end_frame"]
-
         print(f"\n{'='*80}")
         print(f"Task {idx}/{len(all_tasks)}")
-        print(f"Profile: {profile} (testcase={testcase})")
+        print(f"Profile: {profile}")
         print(f"Precision: {precision} (tolerance_rmse={tolerance_rmse})")
         print(f"Target: {target_param}")
         print(f"{'='*80}")
@@ -333,19 +320,15 @@ def run_checkout(config_path, output_dir="dataset", profiles_to_test=None):
 
         try:
             # Get the specific non-target parameter combination for this task
-            non_target_params = task_config.get("non_target_params_combo", {})
+            non_target_params = task_config["non_target_params_combo"]
 
             # Run search based on target parameter
-            # TODO all below func interfaces are now out of date
             if target_param == "n_grid_x":
                 is_converged, best_n_grid_x, cost_history, param_history = find_convergent_n_grid_x(
                     profile=profile,
-                    testcase=testcase,
                     n_grid_x=task_config["initial_value"],
-                    cfl=non_target_params.get("cfl", 0.5),
-                    cg_tolerance=non_target_params.get("cg_tolerance", 1.0e-7),
-                    start_frame=0,
-                    end_frame=end_frame,
+                    cfl=non_target_params["cfl"],
+                    cg_tolerance=non_target_params["cg_tolerance"],
                     tolerance_rmse=tolerance_rmse,
                     multiplication_factor=task_config["multiplication_factor"],
                     max_iteration_num=task_config["max_iteration_num"],
@@ -355,29 +338,24 @@ def run_checkout(config_path, output_dir="dataset", profiles_to_test=None):
             elif target_param == "cfl":
                 is_converged, best_cfl, cost_history, param_history = find_convergent_cfl(
                     profile=profile,
-                    testcase=testcase,
-                    n_grid_x=non_target_params.get("n_grid_x", 64),
+                    n_grid_x=non_target_params["n_grid_x"],
                     cfl=task_config["initial_value"],
-                    cg_tolerance=non_target_params.get("cg_tolerance", 1.0e-7),
-                    start_frame=0,
-                    end_frame=end_frame,
+                    cg_tolerance=non_target_params["cg_tolerance"],
                     tolerance_rmse=tolerance_rmse,
-                    division_factor=task_config.get("division_factor", 2.0),
+                    multiplication_factor=task_config["multiplication_factor"],
                     max_iteration_num=task_config["max_iteration_num"],
                 )
                 optimal_params = {"cfl": best_cfl}
 
             elif target_param == "cg_tolerance":
-                cg_tolerance_values = task_config.get("search_values", [1.0e-9, 1.0e-8, 1.0e-7, 1.0e-6, 1.0e-5])
-                is_converged, best_cg_tolerance, cost_history, param_history = grid_search_cg_tolerance(
+                is_converged, best_cg_tolerance, cost_history, param_history = find_convergent_cg_tol(
                     profile=profile,
-                    testcase=testcase,
-                    n_grid_x=non_target_params.get("n_grid_x", 64),
-                    cfl=non_target_params.get("cfl", 0.5),
-                    cg_tolerance_values=cg_tolerance_values,
-                    start_frame=0,
-                    end_frame=end_frame,
+                    n_grid_x=non_target_params["n_grid_x"],
+                    cfl=non_target_params["cfl"],
+                    cg_tolerance=task_config["initial_value"],
                     tolerance_rmse=tolerance_rmse,
+                    multiplication_factor=task_config["multiplication_factor"],
+                    max_iteration_num=task_config["max_iteration_num"],
                 )
                 optimal_params = {"cg_tolerance": best_cg_tolerance}
 
@@ -411,7 +389,6 @@ def run_checkout(config_path, output_dir="dataset", profiles_to_test=None):
             task_result = {
                 "task_id": f"{profile}_{precision}_{target_param}_{hash(str(non_target_params))}",
                 "profile": profile,
-                "testcase": testcase,
                 "precision_level": precision,
                 "tolerance_rmse": tolerance_rmse,
                 "target_parameter": target_param,
@@ -440,7 +417,6 @@ def run_checkout(config_path, output_dir="dataset", profiles_to_test=None):
                 {
                     "task_id": f"{profile}_{precision}_{target_param}",
                     "profile": profile,
-                    "testcase": testcase,
                     "precision_level": precision,
                     "tolerance_rmse": tolerance_rmse,
                     "target_parameter": target_param,
@@ -485,8 +461,11 @@ def run_checkout(config_path, output_dir="dataset", profiles_to_test=None):
         print(f"\n📉 Failed Task Examples:")
         for i, task in enumerate(failed_tasks[:3]):  # Show first 3 failed tasks
             print(
-                f"   {i+1}. {task['profile']} profile, {task['target_parameter']} optimization (cost: {task.get('total_cost', 'N/A')})"
+                f"   {i+1}. {task['profile']} profile, {task['target_parameter']} optimization (cost: {task['total_cost']})"
             )
 
     return successful_tasks, failed_tasks, statistics
 
+
+if __name__ == "__main__":
+    run_checkout("checkouts/euler_2d.yaml", "dataset")
