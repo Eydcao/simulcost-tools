@@ -9,7 +9,8 @@ import shutil
 from pathlib import Path
 import numpy as np
 import matplotlib
-matplotlib.use('Agg')  # Non-interactive backend
+
+matplotlib.use("Agg")  # Non-interactive backend
 import matplotlib.pyplot as plt
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -24,11 +25,11 @@ def find_gas_2d_binary():
 
     if not binary_path.exists():
         raise FileNotFoundError(
-            f"gas_2d binary not found at {binary_path}\n"
-            "Please run: python solvers/setup_euler_2d.py"
+            f"gas_2d binary not found at {binary_path}\n" "Please run: python solvers/setup_euler_2d.py"
         )
 
     return binary_path
+
 
 def generate_visualization_plots(output_dir, start_frame, end_frame):
     """Generate 2x2 visualization plots for each frame.
@@ -53,18 +54,18 @@ def generate_visualization_plots(output_dir, start_frame, end_frame):
         print(f"  Warning: meta.json not found at {meta_path}, skipping visualization...")
         return
 
-    with open(meta_path, 'r') as f:
+    with open(meta_path, "r") as f:
         metadata = json.load(f)
 
-    nx = metadata['parameters']['n_grid_x']
-    ny = metadata['parameters']['n_grid_y']
+    nx = metadata["parameters"]["n_grid_x"]
+    ny = metadata["parameters"]["n_grid_y"]
     aspect_ratio = ny / nx if nx > 0 else 1.0
 
     # If frame range not specified, get from metadata (good fallback)
     if start_frame is None:
-        start_frame = metadata.get('start_frame', 0)
+        start_frame = metadata.get("start_frame", 0)
     if end_frame is None:
-        end_frame = metadata.get('end_frame', 20)
+        end_frame = metadata.get("end_frame", 20)
 
     print(f"\nGenerating visualization plots for {output_dir}...")
     print(f"  Grid: {nx}x{ny}, aspect ratio: {aspect_ratio:.6f}")
@@ -89,10 +90,10 @@ def generate_visualization_plots(output_dir, start_frame, end_frame):
 
         # --- MODIFIED: Data is already 2D ---
         # Extract fields
-        density_2d = fields.get('density', fields.get('rho', None))
-        pressure_2d = fields.get('pressure', fields.get('p', None))
-        vx_2d = fields.get('velocity_x', fields.get('u', None))
-        vy_2d = fields.get('velocity_y', fields.get('v', None))
+        density_2d = fields.get("density", fields.get("rho", None))
+        pressure_2d = fields.get("pressure", fields.get("p", None))
+        vx_2d = fields.get("velocity_x", fields.get("u", None))
+        vy_2d = fields.get("velocity_y", fields.get("v", None))
 
         if density_2d is None or pressure_2d is None:
             print(f"  Warning: Required fields not found in frame {frame}, skipping...")
@@ -111,46 +112,41 @@ def generate_visualization_plots(output_dir, start_frame, end_frame):
         extent = [0, 1, 0, aspect_ratio]
 
         # Density
-        im0 = axes[0, 0].imshow(density_2d, origin='lower', extent=extent,
-                                aspect='auto', cmap='viridis')
-        axes[0, 0].set_title(f'Density (Frame {frame})')
-        axes[0, 0].set_xlabel('x')
-        axes[0, 0].set_ylabel('y')
+        im0 = axes[0, 0].imshow(density_2d, origin="lower", extent=extent, aspect="auto", cmap="viridis")
+        axes[0, 0].set_title(f"Density (Frame {frame})")
+        axes[0, 0].set_xlabel("x")
+        axes[0, 0].set_ylabel("y")
         plt.colorbar(im0, ax=axes[0, 0])
 
         # Pressure
-        im1 = axes[0, 1].imshow(pressure_2d, origin='lower', extent=extent,
-                                aspect='auto', cmap='plasma')
-        axes[0, 1].set_title(f'Pressure (Frame {frame})')
-        axes[0, 1].set_xlabel('x')
-        axes[0, 1].set_ylabel('y')
+        im1 = axes[0, 1].imshow(pressure_2d, origin="lower", extent=extent, aspect="auto", cmap="plasma")
+        axes[0, 1].set_title(f"Pressure (Frame {frame})")
+        axes[0, 1].set_xlabel("x")
+        axes[0, 1].set_ylabel("y")
         plt.colorbar(im1, ax=axes[0, 1])
 
         # Velocity X
-        im2 = axes[1, 0].imshow(vx_2d, origin='lower', extent=extent,
-                                aspect='auto', cmap='RdBu_r')
-        axes[1, 0].set_title(f'Velocity X (Frame {frame})')
-        axes[1, 0].set_xlabel('x')
-        axes[1, 0].set_ylabel('y')
+        im2 = axes[1, 0].imshow(vx_2d, origin="lower", extent=extent, aspect="auto", cmap="RdBu_r")
+        axes[1, 0].set_title(f"Velocity X (Frame {frame})")
+        axes[1, 0].set_xlabel("x")
+        axes[1, 0].set_ylabel("y")
         plt.colorbar(im2, ax=axes[1, 0])
 
         # Velocity Y
-        im3 = axes[1, 1].imshow(vy_2d, origin='lower', extent=extent,
-                                aspect='auto', cmap='RdBu_r')
-        axes[1, 1].set_title(f'Velocity Y (Frame {frame})')
-        axes[1, 1].set_xlabel('x')
-        axes[1, 0].set_ylabel('y')
+        im3 = axes[1, 1].imshow(vy_2d, origin="lower", extent=extent, aspect="auto", cmap="RdBu_r")
+        axes[1, 1].set_title(f"Velocity Y (Frame {frame})")
+        axes[1, 1].set_xlabel("x")
+        axes[1, 0].set_ylabel("y")
         plt.colorbar(im3, ax=axes[1, 1])
 
         plt.tight_layout()
 
         # Save plot
         plot_file = plots_dir / f"frame_{frame:03d}.png"
-        plt.savefig(plot_file, dpi=150, bbox_inches='tight')
+        plt.savefig(plot_file, dpi=150, bbox_inches="tight")
         plt.close()
 
     print(f"  Generated {end_frame - start_frame + 1} visualization plots in {plots_dir}")
-
 
 
 @hydra.main(version_base=None, config_path="../run_configs/euler_2d", config_name="p1")
@@ -164,8 +160,13 @@ def main(cfg):
 
     # Construct output directory path with all tunable parameters
     repo_root = Path(__file__).parent.parent
-    profile_name = cfg.dump_dir.replace('sim_res/euler_2d/', '')
-    output_dir = repo_root / "sim_res" / "euler_2d" / f"{profile_name}_cfl_{cfg.cfl:.3f}_cgtol_{cfg.cg_tolerance:.1e}_nx_{cfg.n_grid_x}"
+    profile_name = cfg.dump_dir.replace("sim_res/euler_2d/", "")
+    output_dir = (
+        repo_root
+        / "sim_res"
+        / "euler_2d"
+        / f"{profile_name}_cfl_{cfg.cfl:.3f}_cgtol_{cfg.cg_tolerance:.1e}_nx_{cfg.n_grid_x}"
+    )
 
     # Ensure parent directory exists
     output_dir.parent.mkdir(parents=True, exist_ok=True)
@@ -189,12 +190,7 @@ def main(cfg):
 
     try:
         result = subprocess.run(
-            cmd,
-            shell=True,
-            cwd=csmpm_bow_root,
-            check=True,
-            capture_output=not cfg.verbose,
-            text=True
+            cmd, shell=True, cwd=csmpm_bow_root, check=True, capture_output=not cfg.verbose, text=True
         )
 
         if cfg.verbose and result.stdout:

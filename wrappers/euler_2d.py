@@ -5,10 +5,11 @@ import json
 from scipy.interpolate import RegularGridInterpolator
 import meshio
 
+
 def _compute_nrmse_maxabs(field_low, field_high, eps=1e-12):
     # Compute RMSE
     diff = field_low - field_high
-    rmse = np.sqrt(np.mean(diff ** 2))
+    rmse = np.sqrt(np.mean(diff**2))
 
     # Normalize by max absolute value of high-res field
     max_abs_high = np.max(np.abs(field_high)) + eps  # Add eps to avoid division by zero
@@ -23,27 +24,22 @@ def _find_runner_path():
     possible_paths = []
 
     # If working from project root
-    if cwd.endswith('SimulCost-Bench') or cwd.endswith('costsci-tools'):
-        possible_paths.extend([
-            "runners/euler_2d.py",
-            "costsci_tools/runners/euler_2d.py"
-        ])
+    if cwd.endswith("SimulCost-Bench") or cwd.endswith("costsci-tools"):
+        possible_paths.extend(["runners/euler_2d.py", "costsci_tools/runners/euler_2d.py"])
     # If working from costsci_tools/ subdirectory
-    elif 'costsci_tools' in cwd:
-        possible_paths.extend([
-            "runners/euler_2d.py",
-            "../runners/euler_2d.py",
-            "costsci_tools/runners/euler_2d.py"
-        ])
+    elif "costsci_tools" in cwd:
+        possible_paths.extend(["runners/euler_2d.py", "../runners/euler_2d.py", "costsci_tools/runners/euler_2d.py"])
 
     # Add generic fallback paths
-    possible_paths.extend([
-        "runners/euler_2d.py",
-        "costsci_tools/runners/euler_2d.py",
-        "./runners/euler_2d.py",
-        "../runners/euler_2d.py",
-        "../../runners/euler_2d.py"
-    ])
+    possible_paths.extend(
+        [
+            "runners/euler_2d.py",
+            "costsci_tools/runners/euler_2d.py",
+            "./runners/euler_2d.py",
+            "../runners/euler_2d.py",
+            "../../runners/euler_2d.py",
+        ]
+    )
 
     # Remove duplicates while preserving order
     seen = set()
@@ -83,22 +79,23 @@ def _read_vtk_structured(vtk_path, nx, ny):
     """
     mesh = meshio.read(vtk_path)
     data = {}
-    
+
     ghost_layer = 2
     nx_pts = nx + 2 * ghost_layer
     ny_pts = ny + 2 * ghost_layer
 
     if mesh.point_data:
         for field_name, field_values_raw in mesh.point_data.items():
-            
+
             # --- Helper to extract interior 2D field ---
             def extract(raw_flat_field):
                 # Reshape to 2D (y-major, x-fastest)
                 field_2d = raw_flat_field.reshape((ny_pts, nx_pts))
                 # Extract interior [ghost_layer:-ghost_layer]
-                interior_2d = field_2d[ghost_layer:ghost_layer+ny, ghost_layer:ghost_layer+nx]
+                interior_2d = field_2d[ghost_layer : ghost_layer + ny, ghost_layer : ghost_layer + nx]
                 # --- MODIFIED: Return 2D array ---
                 return interior_2d
+
             # ------------------------------------------------
 
             # Handle different shapes
@@ -117,6 +114,7 @@ def _read_vtk_structured(vtk_path, nx, ny):
 
     return data
 
+
 def get_res_euler_2d(profile, n_grid_x, cfl, cg_tolerance):
     """
     Load all time frames for a given parameter set, triggering a simulation
@@ -133,10 +131,10 @@ def get_res_euler_2d(profile, n_grid_x, cfl, cg_tolerance):
     dir_path = f"sim_res/euler_2d/{profile}_cfl_{cfl_str}_cgtol_{cgtol_str}_nx_{n_grid_x}/"
     meta_path = os.path.join(dir_path, "meta.json")
     vtk_dir = os.path.join(dir_path, "vtk")
-    
+
     # --- 2. Check for valid cache or run simulation ---
     if not os.path.exists(meta_path):
-        print(f"No meta.json. Running new simulation: n_grid_x={n_grid_x}, cfl={cfl}, cg_tolerance={cg_tolerance}") 
+        print(f"No meta.json. Running new simulation: n_grid_x={n_grid_x}, cfl={cfl}, cg_tolerance={cg_tolerance}")
         runner_path = _find_runner_path()
         cmd = f"python {runner_path} --config-name={profile} n_grid_x={n_grid_x} cfl={cfl} cg_tolerance={cg_tolerance}"
         subprocess.run(cmd, shell=True, check=True)
@@ -145,7 +143,9 @@ def get_res_euler_2d(profile, n_grid_x, cfl, cg_tolerance):
         with open(meta_path, "r") as f:
             meta = json.load(f)
             if "cost" not in meta:
-                print(f"Invalid meta.json. Running new simulation: n_grid_x={n_grid_x}, cfl={cfl}, cg_tolerance={cg_tolerance}") 
+                print(
+                    f"Invalid meta.json. Running new simulation: n_grid_x={n_grid_x}, cfl={cfl}, cg_tolerance={cg_tolerance}"
+                )
                 runner_path = _find_runner_path()
                 cmd = f"python {runner_path} --config-name={profile} n_grid_x={n_grid_x} cfl={cfl} cg_tolerance={cg_tolerance}"
                 subprocess.run(cmd, shell=True, check=True)
@@ -158,15 +158,15 @@ def get_res_euler_2d(profile, n_grid_x, cfl, cg_tolerance):
         cost = meta["cost"]
         nx = meta["parameters"]["n_grid_x"]
         ny = meta["parameters"]["n_grid_y"]
-    
+
     results = {}
     files = [f for f in os.listdir(vtk_dir) if f.startswith("gas_frame_") and f.endswith(".vtk")]
     files.sort(key=lambda x: int(x.split("_")[2].split(".")[0]))
-    
+
     for file_name in files:
         file_path = os.path.join(vtk_dir, file_name)
         frame_number = int(file_name.split("_")[2].split(".")[0])
-        
+
         # Pass nx, ny to reader, which returns INTERIOR-ONLY 2D data
         data = _read_vtk_structured(file_path, nx, ny)
         results[frame_number] = data
@@ -175,9 +175,7 @@ def get_res_euler_2d(profile, n_grid_x, cfl, cg_tolerance):
     return results, cost
 
 
-def _interpolate_field_2d_interior(
-    field_src_2d, nx_src, ny_src, nx_tgt, ny_tgt
-):
+def _interpolate_field_2d_interior(field_src_2d, nx_src, ny_src, nx_tgt, ny_tgt):
     """
     Interpolates a 2D field from source grid to target grid.
 
@@ -208,9 +206,9 @@ def _interpolate_field_2d_interior(
     interp = RegularGridInterpolator(
         (y_src, x_src),
         field_src_2d,
-        method='linear',
+        method="linear",
         bounds_error=False,
-        fill_value=None  # Use extrapolation at boundaries
+        fill_value=None,  # Use extrapolation at boundaries
     )
 
     # Create coordinates for target grid (interior cell centers)
@@ -220,7 +218,7 @@ def _interpolate_field_2d_interior(
     y_tgt = np.array([(j + 0.5) * dy_tgt for j in range(ny_tgt)])
 
     # Create meshgrid for target points (indexing='ij' gives (ny, nx) shape)
-    yy_tgt, xx_tgt = np.meshgrid(y_tgt, x_tgt, indexing='ij')
+    yy_tgt, xx_tgt = np.meshgrid(y_tgt, x_tgt, indexing="ij")
 
     # Interpolate
     points = np.stack([yy_tgt.ravel(), xx_tgt.ravel()], axis=-1)
@@ -231,11 +229,7 @@ def _interpolate_field_2d_interior(
 
 
 def compare_res_euler_2d(
-    profile1, n_grid_x1_in,
-    profile2, n_grid_x2_in,
-    rmse_tolerance,
-    cfl1, cg_tolerance1,
-    cfl2, cg_tolerance2
+    profile1, n_grid_x1_in, profile2, n_grid_x2_in, rmse_tolerance, cfl1, cg_tolerance1, cfl2, cg_tolerance2
 ):
     """Compare two sets of results using relative error norms and physical metrics.
 
@@ -263,17 +257,17 @@ def compare_res_euler_2d(
         raise ValueError("No frames found in simulation results")
 
     # Compare density and pressure fields at final frame
-    common_frames = sorted(list(frames1)) # Use sorted list from set
+    common_frames = sorted(list(frames1))  # Use sorted list from set
     final_frame = common_frames[-1]
     data1 = res1[final_frame]
     data2 = res2[final_frame]
 
     # --- MODIFIED: Data is already 2D interior-only ---
-    density1_interior = data1['density']
-    density2_interior = data2['density']
-    pressure1_interior = data1['pressure']
-    pressure2_interior = data2['pressure']
-    
+    density1_interior = data1["density"]
+    density2_interior = data2["density"]
+    pressure1_interior = data1["pressure"]
+    pressure2_interior = data2["pressure"]
+
     # --- MODIFIED: Infer nx, ny from shape ---
     # Shape is (ny, nx) due to (y_src, x_src) interpolation order
     ny1, nx1 = density1_interior.shape
@@ -292,14 +286,10 @@ def compare_res_euler_2d(
         if (nx1 * ny1) < (nx2 * ny2):
             # data1 is coarser, interpolate to data2's finer grid
             print(f"Interpolating coarse grid ({nx1}x{ny1}) to fine grid ({nx2}x{ny2})")
-            
+
             # --- MODIFIED: Pass 2D fields directly ---
-            density1_interp = _interpolate_field_2d_interior(
-                density1_interior, nx1, ny1, nx2, ny2
-            )
-            pressure1_interp = _interpolate_field_2d_interior(
-                pressure1_interior, nx1, ny1, nx2, ny2
-            )
+            density1_interp = _interpolate_field_2d_interior(density1_interior, nx1, ny1, nx2, ny2)
+            pressure1_interp = _interpolate_field_2d_interior(pressure1_interior, nx1, ny1, nx2, ny2)
 
             # Use NRMSE: data2 is finer (higher res), use it for normalization
             density_nrmse = _compute_nrmse_maxabs(density1_interp, density2_interior)
@@ -307,14 +297,10 @@ def compare_res_euler_2d(
         else:
             # data2 is coarser, interpolate to data1's finer grid
             print(f"Interpolating coarse grid ({nx2}x{ny2}) to fine grid ({nx1}x{ny1})")
-            
+
             # --- MODIFIED: Pass 2D fields directly ---
-            density2_interp = _interpolate_field_2d_interior(
-                density2_interior, nx2, ny2, nx1, ny1
-            )
-            pressure2_interp = _interpolate_field_2d_interior(
-                pressure2_interior, nx2, ny2, nx1, ny1
-            )
+            density2_interp = _interpolate_field_2d_interior(density2_interior, nx2, ny2, nx1, ny1)
+            pressure2_interp = _interpolate_field_2d_interior(pressure2_interior, nx2, ny2, nx1, ny1)
 
             # Use NRMSE: data1 is finer (higher res), use it for normalization
             density_nrmse = _compute_nrmse_maxabs(density2_interp, density1_interior)
@@ -324,22 +310,14 @@ def compare_res_euler_2d(
     rmse = (density_nrmse + pressure_nrmse) / 2.0
 
     # Convergence criteria
-    converged = (
-        rmse < rmse_tolerance
-    )
+    converged = rmse < rmse_tolerance
 
     print(f"RMSE (relative): {rmse}")
 
     return converged, rmse
 
 
-if __name__=="__main__":
-    ps= ["p1","p2","p3","p4","p5"]
+if __name__ == "__main__":
+    ps = ["p1", "p2", "p3", "p4", "p5"]
     for p in ps:
-        print(compare_res_euler_2d(
-            p, 32,
-            p, 64,
-            0.01,
-            0.25, 1e-6,
-            0.25, 1e-6)
-        )
+        print(compare_res_euler_2d(p, 32, p, 64, 0.01, 0.25, 1e-6, 0.25, 1e-6))

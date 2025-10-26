@@ -9,6 +9,7 @@ from collections import defaultdict
 
 # Add paths for imports
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+# TODO import is out of date now
 from dummy_sols.euler_2d import find_convergent_n_grid_x, find_convergent_cfl, grid_search_cg_tolerance
 from checkouts.config_utils import load_config, build_target_configs
 
@@ -152,7 +153,9 @@ def plot_statistics(statistics, output_dir):
 
         f.write("5. Optimal Parameter Frequencies (All Tasks):\n")
         if statistics["optimal_n_grid_x_values"]:
-            n_grid_x_values, n_grid_x_counts = np.unique(list(statistics["optimal_n_grid_x_values"]), return_counts=True)
+            n_grid_x_values, n_grid_x_counts = np.unique(
+                list(statistics["optimal_n_grid_x_values"]), return_counts=True
+            )
             f.write("   n_grid_x parameter (iterative):\n")
             for n_grid_x, count in zip(n_grid_x_values, n_grid_x_counts):
                 f.write(f"     n_grid_x={n_grid_x}: {count} times\n")
@@ -164,7 +167,9 @@ def plot_statistics(statistics, output_dir):
                 f.write(f"     cfl={cfl:.3f}: {count} times\n")
 
         if statistics["optimal_cg_tolerance_values"]:
-            cg_tol_values, cg_tol_counts = np.unique(list(statistics["optimal_cg_tolerance_values"]), return_counts=True)
+            cg_tol_values, cg_tol_counts = np.unique(
+                list(statistics["optimal_cg_tolerance_values"]), return_counts=True
+            )
             f.write("   cg_tolerance parameter (0-shot):\n")
             for cg_tol, count in zip(cg_tol_values, cg_tol_counts):
                 f.write(f"     cg_tolerance={cg_tol:.0e}: {count} times\n")
@@ -181,26 +186,34 @@ def save_datasets(successful_tasks, failed_tasks, output_dir):
     # Save successful tasks
     success_file = os.path.join(success_dir, "tasks.json")
     with open(success_file, "w") as f:
-        json.dump({
-            "metadata": {
-                "solver": "euler_2d",
-                "description": "Successfully converged parameter optimization tasks",
-                "total_tasks": len(successful_tasks)
+        json.dump(
+            {
+                "metadata": {
+                    "solver": "euler_2d",
+                    "description": "Successfully converged parameter optimization tasks",
+                    "total_tasks": len(successful_tasks),
+                },
+                "tasks": successful_tasks,
             },
-            "tasks": successful_tasks
-        }, f, indent=2)
+            f,
+            indent=2,
+        )
 
     # Save failed tasks
     failed_file = os.path.join(failed_dir, "tasks.json")
     with open(failed_file, "w") as f:
-        json.dump({
-            "metadata": {
-                "solver": "euler_2d",
-                "description": "Failed to converge parameter optimization tasks",
-                "total_tasks": len(failed_tasks)
+        json.dump(
+            {
+                "metadata": {
+                    "solver": "euler_2d",
+                    "description": "Failed to converge parameter optimization tasks",
+                    "total_tasks": len(failed_tasks),
+                },
+                "tasks": failed_tasks,
             },
-            "tasks": failed_tasks
-        }, f, indent=2)
+            f,
+            indent=2,
+        )
 
     print(f"✅ Saved {len(successful_tasks)} successful tasks to {success_file}")
     print(f"❌ Saved {len(failed_tasks)} failed tasks to {failed_file}")
@@ -257,7 +270,7 @@ def run_checkout(config_path, output_dir="dataset", profiles_to_test=None):
                         "tolerance_rmse": config["precision_levels"][precision_level]["tolerance_rmse"],
                         "target_parameter": target_param,
                         "non_target_params_combo": task_non_target_params,  # Store the specific combination
-                        **param_config  # Unpack search parameters (will be overridden by specific combo below)
+                        **param_config,  # Unpack search parameters (will be overridden by specific combo below)
                     }
                     all_tasks.append(task)
 
@@ -294,10 +307,12 @@ def run_checkout(config_path, output_dir="dataset", profiles_to_test=None):
         # Extract testcase and end_frame from profile config
         # Load the profile config to get the correct end_frame
         import yaml
+
         profile_config_path = f"run_configs/euler_2d/{profile}.yaml"
         with open(profile_config_path, "r") as f:
             profile_config = yaml.safe_load(f)
 
+        # TODO obselete now;
         testcase = profile_config["testcase"]
         end_frame = profile_config["end_frame"]
 
@@ -321,6 +336,7 @@ def run_checkout(config_path, output_dir="dataset", profiles_to_test=None):
             non_target_params = task_config.get("non_target_params_combo", {})
 
             # Run search based on target parameter
+            # TODO all below func interfaces are now out of date
             if target_param == "n_grid_x":
                 is_converged, best_n_grid_x, cost_history, param_history = find_convergent_n_grid_x(
                     profile=profile,
@@ -332,7 +348,7 @@ def run_checkout(config_path, output_dir="dataset", profiles_to_test=None):
                     end_frame=end_frame,
                     tolerance_rmse=tolerance_rmse,
                     multiplication_factor=task_config["multiplication_factor"],
-                    max_iteration_num=task_config["max_iteration_num"]
+                    max_iteration_num=task_config["max_iteration_num"],
                 )
                 optimal_params = {"n_grid_x": best_n_grid_x}
 
@@ -347,7 +363,7 @@ def run_checkout(config_path, output_dir="dataset", profiles_to_test=None):
                     end_frame=end_frame,
                     tolerance_rmse=tolerance_rmse,
                     division_factor=task_config.get("division_factor", 2.0),
-                    max_iteration_num=task_config["max_iteration_num"]
+                    max_iteration_num=task_config["max_iteration_num"],
                 )
                 optimal_params = {"cfl": best_cfl}
 
@@ -406,7 +422,7 @@ def run_checkout(config_path, output_dir="dataset", profiles_to_test=None):
                 "cost_history": cost_history,
                 "total_cost": total_cost,
                 "execution_time_seconds": task_elapsed,
-                "parameter_history": param_history
+                "parameter_history": param_history,
             }
 
             if is_converged:
@@ -420,17 +436,19 @@ def run_checkout(config_path, output_dir="dataset", profiles_to_test=None):
             print(f"❌ Task failed with exception: {e}")
             task_elapsed = time.time() - task_start_time
 
-            failed_tasks.append({
-                "task_id": f"{profile}_{precision}_{target_param}",
-                "profile": profile,
-                "testcase": testcase,
-                "precision_level": precision,
-                "tolerance_rmse": tolerance_rmse,
-                "target_parameter": target_param,
-                "is_converged": False,
-                "error": str(e),
-                "execution_time_seconds": task_elapsed
-            })
+            failed_tasks.append(
+                {
+                    "task_id": f"{profile}_{precision}_{target_param}",
+                    "profile": profile,
+                    "testcase": testcase,
+                    "precision_level": precision,
+                    "tolerance_rmse": tolerance_rmse,
+                    "target_parameter": target_param,
+                    "is_converged": False,
+                    "error": str(e),
+                    "execution_time_seconds": task_elapsed,
+                }
+            )
 
     # Calculate final statistics
     total_elapsed = time.time() - start_time_total
@@ -459,40 +477,16 @@ def run_checkout(config_path, output_dir="dataset", profiles_to_test=None):
     if len(successful_tasks) > 0:
         print(f"\n📈 Successful Task Examples:")
         for i, task in enumerate(successful_tasks[:3]):  # Show first 3 successful tasks
-            print(f"   {i+1}. {task['profile']} profile, {task['target_parameter']} optimization -> {task['optimal_parameters']}")
+            print(
+                f"   {i+1}. {task['profile']} profile, {task['target_parameter']} optimization -> {task['optimal_parameters']}"
+            )
 
     if len(failed_tasks) > 0:
         print(f"\n📉 Failed Task Examples:")
         for i, task in enumerate(failed_tasks[:3]):  # Show first 3 failed tasks
-            print(f"   {i+1}. {task['profile']} profile, {task['target_parameter']} optimization (cost: {task.get('total_cost', 'N/A')})")
+            print(
+                f"   {i+1}. {task['profile']} profile, {task['target_parameter']} optimization (cost: {task.get('total_cost', 'N/A')})"
+            )
 
     return successful_tasks, failed_tasks, statistics
 
-
-if __name__ == "__main__":
-    import argparse
-
-    parser = argparse.ArgumentParser(description="Run Euler 2D solver checkout")
-    parser.add_argument(
-        "--config",
-        type=str,
-        default="checkouts/euler_2d.yaml",
-        help="Path to configuration file"
-    )
-    parser.add_argument(
-        "--output",
-        type=str,
-        default="dataset",
-        help="Output directory for results"
-    )
-    parser.add_argument(
-        "--profiles",
-        type=str,
-        nargs="+",
-        default=None,
-        help="Profiles to test (e.g., p1 p2). If not specified, tests all active profiles in config."
-    )
-
-    args = parser.parse_args()
-
-    run_checkout(args.config, args.output, args.profiles)

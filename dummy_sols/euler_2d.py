@@ -3,26 +3,15 @@ import numpy as np
 import sys
 import os
 
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
-# Import only what we need to avoid circular dependencies
-import subprocess
-import json
-from pathlib import Path
-
-
-# Import wrapper functions directly to avoid duplication
-from wrappers.euler_2d import run_sim_euler_2d, compare_res_euler_2d
+# Import wrapper functions directly
+from wrappers.euler_2d import get_res_euler_2d, compare_res_euler_2d
 
 
 def find_convergent_n_grid_x(
     profile,
-    testcase,
     n_grid_x,
     cfl,
     cg_tolerance,
-    start_frame,
-    end_frame,
     tolerance_rmse,
     multiplication_factor,
     max_iteration_num,
@@ -31,14 +20,11 @@ def find_convergent_n_grid_x(
 
     Args:
         profile: Profile identifier (e.g., 'p1', 'p2', 'p3', 'p4')
-        testcase: Test case number (0-3)
         n_grid_x: Initial grid resolution in x-direction
         cfl: CFL number for timestep stability
         cg_tolerance: CG solver convergence tolerance
-        start_frame: Starting frame
-        end_frame: Ending frame
         tolerance_rmse: RMSE tolerance for convergence
-        multiplication_factor: Factor to multiply n_grid_x by each iteration
+        multiplication_factor: Factor to multiply n_grid_x by each iteration (e.g., 2.0)
         max_iteration_num: Maximum number of iterations
 
     Returns:
@@ -56,12 +42,9 @@ def find_convergent_n_grid_x(
         print(f"\nIteration {i+1}: Running simulation with n_grid_x = {n_grid_x}")
 
         # Run simulation
-        cost_i = run_sim_euler_2d(
+        _, cost_i = get_res_euler_2d(
             profile,
-            testcase,
             n_grid_x,
-            start_frame=start_frame,
-            end_frame=end_frame,
             cfl=cfl,
             cg_tolerance=cg_tolerance,
         )
@@ -72,7 +55,6 @@ def find_convergent_n_grid_x(
                 "n_grid_x": n_grid_x,
                 "cfl": cfl,
                 "cg_tolerance": cg_tolerance,
-                "testcase": testcase,
             }
         )
 
@@ -82,14 +64,10 @@ def find_convergent_n_grid_x(
 
             is_converged, rmse = compare_res_euler_2d(
                 profile,
-                testcase,
                 prev_n_grid_x,
                 profile,
-                testcase,
                 n_grid_x,
                 tolerance_rmse,
-                start_frame=start_frame,
-                end_frame=end_frame,
                 cfl1=cfl,
                 cg_tolerance1=cg_tolerance,
                 cfl2=cfl,
@@ -98,7 +76,7 @@ def find_convergent_n_grid_x(
 
             if is_converged:
                 print(f"Convergence achieved between n_grid_x {prev_n_grid_x} and {n_grid_x}")
-                best_n_grid_x = param_history[-1]["n_grid_x"]  # The finer of the two resolutions that converged
+                best_n_grid_x = param_history[-1]["n_grid_x"]  # The finer of the two resolutions
                 converged = True
                 break
             else:
@@ -115,28 +93,22 @@ def find_convergent_n_grid_x(
 
 def find_convergent_cfl(
     profile,
-    testcase,
     n_grid_x,
     cfl,
     cg_tolerance,
-    start_frame,
-    end_frame,
     tolerance_rmse,
-    division_factor,
+    multiplication_factor,
     max_iteration_num,
 ):
     """Iteratively decrease cfl until convergence is achieved.
 
     Args:
         profile: Profile identifier (e.g., 'p1', 'p2', 'p3', 'p4')
-        testcase: Test case number (0-3)
         n_grid_x: Grid resolution in x-direction (fixed)
         cfl: Initial CFL number
         cg_tolerance: CG solver convergence tolerance (fixed)
-        start_frame: Starting frame
-        end_frame: Ending frame
         tolerance_rmse: RMSE tolerance for convergence
-        division_factor: Factor to divide cfl by each iteration
+        multiplication_factor: Factor to multiply cfl by each iteration (e.g., 0.5)
         max_iteration_num: Maximum number of iterations
 
     Returns:
@@ -154,12 +126,9 @@ def find_convergent_cfl(
         print(f"\nIteration {i+1}: Running simulation with cfl = {cfl}")
 
         # Run simulation
-        cost_i = run_sim_euler_2d(
+        _, cost_i = get_res_euler_2d(
             profile,
-            testcase,
             n_grid_x,
-            start_frame=start_frame,
-            end_frame=end_frame,
             cfl=cfl,
             cg_tolerance=cg_tolerance,
         )
@@ -170,7 +139,6 @@ def find_convergent_cfl(
                 "n_grid_x": n_grid_x,
                 "cfl": cfl,
                 "cg_tolerance": cg_tolerance,
-                "testcase": testcase,
             }
         )
 
@@ -180,14 +148,10 @@ def find_convergent_cfl(
 
             is_converged, rmse = compare_res_euler_2d(
                 profile,
-                testcase,
                 n_grid_x,
                 profile,
-                testcase,
                 n_grid_x,
                 tolerance_rmse,
-                start_frame=start_frame,
-                end_frame=end_frame,
                 cfl1=prev_cfl,
                 cg_tolerance1=cg_tolerance,
                 cfl2=cfl,
@@ -203,7 +167,7 @@ def find_convergent_cfl(
                 print(f"No convergence between cfl {prev_cfl} and {cfl}, RMSE = {rmse}")
 
         # Reduce CFL for next iteration
-        cfl = cfl / division_factor
+        cfl = cfl * multiplication_factor
 
     if not converged and param_history:
         best_cfl = param_history[-1]["cfl"]
@@ -213,34 +177,27 @@ def find_convergent_cfl(
 
 def find_convergent_cg_tol(
     profile,
-    testcase,
     n_grid_x,
     cfl,
     cg_tolerance,
-    start_frame,
-    end_frame,
     tolerance_rmse,
-    division_factor,
+    multiplication_factor,
     max_iteration_num,
 ):
-    """Grid search over cg_tolerance values, selecting the one with minimum cost that maintains convergence.
-
-    This is a 0-shot only parameter - we don't do iterative refinement, just compare consecutive
-    values from the provided list.
+    """Iteratively decrease cg_tolerance until convergence is achieved.
 
     Args:
         profile: Profile identifier (e.g., 'p1', 'p2', 'p3', 'p4')
-        testcase: Test case number (0-3)
         n_grid_x: Grid resolution in x-direction (fixed)
         cfl: CFL number (fixed)
-        cg_tolerance_values: Initial of cg_tolerance values to try
-        start_frame: Starting frame
-        end_frame: Ending frame
-        tolerance_rmse: RMSE tolerance for convergence check
+        cg_tolerance: Initial CG solver convergence tolerance
+        tolerance_rmse: RMSE tolerance for convergence
+        multiplication_factor: Factor to multiply cg_tolerance by each iteration (e.g., 0.1)
+        max_iteration_num: Maximum number of iterations
 
     Returns:
-        converged: Boolean indicating if any convergence was achieved
-        best_cg_tolerance: The cg_tolerance with minimum cost among converged results
+        converged: Boolean indicating if convergence was achieved
+        best_cg_tolerance: The cg_tolerance that achieved convergence
         cost_history: List of costs for each cg_tolerance tried
         param_history: List of parameter dictionaries for each iteration
     """
@@ -249,16 +206,13 @@ def find_convergent_cg_tol(
     converged = False
     best_cg_tolerance = None
 
-    for cg_tolerance in cg_tolerance_values:
-        print(f"\nRunning simulation with cg_tolerance = {cg_tolerance}")
+    for i in range(max_iteration_num):
+        print(f"\nIteration {i+1}: Running simulation with cg_tolerance = {cg_tolerance}")
 
         # Run simulation
-        cost_i = run_sim_euler_2d(
+        _, cost_i = get_res_euler_2d(
             profile,
-            testcase,
             n_grid_x,
-            start_frame=start_frame,
-            end_frame=end_frame,
             cfl=cfl,
             cg_tolerance=cg_tolerance,
         )
@@ -269,7 +223,6 @@ def find_convergent_cg_tol(
                 "n_grid_x": n_grid_x,
                 "cfl": cfl,
                 "cg_tolerance": cg_tolerance,
-                "testcase": testcase,
             }
         )
 
@@ -279,14 +232,10 @@ def find_convergent_cg_tol(
 
             is_converged, rmse = compare_res_euler_2d(
                 profile,
-                testcase,
                 n_grid_x,
                 profile,
-                testcase,
                 n_grid_x,
                 tolerance_rmse,
-                start_frame=start_frame,
-                end_frame=end_frame,
                 cfl1=cfl,
                 cg_tolerance1=prev_cg_tolerance,
                 cfl2=cfl,
@@ -301,7 +250,18 @@ def find_convergent_cg_tol(
             else:
                 print(f"No convergence between cg_tolerance {prev_cg_tolerance} and {cg_tolerance}, RMSE = {rmse}")
 
+        # Reduce CG tolerance for next iteration
+        cg_tolerance = cg_tolerance * multiplication_factor
+
     if not converged and param_history:
         best_cg_tolerance = param_history[-1]["cg_tolerance"]
 
     return bool(converged), best_cg_tolerance, cost_history, param_history
+
+
+if __name__ == "__main__":
+    ps = ["p1", "p2", "p3", "p4", "p5"]
+    for p in ps:
+        print(find_convergent_n_grid_x(p, 32, 0.25, 1e-6, 0.01, 2, 4))
+        print(find_convergent_cfl(p, 128, 1.0, 1e-6, 0.01, 0.5, 5))
+        print(find_convergent_cg_tol(p, 128, 0.25, 1e-2, 0.01, 0.1, 5))

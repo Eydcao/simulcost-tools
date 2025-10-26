@@ -114,12 +114,10 @@ if __name__ == "__main__":
         # Original: 50 frames * (1/360 s/frame) = 0.139s ≈ 0.14s
         # New: 20 frames * 0.007 s/frame = 0.14s
         {"testcase": 1, "end_frame": 20, "record_dt": 0.007, "n_grid_x": 64, "cfl": 0.5, "cg_tolerance": 1.0e-7},
-
         # p3: cylinder_gravity test case
         # Original: 100 frames * (1/360 s/frame) = 0.278s ≈ 0.3s
         # New: 20 frames * 0.015 s/frame = 0.3s
         {"testcase": 2, "end_frame": 20, "record_dt": 0.015, "n_grid_x": 64, "cfl": 0.5, "cg_tolerance": 1.0e-7},
-
         # p4: mach_diamond test case
         # Original: 120 frames * (1/180 s/frame) = 0.667s ≈ 0.7s
         # New: 20 frames * 0.035 s/frame = 0.7s
