@@ -80,7 +80,7 @@ The simulated results are considered correct if the L2 RMSE meets the precision-
 2. **dt Time Step Size (iterative+0-shot)**
    - dt is the time step for RK4 integration
 
-3. **cg_atol (0-shot)**
+3. **cg_atol (iterative+0-shot)**
    - The absolute residual threshold for the CG solver
 
 ### Dummy Strategy
@@ -93,8 +93,9 @@ The simulated results are considered correct if the L2 RMSE meets the precision-
    - For dummy solution, this means halving dt each iteration (multiplication factor: 0.5) starting from 40.0 until convergence
    - **Non-target parameters**: N∈{32, 64, 128, 256}, cg_atol∈{1e0, 1e-1, 1e-2, 1e-3, 1e-4}
 
-3. **cg_atol Optimization (0-shot)**
-   - For dummy solution, grid search the cg_atol that achieves convergence with minimum computational cost
+3. **cg_atol Optimization (iterative+0-shot)**
+   - For dummy solution, iteratively search from coarse (relaxed) to fine (strict) tolerance, stopping at the first convergent solution
+   - Search follows a logarithmic progression through predefined cg_atol values until convergence is achieved
    - **Non-target parameters**: N∈{32, 64, 128, 256}, dt∈{5.0, 10.0, 20.0, 40.0}
 
 ## Summarized parameter table for developer only (Not LLM)
@@ -148,7 +149,7 @@ Current configuration generates:
 
 - **N** (iterative+0-shot): 4 profiles × 20 non-target combos = 80 tasks
 - **dt** (iterative+0-shot): 4 profiles × 20 non-target combos = 80 tasks
-- **cg_atol** (0-shot): 4 profiles × 16 non-target combos = 64 tasks
+- **cg_atol** (iterative+0-shot): 4 profiles × 16 non-target combos = 64 tasks
 - **Total per precision**: 224 tasks
 - **Total tasks**: 672 tasks (across 3 precision levels)
 

@@ -24,26 +24,34 @@ def save_datasets(successful_tasks, failed_tasks, output_dir):
     # Save successful tasks (overwrite existing file)
     success_file = os.path.join(success_dir, "tasks.json")
     with open(success_file, "w") as f:
-        json.dump({
-            "metadata": {
-                "solver": "hasegawa_mima_linear",
-                "description": "Successfully converged parameter optimization tasks",
-                "total_tasks": len(successful_tasks)
+        json.dump(
+            {
+                "metadata": {
+                    "solver": "hasegawa_mima_linear",
+                    "description": "Successfully converged parameter optimization tasks",
+                    "total_tasks": len(successful_tasks),
+                },
+                "tasks": successful_tasks,
             },
-            "tasks": successful_tasks
-        }, f, indent=2)
+            f,
+            indent=2,
+        )
 
     # Save failed tasks (overwrite existing file)
     failed_file = os.path.join(failed_dir, "tasks.json")
     with open(failed_file, "w") as f:
-        json.dump({
-            "metadata": {
-                "solver": "hasegawa_mima_linear",
-                "description": "Failed to converge parameter optimization tasks",
-                "total_tasks": len(failed_tasks)
+        json.dump(
+            {
+                "metadata": {
+                    "solver": "hasegawa_mima_linear",
+                    "description": "Failed to converge parameter optimization tasks",
+                    "total_tasks": len(failed_tasks),
+                },
+                "tasks": failed_tasks,
             },
-            "tasks": failed_tasks
-        }, f, indent=2)
+            f,
+            indent=2,
+        )
 
     print(f"✅ Saved {len(successful_tasks)} successful tasks to {success_file}")
     print(f"❌ Saved {len(failed_tasks)} failed tasks to {failed_file}")
@@ -311,7 +319,7 @@ def main():
                             tolerance_rmse=precision_vals["tolerance_rmse"],
                             search_range_min=target_config["search_range_min"],
                             search_range_max=target_config["search_range_max"],
-                            search_range_slice_num=target_config["search_range_slice_num"]
+                            search_range_slice_num=target_config["search_range_slice_num"],
                         )
                         best_param = optimal_cg_atol
                         if best_param is not None:
@@ -322,16 +330,14 @@ def main():
                         "solver": "hasegawa_mima_linear",
                         "target_parameter": target_param,
                         "profile": profile,
-                        "precision_config": {
-                            "tolerance_rmse": precision_vals["tolerance_rmse"]
-                        },
+                        "precision_config": {"tolerance_rmse": precision_vals["tolerance_rmse"]},
                         "target_config": {
                             "initial_value": target_config["initial_value"],
                             "multiplication_factor": target_config["multiplication_factor"],
                             "max_iteration_num": target_config["max_iteration_num"],
                             "search_range_min": target_config["search_range_min"],
                             "search_range_max": target_config["search_range_max"],
-                            "search_range_slice_num": target_config["search_range_slice_num"]
+                            "search_range_slice_num": target_config["search_range_slice_num"],
                         },
                         "non_target_parameters": task_params.copy(),
                         "results": {
@@ -339,8 +345,8 @@ def main():
                             "optimal_parameter_value": best_param,
                             "total_computational_cost": sum(cost_history) if cost_history else 0,
                             "cost_history": cost_history if cost_history else [],
-                            "parameter_history": param_history if param_history else []
-                        }
+                            "parameter_history": param_history if param_history else [],
+                        },
                     }
 
                     # Add task to appropriate dataset
@@ -387,12 +393,16 @@ def main():
     if len(successful_tasks) > 0:
         print(f"\n📈 Successful Task Examples:")
         for i, task in enumerate(successful_tasks[:3]):  # Show first 3 successful tasks
-            print(f"   {i+1}. {task['profile']} profile, {task['target_parameter']} optimization -> {task['results']['optimal_parameter_value']}")
+            print(
+                f"   {i+1}. {task['profile']} profile, {task['target_parameter']} optimization -> {task['results']['optimal_parameter_value']}"
+            )
 
     if len(failed_tasks) > 0:
         print(f"\n📉 Failed Task Examples:")
         for i, task in enumerate(failed_tasks[:3]):  # Show first 3 failed tasks
-            print(f"   {i+1}. {task['profile']} profile, {task['target_parameter']} optimization (cost: {task['results']['total_computational_cost']})")
+            print(
+                f"   {i+1}. {task['profile']} profile, {task['target_parameter']} optimization (cost: {task['results']['total_computational_cost']})"
+            )
 
     # Expected task calculation for verification
     expected_total = 0

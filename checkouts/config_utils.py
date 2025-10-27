@@ -56,7 +56,7 @@ def build_target_configs(config):
 
     for param_name, param_info in config["target_parameters"].items():
         target_config = {
-            "search_type": param_info["search_type"],
+            # "search_type": param_info["search_type"],
             "initial_value": param_info.get("initial_value"),
             "initial_values": param_info.get("initial_values") if isinstance(param_info.get("initial_values"), dict) else None,
             "non_target_parameters": {},

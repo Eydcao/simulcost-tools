@@ -86,4 +86,6 @@ if __name__ == "__main__":
         {"case": "gauss_x_sin_y"},  # p5 (was p5, now p4 in generated files)
     ]
 
-    profiles = create_hasegawa_profiles(case_configs=case_configs, base_profile_path="./run_configs/hasegawa_mima_linear/p1.yaml")
+    profiles = create_hasegawa_profiles(
+        case_configs=case_configs, base_profile_path="./run_configs/hasegawa_mima_linear/p1.yaml"
+    )
