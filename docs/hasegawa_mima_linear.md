@@ -70,6 +70,33 @@ The case key in the config file sets different initial conditions:
 
 The simulated results are considered correct if the L2 RMSE meets the precision-dependent tolerance (low: 0.01, medium: 0.001, high: 0.0005) compared to the analytical solution.
 
+### Convergence Method
+
+Convergence is verified by comparing numerical solution against the analytical (spectral) solution:
+
+- Run numerical simulation with given parameters (N, dt, cg_atol)
+- Run analytical solution using 2D FFT (exact, serves as reference)
+- Calculate L2 RMSE between numerical and analytical solutions across all frames
+- Converged if RMSE < tolerance threshold
+
+### Cost Calculation
+
+Computational cost for the numerical method is estimated as:
+
+$$\text{Cost} = N_{\text{CG}} \times N^2 + N_{\text{matvec}} \times N^2$$
+
+where:
+- $N_{\text{CG}}$ = total CG iterations across all time steps
+- $N_{\text{matvec}}$ = total sparse matrix-vector multiply operations
+- Each CG iteration and matvec operation costs roughly $O(N^2)$
+
+The cost depends on the tunable parameters:
+- **N** (spatial resolution): affects $N^2$ term
+- **dt** (time step): smaller dt → more time steps → more CG iterations
+- **cg_atol** (CG tolerance): stricter tolerance → more CG iterations per solve
+
+Note: The analytical solution (used only as reference for error checking) is not part of the optimization task.
+
 ## Parameter Tuning Tasks and Dummy Strategy
 
 ### Tasks

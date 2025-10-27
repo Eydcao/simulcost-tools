@@ -2,9 +2,81 @@
   "metadata": {
     "solver": "hasegawa_mima_nonlinear",
     "description": "Failed to converge parameter optimization tasks",
-    "total_tasks": 29
+    "total_tasks": 58
   },
   "tasks": [
+    {
+      "task_id": 8,
+      "solver": "hasegawa_mima_nonlinear",
+      "profile": "p1",
+      "precision_level": "low",
+      "tolerance_rmse": 0.0005,
+      "target_parameter": "dt",
+      "non_target_parameters": {
+        "N": 256
+      },
+      "error": "unsupported format string passed to NoneType.__format__"
+    },
+    {
+      "task_id": 16,
+      "solver": "hasegawa_mima_nonlinear",
+      "profile": "p2",
+      "precision_level": "low",
+      "tolerance_rmse": 0.0005,
+      "target_parameter": "dt",
+      "non_target_parameters": {
+        "N": 256
+      },
+      "error": "unsupported format string passed to NoneType.__format__"
+    },
+    {
+      "task_id": 19,
+      "solver": "hasegawa_mima_nonlinear",
+      "profile": "p3",
+      "precision_level": "low",
+      "tolerance_rmse": 0.0005,
+      "target_parameter": "N",
+      "non_target_parameters": {
+        "dt": 20.0
+      },
+      "error": "unsupported format string passed to NoneType.__format__"
+    },
+    {
+      "task_id": 20,
+      "solver": "hasegawa_mima_nonlinear",
+      "profile": "p3",
+      "precision_level": "low",
+      "tolerance_rmse": 0.0005,
+      "target_parameter": "N",
+      "non_target_parameters": {
+        "dt": 40.0
+      },
+      "error": "unsupported format string passed to NoneType.__format__"
+    },
+    {
+      "task_id": 23,
+      "solver": "hasegawa_mima_nonlinear",
+      "profile": "p3",
+      "precision_level": "low",
+      "tolerance_rmse": 0.0005,
+      "target_parameter": "dt",
+      "non_target_parameters": {
+        "N": 128
+      },
+      "error": "unsupported format string passed to NoneType.__format__"
+    },
+    {
+      "task_id": 24,
+      "solver": "hasegawa_mima_nonlinear",
+      "profile": "p3",
+      "precision_level": "low",
+      "tolerance_rmse": 0.0005,
+      "target_parameter": "dt",
+      "non_target_parameters": {
+        "N": 256
+      },
+      "error": "unsupported format string passed to NoneType.__format__"
+    },
     {
       "task_id": 25,
       "solver": "hasegawa_mima_nonlinear",
@@ -20,11 +92,16 @@
       "non_target_parameters": {
         "dt": 5.0
       },
-      "trajectory": {
-        "parameter_name": "N",
-        "initial_value": 32,
-        "optimal_value": 256,
+      "results": {
         "converged": false,
+        "optimal_parameter_value": 256,
+        "total_computational_cost": 962905065472.0,
+        "cost_history": [
+          7372933120.0,
+          35390078976.0,
+          165153701888.0,
+          754988351488.0
+        ],
         "parameter_history": [
           {
             "N": 32,
@@ -42,24 +119,6 @@
             "N": 256,
             "dt": 5.0
           }
-        ],
-        "cost_history": [
-          7372933120.0,
-          35390078976.0,
-          165153701888.0,
-          754988351488.0
-        ],
-        "error_history": [
-          null,
-          0.003813658672615901,
-          0.0016440335380132917,
-          0.00079728746422924
-        ],
-        "N_history": [
-          32,
-          64,
-          128,
-          256
         ]
       }
     },
@@ -78,11 +137,16 @@
       "non_target_parameters": {
         "dt": 10.0
       },
-      "trajectory": {
-        "parameter_name": "N",
-        "initial_value": 32,
-        "optimal_value": 256,
+      "results": {
         "converged": false,
+        "optimal_parameter_value": 256,
+        "total_computational_cost": 481461225472.0,
+        "cost_history": [
+          3686533120.0,
+          17695358976.0,
+          82578341888.0,
+          377500991488.0
+        ],
         "parameter_history": [
           {
             "N": 32,
@@ -100,24 +164,6 @@
             "N": 256,
             "dt": 10.0
           }
-        ],
-        "cost_history": [
-          3686533120.0,
-          17695358976.0,
-          82578341888.0,
-          377500991488.0
-        ],
-        "error_history": [
-          null,
-          0.0038136392728892743,
-          0.0016415628681592457,
-          0.0008137663102519348
-        ],
-        "N_history": [
-          32,
-          64,
-          128,
-          256
         ]
       }
     },
@@ -128,56 +174,10 @@
       "precision_level": "low",
       "tolerance_rmse": 0.0005,
       "target_parameter": "N",
-      "target_config": {
-        "initial_value": 32,
-        "multiplication_factor": 2,
-        "max_iteration_num": 4
-      },
       "non_target_parameters": {
         "dt": 20.0
       },
-      "trajectory": {
-        "parameter_name": "N",
-        "initial_value": 32,
-        "optimal_value": 256,
-        "converged": false,
-        "parameter_history": [
-          {
-            "N": 32,
-            "dt": 20.0
-          },
-          {
-            "N": 64,
-            "dt": 20.0
-          },
-          {
-            "N": 128,
-            "dt": 20.0
-          },
-          {
-            "N": 256,
-            "dt": 20.0
-          }
-        ],
-        "cost_history": [
-          1843333120.0,
-          8847998976.0,
-          41290661888.0,
-          188757311488.0
-        ],
-        "error_history": [
-          null,
-          0.0038128626965380774,
-          0.0016279633047843385,
-          NaN
-        ],
-        "N_history": [
-          32,
-          64,
-          128,
-          256
-        ]
-      }
+      "error": "unsupported format string passed to NoneType.__format__"
     },
     {
       "task_id": 28,
@@ -186,56 +186,46 @@
       "precision_level": "low",
       "tolerance_rmse": 0.0005,
       "target_parameter": "N",
-      "target_config": {
-        "initial_value": 32,
-        "multiplication_factor": 2,
-        "max_iteration_num": 4
-      },
       "non_target_parameters": {
         "dt": 40.0
       },
-      "trajectory": {
-        "parameter_name": "N",
-        "initial_value": 32,
-        "optimal_value": 256,
-        "converged": false,
-        "parameter_history": [
-          {
-            "N": 32,
-            "dt": 40.0
-          },
-          {
-            "N": 64,
-            "dt": 40.0
-          },
-          {
-            "N": 128,
-            "dt": 40.0
-          },
-          {
-            "N": 256,
-            "dt": 40.0
-          }
-        ],
-        "cost_history": [
-          921733120.0,
-          4424318976.0,
-          20646821888.0,
-          94385471488.0
-        ],
-        "error_history": [
-          null,
-          0.003798897246530612,
-          0.0015048429046471386,
-          NaN
-        ],
-        "N_history": [
-          32,
-          64,
-          128,
-          256
-        ]
-      }
+      "error": "unsupported format string passed to NoneType.__format__"
+    },
+    {
+      "task_id": 32,
+      "solver": "hasegawa_mima_nonlinear",
+      "profile": "p4",
+      "precision_level": "low",
+      "tolerance_rmse": 0.0005,
+      "target_parameter": "dt",
+      "non_target_parameters": {
+        "N": 256
+      },
+      "error": "unsupported format string passed to NoneType.__format__"
+    },
+    {
+      "task_id": 40,
+      "solver": "hasegawa_mima_nonlinear",
+      "profile": "p5",
+      "precision_level": "low",
+      "tolerance_rmse": 0.0005,
+      "target_parameter": "dt",
+      "non_target_parameters": {
+        "N": 256
+      },
+      "error": "unsupported format string passed to NoneType.__format__"
+    },
+    {
+      "task_id": 48,
+      "solver": "hasegawa_mima_nonlinear",
+      "profile": "p1",
+      "precision_level": "medium",
+      "tolerance_rmse": 0.0001,
+      "target_parameter": "dt",
+      "non_target_parameters": {
+        "N": 256
+      },
+      "error": "unsupported format string passed to NoneType.__format__"
     },
     {
       "task_id": 51,
@@ -244,61 +234,39 @@
       "precision_level": "medium",
       "tolerance_rmse": 0.0001,
       "target_parameter": "N",
-      "target_config": {
-        "initial_value": 32,
-        "multiplication_factor": 2,
-        "max_iteration_num": 4
-      },
       "non_target_parameters": {
         "dt": 20.0
       },
-      "trajectory": {
-        "parameter_name": "N",
-        "initial_value": 32,
-        "optimal_value": 256,
-        "converged": false,
-        "parameter_history": [
-          {
-            "N": 32,
-            "dt": 20.0
-          },
-          {
-            "N": 64,
-            "dt": 20.0
-          },
-          {
-            "N": 128,
-            "dt": 20.0
-          },
-          {
-            "N": 256,
-            "dt": 20.0
-          }
-        ],
-        "cost_history": [
-          1843333120.0,
-          8847998976.0,
-          41290661888.0,
-          188757311488.0
-        ],
-        "error_history": [
-          null,
-          0.0006931826809519102,
-          0.00019896364820965842,
-          NaN
-        ],
-        "N_history": [
-          32,
-          64,
-          128,
-          256
-        ]
-      }
+      "error": "unsupported format string passed to NoneType.__format__"
     },
     {
       "task_id": 52,
       "solver": "hasegawa_mima_nonlinear",
       "profile": "p2",
+      "precision_level": "medium",
+      "tolerance_rmse": 0.0001,
+      "target_parameter": "N",
+      "non_target_parameters": {
+        "dt": 40.0
+      },
+      "error": "unsupported format string passed to NoneType.__format__"
+    },
+    {
+      "task_id": 56,
+      "solver": "hasegawa_mima_nonlinear",
+      "profile": "p2",
+      "precision_level": "medium",
+      "tolerance_rmse": 0.0001,
+      "target_parameter": "dt",
+      "non_target_parameters": {
+        "N": 256
+      },
+      "error": "unsupported format string passed to NoneType.__format__"
+    },
+    {
+      "task_id": 57,
+      "solver": "hasegawa_mima_nonlinear",
+      "profile": "p3",
       "precision_level": "medium",
       "tolerance_rmse": 0.0001,
       "target_parameter": "N",
@@ -308,50 +276,130 @@
         "max_iteration_num": 4
       },
       "non_target_parameters": {
-        "dt": 40.0
+        "dt": 5.0
       },
-      "trajectory": {
-        "parameter_name": "N",
-        "initial_value": 32,
-        "optimal_value": 256,
+      "results": {
         "converged": false,
+        "optimal_parameter_value": 256,
+        "total_computational_cost": 962905065472.0,
+        "cost_history": [
+          7372933120.0,
+          35390078976.0,
+          165153701888.0,
+          754988351488.0
+        ],
         "parameter_history": [
           {
             "N": 32,
-            "dt": 40.0
+            "dt": 5.0
           },
           {
             "N": 64,
-            "dt": 40.0
+            "dt": 5.0
           },
           {
             "N": 128,
-            "dt": 40.0
+            "dt": 5.0
           },
           {
             "N": 256,
-            "dt": 40.0
+            "dt": 5.0
           }
-        ],
-        "cost_history": [
-          921733120.0,
-          4424318976.0,
-          20646821888.0,
-          94385471488.0
-        ],
-        "error_history": [
-          null,
-          0.00069262530951535,
-          0.00019832705958581194,
-          NaN
-        ],
-        "N_history": [
-          32,
-          64,
-          128,
-          256
         ]
       }
+    },
+    {
+      "task_id": 58,
+      "solver": "hasegawa_mima_nonlinear",
+      "profile": "p3",
+      "precision_level": "medium",
+      "tolerance_rmse": 0.0001,
+      "target_parameter": "N",
+      "target_config": {
+        "initial_value": 32,
+        "multiplication_factor": 2,
+        "max_iteration_num": 4
+      },
+      "non_target_parameters": {
+        "dt": 10.0
+      },
+      "results": {
+        "converged": false,
+        "optimal_parameter_value": 256,
+        "total_computational_cost": 481461225472.0,
+        "cost_history": [
+          3686533120.0,
+          17695358976.0,
+          82578341888.0,
+          377500991488.0
+        ],
+        "parameter_history": [
+          {
+            "N": 32,
+            "dt": 10.0
+          },
+          {
+            "N": 64,
+            "dt": 10.0
+          },
+          {
+            "N": 128,
+            "dt": 10.0
+          },
+          {
+            "N": 256,
+            "dt": 10.0
+          }
+        ]
+      }
+    },
+    {
+      "task_id": 59,
+      "solver": "hasegawa_mima_nonlinear",
+      "profile": "p3",
+      "precision_level": "medium",
+      "tolerance_rmse": 0.0001,
+      "target_parameter": "N",
+      "non_target_parameters": {
+        "dt": 20.0
+      },
+      "error": "unsupported format string passed to NoneType.__format__"
+    },
+    {
+      "task_id": 60,
+      "solver": "hasegawa_mima_nonlinear",
+      "profile": "p3",
+      "precision_level": "medium",
+      "tolerance_rmse": 0.0001,
+      "target_parameter": "N",
+      "non_target_parameters": {
+        "dt": 40.0
+      },
+      "error": "unsupported format string passed to NoneType.__format__"
+    },
+    {
+      "task_id": 63,
+      "solver": "hasegawa_mima_nonlinear",
+      "profile": "p3",
+      "precision_level": "medium",
+      "tolerance_rmse": 0.0001,
+      "target_parameter": "dt",
+      "non_target_parameters": {
+        "N": 128
+      },
+      "error": "unsupported format string passed to NoneType.__format__"
+    },
+    {
+      "task_id": 64,
+      "solver": "hasegawa_mima_nonlinear",
+      "profile": "p3",
+      "precision_level": "medium",
+      "tolerance_rmse": 0.0001,
+      "target_parameter": "dt",
+      "non_target_parameters": {
+        "N": 256
+      },
+      "error": "unsupported format string passed to NoneType.__format__"
     },
     {
       "task_id": 65,
@@ -368,11 +416,16 @@
       "non_target_parameters": {
         "dt": 5.0
       },
-      "trajectory": {
-        "parameter_name": "N",
-        "initial_value": 32,
-        "optimal_value": 256,
+      "results": {
         "converged": false,
+        "optimal_parameter_value": 256,
+        "total_computational_cost": 962905065472.0,
+        "cost_history": [
+          7372933120.0,
+          35390078976.0,
+          165153701888.0,
+          754988351488.0
+        ],
         "parameter_history": [
           {
             "N": 32,
@@ -390,24 +443,6 @@
             "N": 256,
             "dt": 5.0
           }
-        ],
-        "cost_history": [
-          7372933120.0,
-          35390078976.0,
-          165153701888.0,
-          754988351488.0
-        ],
-        "error_history": [
-          null,
-          0.003813658672615901,
-          0.0016440335380132917,
-          0.00079728746422924
-        ],
-        "N_history": [
-          32,
-          64,
-          128,
-          256
         ]
       }
     },
@@ -426,11 +461,16 @@
       "non_target_parameters": {
         "dt": 10.0
       },
-      "trajectory": {
-        "parameter_name": "N",
-        "initial_value": 32,
-        "optimal_value": 256,
+      "results": {
         "converged": false,
+        "optimal_parameter_value": 256,
+        "total_computational_cost": 481461225472.0,
+        "cost_history": [
+          3686533120.0,
+          17695358976.0,
+          82578341888.0,
+          377500991488.0
+        ],
         "parameter_history": [
           {
             "N": 32,
@@ -448,24 +488,6 @@
             "N": 256,
             "dt": 10.0
           }
-        ],
-        "cost_history": [
-          3686533120.0,
-          17695358976.0,
-          82578341888.0,
-          377500991488.0
-        ],
-        "error_history": [
-          null,
-          0.0038136392728892743,
-          0.0016415628681592457,
-          0.0008137663102519348
-        ],
-        "N_history": [
-          32,
-          64,
-          128,
-          256
         ]
       }
     },
@@ -476,56 +498,10 @@
       "precision_level": "medium",
       "tolerance_rmse": 0.0001,
       "target_parameter": "N",
-      "target_config": {
-        "initial_value": 32,
-        "multiplication_factor": 2,
-        "max_iteration_num": 4
-      },
       "non_target_parameters": {
         "dt": 20.0
       },
-      "trajectory": {
-        "parameter_name": "N",
-        "initial_value": 32,
-        "optimal_value": 256,
-        "converged": false,
-        "parameter_history": [
-          {
-            "N": 32,
-            "dt": 20.0
-          },
-          {
-            "N": 64,
-            "dt": 20.0
-          },
-          {
-            "N": 128,
-            "dt": 20.0
-          },
-          {
-            "N": 256,
-            "dt": 20.0
-          }
-        ],
-        "cost_history": [
-          1843333120.0,
-          8847998976.0,
-          41290661888.0,
-          188757311488.0
-        ],
-        "error_history": [
-          null,
-          0.0038128626965380774,
-          0.0016279633047843385,
-          NaN
-        ],
-        "N_history": [
-          32,
-          64,
-          128,
-          256
-        ]
-      }
+      "error": "unsupported format string passed to NoneType.__format__"
     },
     {
       "task_id": 68,
@@ -534,56 +510,10 @@
       "precision_level": "medium",
       "tolerance_rmse": 0.0001,
       "target_parameter": "N",
-      "target_config": {
-        "initial_value": 32,
-        "multiplication_factor": 2,
-        "max_iteration_num": 4
-      },
       "non_target_parameters": {
         "dt": 40.0
       },
-      "trajectory": {
-        "parameter_name": "N",
-        "initial_value": 32,
-        "optimal_value": 256,
-        "converged": false,
-        "parameter_history": [
-          {
-            "N": 32,
-            "dt": 40.0
-          },
-          {
-            "N": 64,
-            "dt": 40.0
-          },
-          {
-            "N": 128,
-            "dt": 40.0
-          },
-          {
-            "N": 256,
-            "dt": 40.0
-          }
-        ],
-        "cost_history": [
-          921733120.0,
-          4424318976.0,
-          20646821888.0,
-          94385471488.0
-        ],
-        "error_history": [
-          null,
-          0.003798897246530612,
-          0.0015048429046471386,
-          NaN
-        ],
-        "N_history": [
-          32,
-          64,
-          128,
-          256
-        ]
-      }
+      "error": "unsupported format string passed to NoneType.__format__"
     },
     {
       "task_id": 71,
@@ -600,11 +530,16 @@
       "non_target_parameters": {
         "N": 128
       },
-      "trajectory": {
-        "parameter_name": "dt",
-        "initial_value": 40.0,
-        "optimal_value": 5.0,
+      "results": {
         "converged": false,
+        "optimal_parameter_value": 5.0,
+        "total_computational_cost": 309669527552.0,
+        "cost_history": [
+          20646821888.0,
+          41290661888.0,
+          82578341888.0,
+          165153701888.0
+        ],
         "parameter_history": [
           {
             "N": 128,
@@ -622,24 +557,6 @@
             "N": 128,
             "dt": 5.0
           }
-        ],
-        "cost_history": [
-          20646821888.0,
-          41290661888.0,
-          82578341888.0,
-          165153701888.0
-        ],
-        "error_history": [
-          null,
-          0.00021345021788389296,
-          0.00024386210325401479,
-          0.0001244132310609006
-        ],
-        "dt_history": [
-          40.0,
-          20.0,
-          10.0,
-          5.0
         ]
       }
     },
@@ -650,56 +567,10 @@
       "precision_level": "medium",
       "tolerance_rmse": 0.0001,
       "target_parameter": "dt",
-      "target_config": {
-        "initial_value": 40.0,
-        "multiplication_factor": 0.5,
-        "max_iteration_num": 4
-      },
       "non_target_parameters": {
         "N": 256
       },
-      "trajectory": {
-        "parameter_name": "dt",
-        "initial_value": 40.0,
-        "optimal_value": 5.0,
-        "converged": false,
-        "parameter_history": [
-          {
-            "N": 256,
-            "dt": 40.0
-          },
-          {
-            "N": 256,
-            "dt": 20.0
-          },
-          {
-            "N": 256,
-            "dt": 10.0
-          },
-          {
-            "N": 256,
-            "dt": 5.0
-          }
-        ],
-        "cost_history": [
-          94385471488.0,
-          188757311488.0,
-          377500991488.0,
-          754988351488.0
-        ],
-        "error_history": [
-          null,
-          NaN,
-          NaN,
-          0.00013302448054104262
-        ],
-        "dt_history": [
-          40.0,
-          20.0,
-          10.0,
-          5.0
-        ]
-      }
+      "error": "unsupported format string passed to NoneType.__format__"
     },
     {
       "task_id": 75,
@@ -708,56 +579,10 @@
       "precision_level": "medium",
       "tolerance_rmse": 0.0001,
       "target_parameter": "N",
-      "target_config": {
-        "initial_value": 32,
-        "multiplication_factor": 2,
-        "max_iteration_num": 4
-      },
       "non_target_parameters": {
         "dt": 20.0
       },
-      "trajectory": {
-        "parameter_name": "N",
-        "initial_value": 32,
-        "optimal_value": 256,
-        "converged": false,
-        "parameter_history": [
-          {
-            "N": 32,
-            "dt": 20.0
-          },
-          {
-            "N": 64,
-            "dt": 20.0
-          },
-          {
-            "N": 128,
-            "dt": 20.0
-          },
-          {
-            "N": 256,
-            "dt": 20.0
-          }
-        ],
-        "cost_history": [
-          1843333120.0,
-          8847998976.0,
-          41290661888.0,
-          188757311488.0
-        ],
-        "error_history": [
-          null,
-          0.0006534863883797751,
-          0.00014436448882177685,
-          NaN
-        ],
-        "N_history": [
-          32,
-          64,
-          128,
-          256
-        ]
-      }
+      "error": "unsupported format string passed to NoneType.__format__"
     },
     {
       "task_id": 76,
@@ -766,59 +591,25 @@
       "precision_level": "medium",
       "tolerance_rmse": 0.0001,
       "target_parameter": "N",
-      "target_config": {
-        "initial_value": 32,
-        "multiplication_factor": 2,
-        "max_iteration_num": 4
-      },
       "non_target_parameters": {
         "dt": 40.0
       },
-      "trajectory": {
-        "parameter_name": "N",
-        "initial_value": 32,
-        "optimal_value": 256,
-        "converged": false,
-        "parameter_history": [
-          {
-            "N": 32,
-            "dt": 40.0
-          },
-          {
-            "N": 64,
-            "dt": 40.0
-          },
-          {
-            "N": 128,
-            "dt": 40.0
-          },
-          {
-            "N": 256,
-            "dt": 40.0
-          }
-        ],
-        "cost_history": [
-          921733120.0,
-          4424318976.0,
-          20646821888.0,
-          94385471488.0
-        ],
-        "error_history": [
-          null,
-          0.0006507947320626918,
-          0.00013215982630909932,
-          NaN
-        ],
-        "N_history": [
-          32,
-          64,
-          128,
-          256
-        ]
-      }
+      "error": "unsupported format string passed to NoneType.__format__"
     },
     {
-      "task_id": 84,
+      "task_id": 80,
+      "solver": "hasegawa_mima_nonlinear",
+      "profile": "p5",
+      "precision_level": "medium",
+      "tolerance_rmse": 0.0001,
+      "target_parameter": "dt",
+      "non_target_parameters": {
+        "N": 256
+      },
+      "error": "unsupported format string passed to NoneType.__format__"
+    },
+    {
+      "task_id": 81,
       "solver": "hasegawa_mima_nonlinear",
       "profile": "p1",
       "precision_level": "high",
@@ -830,50 +621,151 @@
         "max_iteration_num": 4
       },
       "non_target_parameters": {
-        "dt": 40.0
+        "dt": 5.0
       },
-      "trajectory": {
-        "parameter_name": "N",
-        "initial_value": 32,
-        "optimal_value": 256,
+      "results": {
         "converged": false,
+        "optimal_parameter_value": 256,
+        "total_computational_cost": 962905065472.0,
+        "cost_history": [
+          7372933120.0,
+          35390078976.0,
+          165153701888.0,
+          754988351488.0
+        ],
         "parameter_history": [
           {
             "N": 32,
-            "dt": 40.0
+            "dt": 5.0
           },
           {
             "N": 64,
-            "dt": 40.0
+            "dt": 5.0
           },
           {
             "N": 128,
-            "dt": 40.0
+            "dt": 5.0
           },
           {
             "N": 256,
-            "dt": 40.0
+            "dt": 5.0
           }
-        ],
-        "cost_history": [
-          921733120.0,
-          4424318976.0,
-          20646821888.0,
-          94385471488.0
-        ],
-        "error_history": [
-          null,
-          0.0002395943123460601,
-          1.4449820573729142e-05,
-          NaN
-        ],
-        "N_history": [
-          32,
-          64,
-          128,
-          256
         ]
       }
+    },
+    {
+      "task_id": 82,
+      "solver": "hasegawa_mima_nonlinear",
+      "profile": "p1",
+      "precision_level": "high",
+      "tolerance_rmse": 1e-05,
+      "target_parameter": "N",
+      "target_config": {
+        "initial_value": 32,
+        "multiplication_factor": 2,
+        "max_iteration_num": 4
+      },
+      "non_target_parameters": {
+        "dt": 10.0
+      },
+      "results": {
+        "converged": false,
+        "optimal_parameter_value": 256,
+        "total_computational_cost": 481461225472.0,
+        "cost_history": [
+          3686533120.0,
+          17695358976.0,
+          82578341888.0,
+          377500991488.0
+        ],
+        "parameter_history": [
+          {
+            "N": 32,
+            "dt": 10.0
+          },
+          {
+            "N": 64,
+            "dt": 10.0
+          },
+          {
+            "N": 128,
+            "dt": 10.0
+          },
+          {
+            "N": 256,
+            "dt": 10.0
+          }
+        ]
+      }
+    },
+    {
+      "task_id": 83,
+      "solver": "hasegawa_mima_nonlinear",
+      "profile": "p1",
+      "precision_level": "high",
+      "tolerance_rmse": 1e-05,
+      "target_parameter": "N",
+      "target_config": {
+        "initial_value": 32,
+        "multiplication_factor": 2,
+        "max_iteration_num": 4
+      },
+      "non_target_parameters": {
+        "dt": 20.0
+      },
+      "results": {
+        "converged": false,
+        "optimal_parameter_value": 256,
+        "total_computational_cost": 240739305472.0,
+        "cost_history": [
+          1843333120.0,
+          8847998976.0,
+          41290661888.0,
+          188757311488.0
+        ],
+        "parameter_history": [
+          {
+            "N": 32,
+            "dt": 20.0
+          },
+          {
+            "N": 64,
+            "dt": 20.0
+          },
+          {
+            "N": 128,
+            "dt": 20.0
+          },
+          {
+            "N": 256,
+            "dt": 20.0
+          }
+        ]
+      }
+    },
+    {
+      "task_id": 84,
+      "solver": "hasegawa_mima_nonlinear",
+      "profile": "p1",
+      "precision_level": "high",
+      "tolerance_rmse": 1e-05,
+      "target_parameter": "N",
+      "non_target_parameters": {
+        "dt": 40.0
+      },
+      "error": "unsupported format string passed to NoneType.__format__"
+    },
+    {
+      "task_id": 88,
+      "solver": "hasegawa_mima_nonlinear",
+      "profile": "p1",
+      "precision_level": "high",
+      "tolerance_rmse": 1e-05,
+      "target_parameter": "dt",
+      "non_target_parameters": {
+        "N": 256
+      },
+      "error": "unsupported format string passed to NoneType.__format__"
     },
     {
       "task_id": 89,
@@ -890,11 +782,16 @@
       "non_target_parameters": {
         "dt": 5.0
       },
-      "trajectory": {
-        "parameter_name": "N",
-        "initial_value": 32,
-        "optimal_value": 256,
+      "results": {
         "converged": false,
+        "optimal_parameter_value": 256,
+        "total_computational_cost": 962905065472.0,
+        "cost_history": [
+          7372933120.0,
+          35390078976.0,
+          165153701888.0,
+          754988351488.0
+        ],
         "parameter_history": [
           {
             "N": 32,
@@ -912,24 +809,6 @@
             "N": 256,
             "dt": 5.0
           }
-        ],
-        "cost_history": [
-          7372933120.0,
-          35390078976.0,
-          165153701888.0,
-          754988351488.0
-        ],
-        "error_history": [
-          null,
-          0.000693204480818057,
-          0.00019899205084857553,
-          8.672322374942443e-05
-        ],
-        "N_history": [
-          32,
-          64,
-          128,
-          256
         ]
       }
     },
@@ -948,11 +827,16 @@
       "non_target_parameters": {
         "dt": 10.0
       },
-      "trajectory": {
-        "parameter_name": "N",
-        "initial_value": 32,
-        "optimal_value": 256,
+      "results": {
         "converged": false,
+        "optimal_parameter_value": 256,
+        "total_computational_cost": 481461225472.0,
+        "cost_history": [
+          3686533120.0,
+          17695358976.0,
+          82578341888.0,
+          377500991488.0
+        ],
         "parameter_history": [
           {
             "N": 32,
@@ -970,24 +854,6 @@
             "N": 256,
             "dt": 10.0
           }
-        ],
-        "cost_history": [
-          3686533120.0,
-          17695358976.0,
-          82578341888.0,
-          377500991488.0
-        ],
-        "error_history": [
-          null,
-          0.0006932036195464037,
-          0.00019899080232451064,
-          8.672257925378418e-05
-        ],
-        "N_history": [
-          32,
-          64,
-          128,
-          256
         ]
       }
     },
@@ -998,61 +864,39 @@
       "precision_level": "high",
       "tolerance_rmse": 1e-05,
       "target_parameter": "N",
-      "target_config": {
-        "initial_value": 32,
-        "multiplication_factor": 2,
-        "max_iteration_num": 4
-      },
       "non_target_parameters": {
         "dt": 20.0
       },
-      "trajectory": {
-        "parameter_name": "N",
-        "initial_value": 32,
-        "optimal_value": 256,
-        "converged": false,
-        "parameter_history": [
-          {
-            "N": 32,
-            "dt": 20.0
-          },
-          {
-            "N": 64,
-            "dt": 20.0
-          },
-          {
-            "N": 128,
-            "dt": 20.0
-          },
-          {
-            "N": 256,
-            "dt": 20.0
-          }
-        ],
-        "cost_history": [
-          1843333120.0,
-          8847998976.0,
-          41290661888.0,
-          188757311488.0
-        ],
-        "error_history": [
-          null,
-          0.0006931826809519102,
-          0.00019896364820965842,
-          NaN
-        ],
-        "N_history": [
-          32,
-          64,
-          128,
-          256
-        ]
-      }
+      "error": "unsupported format string passed to NoneType.__format__"
     },
     {
       "task_id": 92,
       "solver": "hasegawa_mima_nonlinear",
       "profile": "p2",
+      "precision_level": "high",
+      "tolerance_rmse": 1e-05,
+      "target_parameter": "N",
+      "non_target_parameters": {
+        "dt": 40.0
+      },
+      "error": "unsupported format string passed to NoneType.__format__"
+    },
+    {
+      "task_id": 96,
+      "solver": "hasegawa_mima_nonlinear",
+      "profile": "p2",
+      "precision_level": "high",
+      "tolerance_rmse": 1e-05,
+      "target_parameter": "dt",
+      "non_target_parameters": {
+        "N": 256
+      },
+      "error": "unsupported format string passed to NoneType.__format__"
+    },
+    {
+      "task_id": 97,
+      "solver": "hasegawa_mima_nonlinear",
+      "profile": "p3",
       "precision_level": "high",
       "tolerance_rmse": 1e-05,
       "target_parameter": "N",
@@ -1062,50 +906,130 @@
         "max_iteration_num": 4
       },
       "non_target_parameters": {
-        "dt": 40.0
+        "dt": 5.0
       },
-      "trajectory": {
-        "parameter_name": "N",
-        "initial_value": 32,
-        "optimal_value": 256,
+      "results": {
         "converged": false,
+        "optimal_parameter_value": 256,
+        "total_computational_cost": 962905065472.0,
+        "cost_history": [
+          7372933120.0,
+          35390078976.0,
+          165153701888.0,
+          754988351488.0
+        ],
         "parameter_history": [
           {
             "N": 32,
-            "dt": 40.0
+            "dt": 5.0
           },
           {
             "N": 64,
-            "dt": 40.0
+            "dt": 5.0
           },
           {
             "N": 128,
-            "dt": 40.0
+            "dt": 5.0
           },
           {
             "N": 256,
-            "dt": 40.0
+            "dt": 5.0
           }
-        ],
-        "cost_history": [
-          921733120.0,
-          4424318976.0,
-          20646821888.0,
-          94385471488.0
-        ],
-        "error_history": [
-          null,
-          0.00069262530951535,
-          0.00019832705958581194,
-          NaN
-        ],
-        "N_history": [
-          32,
-          64,
-          128,
-          256
         ]
       }
+    },
+    {
+      "task_id": 98,
+      "solver": "hasegawa_mima_nonlinear",
+      "profile": "p3",
+      "precision_level": "high",
+      "tolerance_rmse": 1e-05,
+      "target_parameter": "N",
+      "target_config": {
+        "initial_value": 32,
+        "multiplication_factor": 2,
+        "max_iteration_num": 4
+      },
+      "non_target_parameters": {
+        "dt": 10.0
+      },
+      "results": {
+        "converged": false,
+        "optimal_parameter_value": 256,
+        "total_computational_cost": 481461225472.0,
+        "cost_history": [
+          3686533120.0,
+          17695358976.0,
+          82578341888.0,
+          377500991488.0
+        ],
+        "parameter_history": [
+          {
+            "N": 32,
+            "dt": 10.0
+          },
+          {
+            "N": 64,
+            "dt": 10.0
+          },
+          {
+            "N": 128,
+            "dt": 10.0
+          },
+          {
+            "N": 256,
+            "dt": 10.0
+          }
+        ]
+      }
+    },
+    {
+      "task_id": 99,
+      "solver": "hasegawa_mima_nonlinear",
+      "profile": "p3",
+      "precision_level": "high",
+      "tolerance_rmse": 1e-05,
+      "target_parameter": "N",
+      "non_target_parameters": {
+        "dt": 20.0
+      },
+      "error": "unsupported format string passed to NoneType.__format__"
+    },
+    {
+      "task_id": 100,
+      "solver": "hasegawa_mima_nonlinear",
+      "profile": "p3",
+      "precision_level": "high",
+      "tolerance_rmse": 1e-05,
+      "target_parameter": "N",
+      "non_target_parameters": {
+        "dt": 40.0
+      },
+      "error": "unsupported format string passed to NoneType.__format__"
+    },
+    {
+      "task_id": 103,
+      "solver": "hasegawa_mima_nonlinear",
+      "profile": "p3",
+      "precision_level": "high",
+      "tolerance_rmse": 1e-05,
+      "target_parameter": "dt",
+      "non_target_parameters": {
+        "N": 128
+      },
+      "error": "unsupported format string passed to NoneType.__format__"
+    },
+    {
+      "task_id": 104,
+      "solver": "hasegawa_mima_nonlinear",
+      "profile": "p3",
+      "precision_level": "high",
+      "tolerance_rmse": 1e-05,
+      "target_parameter": "dt",
+      "non_target_parameters": {
+        "N": 256
+      },
+      "error": "unsupported format string passed to NoneType.__format__"
     },
     {
       "task_id": 105,
@@ -1122,11 +1046,16 @@
       "non_target_parameters": {
         "dt": 5.0
       },
-      "trajectory": {
-        "parameter_name": "N",
-        "initial_value": 32,
-        "optimal_value": 256,
+      "results": {
         "converged": false,
+        "optimal_parameter_value": 256,
+        "total_computational_cost": 962905065472.0,
+        "cost_history": [
+          7372933120.0,
+          35390078976.0,
+          165153701888.0,
+          754988351488.0
+        ],
         "parameter_history": [
           {
             "N": 32,
@@ -1144,24 +1073,6 @@
             "N": 256,
             "dt": 5.0
           }
-        ],
-        "cost_history": [
-          7372933120.0,
-          35390078976.0,
-          165153701888.0,
-          754988351488.0
-        ],
-        "error_history": [
-          null,
-          0.003813658672615901,
-          0.0016440335380132917,
-          0.00079728746422924
-        ],
-        "N_history": [
-          32,
-          64,
-          128,
-          256
         ]
       }
     },
@@ -1180,11 +1091,16 @@
       "non_target_parameters": {
         "dt": 10.0
       },
-      "trajectory": {
-        "parameter_name": "N",
-        "initial_value": 32,
-        "optimal_value": 256,
+      "results": {
         "converged": false,
+        "optimal_parameter_value": 256,
+        "total_computational_cost": 481461225472.0,
+        "cost_history": [
+          3686533120.0,
+          17695358976.0,
+          82578341888.0,
+          377500991488.0
+        ],
         "parameter_history": [
           {
             "N": 32,
@@ -1202,24 +1118,6 @@
             "N": 256,
             "dt": 10.0
           }
-        ],
-        "cost_history": [
-          3686533120.0,
-          17695358976.0,
-          82578341888.0,
-          377500991488.0
-        ],
-        "error_history": [
-          null,
-          0.0038136392728892743,
-          0.0016415628681592457,
-          0.0008137663102519348
-        ],
-        "N_history": [
-          32,
-          64,
-          128,
-          256
         ]
       }
     },
@@ -1230,56 +1128,10 @@
       "precision_level": "high",
       "tolerance_rmse": 1e-05,
       "target_parameter": "N",
-      "target_config": {
-        "initial_value": 32,
-        "multiplication_factor": 2,
-        "max_iteration_num": 4
-      },
       "non_target_parameters": {
         "dt": 20.0
       },
-      "trajectory": {
-        "parameter_name": "N",
-        "initial_value": 32,
-        "optimal_value": 256,
-        "converged": false,
-        "parameter_history": [
-          {
-            "N": 32,
-            "dt": 20.0
-          },
-          {
-            "N": 64,
-            "dt": 20.0
-          },
-          {
-            "N": 128,
-            "dt": 20.0
-          },
-          {
-            "N": 256,
-            "dt": 20.0
-          }
-        ],
-        "cost_history": [
-          1843333120.0,
-          8847998976.0,
-          41290661888.0,
-          188757311488.0
-        ],
-        "error_history": [
-          null,
-          0.0038128626965380774,
-          0.0016279633047843385,
-          NaN
-        ],
-        "N_history": [
-          32,
-          64,
-          128,
-          256
-        ]
-      }
+      "error": "unsupported format string passed to NoneType.__format__"
     },
     {
       "task_id": 108,
@@ -1288,56 +1140,10 @@
       "precision_level": "high",
       "tolerance_rmse": 1e-05,
       "target_parameter": "N",
-      "target_config": {
-        "initial_value": 32,
-        "multiplication_factor": 2,
-        "max_iteration_num": 4
-      },
       "non_target_parameters": {
         "dt": 40.0
       },
-      "trajectory": {
-        "parameter_name": "N",
-        "initial_value": 32,
-        "optimal_value": 256,
-        "converged": false,
-        "parameter_history": [
-          {
-            "N": 32,
-            "dt": 40.0
-          },
-          {
-            "N": 64,
-            "dt": 40.0
-          },
-          {
-            "N": 128,
-            "dt": 40.0
-          },
-          {
-            "N": 256,
-            "dt": 40.0
-          }
-        ],
-        "cost_history": [
-          921733120.0,
-          4424318976.0,
-          20646821888.0,
-          94385471488.0
-        ],
-        "error_history": [
-          null,
-          0.003798897246530612,
-          0.0015048429046471386,
-          NaN
-        ],
-        "N_history": [
-          32,
-          64,
-          128,
-          256
-        ]
-      }
+      "error": "unsupported format string passed to NoneType.__format__"
     },
     {
       "task_id": 111,
@@ -1354,11 +1160,16 @@
       "non_target_parameters": {
         "N": 128
       },
-      "trajectory": {
-        "parameter_name": "dt",
-        "initial_value": 40.0,
-        "optimal_value": 5.0,
+      "results": {
         "converged": false,
+        "optimal_parameter_value": 5.0,
+        "total_computational_cost": 309669527552.0,
+        "cost_history": [
+          20646821888.0,
+          41290661888.0,
+          82578341888.0,
+          165153701888.0
+        ],
         "parameter_history": [
           {
             "N": 128,
@@ -1376,24 +1187,6 @@
             "N": 128,
             "dt": 5.0
           }
-        ],
-        "cost_history": [
-          20646821888.0,
-          41290661888.0,
-          82578341888.0,
-          165153701888.0
-        ],
-        "error_history": [
-          null,
-          0.00021345021788389296,
-          0.00024386210325401479,
-          0.0001244132310609006
-        ],
-        "dt_history": [
-          40.0,
-          20.0,
-          10.0,
-          5.0
         ]
       }
     },
@@ -1404,56 +1197,10 @@
       "precision_level": "high",
       "tolerance_rmse": 1e-05,
       "target_parameter": "dt",
-      "target_config": {
-        "initial_value": 40.0,
-        "multiplication_factor": 0.5,
-        "max_iteration_num": 4
-      },
       "non_target_parameters": {
         "N": 256
       },
-      "trajectory": {
-        "parameter_name": "dt",
-        "initial_value": 40.0,
-        "optimal_value": 5.0,
-        "converged": false,
-        "parameter_history": [
-          {
-            "N": 256,
-            "dt": 40.0
-          },
-          {
-            "N": 256,
-            "dt": 20.0
-          },
-          {
-            "N": 256,
-            "dt": 10.0
-          },
-          {
-            "N": 256,
-            "dt": 5.0
-          }
-        ],
-        "cost_history": [
-          94385471488.0,
-          188757311488.0,
-          377500991488.0,
-          754988351488.0
-        ],
-        "error_history": [
-          null,
-          NaN,
-          NaN,
-          0.00013302448054104262
-        ],
-        "dt_history": [
-          40.0,
-          20.0,
-          10.0,
-          5.0
-        ]
-      }
+      "error": "unsupported format string passed to NoneType.__format__"
     },
     {
       "task_id": 113,
@@ -1470,11 +1217,16 @@
       "non_target_parameters": {
         "dt": 5.0
       },
-      "trajectory": {
-        "parameter_name": "N",
-        "initial_value": 32,
-        "optimal_value": 256,
+      "results": {
         "converged": false,
+        "optimal_parameter_value": 256,
+        "total_computational_cost": 962905065472.0,
+        "cost_history": [
+          7372933120.0,
+          35390078976.0,
+          165153701888.0,
+          754988351488.0
+        ],
         "parameter_history": [
           {
             "N": 32,
@@ -1492,24 +1244,6 @@
             "N": 256,
             "dt": 5.0
           }
-        ],
-        "cost_history": [
-          7372933120.0,
-          35390078976.0,
-          165153701888.0,
-          754988351488.0
-        ],
-        "error_history": [
-          null,
-          0.0006535517237644569,
-          0.00014491229009027702,
-          1.0430060298880633e-05
-        ],
-        "N_history": [
-          32,
-          64,
-          128,
-          256
         ]
       }
     },
@@ -1528,11 +1262,16 @@
       "non_target_parameters": {
         "dt": 10.0
       },
-      "trajectory": {
-        "parameter_name": "N",
-        "initial_value": 32,
-        "optimal_value": 256,
+      "results": {
         "converged": false,
+        "optimal_parameter_value": 256,
+        "total_computational_cost": 481461225472.0,
+        "cost_history": [
+          3686533120.0,
+          17695358976.0,
+          82578341888.0,
+          377500991488.0
+        ],
         "parameter_history": [
           {
             "N": 32,
@@ -1550,24 +1289,6 @@
             "N": 256,
             "dt": 10.0
           }
-        ],
-        "cost_history": [
-          3686533120.0,
-          17695358976.0,
-          82578341888.0,
-          377500991488.0
-        ],
-        "error_history": [
-          null,
-          0.000653551052990468,
-          0.00014489539966382637,
-          1.0391542039944822e-05
-        ],
-        "N_history": [
-          32,
-          64,
-          128,
-          256
         ]
       }
     },
@@ -1578,56 +1299,10 @@
       "precision_level": "high",
       "tolerance_rmse": 1e-05,
       "target_parameter": "N",
-      "target_config": {
-        "initial_value": 32,
-        "multiplication_factor": 2,
-        "max_iteration_num": 4
-      },
       "non_target_parameters": {
         "dt": 20.0
       },
-      "trajectory": {
-        "parameter_name": "N",
-        "initial_value": 32,
-        "optimal_value": 256,
-        "converged": false,
-        "parameter_history": [
-          {
-            "N": 32,
-            "dt": 20.0
-          },
-          {
-            "N": 64,
-            "dt": 20.0
-          },
-          {
-            "N": 128,
-            "dt": 20.0
-          },
-          {
-            "N": 256,
-            "dt": 20.0
-          }
-        ],
-        "cost_history": [
-          1843333120.0,
-          8847998976.0,
-          41290661888.0,
-          188757311488.0
-        ],
-        "error_history": [
-          null,
-          0.0006534863883797751,
-          0.00014436448882177685,
-          NaN
-        ],
-        "N_history": [
-          32,
-          64,
-          128,
-          256
-        ]
-      }
+      "error": "unsupported format string passed to NoneType.__format__"
     },
     {
       "task_id": 116,
@@ -1636,56 +1311,22 @@
       "precision_level": "high",
       "tolerance_rmse": 1e-05,
       "target_parameter": "N",
-      "target_config": {
-        "initial_value": 32,
-        "multiplication_factor": 2,
-        "max_iteration_num": 4
-      },
       "non_target_parameters": {
         "dt": 40.0
       },
-      "trajectory": {
-        "parameter_name": "N",
-        "initial_value": 32,
-        "optimal_value": 256,
-        "converged": false,
-        "parameter_history": [
-          {
-            "N": 32,
-            "dt": 40.0
-          },
-          {
-            "N": 64,
-            "dt": 40.0
-          },
-          {
-            "N": 128,
-            "dt": 40.0
-          },
-          {
-            "N": 256,
-            "dt": 40.0
-          }
-        ],
-        "cost_history": [
-          921733120.0,
-          4424318976.0,
-          20646821888.0,
-          94385471488.0
-        ],
-        "error_history": [
-          null,
-          0.0006507947320626918,
-          0.00013215982630909932,
-          NaN
-        ],
-        "N_history": [
-          32,
-          64,
-          128,
-          256
-        ]
-      }
+      "error": "unsupported format string passed to NoneType.__format__"
+    },
+    {
+      "task_id": 120,
+      "solver": "hasegawa_mima_nonlinear",
+      "profile": "p5",
+      "precision_level": "high",
+      "tolerance_rmse": 1e-05,
+      "target_parameter": "dt",
+      "non_target_parameters": {
+        "N": 256
+      },
+      "error": "unsupported format string passed to NoneType.__format__"
     }
   ]
 }

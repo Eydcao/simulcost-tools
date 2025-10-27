@@ -2,7 +2,7 @@
   "metadata": {
     "solver": "hasegawa_mima_nonlinear",
     "description": "Successfully converged parameter optimization tasks",
-    "total_tasks": 91
+    "total_tasks": 62
   },
   "tasks": [
     {
@@ -20,11 +20,14 @@
       "non_target_parameters": {
         "dt": 5.0
       },
-      "trajectory": {
-        "parameter_name": "N",
-        "initial_value": 32,
-        "optimal_value": 64,
+      "results": {
         "converged": true,
+        "optimal_parameter_value": 64,
+        "total_computational_cost": 42763012096.0,
+        "cost_history": [
+          7372933120.0,
+          35390078976.0
+        ],
         "parameter_history": [
           {
             "N": 32,
@@ -34,18 +37,6 @@
             "N": 64,
             "dt": 5.0
           }
-        ],
-        "cost_history": [
-          7372933120.0,
-          35390078976.0
-        ],
-        "error_history": [
-          null,
-          0.0002400557383430057
-        ],
-        "N_history": [
-          32,
-          64
         ]
       }
     },
@@ -64,11 +55,14 @@
       "non_target_parameters": {
         "dt": 10.0
       },
-      "trajectory": {
-        "parameter_name": "N",
-        "initial_value": 32,
-        "optimal_value": 64,
+      "results": {
         "converged": true,
+        "optimal_parameter_value": 64,
+        "total_computational_cost": 21381892096.0,
+        "cost_history": [
+          3686533120.0,
+          17695358976.0
+        ],
         "parameter_history": [
           {
             "N": 32,
@@ -78,18 +72,6 @@
             "N": 64,
             "dt": 10.0
           }
-        ],
-        "cost_history": [
-          3686533120.0,
-          17695358976.0
-        ],
-        "error_history": [
-          null,
-          0.00024005533613112907
-        ],
-        "N_history": [
-          32,
-          64
         ]
       }
     },
@@ -108,11 +90,14 @@
       "non_target_parameters": {
         "dt": 20.0
       },
-      "trajectory": {
-        "parameter_name": "N",
-        "initial_value": 32,
-        "optimal_value": 64,
+      "results": {
         "converged": true,
+        "optimal_parameter_value": 64,
+        "total_computational_cost": 10691332096.0,
+        "cost_history": [
+          1843333120.0,
+          8847998976.0
+        ],
         "parameter_history": [
           {
             "N": 32,
@@ -122,18 +107,6 @@
             "N": 64,
             "dt": 20.0
           }
-        ],
-        "cost_history": [
-          1843333120.0,
-          8847998976.0
-        ],
-        "error_history": [
-          null,
-          0.0002400415917800044
-        ],
-        "N_history": [
-          32,
-          64
         ]
       }
     },
@@ -152,11 +125,14 @@
       "non_target_parameters": {
         "dt": 40.0
       },
-      "trajectory": {
-        "parameter_name": "N",
-        "initial_value": 32,
-        "optimal_value": 64,
+      "results": {
         "converged": true,
+        "optimal_parameter_value": 64,
+        "total_computational_cost": 5346052096.0,
+        "cost_history": [
+          921733120.0,
+          4424318976.0
+        ],
         "parameter_history": [
           {
             "N": 32,
@@ -166,18 +142,6 @@
             "N": 64,
             "dt": 40.0
           }
-        ],
-        "cost_history": [
-          921733120.0,
-          4424318976.0
-        ],
-        "error_history": [
-          null,
-          0.0002395943123460601
-        ],
-        "N_history": [
-          32,
-          64
         ]
       }
     },
@@ -196,11 +160,14 @@
       "non_target_parameters": {
         "N": 32
       },
-      "trajectory": {
-        "parameter_name": "dt",
-        "initial_value": 40.0,
-        "optimal_value": 20.0,
+      "results": {
         "converged": true,
+        "optimal_parameter_value": 20.0,
+        "total_computational_cost": 2765066240.0,
+        "cost_history": [
+          921733120.0,
+          1843333120.0
+        ],
         "parameter_history": [
           {
             "N": 32,
@@ -210,18 +177,6 @@
             "N": 32,
             "dt": 20.0
           }
-        ],
-        "cost_history": [
-          921733120.0,
-          1843333120.0
-        ],
-        "error_history": [
-          null,
-          2.702170427826029e-05
-        ],
-        "dt_history": [
-          40.0,
-          20.0
         ]
       }
     },
@@ -240,11 +195,14 @@
       "non_target_parameters": {
         "N": 64
       },
-      "trajectory": {
-        "parameter_name": "dt",
-        "initial_value": 40.0,
-        "optimal_value": 20.0,
+      "results": {
         "converged": true,
+        "optimal_parameter_value": 20.0,
+        "total_computational_cost": 13272317952.0,
+        "cost_history": [
+          4424318976.0,
+          8847998976.0
+        ],
         "parameter_history": [
           {
             "N": 64,
@@ -254,18 +212,6 @@
             "N": 64,
             "dt": 20.0
           }
-        ],
-        "cost_history": [
-          4424318976.0,
-          8847998976.0
-        ],
-        "error_history": [
-          null,
-          2.68652029125654e-05
-        ],
-        "dt_history": [
-          40.0,
-          20.0
         ]
       }
     },
@@ -284,83 +230,23 @@
       "non_target_parameters": {
         "N": 128
       },
-      "trajectory": {
-        "parameter_name": "dt",
-        "initial_value": 40.0,
-        "optimal_value": 20.0,
+      "results": {
         "converged": true,
-        "parameter_history": [
-          {
-            "N": 128,
-            "dt": 40.0
-          },
-          {
-            "N": 128,
-            "dt": 20.0
-          }
-        ],
+        "optimal_parameter_value": 20.0,
+        "total_computational_cost": 61937483776.0,
         "cost_history": [
           20646821888.0,
           41290661888.0
         ],
-        "error_history": [
-          null,
-          2.6856844124673987e-05
-        ],
-        "dt_history": [
-          40.0,
-          20.0
-        ]
-      }
-    },
-    {
-      "task_id": 8,
-      "solver": "hasegawa_mima_nonlinear",
-      "profile": "p1",
-      "precision_level": "low",
-      "tolerance_rmse": 0.0005,
-      "target_parameter": "dt",
-      "target_config": {
-        "initial_value": 40.0,
-        "multiplication_factor": 0.5,
-        "max_iteration_num": 4
-      },
-      "non_target_parameters": {
-        "N": 256
-      },
-      "trajectory": {
-        "parameter_name": "dt",
-        "initial_value": 40.0,
-        "optimal_value": 10.0,
-        "converged": true,
         "parameter_history": [
           {
-            "N": 256,
+            "N": 128,
             "dt": 40.0
           },
           {
-            "N": 256,
+            "N": 128,
             "dt": 20.0
-          },
-          {
-            "N": 256,
-            "dt": 10.0
           }
-        ],
-        "cost_history": [
-          94385471488.0,
-          188757311488.0,
-          377500991488.0
-        ],
-        "error_history": [
-          null,
-          NaN,
-          1.683303874411546e-06
-        ],
-        "dt_history": [
-          40.0,
-          20.0,
-          10.0
         ]
       }
     },
@@ -379,11 +265,15 @@
       "non_target_parameters": {
         "dt": 5.0
       },
-      "trajectory": {
-        "parameter_name": "N",
-        "initial_value": 32,
-        "optimal_value": 128,
+      "results": {
         "converged": true,
+        "optimal_parameter_value": 128,
+        "total_computational_cost": 207916713984.0,
+        "cost_history": [
+          7372933120.0,
+          35390078976.0,
+          165153701888.0
+        ],
         "parameter_history": [
           {
             "N": 32,
@@ -397,21 +287,6 @@
             "N": 128,
             "dt": 5.0
           }
-        ],
-        "cost_history": [
-          7372933120.0,
-          35390078976.0,
-          165153701888.0
-        ],
-        "error_history": [
-          null,
-          0.000693204480818057,
-          0.00019899205084857553
-        ],
-        "N_history": [
-          32,
-          64,
-          128
         ]
       }
     },
@@ -430,11 +305,15 @@
       "non_target_parameters": {
         "dt": 10.0
       },
-      "trajectory": {
-        "parameter_name": "N",
-        "initial_value": 32,
-        "optimal_value": 128,
+      "results": {
         "converged": true,
+        "optimal_parameter_value": 128,
+        "total_computational_cost": 103960233984.0,
+        "cost_history": [
+          3686533120.0,
+          17695358976.0,
+          82578341888.0
+        ],
         "parameter_history": [
           {
             "N": 32,
@@ -448,21 +327,6 @@
             "N": 128,
             "dt": 10.0
           }
-        ],
-        "cost_history": [
-          3686533120.0,
-          17695358976.0,
-          82578341888.0
-        ],
-        "error_history": [
-          null,
-          0.0006932036195464037,
-          0.00019899080232451064
-        ],
-        "N_history": [
-          32,
-          64,
-          128
         ]
       }
     },
@@ -481,11 +345,15 @@
       "non_target_parameters": {
         "dt": 20.0
       },
-      "trajectory": {
-        "parameter_name": "N",
-        "initial_value": 32,
-        "optimal_value": 128,
+      "results": {
         "converged": true,
+        "optimal_parameter_value": 128,
+        "total_computational_cost": 51981993984.0,
+        "cost_history": [
+          1843333120.0,
+          8847998976.0,
+          41290661888.0
+        ],
         "parameter_history": [
           {
             "N": 32,
@@ -499,21 +367,6 @@
             "N": 128,
             "dt": 20.0
           }
-        ],
-        "cost_history": [
-          1843333120.0,
-          8847998976.0,
-          41290661888.0
-        ],
-        "error_history": [
-          null,
-          0.0006931826809519102,
-          0.00019896364820965842
-        ],
-        "N_history": [
-          32,
-          64,
-          128
         ]
       }
     },
@@ -532,11 +385,15 @@
       "non_target_parameters": {
         "dt": 40.0
       },
-      "trajectory": {
-        "parameter_name": "N",
-        "initial_value": 32,
-        "optimal_value": 128,
+      "results": {
         "converged": true,
+        "optimal_parameter_value": 128,
+        "total_computational_cost": 25992873984.0,
+        "cost_history": [
+          921733120.0,
+          4424318976.0,
+          20646821888.0
+        ],
         "parameter_history": [
           {
             "N": 32,
@@ -550,21 +407,6 @@
             "N": 128,
             "dt": 40.0
           }
-        ],
-        "cost_history": [
-          921733120.0,
-          4424318976.0,
-          20646821888.0
-        ],
-        "error_history": [
-          null,
-          0.00069262530951535,
-          0.00019832705958581194
-        ],
-        "N_history": [
-          32,
-          64,
-          128
         ]
       }
     },
@@ -583,11 +425,14 @@
       "non_target_parameters": {
         "N": 32
       },
-      "trajectory": {
-        "parameter_name": "dt",
-        "initial_value": 40.0,
-        "optimal_value": 20.0,
+      "results": {
         "converged": true,
+        "optimal_parameter_value": 20.0,
+        "total_computational_cost": 2765066240.0,
+        "cost_history": [
+          921733120.0,
+          1843333120.0
+        ],
         "parameter_history": [
           {
             "N": 32,
@@ -597,18 +442,6 @@
             "N": 32,
             "dt": 20.0
           }
-        ],
-        "cost_history": [
-          921733120.0,
-          1843333120.0
-        ],
-        "error_history": [
-          null,
-          1.283509910454903e-05
-        ],
-        "dt_history": [
-          40.0,
-          20.0
         ]
       }
     },
@@ -627,11 +460,14 @@
       "non_target_parameters": {
         "N": 64
       },
-      "trajectory": {
-        "parameter_name": "dt",
-        "initial_value": 40.0,
-        "optimal_value": 20.0,
+      "results": {
         "converged": true,
+        "optimal_parameter_value": 20.0,
+        "total_computational_cost": 13272317952.0,
+        "cost_history": [
+          4424318976.0,
+          8847998976.0
+        ],
         "parameter_history": [
           {
             "N": 64,
@@ -641,18 +477,6 @@
             "N": 64,
             "dt": 20.0
           }
-        ],
-        "cost_history": [
-          4424318976.0,
-          8847998976.0
-        ],
-        "error_history": [
-          null,
-          1.2427954528399692e-05
-        ],
-        "dt_history": [
-          40.0,
-          20.0
         ]
       }
     },
@@ -671,90 +495,23 @@
       "non_target_parameters": {
         "N": 128
       },
-      "trajectory": {
-        "parameter_name": "dt",
-        "initial_value": 40.0,
-        "optimal_value": 20.0,
+      "results": {
         "converged": true,
-        "parameter_history": [
-          {
-            "N": 128,
-            "dt": 40.0
-          },
-          {
-            "N": 128,
-            "dt": 20.0
-          }
-        ],
+        "optimal_parameter_value": 20.0,
+        "total_computational_cost": 61937483776.0,
         "cost_history": [
           20646821888.0,
           41290661888.0
         ],
-        "error_history": [
-          null,
-          1.2515008318925472e-05
-        ],
-        "dt_history": [
-          40.0,
-          20.0
-        ]
-      }
-    },
-    {
-      "task_id": 16,
-      "solver": "hasegawa_mima_nonlinear",
-      "profile": "p2",
-      "precision_level": "low",
-      "tolerance_rmse": 0.0005,
-      "target_parameter": "dt",
-      "target_config": {
-        "initial_value": 40.0,
-        "multiplication_factor": 0.5,
-        "max_iteration_num": 4
-      },
-      "non_target_parameters": {
-        "N": 256
-      },
-      "trajectory": {
-        "parameter_name": "dt",
-        "initial_value": 40.0,
-        "optimal_value": 5.0,
-        "converged": true,
         "parameter_history": [
           {
-            "N": 256,
+            "N": 128,
             "dt": 40.0
           },
           {
-            "N": 256,
+            "N": 128,
             "dt": 20.0
-          },
-          {
-            "N": 256,
-            "dt": 10.0
-          },
-          {
-            "N": 256,
-            "dt": 5.0
           }
-        ],
-        "cost_history": [
-          94385471488.0,
-          188757311488.0,
-          377500991488.0,
-          754988351488.0
-        ],
-        "error_history": [
-          null,
-          NaN,
-          NaN,
-          8.281439586323155e-08
-        ],
-        "dt_history": [
-          40.0,
-          20.0,
-          10.0,
-          5.0
         ]
       }
     },
@@ -773,11 +530,16 @@
       "non_target_parameters": {
         "dt": 5.0
       },
-      "trajectory": {
-        "parameter_name": "N",
-        "initial_value": 32,
-        "optimal_value": 64,
+      "results": {
         "converged": true,
+        "optimal_parameter_value": 256,
+        "total_computational_cost": 962905065472.0,
+        "cost_history": [
+          7372933120.0,
+          35390078976.0,
+          165153701888.0,
+          754988351488.0
+        ],
         "parameter_history": [
           {
             "N": 32,
@@ -786,19 +548,15 @@
           {
             "N": 64,
             "dt": 5.0
+          },
+          {
+            "N": 128,
+            "dt": 5.0
+          },
+          {
+            "N": 256,
+            "dt": 5.0
           }
-        ],
-        "cost_history": [
-          7372933120.0,
-          35390078976.0
-        ],
-        "error_history": [
-          null,
-          2.3925744106493624e-14
-        ],
-        "N_history": [
-          32,
-          64
         ]
       }
     },
@@ -817,120 +575,33 @@
       "non_target_parameters": {
         "dt": 10.0
       },
-      "trajectory": {
-        "parameter_name": "N",
-        "initial_value": 32,
-        "optimal_value": 64,
+      "results": {
         "converged": true,
-        "parameter_history": [
-          {
-            "N": 32,
-            "dt": 10.0
-          },
-          {
-            "N": 64,
-            "dt": 10.0
-          }
-        ],
+        "optimal_parameter_value": 256,
+        "total_computational_cost": 481461225472.0,
         "cost_history": [
           3686533120.0,
-          17695358976.0
+          17695358976.0,
+          82578341888.0,
+          377500991488.0
         ],
-        "error_history": [
-          null,
-          2.4004156409229194e-14
-        ],
-        "N_history": [
-          32,
-          64
-        ]
-      }
-    },
-    {
-      "task_id": 19,
-      "solver": "hasegawa_mima_nonlinear",
-      "profile": "p3",
-      "precision_level": "low",
-      "tolerance_rmse": 0.0005,
-      "target_parameter": "N",
-      "target_config": {
-        "initial_value": 32,
-        "multiplication_factor": 2,
-        "max_iteration_num": 4
-      },
-      "non_target_parameters": {
-        "dt": 20.0
-      },
-      "trajectory": {
-        "parameter_name": "N",
-        "initial_value": 32,
-        "optimal_value": 64,
-        "converged": true,
         "parameter_history": [
           {
             "N": 32,
-            "dt": 20.0
+            "dt": 10.0
           },
           {
             "N": 64,
-            "dt": 20.0
-          }
-        ],
-        "cost_history": [
-          1843333120.0,
-          8847998976.0
-        ],
-        "error_history": [
-          null,
-          2.3856785414949116e-14
-        ],
-        "N_history": [
-          32,
-          64
-        ]
-      }
-    },
-    {
-      "task_id": 20,
-      "solver": "hasegawa_mima_nonlinear",
-      "profile": "p3",
-      "precision_level": "low",
-      "tolerance_rmse": 0.0005,
-      "target_parameter": "N",
-      "target_config": {
-        "initial_value": 32,
-        "multiplication_factor": 2,
-        "max_iteration_num": 4
-      },
-      "non_target_parameters": {
-        "dt": 40.0
-      },
-      "trajectory": {
-        "parameter_name": "N",
-        "initial_value": 32,
-        "optimal_value": 64,
-        "converged": true,
-        "parameter_history": [
-          {
-            "N": 32,
-            "dt": 40.0
+            "dt": 10.0
           },
           {
-            "N": 64,
-            "dt": 40.0
+            "N": 128,
+            "dt": 10.0
+          },
+          {
+            "N": 256,
+            "dt": 10.0
           }
-        ],
-        "cost_history": [
-          921733120.0,
-          4424318976.0
-        ],
-        "error_history": [
-          null,
-          1.5149983517883322e-14
-        ],
-        "N_history": [
-          32,
-          64
         ]
       }
     },
@@ -949,11 +620,14 @@
       "non_target_parameters": {
         "N": 32
       },
-      "trajectory": {
-        "parameter_name": "dt",
-        "initial_value": 40.0,
-        "optimal_value": 20.0,
+      "results": {
         "converged": true,
+        "optimal_parameter_value": 20.0,
+        "total_computational_cost": 2765066240.0,
+        "cost_history": [
+          921733120.0,
+          1843333120.0
+        ],
         "parameter_history": [
           {
             "N": 32,
@@ -963,18 +637,6 @@
             "N": 32,
             "dt": 20.0
           }
-        ],
-        "cost_history": [
-          921733120.0,
-          1843333120.0
-        ],
-        "error_history": [
-          null,
-          0.00021086375122005642
-        ],
-        "dt_history": [
-          40.0,
-          20.0
         ]
       }
     },
@@ -993,141 +655,23 @@
       "non_target_parameters": {
         "N": 64
       },
-      "trajectory": {
-        "parameter_name": "dt",
-        "initial_value": 40.0,
-        "optimal_value": 20.0,
+      "results": {
         "converged": true,
-        "parameter_history": [
-          {
-            "N": 64,
-            "dt": 40.0
-          },
-          {
-            "N": 64,
-            "dt": 20.0
-          }
-        ],
+        "optimal_parameter_value": 20.0,
+        "total_computational_cost": 13272317952.0,
         "cost_history": [
           4424318976.0,
           8847998976.0
         ],
-        "error_history": [
-          null,
-          0.00021086375121996705
-        ],
-        "dt_history": [
-          40.0,
-          20.0
-        ]
-      }
-    },
-    {
-      "task_id": 23,
-      "solver": "hasegawa_mima_nonlinear",
-      "profile": "p3",
-      "precision_level": "low",
-      "tolerance_rmse": 0.0005,
-      "target_parameter": "dt",
-      "target_config": {
-        "initial_value": 40.0,
-        "multiplication_factor": 0.5,
-        "max_iteration_num": 4
-      },
-      "non_target_parameters": {
-        "N": 128
-      },
-      "trajectory": {
-        "parameter_name": "dt",
-        "initial_value": 40.0,
-        "optimal_value": 10.0,
-        "converged": true,
         "parameter_history": [
           {
-            "N": 128,
+            "N": 64,
             "dt": 40.0
           },
           {
-            "N": 128,
+            "N": 64,
             "dt": 20.0
-          },
-          {
-            "N": 128,
-            "dt": 10.0
           }
-        ],
-        "cost_history": [
-          20646821888.0,
-          41290661888.0,
-          82578341888.0
-        ],
-        "error_history": [
-          null,
-          NaN,
-          1.3188198432839128e-05
-        ],
-        "dt_history": [
-          40.0,
-          20.0,
-          10.0
-        ]
-      }
-    },
-    {
-      "task_id": 24,
-      "solver": "hasegawa_mima_nonlinear",
-      "profile": "p3",
-      "precision_level": "low",
-      "tolerance_rmse": 0.0005,
-      "target_parameter": "dt",
-      "target_config": {
-        "initial_value": 40.0,
-        "multiplication_factor": 0.5,
-        "max_iteration_num": 4
-      },
-      "non_target_parameters": {
-        "N": 256
-      },
-      "trajectory": {
-        "parameter_name": "dt",
-        "initial_value": 40.0,
-        "optimal_value": 5.0,
-        "converged": true,
-        "parameter_history": [
-          {
-            "N": 256,
-            "dt": 40.0
-          },
-          {
-            "N": 256,
-            "dt": 20.0
-          },
-          {
-            "N": 256,
-            "dt": 10.0
-          },
-          {
-            "N": 256,
-            "dt": 5.0
-          }
-        ],
-        "cost_history": [
-          94385471488.0,
-          188757311488.0,
-          377500991488.0,
-          754988351488.0
-        ],
-        "error_history": [
-          null,
-          NaN,
-          NaN,
-          8.243063270273557e-07
-        ],
-        "dt_history": [
-          40.0,
-          20.0,
-          10.0,
-          5.0
         ]
       }
     },
@@ -1146,11 +690,14 @@
       "non_target_parameters": {
         "N": 32
       },
-      "trajectory": {
-        "parameter_name": "dt",
-        "initial_value": 40.0,
-        "optimal_value": 20.0,
+      "results": {
         "converged": true,
+        "optimal_parameter_value": 20.0,
+        "total_computational_cost": 2765066240.0,
+        "cost_history": [
+          921733120.0,
+          1843333120.0
+        ],
         "parameter_history": [
           {
             "N": 32,
@@ -1160,18 +707,6 @@
             "N": 32,
             "dt": 20.0
           }
-        ],
-        "cost_history": [
-          921733120.0,
-          1843333120.0
-        ],
-        "error_history": [
-          null,
-          3.91289452561972e-05
-        ],
-        "dt_history": [
-          40.0,
-          20.0
         ]
       }
     },
@@ -1190,11 +725,14 @@
       "non_target_parameters": {
         "N": 64
       },
-      "trajectory": {
-        "parameter_name": "dt",
-        "initial_value": 40.0,
-        "optimal_value": 20.0,
+      "results": {
         "converged": true,
+        "optimal_parameter_value": 20.0,
+        "total_computational_cost": 13272317952.0,
+        "cost_history": [
+          4424318976.0,
+          8847998976.0
+        ],
         "parameter_history": [
           {
             "N": 64,
@@ -1204,18 +742,6 @@
             "N": 64,
             "dt": 20.0
           }
-        ],
-        "cost_history": [
-          4424318976.0,
-          8847998976.0
-        ],
-        "error_history": [
-          null,
-          0.000284226299618908
-        ],
-        "dt_history": [
-          40.0,
-          20.0
         ]
       }
     },
@@ -1234,90 +760,23 @@
       "non_target_parameters": {
         "N": 128
       },
-      "trajectory": {
-        "parameter_name": "dt",
-        "initial_value": 40.0,
-        "optimal_value": 20.0,
+      "results": {
         "converged": true,
-        "parameter_history": [
-          {
-            "N": 128,
-            "dt": 40.0
-          },
-          {
-            "N": 128,
-            "dt": 20.0
-          }
-        ],
+        "optimal_parameter_value": 20.0,
+        "total_computational_cost": 61937483776.0,
         "cost_history": [
           20646821888.0,
           41290661888.0
         ],
-        "error_history": [
-          null,
-          0.00021345021788389296
-        ],
-        "dt_history": [
-          40.0,
-          20.0
-        ]
-      }
-    },
-    {
-      "task_id": 32,
-      "solver": "hasegawa_mima_nonlinear",
-      "profile": "p4",
-      "precision_level": "low",
-      "tolerance_rmse": 0.0005,
-      "target_parameter": "dt",
-      "target_config": {
-        "initial_value": 40.0,
-        "multiplication_factor": 0.5,
-        "max_iteration_num": 4
-      },
-      "non_target_parameters": {
-        "N": 256
-      },
-      "trajectory": {
-        "parameter_name": "dt",
-        "initial_value": 40.0,
-        "optimal_value": 5.0,
-        "converged": true,
         "parameter_history": [
           {
-            "N": 256,
+            "N": 128,
             "dt": 40.0
           },
           {
-            "N": 256,
+            "N": 128,
             "dt": 20.0
-          },
-          {
-            "N": 256,
-            "dt": 10.0
-          },
-          {
-            "N": 256,
-            "dt": 5.0
           }
-        ],
-        "cost_history": [
-          94385471488.0,
-          188757311488.0,
-          377500991488.0,
-          754988351488.0
-        ],
-        "error_history": [
-          null,
-          NaN,
-          NaN,
-          0.00013302448054104262
-        ],
-        "dt_history": [
-          40.0,
-          20.0,
-          10.0,
-          5.0
         ]
       }
     },
@@ -1336,11 +795,15 @@
       "non_target_parameters": {
         "dt": 5.0
       },
-      "trajectory": {
-        "parameter_name": "N",
-        "initial_value": 32,
-        "optimal_value": 128,
+      "results": {
         "converged": true,
+        "optimal_parameter_value": 128,
+        "total_computational_cost": 207916713984.0,
+        "cost_history": [
+          7372933120.0,
+          35390078976.0,
+          165153701888.0
+        ],
         "parameter_history": [
           {
             "N": 32,
@@ -1354,21 +817,6 @@
             "N": 128,
             "dt": 5.0
           }
-        ],
-        "cost_history": [
-          7372933120.0,
-          35390078976.0,
-          165153701888.0
-        ],
-        "error_history": [
-          null,
-          0.0006535517237644569,
-          0.00014491229009027702
-        ],
-        "N_history": [
-          32,
-          64,
-          128
         ]
       }
     },
@@ -1387,11 +835,15 @@
       "non_target_parameters": {
         "dt": 10.0
       },
-      "trajectory": {
-        "parameter_name": "N",
-        "initial_value": 32,
-        "optimal_value": 128,
+      "results": {
         "converged": true,
+        "optimal_parameter_value": 128,
+        "total_computational_cost": 103960233984.0,
+        "cost_history": [
+          3686533120.0,
+          17695358976.0,
+          82578341888.0
+        ],
         "parameter_history": [
           {
             "N": 32,
@@ -1405,21 +857,6 @@
             "N": 128,
             "dt": 10.0
           }
-        ],
-        "cost_history": [
-          3686533120.0,
-          17695358976.0,
-          82578341888.0
-        ],
-        "error_history": [
-          null,
-          0.000653551052990468,
-          0.00014489539966382637
-        ],
-        "N_history": [
-          32,
-          64,
-          128
         ]
       }
     },
@@ -1438,11 +875,15 @@
       "non_target_parameters": {
         "dt": 20.0
       },
-      "trajectory": {
-        "parameter_name": "N",
-        "initial_value": 32,
-        "optimal_value": 128,
+      "results": {
         "converged": true,
+        "optimal_parameter_value": 128,
+        "total_computational_cost": 51981993984.0,
+        "cost_history": [
+          1843333120.0,
+          8847998976.0,
+          41290661888.0
+        ],
         "parameter_history": [
           {
             "N": 32,
@@ -1456,21 +897,6 @@
             "N": 128,
             "dt": 20.0
           }
-        ],
-        "cost_history": [
-          1843333120.0,
-          8847998976.0,
-          41290661888.0
-        ],
-        "error_history": [
-          null,
-          0.0006534863883797751,
-          0.00014436448882177685
-        ],
-        "N_history": [
-          32,
-          64,
-          128
         ]
       }
     },
@@ -1489,11 +915,15 @@
       "non_target_parameters": {
         "dt": 40.0
       },
-      "trajectory": {
-        "parameter_name": "N",
-        "initial_value": 32,
-        "optimal_value": 128,
+      "results": {
         "converged": true,
+        "optimal_parameter_value": 128,
+        "total_computational_cost": 25992873984.0,
+        "cost_history": [
+          921733120.0,
+          4424318976.0,
+          20646821888.0
+        ],
         "parameter_history": [
           {
             "N": 32,
@@ -1507,21 +937,6 @@
             "N": 128,
             "dt": 40.0
           }
-        ],
-        "cost_history": [
-          921733120.0,
-          4424318976.0,
-          20646821888.0
-        ],
-        "error_history": [
-          null,
-          0.0006507947320626918,
-          0.00013215982630909932
-        ],
-        "N_history": [
-          32,
-          64,
-          128
         ]
       }
     },
@@ -1540,11 +955,14 @@
       "non_target_parameters": {
         "N": 32
       },
-      "trajectory": {
-        "parameter_name": "dt",
-        "initial_value": 40.0,
-        "optimal_value": 20.0,
+      "results": {
         "converged": true,
+        "optimal_parameter_value": 20.0,
+        "total_computational_cost": 2765066240.0,
+        "cost_history": [
+          921733120.0,
+          1843333120.0
+        ],
         "parameter_history": [
           {
             "N": 32,
@@ -1554,18 +972,6 @@
             "N": 32,
             "dt": 20.0
           }
-        ],
-        "cost_history": [
-          921733120.0,
-          1843333120.0
-        ],
-        "error_history": [
-          null,
-          2.8790550806672496e-05
-        ],
-        "dt_history": [
-          40.0,
-          20.0
         ]
       }
     },
@@ -1584,11 +990,14 @@
       "non_target_parameters": {
         "N": 64
       },
-      "trajectory": {
-        "parameter_name": "dt",
-        "initial_value": 40.0,
-        "optimal_value": 20.0,
+      "results": {
         "converged": true,
+        "optimal_parameter_value": 20.0,
+        "total_computational_cost": 13272317952.0,
+        "cost_history": [
+          4424318976.0,
+          8847998976.0
+        ],
         "parameter_history": [
           {
             "N": 64,
@@ -1598,18 +1007,6 @@
             "N": 64,
             "dt": 20.0
           }
-        ],
-        "cost_history": [
-          4424318976.0,
-          8847998976.0
-        ],
-        "error_history": [
-          null,
-          3.413276619232683e-05
-        ],
-        "dt_history": [
-          40.0,
-          20.0
         ]
       }
     },
@@ -1628,90 +1025,23 @@
       "non_target_parameters": {
         "N": 128
       },
-      "trajectory": {
-        "parameter_name": "dt",
-        "initial_value": 40.0,
-        "optimal_value": 20.0,
+      "results": {
         "converged": true,
-        "parameter_history": [
-          {
-            "N": 128,
-            "dt": 40.0
-          },
-          {
-            "N": 128,
-            "dt": 20.0
-          }
-        ],
+        "optimal_parameter_value": 20.0,
+        "total_computational_cost": 61937483776.0,
         "cost_history": [
           20646821888.0,
           41290661888.0
         ],
-        "error_history": [
-          null,
-          2.9040154572528855e-05
-        ],
-        "dt_history": [
-          40.0,
-          20.0
-        ]
-      }
-    },
-    {
-      "task_id": 40,
-      "solver": "hasegawa_mima_nonlinear",
-      "profile": "p5",
-      "precision_level": "low",
-      "tolerance_rmse": 0.0005,
-      "target_parameter": "dt",
-      "target_config": {
-        "initial_value": 40.0,
-        "multiplication_factor": 0.5,
-        "max_iteration_num": 4
-      },
-      "non_target_parameters": {
-        "N": 256
-      },
-      "trajectory": {
-        "parameter_name": "dt",
-        "initial_value": 40.0,
-        "optimal_value": 5.0,
-        "converged": true,
         "parameter_history": [
           {
-            "N": 256,
+            "N": 128,
             "dt": 40.0
           },
           {
-            "N": 256,
+            "N": 128,
             "dt": 20.0
-          },
-          {
-            "N": 256,
-            "dt": 10.0
-          },
-          {
-            "N": 256,
-            "dt": 5.0
           }
-        ],
-        "cost_history": [
-          94385471488.0,
-          188757311488.0,
-          377500991488.0,
-          754988351488.0
-        ],
-        "error_history": [
-          null,
-          NaN,
-          NaN,
-          2.608854438427303e-07
-        ],
-        "dt_history": [
-          40.0,
-          20.0,
-          10.0,
-          5.0
         ]
       }
     },
@@ -1730,11 +1060,15 @@
       "non_target_parameters": {
         "dt": 5.0
       },
-      "trajectory": {
-        "parameter_name": "N",
-        "initial_value": 32,
-        "optimal_value": 128,
+      "results": {
         "converged": true,
+        "optimal_parameter_value": 128,
+        "total_computational_cost": 207916713984.0,
+        "cost_history": [
+          7372933120.0,
+          35390078976.0,
+          165153701888.0
+        ],
         "parameter_history": [
           {
             "N": 32,
@@ -1748,21 +1082,6 @@
             "N": 128,
             "dt": 5.0
           }
-        ],
-        "cost_history": [
-          7372933120.0,
-          35390078976.0,
-          165153701888.0
-        ],
-        "error_history": [
-          null,
-          0.0002400557383430057,
-          1.4592638852903025e-05
-        ],
-        "N_history": [
-          32,
-          64,
-          128
         ]
       }
     },
@@ -1781,11 +1100,15 @@
       "non_target_parameters": {
         "dt": 10.0
       },
-      "trajectory": {
-        "parameter_name": "N",
-        "initial_value": 32,
-        "optimal_value": 128,
+      "results": {
         "converged": true,
+        "optimal_parameter_value": 128,
+        "total_computational_cost": 103960233984.0,
+        "cost_history": [
+          3686533120.0,
+          17695358976.0,
+          82578341888.0
+        ],
         "parameter_history": [
           {
             "N": 32,
@@ -1799,21 +1122,6 @@
             "N": 128,
             "dt": 10.0
           }
-        ],
-        "cost_history": [
-          3686533120.0,
-          17695358976.0,
-          82578341888.0
-        ],
-        "error_history": [
-          null,
-          0.00024005533613112907,
-          1.459234821735675e-05
-        ],
-        "N_history": [
-          32,
-          64,
-          128
         ]
       }
     },
@@ -1832,11 +1140,15 @@
       "non_target_parameters": {
         "dt": 20.0
       },
-      "trajectory": {
-        "parameter_name": "N",
-        "initial_value": 32,
-        "optimal_value": 128,
+      "results": {
         "converged": true,
+        "optimal_parameter_value": 128,
+        "total_computational_cost": 51981993984.0,
+        "cost_history": [
+          1843333120.0,
+          8847998976.0,
+          41290661888.0
+        ],
         "parameter_history": [
           {
             "N": 32,
@@ -1850,21 +1162,6 @@
             "N": 128,
             "dt": 20.0
           }
-        ],
-        "cost_history": [
-          1843333120.0,
-          8847998976.0,
-          41290661888.0
-        ],
-        "error_history": [
-          null,
-          0.0002400415917800044,
-          1.4586253431582055e-05
-        ],
-        "N_history": [
-          32,
-          64,
-          128
         ]
       }
     },
@@ -1883,11 +1180,15 @@
       "non_target_parameters": {
         "dt": 40.0
       },
-      "trajectory": {
-        "parameter_name": "N",
-        "initial_value": 32,
-        "optimal_value": 128,
+      "results": {
         "converged": true,
+        "optimal_parameter_value": 128,
+        "total_computational_cost": 25992873984.0,
+        "cost_history": [
+          921733120.0,
+          4424318976.0,
+          20646821888.0
+        ],
         "parameter_history": [
           {
             "N": 32,
@@ -1901,21 +1202,6 @@
             "N": 128,
             "dt": 40.0
           }
-        ],
-        "cost_history": [
-          921733120.0,
-          4424318976.0,
-          20646821888.0
-        ],
-        "error_history": [
-          null,
-          0.0002395943123460601,
-          1.4449820573729142e-05
-        ],
-        "N_history": [
-          32,
-          64,
-          128
         ]
       }
     },
@@ -1934,11 +1220,14 @@
       "non_target_parameters": {
         "N": 32
       },
-      "trajectory": {
-        "parameter_name": "dt",
-        "initial_value": 40.0,
-        "optimal_value": 20.0,
+      "results": {
         "converged": true,
+        "optimal_parameter_value": 20.0,
+        "total_computational_cost": 2765066240.0,
+        "cost_history": [
+          921733120.0,
+          1843333120.0
+        ],
         "parameter_history": [
           {
             "N": 32,
@@ -1948,18 +1237,6 @@
             "N": 32,
             "dt": 20.0
           }
-        ],
-        "cost_history": [
-          921733120.0,
-          1843333120.0
-        ],
-        "error_history": [
-          null,
-          2.702170427826029e-05
-        ],
-        "dt_history": [
-          40.0,
-          20.0
         ]
       }
     },
@@ -1978,11 +1255,14 @@
       "non_target_parameters": {
         "N": 64
       },
-      "trajectory": {
-        "parameter_name": "dt",
-        "initial_value": 40.0,
-        "optimal_value": 20.0,
+      "results": {
         "converged": true,
+        "optimal_parameter_value": 20.0,
+        "total_computational_cost": 13272317952.0,
+        "cost_history": [
+          4424318976.0,
+          8847998976.0
+        ],
         "parameter_history": [
           {
             "N": 64,
@@ -1992,18 +1272,6 @@
             "N": 64,
             "dt": 20.0
           }
-        ],
-        "cost_history": [
-          4424318976.0,
-          8847998976.0
-        ],
-        "error_history": [
-          null,
-          2.68652029125654e-05
-        ],
-        "dt_history": [
-          40.0,
-          20.0
         ]
       }
     },
@@ -2022,83 +1290,23 @@
       "non_target_parameters": {
         "N": 128
       },
-      "trajectory": {
-        "parameter_name": "dt",
-        "initial_value": 40.0,
-        "optimal_value": 20.0,
+      "results": {
         "converged": true,
-        "parameter_history": [
-          {
-            "N": 128,
-            "dt": 40.0
-          },
-          {
-            "N": 128,
-            "dt": 20.0
-          }
-        ],
+        "optimal_parameter_value": 20.0,
+        "total_computational_cost": 61937483776.0,
         "cost_history": [
           20646821888.0,
           41290661888.0
         ],
-        "error_history": [
-          null,
-          2.6856844124673987e-05
-        ],
-        "dt_history": [
-          40.0,
-          20.0
-        ]
-      }
-    },
-    {
-      "task_id": 48,
-      "solver": "hasegawa_mima_nonlinear",
-      "profile": "p1",
-      "precision_level": "medium",
-      "tolerance_rmse": 0.0001,
-      "target_parameter": "dt",
-      "target_config": {
-        "initial_value": 40.0,
-        "multiplication_factor": 0.5,
-        "max_iteration_num": 4
-      },
-      "non_target_parameters": {
-        "N": 256
-      },
-      "trajectory": {
-        "parameter_name": "dt",
-        "initial_value": 40.0,
-        "optimal_value": 10.0,
-        "converged": true,
         "parameter_history": [
           {
-            "N": 256,
+            "N": 128,
             "dt": 40.0
           },
           {
-            "N": 256,
+            "N": 128,
             "dt": 20.0
-          },
-          {
-            "N": 256,
-            "dt": 10.0
           }
-        ],
-        "cost_history": [
-          94385471488.0,
-          188757311488.0,
-          377500991488.0
-        ],
-        "error_history": [
-          null,
-          NaN,
-          1.683303874411546e-06
-        ],
-        "dt_history": [
-          40.0,
-          20.0,
-          10.0
         ]
       }
     },
@@ -2117,11 +1325,16 @@
       "non_target_parameters": {
         "dt": 5.0
       },
-      "trajectory": {
-        "parameter_name": "N",
-        "initial_value": 32,
-        "optimal_value": 256,
+      "results": {
         "converged": true,
+        "optimal_parameter_value": 256,
+        "total_computational_cost": 962905065472.0,
+        "cost_history": [
+          7372933120.0,
+          35390078976.0,
+          165153701888.0,
+          754988351488.0
+        ],
         "parameter_history": [
           {
             "N": 32,
@@ -2139,24 +1352,6 @@
             "N": 256,
             "dt": 5.0
           }
-        ],
-        "cost_history": [
-          7372933120.0,
-          35390078976.0,
-          165153701888.0,
-          754988351488.0
-        ],
-        "error_history": [
-          null,
-          0.000693204480818057,
-          0.00019899205084857553,
-          8.672322374942443e-05
-        ],
-        "N_history": [
-          32,
-          64,
-          128,
-          256
         ]
       }
     },
@@ -2175,11 +1370,16 @@
       "non_target_parameters": {
         "dt": 10.0
       },
-      "trajectory": {
-        "parameter_name": "N",
-        "initial_value": 32,
-        "optimal_value": 256,
+      "results": {
         "converged": true,
+        "optimal_parameter_value": 256,
+        "total_computational_cost": 481461225472.0,
+        "cost_history": [
+          3686533120.0,
+          17695358976.0,
+          82578341888.0,
+          377500991488.0
+        ],
         "parameter_history": [
           {
             "N": 32,
@@ -2197,24 +1397,6 @@
             "N": 256,
             "dt": 10.0
           }
-        ],
-        "cost_history": [
-          3686533120.0,
-          17695358976.0,
-          82578341888.0,
-          377500991488.0
-        ],
-        "error_history": [
-          null,
-          0.0006932036195464037,
-          0.00019899080232451064,
-          8.672257925378418e-05
-        ],
-        "N_history": [
-          32,
-          64,
-          128,
-          256
         ]
       }
     },
@@ -2233,11 +1415,14 @@
       "non_target_parameters": {
         "N": 32
       },
-      "trajectory": {
-        "parameter_name": "dt",
-        "initial_value": 40.0,
-        "optimal_value": 20.0,
+      "results": {
         "converged": true,
+        "optimal_parameter_value": 20.0,
+        "total_computational_cost": 2765066240.0,
+        "cost_history": [
+          921733120.0,
+          1843333120.0
+        ],
         "parameter_history": [
           {
             "N": 32,
@@ -2247,18 +1432,6 @@
             "N": 32,
             "dt": 20.0
           }
-        ],
-        "cost_history": [
-          921733120.0,
-          1843333120.0
-        ],
-        "error_history": [
-          null,
-          1.283509910454903e-05
-        ],
-        "dt_history": [
-          40.0,
-          20.0
         ]
       }
     },
@@ -2277,11 +1450,14 @@
       "non_target_parameters": {
         "N": 64
       },
-      "trajectory": {
-        "parameter_name": "dt",
-        "initial_value": 40.0,
-        "optimal_value": 20.0,
+      "results": {
         "converged": true,
+        "optimal_parameter_value": 20.0,
+        "total_computational_cost": 13272317952.0,
+        "cost_history": [
+          4424318976.0,
+          8847998976.0
+        ],
         "parameter_history": [
           {
             "N": 64,
@@ -2291,18 +1467,6 @@
             "N": 64,
             "dt": 20.0
           }
-        ],
-        "cost_history": [
-          4424318976.0,
-          8847998976.0
-        ],
-        "error_history": [
-          null,
-          1.2427954528399692e-05
-        ],
-        "dt_history": [
-          40.0,
-          20.0
         ]
       }
     },
@@ -2321,266 +1485,23 @@
       "non_target_parameters": {
         "N": 128
       },
-      "trajectory": {
-        "parameter_name": "dt",
-        "initial_value": 40.0,
-        "optimal_value": 20.0,
+      "results": {
         "converged": true,
-        "parameter_history": [
-          {
-            "N": 128,
-            "dt": 40.0
-          },
-          {
-            "N": 128,
-            "dt": 20.0
-          }
-        ],
+        "optimal_parameter_value": 20.0,
+        "total_computational_cost": 61937483776.0,
         "cost_history": [
           20646821888.0,
           41290661888.0
         ],
-        "error_history": [
-          null,
-          1.2515008318925472e-05
-        ],
-        "dt_history": [
-          40.0,
-          20.0
-        ]
-      }
-    },
-    {
-      "task_id": 56,
-      "solver": "hasegawa_mima_nonlinear",
-      "profile": "p2",
-      "precision_level": "medium",
-      "tolerance_rmse": 0.0001,
-      "target_parameter": "dt",
-      "target_config": {
-        "initial_value": 40.0,
-        "multiplication_factor": 0.5,
-        "max_iteration_num": 4
-      },
-      "non_target_parameters": {
-        "N": 256
-      },
-      "trajectory": {
-        "parameter_name": "dt",
-        "initial_value": 40.0,
-        "optimal_value": 5.0,
-        "converged": true,
         "parameter_history": [
           {
-            "N": 256,
+            "N": 128,
             "dt": 40.0
           },
           {
-            "N": 256,
-            "dt": 20.0
-          },
-          {
-            "N": 256,
-            "dt": 10.0
-          },
-          {
-            "N": 256,
-            "dt": 5.0
-          }
-        ],
-        "cost_history": [
-          94385471488.0,
-          188757311488.0,
-          377500991488.0,
-          754988351488.0
-        ],
-        "error_history": [
-          null,
-          NaN,
-          NaN,
-          8.281439586323155e-08
-        ],
-        "dt_history": [
-          40.0,
-          20.0,
-          10.0,
-          5.0
-        ]
-      }
-    },
-    {
-      "task_id": 57,
-      "solver": "hasegawa_mima_nonlinear",
-      "profile": "p3",
-      "precision_level": "medium",
-      "tolerance_rmse": 0.0001,
-      "target_parameter": "N",
-      "target_config": {
-        "initial_value": 32,
-        "multiplication_factor": 2,
-        "max_iteration_num": 4
-      },
-      "non_target_parameters": {
-        "dt": 5.0
-      },
-      "trajectory": {
-        "parameter_name": "N",
-        "initial_value": 32,
-        "optimal_value": 64,
-        "converged": true,
-        "parameter_history": [
-          {
-            "N": 32,
-            "dt": 5.0
-          },
-          {
-            "N": 64,
-            "dt": 5.0
-          }
-        ],
-        "cost_history": [
-          7372933120.0,
-          35390078976.0
-        ],
-        "error_history": [
-          null,
-          2.3925744106493624e-14
-        ],
-        "N_history": [
-          32,
-          64
-        ]
-      }
-    },
-    {
-      "task_id": 58,
-      "solver": "hasegawa_mima_nonlinear",
-      "profile": "p3",
-      "precision_level": "medium",
-      "tolerance_rmse": 0.0001,
-      "target_parameter": "N",
-      "target_config": {
-        "initial_value": 32,
-        "multiplication_factor": 2,
-        "max_iteration_num": 4
-      },
-      "non_target_parameters": {
-        "dt": 10.0
-      },
-      "trajectory": {
-        "parameter_name": "N",
-        "initial_value": 32,
-        "optimal_value": 64,
-        "converged": true,
-        "parameter_history": [
-          {
-            "N": 32,
-            "dt": 10.0
-          },
-          {
-            "N": 64,
-            "dt": 10.0
-          }
-        ],
-        "cost_history": [
-          3686533120.0,
-          17695358976.0
-        ],
-        "error_history": [
-          null,
-          2.4004156409229194e-14
-        ],
-        "N_history": [
-          32,
-          64
-        ]
-      }
-    },
-    {
-      "task_id": 59,
-      "solver": "hasegawa_mima_nonlinear",
-      "profile": "p3",
-      "precision_level": "medium",
-      "tolerance_rmse": 0.0001,
-      "target_parameter": "N",
-      "target_config": {
-        "initial_value": 32,
-        "multiplication_factor": 2,
-        "max_iteration_num": 4
-      },
-      "non_target_parameters": {
-        "dt": 20.0
-      },
-      "trajectory": {
-        "parameter_name": "N",
-        "initial_value": 32,
-        "optimal_value": 64,
-        "converged": true,
-        "parameter_history": [
-          {
-            "N": 32,
-            "dt": 20.0
-          },
-          {
-            "N": 64,
+            "N": 128,
             "dt": 20.0
           }
-        ],
-        "cost_history": [
-          1843333120.0,
-          8847998976.0
-        ],
-        "error_history": [
-          null,
-          2.3856785414949116e-14
-        ],
-        "N_history": [
-          32,
-          64
-        ]
-      }
-    },
-    {
-      "task_id": 60,
-      "solver": "hasegawa_mima_nonlinear",
-      "profile": "p3",
-      "precision_level": "medium",
-      "tolerance_rmse": 0.0001,
-      "target_parameter": "N",
-      "target_config": {
-        "initial_value": 32,
-        "multiplication_factor": 2,
-        "max_iteration_num": 4
-      },
-      "non_target_parameters": {
-        "dt": 40.0
-      },
-      "trajectory": {
-        "parameter_name": "N",
-        "initial_value": 32,
-        "optimal_value": 64,
-        "converged": true,
-        "parameter_history": [
-          {
-            "N": 32,
-            "dt": 40.0
-          },
-          {
-            "N": 64,
-            "dt": 40.0
-          }
-        ],
-        "cost_history": [
-          921733120.0,
-          4424318976.0
-        ],
-        "error_history": [
-          null,
-          1.5149983517883322e-14
-        ],
-        "N_history": [
-          32,
-          64
         ]
       }
     },
@@ -2599,11 +1520,15 @@
       "non_target_parameters": {
         "N": 32
       },
-      "trajectory": {
-        "parameter_name": "dt",
-        "initial_value": 40.0,
-        "optimal_value": 10.0,
+      "results": {
         "converged": true,
+        "optimal_parameter_value": 10.0,
+        "total_computational_cost": 6451599360.0,
+        "cost_history": [
+          921733120.0,
+          1843333120.0,
+          3686533120.0
+        ],
         "parameter_history": [
           {
             "N": 32,
@@ -2617,21 +1542,6 @@
             "N": 32,
             "dt": 10.0
           }
-        ],
-        "cost_history": [
-          921733120.0,
-          1843333120.0,
-          3686533120.0
-        ],
-        "error_history": [
-          null,
-          0.00021086375122005642,
-          1.31881984327792e-05
-        ],
-        "dt_history": [
-          40.0,
-          20.0,
-          10.0
         ]
       }
     },
@@ -2650,148 +1560,28 @@
       "non_target_parameters": {
         "N": 64
       },
-      "trajectory": {
-        "parameter_name": "dt",
-        "initial_value": 40.0,
-        "optimal_value": 10.0,
+      "results": {
         "converged": true,
-        "parameter_history": [
-          {
-            "N": 64,
-            "dt": 40.0
-          },
-          {
-            "N": 64,
-            "dt": 20.0
-          },
-          {
-            "N": 64,
-            "dt": 10.0
-          }
-        ],
+        "optimal_parameter_value": 10.0,
+        "total_computational_cost": 30967676928.0,
         "cost_history": [
           4424318976.0,
           8847998976.0,
           17695358976.0
         ],
-        "error_history": [
-          null,
-          0.00021086375121996705,
-          1.3188198432857727e-05
-        ],
-        "dt_history": [
-          40.0,
-          20.0,
-          10.0
-        ]
-      }
-    },
-    {
-      "task_id": 63,
-      "solver": "hasegawa_mima_nonlinear",
-      "profile": "p3",
-      "precision_level": "medium",
-      "tolerance_rmse": 0.0001,
-      "target_parameter": "dt",
-      "target_config": {
-        "initial_value": 40.0,
-        "multiplication_factor": 0.5,
-        "max_iteration_num": 4
-      },
-      "non_target_parameters": {
-        "N": 128
-      },
-      "trajectory": {
-        "parameter_name": "dt",
-        "initial_value": 40.0,
-        "optimal_value": 10.0,
-        "converged": true,
         "parameter_history": [
           {
-            "N": 128,
+            "N": 64,
             "dt": 40.0
           },
           {
-            "N": 128,
+            "N": 64,
             "dt": 20.0
           },
           {
-            "N": 128,
+            "N": 64,
             "dt": 10.0
           }
-        ],
-        "cost_history": [
-          20646821888.0,
-          41290661888.0,
-          82578341888.0
-        ],
-        "error_history": [
-          null,
-          NaN,
-          1.3188198432839128e-05
-        ],
-        "dt_history": [
-          40.0,
-          20.0,
-          10.0
-        ]
-      }
-    },
-    {
-      "task_id": 64,
-      "solver": "hasegawa_mima_nonlinear",
-      "profile": "p3",
-      "precision_level": "medium",
-      "tolerance_rmse": 0.0001,
-      "target_parameter": "dt",
-      "target_config": {
-        "initial_value": 40.0,
-        "multiplication_factor": 0.5,
-        "max_iteration_num": 4
-      },
-      "non_target_parameters": {
-        "N": 256
-      },
-      "trajectory": {
-        "parameter_name": "dt",
-        "initial_value": 40.0,
-        "optimal_value": 5.0,
-        "converged": true,
-        "parameter_history": [
-          {
-            "N": 256,
-            "dt": 40.0
-          },
-          {
-            "N": 256,
-            "dt": 20.0
-          },
-          {
-            "N": 256,
-            "dt": 10.0
-          },
-          {
-            "N": 256,
-            "dt": 5.0
-          }
-        ],
-        "cost_history": [
-          94385471488.0,
-          188757311488.0,
-          377500991488.0,
-          754988351488.0
-        ],
-        "error_history": [
-          null,
-          NaN,
-          NaN,
-          8.243063270273557e-07
-        ],
-        "dt_history": [
-          40.0,
-          20.0,
-          10.0,
-          5.0
         ]
       }
     },
@@ -2810,11 +1600,14 @@
       "non_target_parameters": {
         "N": 32
       },
-      "trajectory": {
-        "parameter_name": "dt",
-        "initial_value": 40.0,
-        "optimal_value": 20.0,
+      "results": {
         "converged": true,
+        "optimal_parameter_value": 20.0,
+        "total_computational_cost": 2765066240.0,
+        "cost_history": [
+          921733120.0,
+          1843333120.0
+        ],
         "parameter_history": [
           {
             "N": 32,
@@ -2824,18 +1617,6 @@
             "N": 32,
             "dt": 20.0
           }
-        ],
-        "cost_history": [
-          921733120.0,
-          1843333120.0
-        ],
-        "error_history": [
-          null,
-          3.91289452561972e-05
-        ],
-        "dt_history": [
-          40.0,
-          20.0
         ]
       }
     },
@@ -2854,11 +1635,15 @@
       "non_target_parameters": {
         "N": 64
       },
-      "trajectory": {
-        "parameter_name": "dt",
-        "initial_value": 40.0,
-        "optimal_value": 10.0,
+      "results": {
         "converged": true,
+        "optimal_parameter_value": 10.0,
+        "total_computational_cost": 30967676928.0,
+        "cost_history": [
+          4424318976.0,
+          8847998976.0,
+          17695358976.0
+        ],
         "parameter_history": [
           {
             "N": 64,
@@ -2872,21 +1657,6 @@
             "N": 64,
             "dt": 10.0
           }
-        ],
-        "cost_history": [
-          4424318976.0,
-          8847998976.0,
-          17695358976.0
-        ],
-        "error_history": [
-          null,
-          0.000284226299618908,
-          2.4363820116147777e-05
-        ],
-        "dt_history": [
-          40.0,
-          20.0,
-          10.0
         ]
       }
     },
@@ -2905,11 +1675,16 @@
       "non_target_parameters": {
         "dt": 5.0
       },
-      "trajectory": {
-        "parameter_name": "N",
-        "initial_value": 32,
-        "optimal_value": 256,
+      "results": {
         "converged": true,
+        "optimal_parameter_value": 256,
+        "total_computational_cost": 962905065472.0,
+        "cost_history": [
+          7372933120.0,
+          35390078976.0,
+          165153701888.0,
+          754988351488.0
+        ],
         "parameter_history": [
           {
             "N": 32,
@@ -2927,24 +1702,6 @@
             "N": 256,
             "dt": 5.0
           }
-        ],
-        "cost_history": [
-          7372933120.0,
-          35390078976.0,
-          165153701888.0,
-          754988351488.0
-        ],
-        "error_history": [
-          null,
-          0.0006535517237644569,
-          0.00014491229009027702,
-          1.0430060298880633e-05
-        ],
-        "N_history": [
-          32,
-          64,
-          128,
-          256
         ]
       }
     },
@@ -2963,11 +1720,16 @@
       "non_target_parameters": {
         "dt": 10.0
       },
-      "trajectory": {
-        "parameter_name": "N",
-        "initial_value": 32,
-        "optimal_value": 256,
+      "results": {
         "converged": true,
+        "optimal_parameter_value": 256,
+        "total_computational_cost": 481461225472.0,
+        "cost_history": [
+          3686533120.0,
+          17695358976.0,
+          82578341888.0,
+          377500991488.0
+        ],
         "parameter_history": [
           {
             "N": 32,
@@ -2985,24 +1747,6 @@
             "N": 256,
             "dt": 10.0
           }
-        ],
-        "cost_history": [
-          3686533120.0,
-          17695358976.0,
-          82578341888.0,
-          377500991488.0
-        ],
-        "error_history": [
-          null,
-          0.000653551052990468,
-          0.00014489539966382637,
-          1.0391542039944822e-05
-        ],
-        "N_history": [
-          32,
-          64,
-          128,
-          256
         ]
       }
     },
@@ -3021,11 +1765,14 @@
       "non_target_parameters": {
         "N": 32
       },
-      "trajectory": {
-        "parameter_name": "dt",
-        "initial_value": 40.0,
-        "optimal_value": 20.0,
+      "results": {
         "converged": true,
+        "optimal_parameter_value": 20.0,
+        "total_computational_cost": 2765066240.0,
+        "cost_history": [
+          921733120.0,
+          1843333120.0
+        ],
         "parameter_history": [
           {
             "N": 32,
@@ -3035,18 +1782,6 @@
             "N": 32,
             "dt": 20.0
           }
-        ],
-        "cost_history": [
-          921733120.0,
-          1843333120.0
-        ],
-        "error_history": [
-          null,
-          2.8790550806672496e-05
-        ],
-        "dt_history": [
-          40.0,
-          20.0
         ]
       }
     },
@@ -3065,11 +1800,14 @@
       "non_target_parameters": {
         "N": 64
       },
-      "trajectory": {
-        "parameter_name": "dt",
-        "initial_value": 40.0,
-        "optimal_value": 20.0,
+      "results": {
         "converged": true,
+        "optimal_parameter_value": 20.0,
+        "total_computational_cost": 13272317952.0,
+        "cost_history": [
+          4424318976.0,
+          8847998976.0
+        ],
         "parameter_history": [
           {
             "N": 64,
@@ -3079,18 +1817,6 @@
             "N": 64,
             "dt": 20.0
           }
-        ],
-        "cost_history": [
-          4424318976.0,
-          8847998976.0
-        ],
-        "error_history": [
-          null,
-          3.413276619232683e-05
-        ],
-        "dt_history": [
-          40.0,
-          20.0
         ]
       }
     },
@@ -3109,264 +1835,23 @@
       "non_target_parameters": {
         "N": 128
       },
-      "trajectory": {
-        "parameter_name": "dt",
-        "initial_value": 40.0,
-        "optimal_value": 20.0,
+      "results": {
         "converged": true,
-        "parameter_history": [
-          {
-            "N": 128,
-            "dt": 40.0
-          },
-          {
-            "N": 128,
-            "dt": 20.0
-          }
-        ],
+        "optimal_parameter_value": 20.0,
+        "total_computational_cost": 61937483776.0,
         "cost_history": [
           20646821888.0,
           41290661888.0
         ],
-        "error_history": [
-          null,
-          2.9040154572528855e-05
-        ],
-        "dt_history": [
-          40.0,
-          20.0
-        ]
-      }
-    },
-    {
-      "task_id": 80,
-      "solver": "hasegawa_mima_nonlinear",
-      "profile": "p5",
-      "precision_level": "medium",
-      "tolerance_rmse": 0.0001,
-      "target_parameter": "dt",
-      "target_config": {
-        "initial_value": 40.0,
-        "multiplication_factor": 0.5,
-        "max_iteration_num": 4
-      },
-      "non_target_parameters": {
-        "N": 256
-      },
-      "trajectory": {
-        "parameter_name": "dt",
-        "initial_value": 40.0,
-        "optimal_value": 5.0,
-        "converged": true,
         "parameter_history": [
           {
-            "N": 256,
+            "N": 128,
             "dt": 40.0
           },
           {
-            "N": 256,
-            "dt": 20.0
-          },
-          {
-            "N": 256,
-            "dt": 10.0
-          },
-          {
-            "N": 256,
-            "dt": 5.0
-          }
-        ],
-        "cost_history": [
-          94385471488.0,
-          188757311488.0,
-          377500991488.0,
-          754988351488.0
-        ],
-        "error_history": [
-          null,
-          NaN,
-          NaN,
-          2.608854438427303e-07
-        ],
-        "dt_history": [
-          40.0,
-          20.0,
-          10.0,
-          5.0
-        ]
-      }
-    },
-    {
-      "task_id": 81,
-      "solver": "hasegawa_mima_nonlinear",
-      "profile": "p1",
-      "precision_level": "high",
-      "tolerance_rmse": 1e-05,
-      "target_parameter": "N",
-      "target_config": {
-        "initial_value": 32,
-        "multiplication_factor": 2,
-        "max_iteration_num": 4
-      },
-      "non_target_parameters": {
-        "dt": 5.0
-      },
-      "trajectory": {
-        "parameter_name": "N",
-        "initial_value": 32,
-        "optimal_value": 256,
-        "converged": true,
-        "parameter_history": [
-          {
-            "N": 32,
-            "dt": 5.0
-          },
-          {
-            "N": 64,
-            "dt": 5.0
-          },
-          {
-            "N": 128,
-            "dt": 5.0
-          },
-          {
-            "N": 256,
-            "dt": 5.0
-          }
-        ],
-        "cost_history": [
-          7372933120.0,
-          35390078976.0,
-          165153701888.0,
-          754988351488.0
-        ],
-        "error_history": [
-          null,
-          0.0002400557383430057,
-          1.4592638852903025e-05,
-          6.512918603425906e-07
-        ],
-        "N_history": [
-          32,
-          64,
-          128,
-          256
-        ]
-      }
-    },
-    {
-      "task_id": 82,
-      "solver": "hasegawa_mima_nonlinear",
-      "profile": "p1",
-      "precision_level": "high",
-      "tolerance_rmse": 1e-05,
-      "target_parameter": "N",
-      "target_config": {
-        "initial_value": 32,
-        "multiplication_factor": 2,
-        "max_iteration_num": 4
-      },
-      "non_target_parameters": {
-        "dt": 10.0
-      },
-      "trajectory": {
-        "parameter_name": "N",
-        "initial_value": 32,
-        "optimal_value": 256,
-        "converged": true,
-        "parameter_history": [
-          {
-            "N": 32,
-            "dt": 10.0
-          },
-          {
-            "N": 64,
-            "dt": 10.0
-          },
-          {
-            "N": 128,
-            "dt": 10.0
-          },
-          {
-            "N": 256,
-            "dt": 10.0
-          }
-        ],
-        "cost_history": [
-          3686533120.0,
-          17695358976.0,
-          82578341888.0,
-          377500991488.0
-        ],
-        "error_history": [
-          null,
-          0.00024005533613112907,
-          1.459234821735675e-05,
-          6.51166441078754e-07
-        ],
-        "N_history": [
-          32,
-          64,
-          128,
-          256
-        ]
-      }
-    },
-    {
-      "task_id": 83,
-      "solver": "hasegawa_mima_nonlinear",
-      "profile": "p1",
-      "precision_level": "high",
-      "tolerance_rmse": 1e-05,
-      "target_parameter": "N",
-      "target_config": {
-        "initial_value": 32,
-        "multiplication_factor": 2,
-        "max_iteration_num": 4
-      },
-      "non_target_parameters": {
-        "dt": 20.0
-      },
-      "trajectory": {
-        "parameter_name": "N",
-        "initial_value": 32,
-        "optimal_value": 256,
-        "converged": true,
-        "parameter_history": [
-          {
-            "N": 32,
-            "dt": 20.0
-          },
-          {
-            "N": 64,
-            "dt": 20.0
-          },
-          {
             "N": 128,
             "dt": 20.0
-          },
-          {
-            "N": 256,
-            "dt": 20.0
           }
-        ],
-        "cost_history": [
-          1843333120.0,
-          8847998976.0,
-          41290661888.0,
-          188757311488.0
-        ],
-        "error_history": [
-          null,
-          0.0002400415917800044,
-          1.4586253431582055e-05,
-          6.486318462010425e-07
-        ],
-        "N_history": [
-          32,
-          64,
-          128,
-          256
         ]
       }
     },
@@ -3385,11 +1870,15 @@
       "non_target_parameters": {
         "N": 32
       },
-      "trajectory": {
-        "parameter_name": "dt",
-        "initial_value": 40.0,
-        "optimal_value": 10.0,
+      "results": {
         "converged": true,
+        "optimal_parameter_value": 10.0,
+        "total_computational_cost": 6451599360.0,
+        "cost_history": [
+          921733120.0,
+          1843333120.0,
+          3686533120.0
+        ],
         "parameter_history": [
           {
             "N": 32,
@@ -3403,21 +1892,6 @@
             "N": 32,
             "dt": 10.0
           }
-        ],
-        "cost_history": [
-          921733120.0,
-          1843333120.0,
-          3686533120.0
-        ],
-        "error_history": [
-          null,
-          2.702170427826029e-05,
-          1.6932769229365282e-06
-        ],
-        "dt_history": [
-          40.0,
-          20.0,
-          10.0
         ]
       }
     },
@@ -3436,11 +1910,15 @@
       "non_target_parameters": {
         "N": 64
       },
-      "trajectory": {
-        "parameter_name": "dt",
-        "initial_value": 40.0,
-        "optimal_value": 10.0,
+      "results": {
         "converged": true,
+        "optimal_parameter_value": 10.0,
+        "total_computational_cost": 30967676928.0,
+        "cost_history": [
+          4424318976.0,
+          8847998976.0,
+          17695358976.0
+        ],
         "parameter_history": [
           {
             "N": 64,
@@ -3454,21 +1932,6 @@
             "N": 64,
             "dt": 10.0
           }
-        ],
-        "cost_history": [
-          4424318976.0,
-          8847998976.0,
-          17695358976.0
-        ],
-        "error_history": [
-          null,
-          2.68652029125654e-05,
-          1.6838264549380268e-06
-        ],
-        "dt_history": [
-          40.0,
-          20.0,
-          10.0
         ]
       }
     },
@@ -3487,90 +1950,28 @@
       "non_target_parameters": {
         "N": 128
       },
-      "trajectory": {
-        "parameter_name": "dt",
-        "initial_value": 40.0,
-        "optimal_value": 10.0,
+      "results": {
         "converged": true,
-        "parameter_history": [
-          {
-            "N": 128,
-            "dt": 40.0
-          },
-          {
-            "N": 128,
-            "dt": 20.0
-          },
-          {
-            "N": 128,
-            "dt": 10.0
-          }
-        ],
+        "optimal_parameter_value": 10.0,
+        "total_computational_cost": 144515825664.0,
         "cost_history": [
           20646821888.0,
           41290661888.0,
           82578341888.0
         ],
-        "error_history": [
-          null,
-          2.6856844124673987e-05,
-          1.683325110740665e-06
-        ],
-        "dt_history": [
-          40.0,
-          20.0,
-          10.0
-        ]
-      }
-    },
-    {
-      "task_id": 88,
-      "solver": "hasegawa_mima_nonlinear",
-      "profile": "p1",
-      "precision_level": "high",
-      "tolerance_rmse": 1e-05,
-      "target_parameter": "dt",
-      "target_config": {
-        "initial_value": 40.0,
-        "multiplication_factor": 0.5,
-        "max_iteration_num": 4
-      },
-      "non_target_parameters": {
-        "N": 256
-      },
-      "trajectory": {
-        "parameter_name": "dt",
-        "initial_value": 40.0,
-        "optimal_value": 10.0,
-        "converged": true,
         "parameter_history": [
           {
-            "N": 256,
+            "N": 128,
             "dt": 40.0
           },
           {
-            "N": 256,
+            "N": 128,
             "dt": 20.0
           },
           {
-            "N": 256,
+            "N": 128,
             "dt": 10.0
           }
-        ],
-        "cost_history": [
-          94385471488.0,
-          188757311488.0,
-          377500991488.0
-        ],
-        "error_history": [
-          null,
-          NaN,
-          1.683303874411546e-06
-        ],
-        "dt_history": [
-          40.0,
-          20.0,
-          10.0
         ]
       }
     },
@@ -3589,11 +1990,15 @@
       "non_target_parameters": {
         "N": 32
       },
-      "trajectory": {
-        "parameter_name": "dt",
-        "initial_value": 40.0,
-        "optimal_value": 10.0,
+      "results": {
         "converged": true,
+        "optimal_parameter_value": 10.0,
+        "total_computational_cost": 6451599360.0,
+        "cost_history": [
+          921733120.0,
+          1843333120.0,
+          3686533120.0
+        ],
         "parameter_history": [
           {
             "N": 32,
@@ -3607,21 +2012,6 @@
             "N": 32,
             "dt": 10.0
           }
-        ],
-        "cost_history": [
-          921733120.0,
-          1843333120.0,
-          3686533120.0
-        ],
-        "error_history": [
-          null,
-          1.283509910454903e-05,
-          8.036573891721085e-07
-        ],
-        "dt_history": [
-          40.0,
-          20.0,
-          10.0
         ]
       }
     },
@@ -3640,11 +2030,15 @@
       "non_target_parameters": {
         "N": 64
       },
-      "trajectory": {
-        "parameter_name": "dt",
-        "initial_value": 40.0,
-        "optimal_value": 10.0,
+      "results": {
         "converged": true,
+        "optimal_parameter_value": 10.0,
+        "total_computational_cost": 30967676928.0,
+        "cost_history": [
+          4424318976.0,
+          8847998976.0,
+          17695358976.0
+        ],
         "parameter_history": [
           {
             "N": 64,
@@ -3658,21 +2052,6 @@
             "N": 64,
             "dt": 10.0
           }
-        ],
-        "cost_history": [
-          4424318976.0,
-          8847998976.0,
-          17695358976.0
-        ],
-        "error_history": [
-          null,
-          1.2427954528399692e-05,
-          7.784951886720569e-07
-        ],
-        "dt_history": [
-          40.0,
-          20.0,
-          10.0
         ]
       }
     },
@@ -3691,273 +2070,28 @@
       "non_target_parameters": {
         "N": 128
       },
-      "trajectory": {
-        "parameter_name": "dt",
-        "initial_value": 40.0,
-        "optimal_value": 10.0,
+      "results": {
         "converged": true,
-        "parameter_history": [
-          {
-            "N": 128,
-            "dt": 40.0
-          },
-          {
-            "N": 128,
-            "dt": 20.0
-          },
-          {
-            "N": 128,
-            "dt": 10.0
-          }
-        ],
+        "optimal_parameter_value": 10.0,
+        "total_computational_cost": 144515825664.0,
         "cost_history": [
           20646821888.0,
           41290661888.0,
           82578341888.0
         ],
-        "error_history": [
-          null,
-          1.2515008318925472e-05,
-          8.293995006679598e-07
-        ],
-        "dt_history": [
-          40.0,
-          20.0,
-          10.0
-        ]
-      }
-    },
-    {
-      "task_id": 96,
-      "solver": "hasegawa_mima_nonlinear",
-      "profile": "p2",
-      "precision_level": "high",
-      "tolerance_rmse": 1e-05,
-      "target_parameter": "dt",
-      "target_config": {
-        "initial_value": 40.0,
-        "multiplication_factor": 0.5,
-        "max_iteration_num": 4
-      },
-      "non_target_parameters": {
-        "N": 256
-      },
-      "trajectory": {
-        "parameter_name": "dt",
-        "initial_value": 40.0,
-        "optimal_value": 5.0,
-        "converged": true,
         "parameter_history": [
           {
-            "N": 256,
+            "N": 128,
             "dt": 40.0
           },
           {
-            "N": 256,
+            "N": 128,
             "dt": 20.0
           },
           {
-            "N": 256,
-            "dt": 10.0
-          },
-          {
-            "N": 256,
-            "dt": 5.0
-          }
-        ],
-        "cost_history": [
-          94385471488.0,
-          188757311488.0,
-          377500991488.0,
-          754988351488.0
-        ],
-        "error_history": [
-          null,
-          NaN,
-          NaN,
-          8.281439586323155e-08
-        ],
-        "dt_history": [
-          40.0,
-          20.0,
-          10.0,
-          5.0
-        ]
-      }
-    },
-    {
-      "task_id": 97,
-      "solver": "hasegawa_mima_nonlinear",
-      "profile": "p3",
-      "precision_level": "high",
-      "tolerance_rmse": 1e-05,
-      "target_parameter": "N",
-      "target_config": {
-        "initial_value": 32,
-        "multiplication_factor": 2,
-        "max_iteration_num": 4
-      },
-      "non_target_parameters": {
-        "dt": 5.0
-      },
-      "trajectory": {
-        "parameter_name": "N",
-        "initial_value": 32,
-        "optimal_value": 64,
-        "converged": true,
-        "parameter_history": [
-          {
-            "N": 32,
-            "dt": 5.0
-          },
-          {
-            "N": 64,
-            "dt": 5.0
-          }
-        ],
-        "cost_history": [
-          7372933120.0,
-          35390078976.0
-        ],
-        "error_history": [
-          null,
-          2.3925744106493624e-14
-        ],
-        "N_history": [
-          32,
-          64
-        ]
-      }
-    },
-    {
-      "task_id": 98,
-      "solver": "hasegawa_mima_nonlinear",
-      "profile": "p3",
-      "precision_level": "high",
-      "tolerance_rmse": 1e-05,
-      "target_parameter": "N",
-      "target_config": {
-        "initial_value": 32,
-        "multiplication_factor": 2,
-        "max_iteration_num": 4
-      },
-      "non_target_parameters": {
-        "dt": 10.0
-      },
-      "trajectory": {
-        "parameter_name": "N",
-        "initial_value": 32,
-        "optimal_value": 64,
-        "converged": true,
-        "parameter_history": [
-          {
-            "N": 32,
-            "dt": 10.0
-          },
-          {
-            "N": 64,
+            "N": 128,
             "dt": 10.0
           }
-        ],
-        "cost_history": [
-          3686533120.0,
-          17695358976.0
-        ],
-        "error_history": [
-          null,
-          2.4004156409229194e-14
-        ],
-        "N_history": [
-          32,
-          64
-        ]
-      }
-    },
-    {
-      "task_id": 99,
-      "solver": "hasegawa_mima_nonlinear",
-      "profile": "p3",
-      "precision_level": "high",
-      "tolerance_rmse": 1e-05,
-      "target_parameter": "N",
-      "target_config": {
-        "initial_value": 32,
-        "multiplication_factor": 2,
-        "max_iteration_num": 4
-      },
-      "non_target_parameters": {
-        "dt": 20.0
-      },
-      "trajectory": {
-        "parameter_name": "N",
-        "initial_value": 32,
-        "optimal_value": 64,
-        "converged": true,
-        "parameter_history": [
-          {
-            "N": 32,
-            "dt": 20.0
-          },
-          {
-            "N": 64,
-            "dt": 20.0
-          }
-        ],
-        "cost_history": [
-          1843333120.0,
-          8847998976.0
-        ],
-        "error_history": [
-          null,
-          2.3856785414949116e-14
-        ],
-        "N_history": [
-          32,
-          64
-        ]
-      }
-    },
-    {
-      "task_id": 100,
-      "solver": "hasegawa_mima_nonlinear",
-      "profile": "p3",
-      "precision_level": "high",
-      "tolerance_rmse": 1e-05,
-      "target_parameter": "N",
-      "target_config": {
-        "initial_value": 32,
-        "multiplication_factor": 2,
-        "max_iteration_num": 4
-      },
-      "non_target_parameters": {
-        "dt": 40.0
-      },
-      "trajectory": {
-        "parameter_name": "N",
-        "initial_value": 32,
-        "optimal_value": 64,
-        "converged": true,
-        "parameter_history": [
-          {
-            "N": 32,
-            "dt": 40.0
-          },
-          {
-            "N": 64,
-            "dt": 40.0
-          }
-        ],
-        "cost_history": [
-          921733120.0,
-          4424318976.0
-        ],
-        "error_history": [
-          null,
-          1.5149983517883322e-14
-        ],
-        "N_history": [
-          32,
-          64
         ]
       }
     },
@@ -3976,11 +2110,16 @@
       "non_target_parameters": {
         "N": 32
       },
-      "trajectory": {
-        "parameter_name": "dt",
-        "initial_value": 40.0,
-        "optimal_value": 5.0,
+      "results": {
         "converged": true,
+        "optimal_parameter_value": 5.0,
+        "total_computational_cost": 13824532480.0,
+        "cost_history": [
+          921733120.0,
+          1843333120.0,
+          3686533120.0,
+          7372933120.0
+        ],
         "parameter_history": [
           {
             "N": 32,
@@ -3998,24 +2137,6 @@
             "N": 32,
             "dt": 5.0
           }
-        ],
-        "cost_history": [
-          921733120.0,
-          1843333120.0,
-          3686533120.0,
-          7372933120.0
-        ],
-        "error_history": [
-          null,
-          0.00021086375122005642,
-          1.31881984327792e-05,
-          8.243063269691172e-07
-        ],
-        "dt_history": [
-          40.0,
-          20.0,
-          10.0,
-          5.0
         ]
       }
     },
@@ -4034,162 +2155,33 @@
       "non_target_parameters": {
         "N": 64
       },
-      "trajectory": {
-        "parameter_name": "dt",
-        "initial_value": 40.0,
-        "optimal_value": 5.0,
+      "results": {
         "converged": true,
-        "parameter_history": [
-          {
-            "N": 64,
-            "dt": 40.0
-          },
-          {
-            "N": 64,
-            "dt": 20.0
-          },
-          {
-            "N": 64,
-            "dt": 10.0
-          },
-          {
-            "N": 64,
-            "dt": 5.0
-          }
-        ],
+        "optimal_parameter_value": 5.0,
+        "total_computational_cost": 66357755904.0,
         "cost_history": [
           4424318976.0,
           8847998976.0,
           17695358976.0,
           35390078976.0
         ],
-        "error_history": [
-          null,
-          0.00021086375121996705,
-          1.3188198432857727e-05,
-          8.243063269629664e-07
-        ],
-        "dt_history": [
-          40.0,
-          20.0,
-          10.0,
-          5.0
-        ]
-      }
-    },
-    {
-      "task_id": 103,
-      "solver": "hasegawa_mima_nonlinear",
-      "profile": "p3",
-      "precision_level": "high",
-      "tolerance_rmse": 1e-05,
-      "target_parameter": "dt",
-      "target_config": {
-        "initial_value": 40.0,
-        "multiplication_factor": 0.5,
-        "max_iteration_num": 4
-      },
-      "non_target_parameters": {
-        "N": 128
-      },
-      "trajectory": {
-        "parameter_name": "dt",
-        "initial_value": 40.0,
-        "optimal_value": 5.0,
-        "converged": true,
         "parameter_history": [
           {
-            "N": 128,
+            "N": 64,
             "dt": 40.0
           },
           {
-            "N": 128,
+            "N": 64,
             "dt": 20.0
           },
           {
-            "N": 128,
+            "N": 64,
             "dt": 10.0
           },
           {
-            "N": 128,
+            "N": 64,
             "dt": 5.0
           }
-        ],
-        "cost_history": [
-          20646821888.0,
-          41290661888.0,
-          82578341888.0,
-          165153701888.0
-        ],
-        "error_history": [
-          null,
-          NaN,
-          1.3188198432839128e-05,
-          8.243063268765927e-07
-        ],
-        "dt_history": [
-          40.0,
-          20.0,
-          10.0,
-          5.0
-        ]
-      }
-    },
-    {
-      "task_id": 104,
-      "solver": "hasegawa_mima_nonlinear",
-      "profile": "p3",
-      "precision_level": "high",
-      "tolerance_rmse": 1e-05,
-      "target_parameter": "dt",
-      "target_config": {
-        "initial_value": 40.0,
-        "multiplication_factor": 0.5,
-        "max_iteration_num": 4
-      },
-      "non_target_parameters": {
-        "N": 256
-      },
-      "trajectory": {
-        "parameter_name": "dt",
-        "initial_value": 40.0,
-        "optimal_value": 5.0,
-        "converged": true,
-        "parameter_history": [
-          {
-            "N": 256,
-            "dt": 40.0
-          },
-          {
-            "N": 256,
-            "dt": 20.0
-          },
-          {
-            "N": 256,
-            "dt": 10.0
-          },
-          {
-            "N": 256,
-            "dt": 5.0
-          }
-        ],
-        "cost_history": [
-          94385471488.0,
-          188757311488.0,
-          377500991488.0,
-          754988351488.0
-        ],
-        "error_history": [
-          null,
-          NaN,
-          NaN,
-          8.243063270273557e-07
-        ],
-        "dt_history": [
-          40.0,
-          20.0,
-          10.0,
-          5.0
         ]
       }
     },
@@ -4208,11 +2200,15 @@
       "non_target_parameters": {
         "N": 32
       },
-      "trajectory": {
-        "parameter_name": "dt",
-        "initial_value": 40.0,
-        "optimal_value": 10.0,
+      "results": {
         "converged": true,
+        "optimal_parameter_value": 10.0,
+        "total_computational_cost": 6451599360.0,
+        "cost_history": [
+          921733120.0,
+          1843333120.0,
+          3686533120.0
+        ],
         "parameter_history": [
           {
             "N": 32,
@@ -4226,21 +2222,6 @@
             "N": 32,
             "dt": 10.0
           }
-        ],
-        "cost_history": [
-          921733120.0,
-          1843333120.0,
-          3686533120.0
-        ],
-        "error_history": [
-          null,
-          3.91289452561972e-05,
-          2.441011833526301e-06
-        ],
-        "dt_history": [
-          40.0,
-          20.0,
-          10.0
         ]
       }
     },
@@ -4259,11 +2240,16 @@
       "non_target_parameters": {
         "N": 64
       },
-      "trajectory": {
-        "parameter_name": "dt",
-        "initial_value": 40.0,
-        "optimal_value": 5.0,
+      "results": {
         "converged": true,
+        "optimal_parameter_value": 5.0,
+        "total_computational_cost": 66357755904.0,
+        "cost_history": [
+          4424318976.0,
+          8847998976.0,
+          17695358976.0,
+          35390078976.0
+        ],
         "parameter_history": [
           {
             "N": 64,
@@ -4281,24 +2267,6 @@
             "N": 64,
             "dt": 5.0
           }
-        ],
-        "cost_history": [
-          4424318976.0,
-          8847998976.0,
-          17695358976.0,
-          35390078976.0
-        ],
-        "error_history": [
-          null,
-          0.000284226299618908,
-          2.4363820116147777e-05,
-          1.5716420777179241e-06
-        ],
-        "dt_history": [
-          40.0,
-          20.0,
-          10.0,
-          5.0
         ]
       }
     },
@@ -4317,11 +2285,15 @@
       "non_target_parameters": {
         "N": 32
       },
-      "trajectory": {
-        "parameter_name": "dt",
-        "initial_value": 40.0,
-        "optimal_value": 10.0,
+      "results": {
         "converged": true,
+        "optimal_parameter_value": 10.0,
+        "total_computational_cost": 6451599360.0,
+        "cost_history": [
+          921733120.0,
+          1843333120.0,
+          3686533120.0
+        ],
         "parameter_history": [
           {
             "N": 32,
@@ -4335,21 +2307,6 @@
             "N": 32,
             "dt": 10.0
           }
-        ],
-        "cost_history": [
-          921733120.0,
-          1843333120.0,
-          3686533120.0
-        ],
-        "error_history": [
-          null,
-          2.8790550806672496e-05,
-          1.796763300570711e-06
-        ],
-        "dt_history": [
-          40.0,
-          20.0,
-          10.0
         ]
       }
     },
@@ -4368,11 +2325,15 @@
       "non_target_parameters": {
         "N": 64
       },
-      "trajectory": {
-        "parameter_name": "dt",
-        "initial_value": 40.0,
-        "optimal_value": 10.0,
+      "results": {
         "converged": true,
+        "optimal_parameter_value": 10.0,
+        "total_computational_cost": 30967676928.0,
+        "cost_history": [
+          4424318976.0,
+          8847998976.0,
+          17695358976.0
+        ],
         "parameter_history": [
           {
             "N": 64,
@@ -4386,21 +2347,6 @@
             "N": 64,
             "dt": 10.0
           }
-        ],
-        "cost_history": [
-          4424318976.0,
-          8847998976.0,
-          17695358976.0
-        ],
-        "error_history": [
-          null,
-          3.413276619232683e-05,
-          2.0235193294365594e-06
-        ],
-        "dt_history": [
-          40.0,
-          20.0,
-          10.0
         ]
       }
     },
@@ -4419,97 +2365,28 @@
       "non_target_parameters": {
         "N": 128
       },
-      "trajectory": {
-        "parameter_name": "dt",
-        "initial_value": 40.0,
-        "optimal_value": 10.0,
+      "results": {
         "converged": true,
-        "parameter_history": [
-          {
-            "N": 128,
-            "dt": 40.0
-          },
-          {
-            "N": 128,
-            "dt": 20.0
-          },
-          {
-            "N": 128,
-            "dt": 10.0
-          }
-        ],
+        "optimal_parameter_value": 10.0,
+        "total_computational_cost": 144515825664.0,
         "cost_history": [
           20646821888.0,
           41290661888.0,
           82578341888.0
         ],
-        "error_history": [
-          null,
-          2.9040154572528855e-05,
-          2.410847120642062e-06
-        ],
-        "dt_history": [
-          40.0,
-          20.0,
-          10.0
-        ]
-      }
-    },
-    {
-      "task_id": 120,
-      "solver": "hasegawa_mima_nonlinear",
-      "profile": "p5",
-      "precision_level": "high",
-      "tolerance_rmse": 1e-05,
-      "target_parameter": "dt",
-      "target_config": {
-        "initial_value": 40.0,
-        "multiplication_factor": 0.5,
-        "max_iteration_num": 4
-      },
-      "non_target_parameters": {
-        "N": 256
-      },
-      "trajectory": {
-        "parameter_name": "dt",
-        "initial_value": 40.0,
-        "optimal_value": 5.0,
-        "converged": true,
         "parameter_history": [
           {
-            "N": 256,
+            "N": 128,
             "dt": 40.0
           },
           {
-            "N": 256,
+            "N": 128,
             "dt": 20.0
           },
           {
-            "N": 256,
+            "N": 128,
             "dt": 10.0
-          },
-          {
-            "N": 256,
-            "dt": 5.0
           }
-        ],
-        "cost_history": [
-          94385471488.0,
-          188757311488.0,
-          377500991488.0,
-          754988351488.0
-        ],
-        "error_history": [
-          null,
-          NaN,
-          NaN,
-          2.608854438427303e-07
-        ],
-        "dt_history": [
-          40.0,
-          20.0,
-          10.0,
-          5.0
         ]
       }
     }
