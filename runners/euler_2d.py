@@ -61,51 +61,30 @@ def generate_visualization_plots(output_dir, start_frame, end_frame):
     ny = metadata["parameters"]["n_grid_y"]
     aspect_ratio = ny / nx if nx > 0 else 1.0
 
-    # If frame range not specified, get from metadata (good fallback)
-    if start_frame is None:
-        start_frame = metadata.get("start_frame", 0)
-    if end_frame is None:
-        end_frame = metadata.get("end_frame", 20)
-
     print(f"\nGenerating visualization plots for {output_dir}...")
     print(f"  Grid: {nx}x{ny}, aspect ratio: {aspect_ratio:.6f}")
     print(f"  Frames: {start_frame} to {end_frame}")
 
     for frame in range(start_frame, end_frame + 1):
-        # Try multiple filename patterns (gas_frame_N.vtk or output_N.vtk)
         vtk_file = vtk_dir / f"gas_frame_{frame}.vtk"
-        if not vtk_file.exists():
-            vtk_file = vtk_dir / f"output_{frame}.vtk"
-        if not vtk_file.exists():
-            print(f"  Warning: VTK file not found for frame {frame}, skipping...")
-            continue
 
-        # --- MODIFIED: Call _read_vtk_structured directly ---
-        try:
-            # This now returns a dict of 2D (ny, nx) interior-only arrays
-            fields = _read_vtk_structured(vtk_file, nx, ny)
-        except Exception as e:
-            print(f"  Error reading VTK file {vtk_file}: {e}, skipping...")
-            continue
+        # Read VTK file - fail fast if missing or corrupted
+        fields = _read_vtk_structured(vtk_file, nx, ny)
 
-        # --- MODIFIED: Data is already 2D ---
-        # Extract fields
-        density_2d = fields.get("density", fields.get("rho", None))
-        pressure_2d = fields.get("pressure", fields.get("p", None))
-        vx_2d = fields.get("velocity_x", fields.get("u", None))
-        vy_2d = fields.get("velocity_y", fields.get("v", None))
+        # Extract fields - fail fast if missing
+        density_2d = fields["density"]
+        pressure_vertices = fields["pressure"]
+        vx_2d = fields["velocity_x"]
+        vy_2d = fields["velocity_y"]
 
-        if density_2d is None or pressure_2d is None:
-            print(f"  Warning: Required fields not found in frame {frame}, skipping...")
-            continue
-
-        # Reshaping is no longer needed
-        # Set defaults if velocity fields are missing
-        if vx_2d is None:
-            vx_2d = np.zeros((ny, nx))
-        if vy_2d is None:
-            vy_2d = np.zeros((ny, nx))
-        # --- End of modification ---
+        # Pressure is vertex-centered (ny+1, nx+1), average to cell centers (ny, nx)
+        # For each cell (i,j), average the 4 surrounding vertex values
+        pressure_2d = (
+            pressure_vertices[:-1, :-1]
+            + pressure_vertices[:-1, 1:]
+            + pressure_vertices[1:, :-1]
+            + pressure_vertices[1:, 1:]
+        ) / 4.0
 
         # Create 2x2 plot
         fig, axes = plt.subplots(2, 2, figsize=(14, 10))

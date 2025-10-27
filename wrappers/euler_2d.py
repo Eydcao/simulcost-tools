@@ -66,7 +66,10 @@ def _read_vtk_structured(vtk_path, nx, ny):
     Read binary VTK structured grid file and extract INTERIOR-ONLY data.
 
     This function reads the raw data, which includes ghost cells,
-    and immediately extracts the interior (nx * ny) cells.
+    and immediately extracts the interior data.
+
+    IMPORTANT: Pressure is stored on vertices (at i*dx positions),
+    while other fields are stored on cell centers (at (i+0.5)*dx positions).
 
     Args:
         vtk_path (str): Path to the VTK file.
@@ -75,7 +78,8 @@ def _read_vtk_structured(vtk_path, nx, ny):
 
     Returns:
         dict: Dictionary containing INTERIOR-ONLY field data.
-              Fields are 2D numpy arrays (ny, nx).
+              - Cell-centered fields (density, velocity): shape (ny, nx)
+              - Vertex-centered fields (pressure): shape (ny+1, nx+1)
     """
     mesh = meshio.read(vtk_path)
     data = {}
@@ -87,13 +91,23 @@ def _read_vtk_structured(vtk_path, nx, ny):
     if mesh.point_data:
         for field_name, field_values_raw in mesh.point_data.items():
 
+            # Determine if this is a vertex-centered field (pressure)
+            is_vertex = field_name.lower() == "pressure" or field_name.lower() == "p"
+
             # --- Helper to extract interior 2D field ---
-            def extract(raw_flat_field):
+            def extract_cell_centered(raw_flat_field):
                 # Reshape to 2D (y-major, x-fastest)
                 field_2d = raw_flat_field.reshape((ny_pts, nx_pts))
-                # Extract interior [ghost_layer:-ghost_layer]
+                # Extract interior cells [ghost_layer : ghost_layer+ny, ghost_layer : ghost_layer+nx]
                 interior_2d = field_2d[ghost_layer : ghost_layer + ny, ghost_layer : ghost_layer + nx]
-                # --- MODIFIED: Return 2D array ---
+                return interior_2d
+
+            def extract_vertex_centered(raw_flat_field):
+                # Reshape to 2D (y-major, x-fastest)
+                field_2d = raw_flat_field.reshape((ny_pts, nx_pts))
+                # Extract interior vertices [ghost_layer : ghost_layer+ny+1, ghost_layer : ghost_layer+nx+1]
+                # One extra vertex in each direction to bound the cells
+                interior_2d = field_2d[ghost_layer : ghost_layer + ny + 1, ghost_layer : ghost_layer + nx + 1]
                 return interior_2d
 
             # ------------------------------------------------
@@ -102,15 +116,21 @@ def _read_vtk_structured(vtk_path, nx, ny):
             if field_values_raw.ndim == 2:
                 if field_values_raw.shape[1] == 1:
                     # Scalar field stored as (N, 1) - flatten to 1D
-                    data[field_name] = extract(field_values_raw.ravel())
+                    if is_vertex:
+                        data[field_name] = extract_vertex_centered(field_values_raw.ravel())
+                    else:
+                        data[field_name] = extract_cell_centered(field_values_raw.ravel())
                 elif field_values_raw.shape[1] == 3:
-                    # Vector field (3 components) - extract x,y components
-                    data[f"{field_name}_x"] = extract(field_values_raw[:, 0])
-                    data[f"{field_name}_y"] = extract(field_values_raw[:, 1])
+                    # Vector field (3 components) - always cell-centered
+                    data[f"{field_name}_x"] = extract_cell_centered(field_values_raw[:, 0])
+                    data[f"{field_name}_y"] = extract_cell_centered(field_values_raw[:, 1])
                     # z-component available as field_values[:, 2] if needed
             elif field_values_raw.ndim == 1:
                 # Already 1D scalar field
-                data[field_name] = extract(field_values_raw)
+                if is_vertex:
+                    data[field_name] = extract_vertex_centered(field_values_raw)
+                else:
+                    data[field_name] = extract_cell_centered(field_values_raw)
 
     return data
 
@@ -175,32 +195,39 @@ def get_res_euler_2d(profile, n_grid_x, cfl, cg_tolerance):
     return results, cost
 
 
-def _interpolate_field_2d_interior(field_src_2d, nx_src, ny_src, nx_tgt, ny_tgt):
+def _interpolate_field_2d_interior(field_src_2d, nx_src, ny_src, nx_tgt, ny_tgt, is_vertex=False):
     """
     Interpolates a 2D field from source grid to target grid.
 
-    CLEAN VERSION: Operates on interior-only data (no ghost cells).
-    This function expects both input and output to be 2D interior arrays.
+    Handles both cell-centered and vertex-centered fields correctly.
 
     Args:
-        field_src_2d: 2D array of INTERIOR cells only (ny_src, nx_src)
+        field_src_2d: 2D array of INTERIOR data only
+                      - Cell-centered: shape (ny_src, nx_src), at (i+0.5)*dx
+                      - Vertex-centered: shape (ny_src+1, nx_src+1), at i*dx
         nx_src: Number of interior cells in x-direction for source
         ny_src: Number of interior cells in y-direction for source
         nx_tgt: Number of interior cells in x-direction for target
         ny_tgt: Number of interior cells in y-direction for target
+        is_vertex: True if field is vertex-centered (like pressure)
 
     Returns:
-        Interpolated 2D field on target grid interior (ny_tgt, nx_tgt)
+        Interpolated 2D field on target grid
+        - Cell-centered: shape (ny_tgt, nx_tgt)
+        - Vertex-centered: shape (ny_tgt+1, nx_tgt+1)
     """
-    # --- MODIFIED: field_src_2d is already 2D, no reshape needed ---
-
     # Grid spacing
     dx_src = 1.0 / nx_src
     dy_src = dx_src
 
-    # Create coordinates for source grid (interior cell centers)
-    x_src = np.array([(i + 0.5) * dx_src for i in range(nx_src)])
-    y_src = np.array([(j + 0.5) * dy_src for j in range(ny_src)])
+    if is_vertex:
+        # Vertex-centered: defined at vertices i*dx
+        x_src = np.array([i * dx_src for i in range(nx_src + 1)])
+        y_src = np.array([j * dy_src for j in range(ny_src + 1)])
+    else:
+        # Cell-centered: defined at cell centers (i+0.5)*dx
+        x_src = np.array([(i + 0.5) * dx_src for i in range(nx_src)])
+        y_src = np.array([(j + 0.5) * dy_src for j in range(ny_src)])
 
     # Create interpolator (RegularGridInterpolator expects (y, x) order for 2D)
     interp = RegularGridInterpolator(
@@ -211,20 +238,30 @@ def _interpolate_field_2d_interior(field_src_2d, nx_src, ny_src, nx_tgt, ny_tgt)
         fill_value=None,  # Use extrapolation at boundaries
     )
 
-    # Create coordinates for target grid (interior cell centers)
+    # Create coordinates for target grid
     dx_tgt = 1.0 / nx_tgt
     dy_tgt = dx_tgt
-    x_tgt = np.array([(i + 0.5) * dx_tgt for i in range(nx_tgt)])
-    y_tgt = np.array([(j + 0.5) * dy_tgt for j in range(ny_tgt)])
+
+    if is_vertex:
+        # Vertex-centered target points
+        x_tgt = np.array([i * dx_tgt for i in range(nx_tgt + 1)])
+        y_tgt = np.array([j * dy_tgt for j in range(ny_tgt + 1)])
+    else:
+        # Cell-centered target points
+        x_tgt = np.array([(i + 0.5) * dx_tgt for i in range(nx_tgt)])
+        y_tgt = np.array([(j + 0.5) * dy_tgt for j in range(ny_tgt)])
 
     # Create meshgrid for target points (indexing='ij' gives (ny, nx) shape)
     yy_tgt, xx_tgt = np.meshgrid(y_tgt, x_tgt, indexing="ij")
 
     # Interpolate
     points = np.stack([yy_tgt.ravel(), xx_tgt.ravel()], axis=-1)
-    field_tgt_2d = interp(points).reshape((ny_tgt, nx_tgt))
 
-    # --- MODIFIED: Return 2D array ---
+    if is_vertex:
+        field_tgt_2d = interp(points).reshape((ny_tgt + 1, nx_tgt + 1))
+    else:
+        field_tgt_2d = interp(points).reshape((ny_tgt, nx_tgt))
+
     return field_tgt_2d
 
 
@@ -287,9 +324,10 @@ def compare_res_euler_2d(
             # data1 is coarser, interpolate to data2's finer grid
             print(f"Interpolating coarse grid ({nx1}x{ny1}) to fine grid ({nx2}x{ny2})")
 
-            # --- MODIFIED: Pass 2D fields directly ---
-            density1_interp = _interpolate_field_2d_interior(density1_interior, nx1, ny1, nx2, ny2)
-            pressure1_interp = _interpolate_field_2d_interior(pressure1_interior, nx1, ny1, nx2, ny2)
+            # Interpolate cell-centered density
+            density1_interp = _interpolate_field_2d_interior(density1_interior, nx1, ny1, nx2, ny2, is_vertex=False)
+            # Interpolate vertex-centered pressure
+            pressure1_interp = _interpolate_field_2d_interior(pressure1_interior, nx1, ny1, nx2, ny2, is_vertex=True)
 
             # Use NRMSE: data2 is finer (higher res), use it for normalization
             density_nrmse = _compute_nrmse_maxabs(density1_interp, density2_interior)
@@ -298,9 +336,10 @@ def compare_res_euler_2d(
             # data2 is coarser, interpolate to data1's finer grid
             print(f"Interpolating coarse grid ({nx2}x{ny2}) to fine grid ({nx1}x{ny1})")
 
-            # --- MODIFIED: Pass 2D fields directly ---
-            density2_interp = _interpolate_field_2d_interior(density2_interior, nx2, ny2, nx1, ny1)
-            pressure2_interp = _interpolate_field_2d_interior(pressure2_interior, nx2, ny2, nx1, ny1)
+            # Interpolate cell-centered density
+            density2_interp = _interpolate_field_2d_interior(density2_interior, nx2, ny2, nx1, ny1, is_vertex=False)
+            # Interpolate vertex-centered pressure
+            pressure2_interp = _interpolate_field_2d_interior(pressure2_interior, nx2, ny2, nx1, ny1, is_vertex=True)
 
             # Use NRMSE: data1 is finer (higher res), use it for normalization
             density_nrmse = _compute_nrmse_maxabs(density2_interp, density1_interior)

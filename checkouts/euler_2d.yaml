@@ -4,10 +4,10 @@ precision_levels:
   medium:
     tolerance_rmse: 0.04
   high:
-    tolerance_rmse: 0.01
+    tolerance_rmse: 0.008
 
 profiles:
-  active_profiles: ["p1", "p2", "p3", "p4", "p5"]
+  active_profiles: ["p1", "p2", "p3", "p4", "p5", "p6", "p7", "p8", "p9"]
 
 target_parameters:
   cfl:
