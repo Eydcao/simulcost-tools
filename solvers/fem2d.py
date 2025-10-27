@@ -4,6 +4,7 @@ import scipy.sparse
 import scipy.sparse.linalg
 import meshio
 import os
+import matplotlib.pyplot as plt
 
 from .base_solver import SIMULATOR
 from .fastipc_utils.common.physics.fixed_corotated import *
@@ -25,8 +26,8 @@ class FEM2D(SIMULATOR):
         self.nx = cfg.nx
 
         # Case type and gravity
-        self.case = cfg.get('case', 'cantilever')
-        self.gravity = cfg.envs_params.get('gravity', -9.8)
+        self.case = cfg.get("case", "cantilever")
+        self.gravity = cfg.envs_params.get("gravity", -9.8)
 
         # Newton solver parameters
         # newton_v_res_tol: velocity-like residual tolerance
@@ -45,7 +46,7 @@ class FEM2D(SIMULATOR):
         self.n_elements = len(self.mesh_elements)
 
         self.real = ti.f64
-        ti.init(arch=ti.cpu, default_fp=self.real, verbose=self.verbose)
+        ti.init(arch=ti.gpu, default_fp=self.real, verbose=self.verbose)
 
         self.cnt = ti.field(dtype=ti.i32, shape=())
         self.x = ti.Vector.field(self.dim, dtype=self.real)
@@ -57,7 +58,7 @@ class FEM2D(SIMULATOR):
         self.zero = ti.Vector.field(self.dim, dtype=self.real)
         self.restT = ti.Matrix.field(self.dim, self.dim, dtype=self.real)
         self.vertices = ti.field(dtype=ti.i32)
-        
+
         ti.root.dense(ti.k, self.n_particles).place(self.x, self.xPrev, self.xTilde, self.xn, self.v, self.m)
         ti.root.dense(ti.k, self.n_particles).place(self.zero)
         ti.root.dense(ti.i, self.n_elements).place(self.restT)
@@ -66,7 +67,7 @@ class FEM2D(SIMULATOR):
         self.data_rhs = ti.field(self.real, shape=self.n_particles * self.dim)
         self.data_mat = ti.field(self.real, shape=(3, 2000000))
         self.data_sol = ti.field(self.real, shape=self.n_particles * self.dim)
-        
+
         self.dump_dir = cfg.dump_dir
         self.fixed_nodes = []
         if not os.path.exists(self.dump_dir):
@@ -74,12 +75,13 @@ class FEM2D(SIMULATOR):
 
         # Cost counters for tracking computational work
         self.cnt_hessian_gradient = 0  # Counts hessian+gradient assembly (cost: n_elements each)
-        self.cnt_energy = 0             # Counts energy evaluation (cost: n_elements each)
-        self.cnt_linear_solve = 0       # Counts sparse linear solve (cost: (n_particles*dim)^2 each)
+        self.cnt_energy = 0  # Counts energy evaluation (cost: n_elements each)
+        self.cnt_linear_solve = 0  # Counts sparse linear solve (cost: (n_particles*dim)^2 each)
 
         # Energy tracking for convergence analysis
         self.energy_log_kin = []
         self.energy_log_pot = []
+        self.energy_log_gra = []
         self.energy_log_tot = []
 
     def _get_mesh(self, nx, cfg):
@@ -95,10 +97,10 @@ class FEM2D(SIMULATOR):
         dy = Ly / n_gy_e
 
         # Get starting position based on case
-        if self.case == 'vibration_bar':
-            x_start = cfg.envs_params.get('x_start', 0.0)
-            y_start = cfg.envs_params.get('y_start', 0.0)
-        elif self.case == 'twisting_column':
+        if self.case == "vibration_bar":
+            x_start = cfg.envs_params.get("x_start", 0.0)
+            y_start = cfg.envs_params.get("y_start", 0.0)
+        elif self.case == "twisting_column":
             x_start = 0.0
             y_start = 0.0
         else:  # cantilever
@@ -112,6 +114,7 @@ class FEM2D(SIMULATOR):
                 v_pos[i * (n_gy_e + 1) + j] = np.array([x_start + dx * i, y_start + dy * j])
 
         from scipy.spatial import Delaunay
+
         tri = Delaunay(v_pos)
         cells = [("triangle", tri.simplices)]
 
@@ -167,7 +170,9 @@ class FEM2D(SIMULATOR):
             if ti.static(self.dim == 2):
                 total_energy += elasticity_energy(ti.Vector([sig[0, 0], sig[1, 1]]), self.la, self.mu) * dt * dt * vol0
             else:
-                total_energy += elasticity_energy(ti.Vector([sig[0, 0], sig[1, 1], sig[2, 2]]), self.la, self.mu) * dt * dt * vol0
+                total_energy += (
+                    elasticity_energy(ti.Vector([sig[0, 0], sig[1, 1], sig[2, 2]]), self.la, self.mu) * dt * dt * vol0
+                )
         return total_energy
 
     @ti.kernel
@@ -192,13 +197,35 @@ class FEM2D(SIMULATOR):
                 pot_energy += elasticity_energy(ti.Vector([sig[0, 0], sig[1, 1], sig[2, 2]]), self.la, self.mu) * vol0
         return pot_energy
 
+    @ti.kernel
+    def compute_gravitational_energy(self, y_ref: ti.f64) -> ti.f64:
+        """Compute gravitational potential energy relative to reference height
+
+        E_grav = m * g * (y - y_ref)
+
+        Args:
+            y_ref: Reference height (typically initial COM height)
+
+        Returns:
+            Gravitational potential energy
+        """
+        gra_energy = 0.0
+        for i in range(self.n_particles):
+            # Gravitational potential energy: m * g * height
+            # y[1] is the vertical coordinate
+            # NOTE gravity is negative for downward direction
+            gra_energy -= self.m[i] * self.gravity * (self.x[i][1] - y_ref)
+        return gra_energy
+
     def log_energies(self):
-        """Compute and log kinetic, potential, and total energies"""
+        """Compute and log kinetic, potential, gravitational, and total energies"""
         kin = self.compute_kinetic_energy()
         pot = self.compute_elastic_potential_energy()
-        tot = kin + pot
+        gra = self.compute_gravitational_energy(self.y_ref)
+        tot = kin + pot + gra
         self.energy_log_kin.append(kin)
         self.energy_log_pot.append(pot)
+        self.energy_log_gra.append(gra)
         self.energy_log_tot.append(tot)
 
     @ti.kernel
@@ -221,8 +248,16 @@ class FEM2D(SIMULATOR):
             dPdF = elasticity_first_piola_kirchoff_stress_derivative(F, self.la, self.mu) * dt * dt * vol0
             P = elasticity_first_piola_kirchoff_stress(F, self.la, self.mu) * dt * dt * vol0
             if ti.static(self.dim == 2):
-                intermediate = ti.Matrix([[0.0, 0.0, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0],
-                                          [0.0, 0.0, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0]])
+                intermediate = ti.Matrix(
+                    [
+                        [0.0, 0.0, 0.0, 0.0],
+                        [0.0, 0.0, 0.0, 0.0],
+                        [0.0, 0.0, 0.0, 0.0],
+                        [0.0, 0.0, 0.0, 0.0],
+                        [0.0, 0.0, 0.0, 0.0],
+                        [0.0, 0.0, 0.0, 0.0],
+                    ]
+                )
                 for colI in ti.static(range(4)):
                     _000 = dPdF[0, colI] * IB[0, 0]
                     _010 = dPdF[0, colI] * IB[1, 0]
@@ -238,9 +273,16 @@ class FEM2D(SIMULATOR):
                     intermediate[5, colI] = _210 + _311
                     intermediate[0, colI] = -intermediate[2, colI] - intermediate[4, colI]
                     intermediate[1, colI] = -intermediate[3, colI] - intermediate[5, colI]
-                indMap = ti.Vector([self.vertices[e, 0] * 2, self.vertices[e, 0] * 2 + 1,
-                                    self.vertices[e, 1] * 2, self.vertices[e, 1] * 2 + 1,
-                                    self.vertices[e, 2] * 2, self.vertices[e, 2] * 2 + 1])
+                indMap = ti.Vector(
+                    [
+                        self.vertices[e, 0] * 2,
+                        self.vertices[e, 0] * 2 + 1,
+                        self.vertices[e, 1] * 2,
+                        self.vertices[e, 1] * 2 + 1,
+                        self.vertices[e, 2] * 2,
+                        self.vertices[e, 2] * 2 + 1,
+                    ]
+                )
                 for colI in ti.static(range(6)):
                     _000 = intermediate[colI, 0] * IB[0, 0]
                     _010 = intermediate[colI, 0] * IB[1, 0]
@@ -259,60 +301,168 @@ class FEM2D(SIMULATOR):
                     c = self.cnt[None] + e * 36 + colI * 6 + 3
                     self.data_mat[0, c], self.data_mat[1, c], self.data_mat[2, c] = indMap[5], indMap[colI], _210 + _311
                     c = self.cnt[None] + e * 36 + colI * 6 + 4
-                    self.data_mat[0, c], self.data_mat[1, c], self.data_mat[2, c] = indMap[0], indMap[colI], - _000 - _101 - _010 - _111
+                    self.data_mat[0, c], self.data_mat[1, c], self.data_mat[2, c] = (
+                        indMap[0],
+                        indMap[colI],
+                        -_000 - _101 - _010 - _111,
+                    )
                     c = self.cnt[None] + e * 36 + colI * 6 + 5
-                    self.data_mat[0, c], self.data_mat[1, c], self.data_mat[2, c] = indMap[1], indMap[colI], - _200 - _301 - _210 - _311
+                    self.data_mat[0, c], self.data_mat[1, c], self.data_mat[2, c] = (
+                        indMap[1],
+                        indMap[colI],
+                        -_200 - _301 - _210 - _311,
+                    )
                 self.data_rhs[self.vertices[e, 1] * 2 + 0] -= P[0, 0] * IB[0, 0] + P[0, 1] * IB[0, 1]
                 self.data_rhs[self.vertices[e, 1] * 2 + 1] -= P[1, 0] * IB[0, 0] + P[1, 1] * IB[0, 1]
                 self.data_rhs[self.vertices[e, 2] * 2 + 0] -= P[0, 0] * IB[1, 0] + P[0, 1] * IB[1, 1]
                 self.data_rhs[self.vertices[e, 2] * 2 + 1] -= P[1, 0] * IB[1, 0] + P[1, 1] * IB[1, 1]
-                self.data_rhs[self.vertices[e, 0] * 2 + 0] -= -P[0, 0] * IB[0, 0] - P[0, 1] * IB[0, 1] - P[0, 0] * IB[1, 0] - P[0, 1] * IB[1, 1]
-                self.data_rhs[self.vertices[e, 0] * 2 + 1] -= -P[1, 0] * IB[0, 0] - P[1, 1] * IB[0, 1] - P[1, 0] * IB[1, 0] - P[1, 1] * IB[1, 1]
+                self.data_rhs[self.vertices[e, 0] * 2 + 0] -= (
+                    -P[0, 0] * IB[0, 0] - P[0, 1] * IB[0, 1] - P[0, 0] * IB[1, 0] - P[0, 1] * IB[1, 1]
+                )
+                self.data_rhs[self.vertices[e, 0] * 2 + 1] -= (
+                    -P[1, 0] * IB[0, 0] - P[1, 1] * IB[0, 1] - P[1, 0] * IB[1, 0] - P[1, 1] * IB[1, 1]
+                )
             else:
                 Z = ti.Vector([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
                 intermediate = ti.Matrix.rows([Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z, Z])
                 for colI in ti.static(range(9)):
-                    intermediate[3, colI] = IB[0, 0] * dPdF[0, colI] + IB[0, 1] * dPdF[3, colI] + IB[0, 2] * dPdF[6, colI]
-                    intermediate[4, colI] = IB[0, 0] * dPdF[1, colI] + IB[0, 1] * dPdF[4, colI] + IB[0, 2] * dPdF[7, colI]
-                    intermediate[5, colI] = IB[0, 0] * dPdF[2, colI] + IB[0, 1] * dPdF[5, colI] + IB[0, 2] * dPdF[8, colI]
-                    intermediate[6, colI] = IB[1, 0] * dPdF[0, colI] + IB[1, 1] * dPdF[3, colI] + IB[1, 2] * dPdF[6, colI]
-                    intermediate[7, colI] = IB[1, 0] * dPdF[1, colI] + IB[1, 1] * dPdF[4, colI] + IB[1, 2] * dPdF[7, colI]
-                    intermediate[8, colI] = IB[1, 0] * dPdF[2, colI] + IB[1, 1] * dPdF[5, colI] + IB[1, 2] * dPdF[8, colI]
-                    intermediate[9, colI] = IB[2, 0] * dPdF[0, colI] + IB[2, 1] * dPdF[3, colI] + IB[2, 2] * dPdF[6, colI]
-                    intermediate[10, colI] = IB[2, 0] * dPdF[1, colI] + IB[2, 1] * dPdF[4, colI] + IB[2, 2] * dPdF[7, colI]
-                    intermediate[11, colI] = IB[2, 0] * dPdF[2, colI] + IB[2, 1] * dPdF[5, colI] + IB[2, 2] * dPdF[8, colI]
+                    intermediate[3, colI] = (
+                        IB[0, 0] * dPdF[0, colI] + IB[0, 1] * dPdF[3, colI] + IB[0, 2] * dPdF[6, colI]
+                    )
+                    intermediate[4, colI] = (
+                        IB[0, 0] * dPdF[1, colI] + IB[0, 1] * dPdF[4, colI] + IB[0, 2] * dPdF[7, colI]
+                    )
+                    intermediate[5, colI] = (
+                        IB[0, 0] * dPdF[2, colI] + IB[0, 1] * dPdF[5, colI] + IB[0, 2] * dPdF[8, colI]
+                    )
+                    intermediate[6, colI] = (
+                        IB[1, 0] * dPdF[0, colI] + IB[1, 1] * dPdF[3, colI] + IB[1, 2] * dPdF[6, colI]
+                    )
+                    intermediate[7, colI] = (
+                        IB[1, 0] * dPdF[1, colI] + IB[1, 1] * dPdF[4, colI] + IB[1, 2] * dPdF[7, colI]
+                    )
+                    intermediate[8, colI] = (
+                        IB[1, 0] * dPdF[2, colI] + IB[1, 1] * dPdF[5, colI] + IB[1, 2] * dPdF[8, colI]
+                    )
+                    intermediate[9, colI] = (
+                        IB[2, 0] * dPdF[0, colI] + IB[2, 1] * dPdF[3, colI] + IB[2, 2] * dPdF[6, colI]
+                    )
+                    intermediate[10, colI] = (
+                        IB[2, 0] * dPdF[1, colI] + IB[2, 1] * dPdF[4, colI] + IB[2, 2] * dPdF[7, colI]
+                    )
+                    intermediate[11, colI] = (
+                        IB[2, 0] * dPdF[2, colI] + IB[2, 1] * dPdF[5, colI] + IB[2, 2] * dPdF[8, colI]
+                    )
                     intermediate[0, colI] = -intermediate[3, colI] - intermediate[6, colI] - intermediate[9, colI]
                     intermediate[1, colI] = -intermediate[4, colI] - intermediate[7, colI] - intermediate[10, colI]
                     intermediate[2, colI] = -intermediate[5, colI] - intermediate[8, colI] - intermediate[11, colI]
-                indMap = ti.Vector([self.vertices[e, 0] * 3, self.vertices[e, 0] * 3 + 1, self.vertices[e, 0] * 3 + 2,
-                                    self.vertices[e, 1] * 3, self.vertices[e, 1] * 3 + 1, self.vertices[e, 1] * 3 + 2,
-                                    self.vertices[e, 2] * 3, self.vertices[e, 2] * 3 + 1, self.vertices[e, 2] * 3 + 2,
-                                    self.vertices[e, 3] * 3, self.vertices[e, 3] * 3 + 1, self.vertices[e, 3] * 3 + 2])
+                indMap = ti.Vector(
+                    [
+                        self.vertices[e, 0] * 3,
+                        self.vertices[e, 0] * 3 + 1,
+                        self.vertices[e, 0] * 3 + 2,
+                        self.vertices[e, 1] * 3,
+                        self.vertices[e, 1] * 3 + 1,
+                        self.vertices[e, 1] * 3 + 2,
+                        self.vertices[e, 2] * 3,
+                        self.vertices[e, 2] * 3 + 1,
+                        self.vertices[e, 2] * 3 + 2,
+                        self.vertices[e, 3] * 3,
+                        self.vertices[e, 3] * 3 + 1,
+                        self.vertices[e, 3] * 3 + 2,
+                    ]
+                )
                 for rowI in ti.static(range(12)):
                     c = self.cnt[None] + e * 144 + rowI * 12 + 0
-                    self.data_mat[0, c], self.data_mat[1, c], self.data_mat[2, c] = indMap[rowI], indMap[3], IB[0, 0] * intermediate[rowI, 0] + IB[0, 1] * intermediate[rowI, 3] + IB[0, 2] * intermediate[rowI, 6]
+                    self.data_mat[0, c], self.data_mat[1, c], self.data_mat[2, c] = (
+                        indMap[rowI],
+                        indMap[3],
+                        IB[0, 0] * intermediate[rowI, 0]
+                        + IB[0, 1] * intermediate[rowI, 3]
+                        + IB[0, 2] * intermediate[rowI, 6],
+                    )
                     c = self.cnt[None] + e * 144 + rowI * 12 + 1
-                    self.data_mat[0, c], self.data_mat[1, c], self.data_mat[2, c] = indMap[rowI], indMap[4], IB[0, 0] * intermediate[rowI, 1] + IB[0, 1] * intermediate[rowI, 4] + IB[0, 2] * intermediate[rowI, 7]
+                    self.data_mat[0, c], self.data_mat[1, c], self.data_mat[2, c] = (
+                        indMap[rowI],
+                        indMap[4],
+                        IB[0, 0] * intermediate[rowI, 1]
+                        + IB[0, 1] * intermediate[rowI, 4]
+                        + IB[0, 2] * intermediate[rowI, 7],
+                    )
                     c = self.cnt[None] + e * 144 + rowI * 12 + 2
-                    self.data_mat[0, c], self.data_mat[1, c], self.data_mat[2, c] = indMap[rowI], indMap[5], IB[0, 0] * intermediate[rowI, 2] + IB[0, 1] * intermediate[rowI, 5] + IB[0, 2] * intermediate[rowI, 8]
+                    self.data_mat[0, c], self.data_mat[1, c], self.data_mat[2, c] = (
+                        indMap[rowI],
+                        indMap[5],
+                        IB[0, 0] * intermediate[rowI, 2]
+                        + IB[0, 1] * intermediate[rowI, 5]
+                        + IB[0, 2] * intermediate[rowI, 8],
+                    )
                     c = self.cnt[None] + e * 144 + rowI * 12 + 3
-                    self.data_mat[0, c], self.data_mat[1, c], self.data_mat[2, c] = indMap[rowI], indMap[6], IB[1, 0] * intermediate[rowI, 0] + IB[1, 1] * intermediate[rowI, 3] + IB[1, 2] * intermediate[rowI, 6]
+                    self.data_mat[0, c], self.data_mat[1, c], self.data_mat[2, c] = (
+                        indMap[rowI],
+                        indMap[6],
+                        IB[1, 0] * intermediate[rowI, 0]
+                        + IB[1, 1] * intermediate[rowI, 3]
+                        + IB[1, 2] * intermediate[rowI, 6],
+                    )
                     c = self.cnt[None] + e * 144 + rowI * 12 + 4
-                    self.data_mat[0, c], self.data_mat[1, c], self.data_mat[2, c] = indMap[rowI], indMap[7], IB[1, 0] * intermediate[rowI, 1] + IB[1, 1] * intermediate[rowI, 4] + IB[1, 2] * intermediate[rowI, 7]
+                    self.data_mat[0, c], self.data_mat[1, c], self.data_mat[2, c] = (
+                        indMap[rowI],
+                        indMap[7],
+                        IB[1, 0] * intermediate[rowI, 1]
+                        + IB[1, 1] * intermediate[rowI, 4]
+                        + IB[1, 2] * intermediate[rowI, 7],
+                    )
                     c = self.cnt[None] + e * 144 + rowI * 12 + 5
-                    self.data_mat[0, c], self.data_mat[1, c], self.data_mat[2, c] = indMap[rowI], indMap[8], IB[1, 0] * intermediate[rowI, 2] + IB[1, 1] * intermediate[rowI, 5] + IB[1, 2] * intermediate[rowI, 8]
+                    self.data_mat[0, c], self.data_mat[1, c], self.data_mat[2, c] = (
+                        indMap[rowI],
+                        indMap[8],
+                        IB[1, 0] * intermediate[rowI, 2]
+                        + IB[1, 1] * intermediate[rowI, 5]
+                        + IB[1, 2] * intermediate[rowI, 8],
+                    )
                     c = self.cnt[None] + e * 144 + rowI * 12 + 6
-                    self.data_mat[0, c], self.data_mat[1, c], self.data_mat[2, c] = indMap[rowI], indMap[9], IB[2, 0] * intermediate[rowI, 0] + IB[2, 1] * intermediate[rowI, 3] + IB[2, 2] * intermediate[rowI, 6]
+                    self.data_mat[0, c], self.data_mat[1, c], self.data_mat[2, c] = (
+                        indMap[rowI],
+                        indMap[9],
+                        IB[2, 0] * intermediate[rowI, 0]
+                        + IB[2, 1] * intermediate[rowI, 3]
+                        + IB[2, 2] * intermediate[rowI, 6],
+                    )
                     c = self.cnt[None] + e * 144 + rowI * 12 + 7
-                    self.data_mat[0, c], self.data_mat[1, c], self.data_mat[2, c] = indMap[rowI], indMap[10], IB[2, 0] * intermediate[rowI, 1] + IB[2, 1] * intermediate[rowI, 4] + IB[2, 2] * intermediate[rowI, 7]
+                    self.data_mat[0, c], self.data_mat[1, c], self.data_mat[2, c] = (
+                        indMap[rowI],
+                        indMap[10],
+                        IB[2, 0] * intermediate[rowI, 1]
+                        + IB[2, 1] * intermediate[rowI, 4]
+                        + IB[2, 2] * intermediate[rowI, 7],
+                    )
                     c = self.cnt[None] + e * 144 + rowI * 12 + 8
-                    self.data_mat[0, c], self.data_mat[1, c], self.data_mat[2, c] = indMap[rowI], indMap[11], IB[2, 0] * intermediate[rowI, 2] + IB[2, 1] * intermediate[rowI, 5] + IB[2, 2] * intermediate[rowI, 8]
+                    self.data_mat[0, c], self.data_mat[1, c], self.data_mat[2, c] = (
+                        indMap[rowI],
+                        indMap[11],
+                        IB[2, 0] * intermediate[rowI, 2]
+                        + IB[2, 1] * intermediate[rowI, 5]
+                        + IB[2, 2] * intermediate[rowI, 8],
+                    )
                     c = self.cnt[None] + e * 144 + rowI * 12 + 9
-                    self.data_mat[0, c], self.data_mat[1, c], self.data_mat[2, c] = indMap[rowI], indMap[0], -self.data_mat[2, c - 9] - self.data_mat[2, c - 6] - self.data_mat[2, c - 3]
+                    self.data_mat[0, c], self.data_mat[1, c], self.data_mat[2, c] = (
+                        indMap[rowI],
+                        indMap[0],
+                        -self.data_mat[2, c - 9] - self.data_mat[2, c - 6] - self.data_mat[2, c - 3],
+                    )
                     c = self.cnt[None] + e * 144 + rowI * 12 + 10
-                    self.data_mat[0, c], self.data_mat[1, c], self.data_mat[2, c] = indMap[rowI], indMap[1], -self.data_mat[2, c - 9] - self.data_mat[2, c - 6] - self.data_mat[2, c - 3]
+                    self.data_mat[0, c], self.data_mat[1, c], self.data_mat[2, c] = (
+                        indMap[rowI],
+                        indMap[1],
+                        -self.data_mat[2, c - 9] - self.data_mat[2, c - 6] - self.data_mat[2, c - 3],
+                    )
                     c = self.cnt[None] + e * 144 + rowI * 12 + 11
-                    self.data_mat[0, c], self.data_mat[1, c], self.data_mat[2, c] = indMap[rowI], indMap[2], -self.data_mat[2, c - 9] - self.data_mat[2, c - 6] - self.data_mat[2, c - 3]
+                    self.data_mat[0, c], self.data_mat[1, c], self.data_mat[2, c] = (
+                        indMap[rowI],
+                        indMap[2],
+                        -self.data_mat[2, c - 9] - self.data_mat[2, c - 6] - self.data_mat[2, c - 3],
+                    )
                 R10 = IB[0, 0] * P[0, 0] + IB[0, 1] * P[0, 1] + IB[0, 2] * P[0, 2]
                 R11 = IB[0, 0] * P[1, 0] + IB[0, 1] * P[1, 1] + IB[0, 2] * P[1, 2]
                 R12 = IB[0, 0] * P[2, 0] + IB[0, 1] * P[2, 1] + IB[0, 2] * P[2, 2]
@@ -342,7 +492,7 @@ class FEM2D(SIMULATOR):
             self.xPrev[i] = self.x[i]
 
     @ti.kernel
-    def apply_sol(self, alpha : ti.f64):
+    def apply_sol(self, alpha: ti.f64):
         for i in range(self.n_particles):
             for d in ti.static(range(self.dim)):
                 self.x[i][d] = self.xPrev[i][d] + self.data_sol[i * self.dim + d] * alpha
@@ -372,12 +522,20 @@ class FEM2D(SIMULATOR):
         self.compute_restT_and_m()
         self.zero.fill(0)
 
+        # Compute initial center of mass y position as reference for gravitational energy
+        # Convert taichi fields to numpy for this computation
+        m_np = self.m.to_numpy()
+        x_np = self.x.to_numpy()
+        total_mass = np.sum(m_np)
+        com_y = np.sum(m_np * x_np[:, 1])
+        self.y_ref = com_y / total_mass if total_mass > 0 else 0.0
+
         # Set initial velocity based on case
-        if self.case == 'vibration_bar':
+        if self.case == "vibration_bar":
             # Sinusoidal initial velocity: v_x = amplitude * sin(0.5 * pi * x / Lx)
-            v0 = self.cfg.envs_params.get('initial_velocity_amplitude', 0.75)
+            v0 = self.cfg.envs_params.get("initial_velocity_amplitude", 0.75)
             Lx = self.cfg.envs_params.Lx
-            x_start = self.cfg.envs_params.get('x_start', 0.0)
+            x_start = self.cfg.envs_params.get("x_start", 0.0)
 
             initial_v = np.zeros((self.n_particles, 2))
             for i in range(self.n_particles):
@@ -385,11 +543,11 @@ class FEM2D(SIMULATOR):
                 initial_v[i, 0] = v0 * np.sin(0.5 * np.pi * x_rel / Lx)
 
             self.v.from_numpy(initial_v)
-        elif self.case == 'twisting_column':
+        elif self.case == "twisting_column":
             # Twisting motion: create rotational velocity field around center
             # v_x = -omega * (y - y_center)
             # v_y = omega * (x - x_center)
-            amplitude = self.cfg.envs_params.get('initial_twist_amplitude', 1.0)
+            amplitude = self.cfg.envs_params.get("initial_twist_amplitude", 1.0)
             Lx = self.cfg.envs_params.Lx
             Ly = self.cfg.envs_params.Ly
             x_center = Lx / 2.0
@@ -403,9 +561,9 @@ class FEM2D(SIMULATOR):
                 # Scale by distance from center to create differential rotation
                 dx = x_pos - x_center
                 dy = y_pos - y_center
-                r = np.sqrt(dx*dx + dy*dy)
+                r = np.sqrt(dx * dx + dy * dy)
                 # Linear velocity profile: v = omega * r, scaled by height
-                y_factor = (y_pos / Ly)  # 0 at bottom, 1 at top
+                y_factor = y_pos / Ly  # 0 at bottom, 1 at top
                 initial_v[i, 0] = -amplitude * dy * y_factor
                 initial_v[i, 1] = amplitude * dx * y_factor
 
@@ -415,14 +573,14 @@ class FEM2D(SIMULATOR):
             self.v.fill(0)
 
         # Set boundary conditions based on case
-        if self.case == 'cantilever':
+        if self.case == "cantilever":
             # Fix left edge (x < 1e-6)
             for i in range(self.n_particles):
                 if self.mesh_particles[i, 0] < 1e-6:
                     self.fixed_nodes.append(i)
-        elif self.case == 'vibration_bar':
+        elif self.case == "vibration_bar":
             # Fix left edge (x < x_start + small tolerance)
-            x_start = self.cfg.envs_params.get('x_start', 0.0)
+            x_start = self.cfg.envs_params.get("x_start", 0.0)
             Lx = self.cfg.envs_params.Lx
             dx = Lx / self.nx
             bc_dist_dx = 0.05 * dx
@@ -430,7 +588,7 @@ class FEM2D(SIMULATOR):
             for i in range(self.n_particles):
                 if self.mesh_particles[i, 0] < x_start + bc_dist_dx:
                     self.fixed_nodes.append(i)
-        elif self.case == 'twisting_column':
+        elif self.case == "twisting_column":
             # Fix bottom edge (y < small tolerance)
             Ly = self.cfg.envs_params.Ly
             dy = Ly / int(self.nx * Ly / self.cfg.envs_params.Lx)
@@ -463,7 +621,7 @@ class FEM2D(SIMULATOR):
 
             # Convert to sparse matrix format
             mat = self.data_mat.to_numpy()
-            row, col, val = mat[0, :self.cnt[None]], mat[1, :self.cnt[None]], mat[2, :self.cnt[None]]
+            row, col, val = mat[0, : self.cnt[None]], mat[1, : self.cnt[None]], mat[2, : self.cnt[None]]
             rhs = self.data_rhs.to_numpy()
             n = self.n_particles * self.dim
             A = scipy.sparse.csr_matrix((val, (row, col)), shape=(n, n))
@@ -476,7 +634,7 @@ class FEM2D(SIMULATOR):
                 D.append(node_idx * self.dim + 1)
 
             # For vibration_bar: constrain all Y DOFs (1D vibration, no Y motion)
-            if self.case == 'vibration_bar':
+            if self.case == "vibration_bar":
                 for node_idx in range(self.n_particles):
                     D.append(node_idx * self.dim + 1)  # Y component
 
@@ -503,7 +661,7 @@ class FEM2D(SIMULATOR):
             # residual is |Δx|_∞, we check if |Δx|/dt < newton_v_res_tol
             residual = self.output_residual(dt)
             if self.verbose:
-                print(f'  Newton iter {newton_iter}: |Δx| = {residual:.6e}, |Δx|/dt = {residual/dt:.6e}')
+                print(f"  Newton iter {newton_iter}: |Δx| = {residual:.6e}, |Δx|/dt = {residual/dt:.6e}")
 
             converged = residual < self.newton_v_res_tol * dt
 
@@ -552,13 +710,10 @@ class FEM2D(SIMULATOR):
         for node_idx in self.fixed_nodes:
             is_bc[node_idx] = 1.0
 
-        point_data = {
-            'velocity': particle_vel,
-            'is_bc': is_bc
-        }
+        point_data = {"velocity": particle_vel, "is_bc": is_bc}
 
-        mesh = meshio.Mesh(points=particle_pos, cells={'triangle': self.mesh_elements}, point_data=point_data)
-        meshio.write(f'{self.dump_dir}/frame_{self.record_frame:06d}.vtk', mesh)
+        mesh = meshio.Mesh(points=particle_pos, cells={"triangle": self.mesh_elements}, point_data=point_data)
+        meshio.write(f"{self.dump_dir}/frame_{self.record_frame:06d}.vtk", mesh)
 
     def post_process(self):
         """
@@ -584,7 +739,7 @@ class FEM2D(SIMULATOR):
 
         # Cost constants per element (for 2D)
         cost_per_hessian_gradient = 804  # operations per element
-        cost_per_energy = 54             # operations per element
+        cost_per_energy = 54  # operations per element
 
         cost_hessian_gradient = self.cnt_hessian_gradient * self.n_elements * cost_per_hessian_gradient
         cost_energy = self.cnt_energy * self.n_elements * cost_per_energy
@@ -611,6 +766,7 @@ class FEM2D(SIMULATOR):
                 "n_dof": int(n_dof),
             }
             import json
+
             json.dump(meta, f, indent=4)
 
         # Save energies for convergence analysis
@@ -619,12 +775,40 @@ class FEM2D(SIMULATOR):
             energies_path,
             kin=np.array(self.energy_log_kin),
             pot=np.array(self.energy_log_pot),
+            gra=np.array(self.energy_log_gra),
             tot=np.array(self.energy_log_tot),
         )
 
+        # Plot energies vs time
+        paint_res = 300
+        plt.clf()
+        plt.figure(figsize=(8, 4))
+        plt.rcParams["figure.dpi"] = paint_res
+        plt.rcParams["font.family"] = "Times New Roman"
+        plt.xlabel(r"$t[s]$")
+        plt.ylabel(r"$E[J]$")
+
+        # Set legend
+        legend = [r"$E_{kin}$", r"$E_{pot}$", r"$E_{grav}$", r"$E_{tot}$"]
+
+        # Time series
+        time = np.arange(len(self.energy_log_kin)) * self.cfg.record_dt
+
+        # Plot all energy components
+        plt.plot(time, self.energy_log_kin, label=legend[0])
+        plt.plot(time, self.energy_log_pot, label=legend[1])
+        plt.plot(time, self.energy_log_gra, label=legend[2])
+        plt.plot(time, self.energy_log_tot, label=legend[3])
+
+        plt.legend(loc="best")
+        plt.savefig(os.path.join(self.dump_dir, "energies.png"), dpi=paint_res)
+        plt.close()
+
         if self.verbose:
             print(f"\nCost Summary:")
-            print(f"  Hessian+Gradient assemblies: {self.cnt_hessian_gradient} × {self.n_elements} × {cost_per_hessian_gradient} = {cost_hessian_gradient}")
+            print(
+                f"  Hessian+Gradient assemblies: {self.cnt_hessian_gradient} × {self.n_elements} × {cost_per_hessian_gradient} = {cost_hessian_gradient}"
+            )
             print(f"  Energy evaluations: {self.cnt_energy} × {self.n_elements} × {cost_per_energy} = {cost_energy}")
             print(f"  Linear solves: {self.cnt_linear_solve} × {n_dof}^2 = {cost_linear_solve}")
             print(f"  Total cost: {total_cost}")

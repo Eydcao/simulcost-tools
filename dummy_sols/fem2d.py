@@ -8,7 +8,9 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from wrappers.fem2d import run_sim_fem2d, compare_energies_fem2d
 
 
-def find_convergent_nx(profile, nx, dt, newton_v_res_tol, energy_tolerance, var_threshold, multiplication_factor, max_iteration_num):
+def find_convergent_nx(
+    profile, nx, dt, newton_v_res_tol, energy_tolerance, var_threshold, multiplication_factor, max_iteration_num
+):
     """Iteratively increase nx (grid resolution) until convergence is achieved with fixed other parameters.
 
     Args:
@@ -56,7 +58,7 @@ def find_convergent_nx(profile, nx, dt, newton_v_res_tol, energy_tolerance, var_
                 dt2=dt,
                 newton_v_res_tol2=newton_v_res_tol,
                 energy_tolerance=energy_tolerance,
-                var_threshold=var_threshold
+                var_threshold=var_threshold,
             )
 
             if is_converged:
@@ -79,7 +81,9 @@ def find_convergent_nx(profile, nx, dt, newton_v_res_tol, energy_tolerance, var_
     return converged, best_nx, cost_history, param_history
 
 
-def find_convergent_dt(profile, nx, dt, newton_v_res_tol, energy_tolerance, var_threshold, multiplication_factor, max_iteration_num):
+def find_convergent_dt(
+    profile, nx, dt, newton_v_res_tol, energy_tolerance, var_threshold, multiplication_factor, max_iteration_num
+):
     """Iteratively reduce dt (time step size) until convergence is achieved.
 
     Args:
@@ -127,7 +131,7 @@ def find_convergent_dt(profile, nx, dt, newton_v_res_tol, energy_tolerance, var_
                 dt2=current_dt,
                 newton_v_res_tol2=newton_v_res_tol,
                 energy_tolerance=energy_tolerance,
-                var_threshold=var_threshold
+                var_threshold=var_threshold,
             )
 
             if is_converged:
@@ -150,8 +154,9 @@ def find_convergent_dt(profile, nx, dt, newton_v_res_tol, energy_tolerance, var_
     return converged, best_dt, cost_history, param_history
 
 
-def find_optimal_newton_v_res_tol(profile, nx, dt, energy_tolerance, var_threshold,
-                                   search_range_min, search_range_max, search_range_slice_num):
+def find_optimal_newton_v_res_tol(
+    profile, nx, dt, energy_tolerance, var_threshold, search_range_min, search_range_max, search_range_slice_num
+):
     """Grid search over newton_v_res_tol for optimal Newton convergence tolerance.
     Uses fixed nx and dt values (no nested iterative search).
 
@@ -174,9 +179,7 @@ def find_optimal_newton_v_res_tol(profile, nx, dt, energy_tolerance, var_thresho
     """
     # Use logarithmic spacing for newton_v_res_tol (descending: larger to smaller tolerance)
     newton_v_res_tol_values = np.logspace(
-        np.log10(search_range_max),
-        np.log10(search_range_min),
-        search_range_slice_num
+        np.log10(search_range_max), np.log10(search_range_min), search_range_slice_num
     )
 
     param_history = []
@@ -188,12 +191,7 @@ def find_optimal_newton_v_res_tol(profile, nx, dt, energy_tolerance, var_thresho
         print(f"Using fixed parameters: nx = {nx}, dt = {dt}")
 
         # Run single simulation with fixed parameters
-        cost, is_converged = run_sim_fem2d(
-            profile=profile,
-            nx=nx,
-            dt=dt,
-            newton_v_res_tol=newton_tol
-        )
+        cost, is_converged = run_sim_fem2d(profile=profile, nx=nx, dt=dt, newton_v_res_tol=newton_tol)
 
         # Record parameter combination
         param_entry = {"newton_v_res_tol": newton_tol, "nx": nx, "dt": dt}
@@ -201,11 +199,13 @@ def find_optimal_newton_v_res_tol(profile, nx, dt, energy_tolerance, var_thresho
 
         # Only consider converged solutions
         if is_converged:
-            newton_results.append({
-                "newton_v_res_tol": newton_tol,
-                "total_cost": cost,
-                "cost_history": [cost],
-            })
+            newton_results.append(
+                {
+                    "newton_v_res_tol": newton_tol,
+                    "total_cost": cost,
+                    "cost_history": [cost],
+                }
+            )
             print(f"newton_v_res_tol = {newton_tol}: CONVERGED - Total Cost = {cost}")
         else:
             print(f"newton_v_res_tol = {newton_tol}: FAILED - Simulation did not converge")
@@ -237,9 +237,9 @@ if __name__ == "__main__":
     # Profile-specific initial values
     # Based on existing configs and expected mesh sizes
     initial_values = {
-        "p1": {"nx": 20, "dt": 0.0005},   # cantilever: Lx=10.0, Ly=2.0
-        "p2": {"nx": 70, "dt": 0.005},     # vibration_bar: Lx=25.0, Ly=1.0
-        "p3": {"nx": 20, "dt": 0.001}      # twisting_column: Lx=2.0, Ly=10.0
+        "p1": {"nx": 20, "dt": 0.0005},  # cantilever: Lx=10.0, Ly=2.0
+        "p2": {"nx": 70, "dt": 0.005},  # vibration_bar: Lx=25.0, Ly=1.0
+        "p3": {"nx": 20, "dt": 0.001},  # twisting_column: Lx=2.0, Ly=10.0
     }
 
     initial_nx = initial_values[profile]["nx"]
@@ -261,7 +261,7 @@ if __name__ == "__main__":
         energy_tolerance=energy_tolerance,
         var_threshold=var_threshold,
         multiplication_factor=2,
-        max_iteration_num=4
+        max_iteration_num=4,
     )
 
     print(f"\nNX convergence test: {converged}, best_nx: {best_nx}")
@@ -279,7 +279,7 @@ if __name__ == "__main__":
         energy_tolerance=energy_tolerance,
         var_threshold=var_threshold,
         multiplication_factor=0.5,  # Reduce dt by half each iteration
-        max_iteration_num=4
+        max_iteration_num=4,
     )
 
     print(f"\nDT convergence test: {converged_dt}, best_dt: {best_dt}")

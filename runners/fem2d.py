@@ -2,27 +2,17 @@ import sys
 import os
 
 # Add repository root to Python path
-repo_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+repo_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 sys.path.append(repo_root)
 
 # Add fastipc_utils to Python path for internal imports
-fastipc_utils_path = os.path.join(repo_root, 'solvers', 'fastipc_utils')
+fastipc_utils_path = os.path.join(repo_root, "solvers", "fastipc_utils")
 sys.path.append(fastipc_utils_path)
 
 import hydra
 from omegaconf import DictConfig, OmegaConf
 from solvers.fem2d import FEM2D
-
-
-def format_param_for_path(value):
-    """Format parameter values for clean folder/file names."""
-    if isinstance(value, float):
-        if value >= 1e-3 and value < 1e3:
-            return f"{value:.6g}".rstrip("0").rstrip(".")
-        else:
-            return f"{value:.2e}"
-    else:
-        return str(value)
+from solvers.utils import format_param_for_path
 
 
 @hydra.main(version_base=None, config_path="../run_configs/fem2d", config_name="p1")
@@ -35,11 +25,14 @@ def main(cfg: DictConfig) -> None:
     base_dir = os.path.dirname(cfg.dump_dir)
 
     # Create parameterized directory name
-    param_dir = f"{profile}_nx{cfg.nx}_dt{format_param_for_path(cfg.dt)}_nvrestol{format_param_for_path(cfg.newton_v_res_tol)}"
+    param_dir = (
+        f"{profile}_nx{cfg.nx}_dt{format_param_for_path(cfg.dt)}_nvrestol{format_param_for_path(cfg.newton_v_res_tol)}"
+    )
     cfg.dump_dir = os.path.join(base_dir, param_dir)
 
     solver = FEM2D(verbose=cfg.verbose, cfg=cfg)
     solver.run()
+
 
 if __name__ == "__main__":
     main()

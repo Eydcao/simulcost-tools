@@ -28,17 +28,13 @@ def get_case_from_profile(profile):
     """Get the case from the profile configuration file"""
     config_path = f"run_configs/fem2d/{profile}.yaml"
     try:
-        with open(config_path, 'r') as f:
+        with open(config_path, "r") as f:
             config = yaml.safe_load(f)
-            if 'case' in config:
-                return config['case']
+            if "case" in config:
+                return config["case"]
             else:
                 # Return default case names based on profile
-                case_map = {
-                    "p1": "cantilever",
-                    "p2": "vibration_bar",
-                    "p3": "twisting_column"
-                }
+                case_map = {"p1": "cantilever", "p2": "vibration_bar", "p3": "twisting_column"}
                 return case_map.get(profile, "unknown")
     except FileNotFoundError:
         raise FileNotFoundError(f"Config file {config_path} not found. Please ensure the profile '{profile}' exists.")
@@ -55,26 +51,34 @@ def save_datasets(successful_tasks, failed_tasks, output_dir):
     # Save successful tasks (overwrite existing file)
     success_file = os.path.join(success_dir, "tasks.json")
     with open(success_file, "w") as f:  # "w" mode overwrites existing file
-        json.dump({
-            "metadata": {
-                "solver": "fem2d",
-                "description": "Successfully converged parameter optimization tasks",
-                "total_tasks": len(successful_tasks)
+        json.dump(
+            {
+                "metadata": {
+                    "solver": "fem2d",
+                    "description": "Successfully converged parameter optimization tasks",
+                    "total_tasks": len(successful_tasks),
+                },
+                "tasks": successful_tasks,
             },
-            "tasks": successful_tasks
-        }, f, indent=2)
+            f,
+            indent=2,
+        )
 
     # Save failed tasks (overwrite existing file)
     failed_file = os.path.join(failed_dir, "tasks.json")
     with open(failed_file, "w") as f:  # "w" mode overwrites existing file
-        json.dump({
-            "metadata": {
-                "solver": "fem2d",
-                "description": "Failed to converge parameter optimization tasks",
-                "total_tasks": len(failed_tasks)
+        json.dump(
+            {
+                "metadata": {
+                    "solver": "fem2d",
+                    "description": "Failed to converge parameter optimization tasks",
+                    "total_tasks": len(failed_tasks),
+                },
+                "tasks": failed_tasks,
             },
-            "tasks": failed_tasks
-        }, f, indent=2)
+            f,
+            indent=2,
+        )
 
     print(f"✅ Saved {len(successful_tasks)} successful tasks to {success_file}")
     print(f"❌ Saved {len(failed_tasks)} failed tasks to {failed_file}")
@@ -157,7 +161,9 @@ def plot_statistics(statistics, output_dir):
         color_idx += 1
 
     if statistics["optimal_newton_v_res_tol_values"]:
-        newton_values, newton_counts = np.unique(list(statistics["optimal_newton_v_res_tol_values"]), return_counts=True)
+        newton_values, newton_counts = np.unique(
+            list(statistics["optimal_newton_v_res_tol_values"]), return_counts=True
+        )
         ax.bar(
             [f"{n:.6g}" for n in newton_values],
             newton_counts,
@@ -233,7 +239,9 @@ def plot_statistics(statistics, output_dir):
                 f.write(f"     dt={dt:.6g}: {count} times\n")
 
         if statistics["optimal_newton_v_res_tol_values"]:
-            newton_values, newton_counts = np.unique(list(statistics["optimal_newton_v_res_tol_values"]), return_counts=True)
+            newton_values, newton_counts = np.unique(
+                list(statistics["optimal_newton_v_res_tol_values"]), return_counts=True
+            )
             f.write("   newton_v_res_tol parameter (0-shot):\n")
             for newton_tol, count in zip(newton_values, newton_counts):
                 f.write(f"     newton_v_res_tol={newton_tol:.6g}: {count} times\n")
@@ -333,7 +341,7 @@ def main():
                             energy_tolerance=precision_vals["energy_tolerance"],
                             var_threshold=precision_vals["var_threshold"],
                             multiplication_factor=target_config["multiplication_factor"],
-                            max_iteration_num=target_config["max_iteration_num"]
+                            max_iteration_num=target_config["max_iteration_num"],
                         )
                         if best_param is not None:
                             statistics["optimal_nx_values"].append(best_param)
@@ -349,7 +357,7 @@ def main():
                             energy_tolerance=precision_vals["energy_tolerance"],
                             var_threshold=precision_vals["var_threshold"],
                             multiplication_factor=target_config["multiplication_factor"],
-                            max_iteration_num=target_config["max_iteration_num"]
+                            max_iteration_num=target_config["max_iteration_num"],
                         )
                         if best_param is not None:
                             statistics["optimal_dt_values"].append(best_param)
@@ -369,7 +377,7 @@ def main():
                             var_threshold=precision_vals["var_threshold"],
                             search_range_min=search_range_min,
                             search_range_max=search_range_max,
-                            search_range_slice_num=search_range_slice_num
+                            search_range_slice_num=search_range_slice_num,
                         )
 
                         # best_param is just the optimal newton_v_res_tol value
@@ -383,14 +391,24 @@ def main():
                         "profile": profile,
                         "precision_config": {
                             "energy_tolerance": precision_vals["energy_tolerance"],
-                            "var_threshold": precision_vals["var_threshold"]
+                            "var_threshold": precision_vals["var_threshold"],
                         },
                         "target_config": {
-                            "initial_value": target_config.get("initial_values", {}).get(profile) if target_param != "newton_v_res_tol" else None,
+                            "initial_value": (
+                                target_config.get("initial_values", {}).get(profile)
+                                if target_param != "newton_v_res_tol"
+                                else None
+                            ),
                             "multiplication_factor": target_config.get("multiplication_factor"),
                             "max_iteration_num": target_config.get("max_iteration_num"),
-                            "search_range": target_config.get("search_range") if target_param == "newton_v_res_tol" else None,
-                            "search_range_slice_num": target_config.get("search_range_slice_num") if target_param == "newton_v_res_tol" else None,
+                            "search_range": (
+                                target_config.get("search_range") if target_param == "newton_v_res_tol" else None
+                            ),
+                            "search_range_slice_num": (
+                                target_config.get("search_range_slice_num")
+                                if target_param == "newton_v_res_tol"
+                                else None
+                            ),
                         },
                         "non_target_parameters": task_params.copy(),
                         "results": {
@@ -398,8 +416,8 @@ def main():
                             "optimal_parameter_value": best_param,
                             "total_computational_cost": sum(cost_history) if cost_history else 0,
                             "cost_history": cost_history if cost_history else [],
-                            "parameter_history": param_history if param_history else []
-                        }
+                            "parameter_history": param_history if param_history else [],
+                        },
                     }
 
                     # Add task to appropriate dataset
@@ -446,12 +464,16 @@ def main():
     if len(successful_tasks) > 0:
         print(f"\n📈 Successful Task Examples:")
         for i, task in enumerate(successful_tasks[:3]):  # Show first 3 successful tasks
-            print(f"   {i+1}. {task['profile']} profile, {task['target_parameter']} optimization -> {task['results']['optimal_parameter_value']}")
+            print(
+                f"   {i+1}. {task['profile']} profile, {task['target_parameter']} optimization -> {task['results']['optimal_parameter_value']}"
+            )
 
     if len(failed_tasks) > 0:
         print(f"\n📉 Failed Task Examples:")
         for i, task in enumerate(failed_tasks[:3]):  # Show first 3 failed tasks
-            print(f"   {i+1}. {task['profile']} profile, {task['target_parameter']} optimization (cost: {task['results']['total_computational_cost']})")
+            print(
+                f"   {i+1}. {task['profile']} profile, {task['target_parameter']} optimization (cost: {task['results']['total_computational_cost']})"
+            )
 
     # Expected task calculation for verification
     expected_total = 0
