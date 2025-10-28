@@ -57,11 +57,8 @@ solvers/euler_2d_utils/
     │   ├── TimeIntegration/     # TVD Runge-Kutta
     │   ├── LinearProjectionSys/ # Projection methods
     │   ├── Simulator/           # Gas simulator
-    │   └── IO/                  # VTK/PLY output
+    │   └── IO/                  # VTK output
     ├── CMakeLists.txt           # Build configuration
-    ├── BUILD.md                 # Detailed build instructions
-    ├── DEPENDENCIES.md          # Dependency information
-    ├── QUICKSTART.md            # Quick start guide
     └── README.md                # Project overview
 ```
 
@@ -105,86 +102,39 @@ Expected output: `Examples/gas_2d` binary (~580 KB)
 
 ```bash
 # Run test case 0 (central explosion) with small grid for quick test
-./Examples/gas_2d 0 0 5 16
+./Examples/gas_2d 0 0 5 16 0.075 0.25 1e-7 ./tmp/test_euler
 ```
 
 Expected output:
 
 - Log messages showing simulation progress
-- Creates directory `central_boom_2d_16_16/`
-- Generates PLY files and optionally VTK files
+- Creates directory `./tmp/test_euler/`
+- Generates VTK files in `./tmp/test_euler/vtk/`
+- Creates `meta.json` with simulation metadata
 
 ## Usage
 
-Once set up, the gas_2d binary can be used with different test cases and parameters:
+Once set up, the gas_2d binary is invoked through the Python wrapper interface. The binary accepts the following command-line arguments:
 
 ```bash
-# Basic syntax
-./gas_2d testcase [start_frame] [end_frame] [N_grid_x] # TODO this seems to be outdated
-
-# Test cases:
-# 0 - Central explosion (circular high-pressure region)
-# 1 - Stair flow (supersonic flow over step geometry)
-# 2 - Cylinder with gravity (explosion with gravitational effects)
-# 3 - Mach diamond (supersonic jet forming shock diamonds)
-
-# Examples:
-./gas_2d 0              # Central explosion, 64x64 grid, frames 0-180
-./gas_2d 1 0 100        # Stair flow, frames 0-100
-./gas_2d 0 0 180 128    # Central explosion, 128x128 grid
+./gas_2d <testcase> <start_frame> <end_frame> <N_grid_x> <record_dt> <cfl> <cg_tolerance> <output_dir>
 ```
 
-### Output Files
+**Parameters:**
 
-The binary creates output in automatically named directories:
+- `testcase`: Test case number (0-8)
+- `start_frame`: Starting frame number
+- `end_frame`: Ending frame number
+- `N_grid_x`: Grid resolution in x-direction
+- `record_dt`: Time interval between output frames
+- `cfl`: CFL number for timestep stability
+- `cg_tolerance`: CG solver convergence tolerance
+- `output_dir`: Directory for output files
 
-- `central_boom_2d_{Nx}_{Ny}/` - PLY point cloud files
-- `central_boom_2d_{Nx}_{Ny}/vtk/` - VTK structured grid files (if enabled)
+**Output:**
 
-Each output includes:
-
-- **gas_{frame}.ply** - Point cloud with density, pressure, velocity, schlieren
-- **gas_density_{frame}.vtk** - VTK files for ParaView visualization
-
-## Solver Features
-
-### Physics
-
-- Compressible Euler equations for ideal gas
-- 2D Cartesian grids
-- High-order WENO reconstruction (2nd/3rd order)
-- TVD Runge-Kutta time integration (2nd/3rd order)
-- Riemann solver (Local Lax-Friedrichs)
-- Gravity and source terms support
-
-### Numerical Methods
-
-- Grid-based finite volume method
-- Adaptive time stepping with CFL condition
-- Linear projection for constraint enforcement
-- Parallel execution with TBB
-
-### Boundary Conditions
-
-- Inlet (prescribed flow)
-- Outlet (extrapolation)
-- Wall (no-slip/slip)
-- Free boundaries
-
-## Parameter Optimization
-
-The Euler 2D solver supports optimization of several parameters:
-
-- **`n_grid_x`**: Spatial grid resolution in x direction (e.g., 16, 32, 64, 128, 256, 512)
-  - `n_grid_y` is computed from `n_grid_x` and aspect ratio (test case dependent)
-- **`cfl`**: CFL number for timestep stability (typical range: 0.1-0.9)
-  - Controls time step size relative to grid spacing and wave speed
-- **`cg_tolerance`**: CG solver convergence tolerance for pressure projection (typical range: 1e-9 to 1e-5)
-  - Too tight leads to unnecessary iterations; too loose may cause divergence
-- **`record_dt`**: Time between output frames (affects total simulation time)
-- **Test case selection**: Different physics scenarios (0-3)
-
-These parameters control the trade-off between accuracy and computational cost.
+- `<output_dir>/vtk/` - VTK structured grid files (one per frame)
+- `<output_dir>/meta.json` - Simulation metadata (cost, parameters, runtime)
 
 ## Troubleshooting
 
@@ -227,37 +177,15 @@ ls -lh solvers/euler_2d_utils/CSMPM_BOW/build/Examples/gas_2d
 
 **Segmentation Faults:**
 
-- Try smaller grid resolution
+- Try smaller grid resolution (e.g., n_grid_x=16 or 32)
 - Check memory availability
 - Rebuild in Debug mode for more info: `cmake .. -DCMAKE_BUILD_TYPE=Debug`
 
 ### Performance Issues
 
 - Use **Release** build for production runs (10-100x faster than Debug)
-- Start with small grids (e.g., 32x32) for testing
+- Start with small grids (e.g., 32×32) for testing
 - Increase grid resolution gradually
 - Monitor memory usage (scales with `N_grid_x^2`)
-
-## Integration with CostSci-Tools
-
-The wrapper interface will:
-
-1. **Run simulations** by executing the binary with specified parameters
-2. **Parse output** from PLY files (density, pressure, velocity fields)
-3. **Calculate cost** based on grid resolution and simulation time
-4. **Compare results** between different parameter sets for convergence checking
-
-See `wrappers/euler_2d.py` for the Python interface implementation.
-
-## References
-
-For more detailed information:
-
-- **BUILD.md** - Comprehensive build instructions and troubleshooting
-- **DEPENDENCIES.md** - Dependency installation details
-- **QUICKSTART.md** - 5-minute getting started guide
-- **README.md** - Project overview and architecture
-
----
 
 **Note**: This solver was originally part of the BOW physics framework and has been refactored as a standalone project for easier integration.
