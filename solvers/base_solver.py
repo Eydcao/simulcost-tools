@@ -98,6 +98,10 @@ class SIMULATOR:
 
             if self.verbose:
                 print(f"Time: {self.current_time:.6f}, dt: {dt:.6e}")
+            elif self.num_steps % 100 == 0:
+                # Progress indicator every 100 steps when not verbose
+                progress_pct = (self.current_time / self.end_time) * 100
+                print(f"Progress: {progress_pct:.1f}% (step {self.num_steps}, time {self.current_time:.3f}/{self.end_time:.3f})")
 
             # Perform simulation step
             self.step(dt)

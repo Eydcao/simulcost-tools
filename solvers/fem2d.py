@@ -1,7 +1,7 @@
 import taichi as ti
 import numpy as np
-import scipy.sparse
-import scipy.sparse.linalg
+# scipy only used for mesh generation, not for linear solve
+import scipy.sparse  # Only for mesh generation
 import meshio
 import os
 import matplotlib.pyplot as plt
@@ -79,6 +79,18 @@ class FEM2D(SIMULATOR):
         self.fixed_nodes = []
         if not os.path.exists(self.dump_dir):
             os.makedirs(self.dump_dir)
+
+        # Initialize Taichi sparse linear solver
+        # Using LLT (Cholesky) for symmetric positive definite systems
+        # LDLT is also good for symmetric indefinite, LU for general
+        self.solver = ti.linalg.SparseSolver(solver_type="LLT")
+        self.n_dof = self.n_particles * self.dim
+
+        # Taichi field for boundary condition DOFs
+        # Store list of DOF indices that have Dirichlet boundary conditions
+        max_bc_dofs = self.n_dof  # Conservative upper bound
+        self.bc_dofs = ti.field(dtype=ti.i32, shape=max_bc_dofs)
+        self.num_bc_dofs = ti.field(dtype=ti.i32, shape=())
 
         # Cost counters for tracking computational work
         self.cnt_hessian_gradient = 0  # Counts hessian+gradient assembly (cost: n_elements each)
@@ -640,6 +652,49 @@ class FEM2D(SIMULATOR):
 
         return min_edge
 
+    @ti.kernel
+    def fill_sparse_matrix_builder(self, builder: ti.types.sparse_matrix_builder()):
+        """
+        Fill the SparseMatrixBuilder directly from data_mat field with boundary conditions applied.
+        Reads COO triplets from data_mat and applies Dirichlet BCs by:
+        - Skipping entries in rows/cols corresponding to BC DOFs
+        - Adding diagonal entries (value=1) for BC DOFs
+        """
+        # Build a lookup set for BC DOFs (mark which DOFs have BCs)
+        # Using a simple linear search since num_bc_dofs is usually small
+
+        # First pass: Add non-BC entries from data_mat
+        for idx in range(self.cnt[None]):
+            row = ti.cast(self.data_mat[0, idx], ti.i32)
+            col = ti.cast(self.data_mat[1, idx], ti.i32)
+            val = self.data_mat[2, idx]
+
+            # Check if this row or col is a BC DOF
+            is_bc_entry = 0
+            for bc_idx in range(self.num_bc_dofs[None]):
+                bc_dof = self.bc_dofs[bc_idx]
+                if row == bc_dof or col == bc_dof:
+                    is_bc_entry = 1
+                    break
+
+            # Only add if not a BC entry
+            if is_bc_entry == 0:
+                builder[row, col] += val
+
+        # Second pass: Add diagonal entries for BC DOFs
+        for bc_idx in range(self.num_bc_dofs[None]):
+            bc_dof = self.bc_dofs[bc_idx]
+            builder[bc_dof, bc_dof] += 1.0
+
+    @ti.kernel
+    def apply_bc_to_rhs(self, rhs: ti.types.ndarray()):
+        """
+        Apply boundary conditions to RHS by zeroing BC DOF entries.
+        """
+        for bc_idx in range(self.num_bc_dofs[None]):
+            bc_dof = self.bc_dofs[bc_idx]
+            rhs[bc_dof] = 0.0
+
     def cal_dt(self):
         """
         Calculate time step using CFL condition for elastic wave propagation.
@@ -689,42 +744,42 @@ class FEM2D(SIMULATOR):
             if self.verbose:
                 print(f"  Newton iter {newton_iter}: Total entries: {self.cnt[None]}")
 
-            # Convert to sparse matrix format
-            mat = self.data_mat.to_numpy()
-            row, col, val = mat[0, : self.cnt[None]], mat[1, : self.cnt[None]], mat[2, : self.cnt[None]]
-            rhs = self.data_rhs.to_numpy()
-            n = self.n_particles * self.dim
-            A = scipy.sparse.csr_matrix((val, (row, col)), shape=(n, n))
-            A = scipy.sparse.lil_matrix(A)
-
-            # Apply boundary conditions (Dirichlet BC on fixed nodes)
-            D = []
+            # Build boundary condition DOF list
+            bc_dof_list = []
             for node_idx in self.fixed_nodes:
-                D.append(node_idx * self.dim)
-                D.append(node_idx * self.dim + 1)
+                bc_dof_list.append(node_idx * self.dim)
+                bc_dof_list.append(node_idx * self.dim + 1)
 
             # For vibration_bar: constrain all Y DOFs (1D vibration, no Y motion)
             if self.case == "vibration_bar":
                 for node_idx in range(self.n_particles):
-                    D.append(node_idx * self.dim + 1)  # Y component
+                    bc_dof_list.append(node_idx * self.dim + 1)  # Y component
 
-            D = np.array(D, dtype=np.int32)
+            # Remove duplicates and store in Taichi field
+            bc_dof_array = np.unique(np.array(bc_dof_list, dtype=np.int32)) if bc_dof_list else np.array([], dtype=np.int32)
+            self.num_bc_dofs[None] = len(bc_dof_array)
+            if len(bc_dof_array) > 0:
+                self.bc_dofs.from_numpy(np.pad(bc_dof_array, (0, self.n_dof - len(bc_dof_array))))
 
-            # Remove duplicates
-            D = np.unique(D)
+            # Build sparse matrix directly from data_mat field with BCs applied
+            # Maximum triplets = original entries + diagonal BC entries
+            max_triplets = self.cnt[None] + len(bc_dof_array)
+            builder = ti.linalg.SparseMatrixBuilder(self.n_dof, self.n_dof, max_num_triplets=max_triplets)
+            self.fill_sparse_matrix_builder(builder)
+            A = builder.build()
 
-            # Only apply BC if there are fixed DOFs
-            if len(D) > 0:
-                A[:, D] = 0
-                A[D, :] = 0
-                A = scipy.sparse.csr_matrix(A)
-                A += scipy.sparse.csr_matrix((np.ones(len(D)), (D, D)), shape=(n, n))
-                rhs[D] = 0
-            else:
-                A = scipy.sparse.csr_matrix(A)
+            # Prepare RHS from Taichi field and apply BCs
+            b = self.data_rhs.to_numpy()
+            if len(bc_dof_array) > 0:
+                self.apply_bc_to_rhs(b)
 
-            # Solve linear system
-            self.data_sol.from_numpy(scipy.sparse.linalg.spsolve(A, rhs))
+            # Solve using Taichi's native solver
+            self.solver.analyze_pattern(A)
+            self.solver.factorize(A)
+            x = self.solver.solve(b)
+
+            # Copy solution back to Taichi
+            self.data_sol.from_numpy(x)
             self.cnt_linear_solve += 1
 
             # Check convergence criterion
