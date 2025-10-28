@@ -20,7 +20,7 @@ from collections import defaultdict
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from checkouts.config_utils import load_config, build_target_configs
-from dummy_sols.fem2d import find_convergent_nx, find_convergent_dt, find_optimal_newton_v_res_tol
+from dummy_sols.fem2d import find_convergent_nx, find_convergent_cfl, find_optimal_newton_v_res_tol
 import yaml
 
 
@@ -149,13 +149,13 @@ def plot_statistics(statistics, output_dir):
         )
         color_idx += 1
 
-    if statistics["optimal_dt_values"]:
-        dt_values, dt_counts = np.unique(list(statistics["optimal_dt_values"]), return_counts=True)
+    if statistics["optimal_cfl_values"]:
+        cfl_values, cfl_counts = np.unique(list(statistics["optimal_cfl_values"]), return_counts=True)
         ax.bar(
-            [f"{d:.6g}" for d in dt_values],
-            dt_counts,
+            [f"{d:.6g}" for d in cfl_values],
+            cfl_counts,
             alpha=0.7,
-            label="dt parameter",
+            label="cfl parameter",
             color=colors[color_idx % len(colors)],
         )
         color_idx += 1
@@ -232,11 +232,11 @@ def plot_statistics(statistics, output_dir):
             for nx, count in zip(nx_values, nx_counts):
                 f.write(f"     nx={nx}: {count} times\n")
 
-        if statistics["optimal_dt_values"]:
-            dt_values, dt_counts = np.unique(list(statistics["optimal_dt_values"]), return_counts=True)
-            f.write("   dt parameter (iterative):\n")
-            for dt, count in zip(dt_values, dt_counts):
-                f.write(f"     dt={dt:.6g}: {count} times\n")
+        if statistics["optimal_cfl_values"]:
+            cfl_values, cfl_counts = np.unique(list(statistics["optimal_cfl_values"]), return_counts=True)
+            f.write("   cfl parameter (iterative):\n")
+            for cfl, count in zip(cfl_values, cfl_counts):
+                f.write(f"     cfl={cfl:.6g}: {count} times\n")
 
         if statistics["optimal_newton_v_res_tol_values"]:
             newton_values, newton_counts = np.unique(
@@ -287,7 +287,7 @@ def main():
         "convergence_by_target": defaultdict(lambda: {"total": 0, "converged": 0, "costs": []}),
         "convergence_by_profile": defaultdict(lambda: {"total": 0, "converged": 0}),
         "optimal_nx_values": [],
-        "optimal_dt_values": [],
+        "optimal_cfl_values": [],
         "optimal_newton_v_res_tol_values": [],
     }
 
@@ -336,7 +336,7 @@ def main():
                         is_converged, best_param, cost_history, param_history = find_convergent_nx(
                             profile=profile,
                             nx=initial_nx,
-                            dt=task_params["dt"],
+                            cfl=task_params["cfl"],
                             newton_v_res_tol=0.01,  # Default for nx search
                             energy_tolerance=precision_vals["energy_tolerance"],
                             var_threshold=precision_vals["var_threshold"],
@@ -346,24 +346,24 @@ def main():
                         if best_param is not None:
                             statistics["optimal_nx_values"].append(best_param)
 
-                    elif target_param == "dt":
-                        # Get profile-specific initial dt value
-                        initial_dt = target_config["initial_values"][profile]
-                        is_converged, best_param, cost_history, param_history = find_convergent_dt(
+                    elif target_param == "cfl":
+                        # Get profile-specific initial cfl value
+                        initial_cfl = target_config["initial_values"][profile]
+                        is_converged, best_param, cost_history, param_history = find_convergent_cfl(
                             profile=profile,
                             nx=task_params["nx"],
-                            dt=initial_dt,
-                            newton_v_res_tol=0.01,  # Default for dt search
+                            cfl=initial_cfl,
+                            newton_v_res_tol=0.01,  # Default for cfl search
                             energy_tolerance=precision_vals["energy_tolerance"],
                             var_threshold=precision_vals["var_threshold"],
                             multiplication_factor=target_config["multiplication_factor"],
                             max_iteration_num=target_config["max_iteration_num"],
                         )
                         if best_param is not None:
-                            statistics["optimal_dt_values"].append(best_param)
+                            statistics["optimal_cfl_values"].append(best_param)
 
                     elif target_param == "newton_v_res_tol":
-                        # 0-shot grid search over newton_v_res_tol with fixed nx and dt
+                        # 0-shot grid search over newton_v_res_tol with fixed nx and cfl
                         search_range = target_config.get("search_range", [0.001, 0.1])
                         search_range_min = search_range[0]
                         search_range_max = search_range[1]
@@ -372,7 +372,7 @@ def main():
                         is_converged, best_param, cost_history, param_history = find_optimal_newton_v_res_tol(
                             profile=profile,
                             nx=task_params["nx"],
-                            dt=task_params["dt"],
+                            cfl=task_params["cfl"],
                             energy_tolerance=precision_vals["energy_tolerance"],
                             var_threshold=precision_vals["var_threshold"],
                             search_range_min=search_range_min,

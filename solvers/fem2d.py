@@ -22,7 +22,7 @@ class FEM2D(SIMULATOR):
         self.la = self.E * self.nu / ((1 + self.nu) * (1 - 2 * self.nu))
         self.mu = self.E / (2 * (1 + self.nu))
         self.density = cfg.density
-        self.dt = cfg.dt
+        self.cfl = cfg.cfl
         self.nx = cfg.nx
 
         # Case type and gravity
@@ -46,7 +46,7 @@ class FEM2D(SIMULATOR):
         self.n_elements = len(self.mesh_elements)
 
         self.real = ti.f64
-        ti.init(arch=ti.gpu, default_fp=self.real, verbose=self.verbose)
+        ti.init(arch=ti.cpu, default_fp=self.real, verbose=self.verbose)
 
         self.cnt = ti.field(dtype=ti.i32, shape=())
         self.x = ti.Vector.field(self.dim, dtype=self.real)
@@ -64,8 +64,15 @@ class FEM2D(SIMULATOR):
         ti.root.dense(ti.i, self.n_elements).place(self.restT)
         ti.root.dense(ti.ij, (self.n_elements, self.dim + 1)).place(self.vertices)
 
+        # Calculate required sparse matrix storage size
+        # Inertia: n_particles * dim diagonal entries
+        # Elasticity: n_elements * (dim+1)*dim * (dim+1)*dim entries per element
+        inertia_entries = self.n_particles * self.dim
+        elasticity_entries = self.n_elements * (self.dim + 1) * self.dim * (self.dim + 1) * self.dim
+        max_matrix_entries = int((inertia_entries + elasticity_entries) * 1.2)  # 20% safety margin
+
         self.data_rhs = ti.field(self.real, shape=self.n_particles * self.dim)
-        self.data_mat = ti.field(self.real, shape=(3, 2000000))
+        self.data_mat = ti.field(self.real, shape=(3, max_matrix_entries))
         self.data_sol = ti.field(self.real, shape=self.n_particles * self.dim)
 
         self.dump_dir = cfg.dump_dir
@@ -598,8 +605,71 @@ class FEM2D(SIMULATOR):
                 if self.mesh_particles[i, 1] < bc_dist_dy:
                     self.fixed_nodes.append(i)
 
+    @ti.kernel
+    def compute_min_edge_length(self) -> ti.f64:
+        """
+        Compute minimum edge length across all elements in parallel.
+
+        Returns:
+            Minimum edge length in the mesh
+        """
+        min_edge = 1e10  # Large initial value
+
+        # Parallelize over all elements
+        for elem_idx in range(self.n_elements):
+            # For triangular elements (3 nodes) or tetrahedral (4 nodes)
+            # Compute all edge lengths
+            if ti.static(self.dim == 2):
+                # Triangle: 3 edges
+                for i in ti.static(range(3)):
+                    j = (i + 1) % 3
+                    p1 = self.vertices[elem_idx, i]
+                    p2 = self.vertices[elem_idx, j]
+                    edge_vec = self.x[p1] - self.x[p2]
+                    edge_length = edge_vec.norm()
+                    ti.atomic_min(min_edge, edge_length)
+            else:
+                # Tetrahedron: 6 edges (0-1, 0-2, 0-3, 1-2, 1-3, 2-3)
+                for i in ti.static(range(4)):
+                    for j in ti.static(range(i + 1, 4)):
+                        p1 = self.vertices[elem_idx, i]
+                        p2 = self.vertices[elem_idx, j]
+                        edge_vec = self.x[p1] - self.x[p2]
+                        edge_length = edge_vec.norm()
+                        ti.atomic_min(min_edge, edge_length)
+
+        return min_edge
+
     def cal_dt(self):
-        return self.dt
+        """
+        Calculate time step using CFL condition for elastic wave propagation.
+
+        For elastic materials, the wave speed (sound speed) is:
+            c = sqrt((lambda + 2*mu) / rho)
+
+        CFL condition:
+            dt = CFL * dx / c
+
+        where dx is the characteristic element size.
+        """
+        # Calculate wave speed for elastic material
+        # c = sqrt((lambda + 2*mu) / rho)
+        wave_speed = np.sqrt((self.la + 2 * self.mu) / self.density)
+
+        # Compute minimum edge length using Taichi kernel (parallel)
+        min_edge_length = self.compute_min_edge_length()
+
+        # Calculate dt from CFL condition
+        dt_cfl = self.cfl * min_edge_length / wave_speed
+
+        if self.verbose:
+            print(f"CFL-based time step calculation:")
+            print(f"  Wave speed: {wave_speed:.2e} m/s")
+            print(f"  Min element size: {min_edge_length:.2e} m")
+            print(f"  CFL number: {self.cfl}")
+            print(f"  Computed dt: {dt_cfl:.2e} s")
+
+        return dt_cfl
 
     def step(self, dt):
         # Initialize state for this timestep
@@ -741,9 +811,12 @@ class FEM2D(SIMULATOR):
         cost_per_hessian_gradient = 804  # operations per element
         cost_per_energy = 54  # operations per element
 
-        cost_hessian_gradient = self.cnt_hessian_gradient * self.n_elements * cost_per_hessian_gradient
-        cost_energy = self.cnt_energy * self.n_elements * cost_per_energy
-        cost_linear_solve = self.cnt_linear_solve * n_dof * n_dof
+        # normalize by cost_per_energy (seeing it as unit cost) to keep numbers manageable
+        cost_hessian_gradient = (
+            self.cnt_hessian_gradient * self.n_elements * cost_per_hessian_gradient / cost_per_energy
+        )
+        cost_energy = self.cnt_energy * self.n_elements * cost_per_energy / cost_per_energy
+        cost_linear_solve = self.cnt_linear_solve * n_dof * n_dof / cost_per_energy
 
         total_cost = cost_hessian_gradient + cost_energy + cost_linear_solve
 

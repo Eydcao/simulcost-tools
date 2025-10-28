@@ -5,7 +5,10 @@ defaults:
 
 # Tunable Parameters
 nx: 20
-dt: 0.0005
+# cfl: CFL number for automatic dt calculation
+# Time step will be computed as: dt = cfl * dx / wave_speed
+# where wave_speed = sqrt((lambda + 2*mu) / rho)
+cfl: 0.5
 # newton_v_res_tol: velocity-like residual tolerance for Newton convergence
 # Convergence criterion: |Δx|/dt < newton_v_res_tol, where Δx is position correction
 newton_v_res_tol: 0.01

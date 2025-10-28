@@ -60,28 +60,27 @@ def _find_runner_path():
     )
 
 
-def get_fem2d_data(profile, nx, dt, newton_v_res_tol):
+def get_fem2d_data(profile, nx, cfl, newton_v_res_tol):
     """
     Retrieves fem2d simulation results, running the simulation if not cached.
 
-    This function checks for both 'meta.json' (with 'cost' and 'is_converged')
+    This function checks for both 'meta.json' (with 'cost')
     and 'energies.npz'. If any are missing or incomplete, it runs the
     simulation. It then loads and returns all data.
 
     Args:
         profile: Profile name (p1, p2, p3, etc.)
         nx: Grid resolution parameter
-        dt: Time step size
+        cfl: CFL number for time step calculation
         newton_v_res_tol: Newton velocity residual tolerance (convergence criterion)
 
     Returns:
-        tuple: (energies, cost, is_converged)
+        tuple: (energies, cost)
             - energies (dict): Dictionary of energy arrays
             - cost (float): Simulation cost
-            - is_converged (bool): Simulation convergence status
     """
     # Create directory path based on parameters
-    dir_path = f"sim_res/fem2d/{profile}_nx{nx}_dt{format_param_for_path(dt)}_nvrestol{format_param_for_path(newton_v_res_tol)}/"
+    dir_path = f"sim_res/fem2d/{profile}_nx{nx}_cfl{format_param_for_path(cfl)}_nvrestol{format_param_for_path(newton_v_res_tol)}/"
     meta_path = os.path.join(dir_path, "meta.json")
     energies_path = os.path.join(dir_path, "energies.npz")
 
@@ -93,7 +92,7 @@ def get_fem2d_data(profile, nx, dt, newton_v_res_tol):
                 meta = json.load(f)
                 # Fail fast if keys are missing
                 _ = meta["cost"]
-                _ = meta["is_converged"]
+                # Note: fem2d doesn't write "is_converged" - it doesn't have convergence criteria
                 has_valid_cache = True
                 print(f"Using existing simulation results from {dir_path}")
         except (json.JSONDecodeError, IOError, KeyError) as e:
@@ -101,10 +100,10 @@ def get_fem2d_data(profile, nx, dt, newton_v_res_tol):
 
     # --- 2. Run simulation if cache is missing or invalid ---
     if not has_valid_cache:
-        print(f"Running new simulation: nx={nx}, dt={dt}, newton_v_res_tol={newton_v_res_tol}")
+        print(f"Running new simulation: nx={nx}, cfl={cfl}, newton_v_res_tol={newton_v_res_tol}")
 
         runner_path = _find_runner_path()
-        cmd = f"{sys.executable} {runner_path} --config-name={profile} nx={nx} dt={dt} newton_v_res_tol={newton_v_res_tol}"
+        cmd = f"{sys.executable} {runner_path} --config-name={profile} nx={nx} cfl={cfl} newton_v_res_tol={newton_v_res_tol}"
 
         # This will raise CalledProcessError if the command fails
         subprocess.run(cmd, shell=True, check=True)
@@ -127,14 +126,14 @@ def get_fem2d_data(profile, nx, dt, newton_v_res_tol):
 
 
 def compare_energies_fem2d(
-    profile1, nx1, dt1, newton_v_res_tol1, profile2, nx2, dt2, newton_v_res_tol2, energy_tolerance, var_threshold
+    profile1, nx1, cfl1, newton_v_res_tol1, profile2, nx2, cfl2, newton_v_res_tol2, energy_tolerance, var_threshold
 ):
     """Compare energies between two fem2d simulations.
 
     Args:
         profile1, profile2: Profile names
         nx1, nx2: Grid resolution parameters
-        dt1, dt2: Time step sizes
+        cfl1, cfl2: CFL numbers for time step calculation
         newton_v_res_tol1, newton_v_res_tol2: Newton velocity residual tolerances
         energy_tolerance: Tolerance for energy comparison
         var_threshold: Threshold for energy conservation (coefficient of variation)
@@ -146,8 +145,8 @@ def compare_energies_fem2d(
         avg_energy_diff (float): Average relative energy difference
     """
     # Load energies and metadata for both cases
-    energies1, _ = get_fem2d_data(profile1, nx1, dt1, newton_v_res_tol1)
-    energies2, _ = get_fem2d_data(profile2, nx2, dt2, newton_v_res_tol2)
+    energies1, _ = get_fem2d_data(profile1, nx1, cfl1, newton_v_res_tol1)
+    energies2, _ = get_fem2d_data(profile2, nx2, cfl2, newton_v_res_tol2)
 
     # # Check if either simulation failed
     # if not is_converged1:
@@ -263,7 +262,6 @@ def compute_energy_metrics(energies, var_threshold):
 
 
 if __name__ == "__main__":
-    ps = ["p1"]
-    # ps = ["p1", "p2", "p3", "p4", "p5"]
+    ps = ["p1", "p2", "p3"]
     for p in ps:
-        print(compare_energies_fem2d(p, 40, 0.05, 0.01, p, 80, 0.05, 0.01, 0.01, 0.01))
+        print(compare_energies_fem2d(p, 40, 0.5, 0.01, p, 80, 0.5, 0.01, 0.01, 0.01))
