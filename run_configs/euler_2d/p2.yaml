@@ -1,0 +1,23 @@
+defaults:
+  - _self_
+  - override hydra/hydra_logging: none
+  - override hydra/job_logging: none
+
+# Test case selection
+testcase: 1           # 0=central_explosion, 1=stair_flow, 2=mach_diamond
+# testcase_name: "stair_flow_2d"
+# Aspect ratio is hardcoded in C++ gas_2d.cpp (testcase 1: 1/4 for divisibility)
+
+# Numerical parameters (tunable)
+n_grid_x: 64          # Grid resolution in x-direction (y-direction computed from aspect ratio)
+cfl: 0.5              # CFL number for timestep stability (typical range: 0.1-0.9)
+cg_tolerance: 1.0e-7  # CG solver convergence tolerance for pressure projection (typical range: 1e-5 to 1e-9)
+
+# Simulation statics (non-tunable - define the task)
+start_frame: 0        # Starting frame number
+end_frame: 10         # Ending frame number
+record_dt: 0.021      # Time interval between recordings (10 frames * 0.021s = 0.21s total)
+
+# Output configuration
+dump_dir: "sim_res/euler_2d/p2"  # Directory for output files
+verbose: False        # Enable verbose output
