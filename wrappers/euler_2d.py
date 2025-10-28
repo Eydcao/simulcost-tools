@@ -1,9 +1,20 @@
 import os
+import sys
 import subprocess
 import numpy as np
 import json
 from scipy.interpolate import RegularGridInterpolator
 import meshio
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
+
+# Get base directory for simulation results from environment variable
+# If not set, use current directory (maintains backward compatibility)
+SIM_RES_BASE_DIR = os.getenv("SIM_RES_BASE_DIR", None)
+if SIM_RES_BASE_DIR:
+    print(f"✅ Using custom simulation results directory: {SIM_RES_BASE_DIR}")
 
 
 def _compute_nrmse_maxabs(field_low, field_high, eps=1e-12):
@@ -59,6 +70,13 @@ def _find_runner_path():
         f"Searched paths: {unique_paths}\n"
         f"Please ensure the runner exists or update the search paths."
     )
+
+
+def _get_sim_path(relative_path):
+    """Construct simulation path, using absolute path if SIM_RES_BASE_DIR is set."""
+    if SIM_RES_BASE_DIR:
+        return os.path.join(SIM_RES_BASE_DIR, relative_path)
+    return relative_path
 
 
 def _read_vtk_structured(vtk_path, nx, ny):
@@ -148,7 +166,7 @@ def get_res_euler_2d(profile, n_grid_x, cfl, cg_tolerance):
     # --- 1. Define paths ---
     cfl_str = f"{cfl:.3f}" if cfl is not None else "default"
     cgtol_str = f"{cg_tolerance:.1e}" if cg_tolerance is not None else "default"
-    dir_path = f"sim_res/euler_2d/{profile}_cfl_{cfl_str}_cgtol_{cgtol_str}_nx_{n_grid_x}/"
+    dir_path = _get_sim_path(f"sim_res/euler_2d/{profile}_cfl_{cfl_str}_cgtol_{cgtol_str}_nx_{n_grid_x}/")
     meta_path = os.path.join(dir_path, "meta.json")
     vtk_dir = os.path.join(dir_path, "vtk")
 
@@ -156,7 +174,11 @@ def get_res_euler_2d(profile, n_grid_x, cfl, cg_tolerance):
     if not os.path.exists(meta_path):
         print(f"No meta.json. Running new simulation: n_grid_x={n_grid_x}, cfl={cfl}, cg_tolerance={cg_tolerance}")
         runner_path = _find_runner_path()
-        cmd = f"python {runner_path} --config-name={profile} n_grid_x={n_grid_x} cfl={cfl} cg_tolerance={cg_tolerance}"
+        if SIM_RES_BASE_DIR:
+            dump_dir = os.path.join(SIM_RES_BASE_DIR, f"sim_res/euler_2d/{profile}")
+            cmd = f"{sys.executable} {runner_path} --config-name={profile} n_grid_x={n_grid_x} cfl={cfl} cg_tolerance={cg_tolerance} dump_dir={dump_dir}"
+        else:
+            cmd = f"{sys.executable} {runner_path} --config-name={profile} n_grid_x={n_grid_x} cfl={cfl} cg_tolerance={cg_tolerance}"
         subprocess.run(cmd, shell=True, check=True)
     else:
         # Check if meta.json is valid (has 'cost')
@@ -167,7 +189,11 @@ def get_res_euler_2d(profile, n_grid_x, cfl, cg_tolerance):
                     f"Invalid meta.json. Running new simulation: n_grid_x={n_grid_x}, cfl={cfl}, cg_tolerance={cg_tolerance}"
                 )
                 runner_path = _find_runner_path()
-                cmd = f"python {runner_path} --config-name={profile} n_grid_x={n_grid_x} cfl={cfl} cg_tolerance={cg_tolerance}"
+                if SIM_RES_BASE_DIR:
+                    dump_dir = os.path.join(SIM_RES_BASE_DIR, f"sim_res/euler_2d/{profile}")
+                    cmd = f"{sys.executable} {runner_path} --config-name={profile} n_grid_x={n_grid_x} cfl={cfl} cg_tolerance={cg_tolerance} dump_dir={dump_dir}"
+                else:
+                    cmd = f"{sys.executable} {runner_path} --config-name={profile} n_grid_x={n_grid_x} cfl={cfl} cg_tolerance={cg_tolerance}"
                 subprocess.run(cmd, shell=True, check=True)
             else:
                 print(f"Using existing simulation results from {dir_path}")
