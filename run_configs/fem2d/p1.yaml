@@ -29,7 +29,7 @@ mesh_offset:
 
 # Simulator statics
 record_dt: 0.2
-end_frame: 20
+end_frame: 7
 max_newton_iter: 10
 
 dump_dir: "sim_res/fem2d/p1"

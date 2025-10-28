@@ -1,5 +1,6 @@
 import taichi as ti
 import numpy as np
+
 # scipy only used for mesh generation, not for linear solve
 import scipy.sparse  # Only for mesh generation
 import meshio
@@ -16,11 +17,14 @@ class FEM2D(SIMULATOR):
     def __init__(self, verbose, cfg):
         super().__init__(verbose, cfg)
 
+        self.sparsity_pattern_analyzed = False
+
         self.dim = cfg.dim
         self.E = cfg.E
         self.nu = cfg.nu
         self.la = self.E * self.nu / ((1 + self.nu) * (1 - 2 * self.nu))
         self.mu = self.E / (2 * (1 + self.nu))
+        print(f"Lamé parameters: λ={self.la}, μ={self.mu}")
         self.density = cfg.density
         self.cfl = cfg.cfl
         self.nx = cfg.nx
@@ -46,7 +50,7 @@ class FEM2D(SIMULATOR):
         self.n_elements = len(self.mesh_elements)
 
         self.real = ti.f64
-        ti.init(arch=ti.cpu, default_fp=self.real, verbose=self.verbose)
+        ti.init(arch=ti.cpu, default_fp=self.real, verbose=self.verbose, cpu_max_num_threads=8, debug=False)
 
         self.cnt = ti.field(dtype=ti.i32, shape=())
         self.x = ti.Vector.field(self.dim, dtype=self.real)
@@ -77,6 +81,7 @@ class FEM2D(SIMULATOR):
 
         self.dump_dir = cfg.dump_dir
         self.fixed_nodes = []
+        self.bc_initialized = False  # Flag to track if BCs have been set up
         if not os.path.exists(self.dump_dir):
             os.makedirs(self.dump_dir)
 
@@ -91,6 +96,9 @@ class FEM2D(SIMULATOR):
         max_bc_dofs = self.n_dof  # Conservative upper bound
         self.bc_dofs = ti.field(dtype=ti.i32, shape=max_bc_dofs)
         self.num_bc_dofs = ti.field(dtype=ti.i32, shape=())
+
+        # Boolean lookup array for fast BC checking (O(1) instead of O(n))
+        self.is_bc_dof = ti.field(dtype=ti.i32, shape=self.n_dof)
 
         # Cost counters for tracking computational work
         self.cnt_hessian_gradient = 0  # Counts hessian+gradient assembly (cost: n_elements each)
@@ -617,6 +625,31 @@ class FEM2D(SIMULATOR):
                 if self.mesh_particles[i, 1] < bc_dist_dy:
                     self.fixed_nodes.append(i)
 
+        # Prepare BC DOFs
+        # Initialize boundary conditions once (BCs are fixed throughout simulation)
+        if not self.bc_initialized:
+            bc_dof_list = []
+            for node_idx in self.fixed_nodes:
+                bc_dof_list.append(node_idx * self.dim)
+                bc_dof_list.append(node_idx * self.dim + 1)
+
+            # For vibration_bar: constrain all Y DOFs (1D vibration, no Y motion)
+            if self.case == "vibration_bar":
+                for node_idx in range(self.n_particles):
+                    bc_dof_list.append(node_idx * self.dim + 1)  # Y component
+
+            # Remove duplicates and store in Taichi field
+            bc_dof_array = (
+                np.unique(np.array(bc_dof_list, dtype=np.int32)) if bc_dof_list else np.array([], dtype=np.int32)
+            )
+            self.num_bc_dofs[None] = len(bc_dof_array)
+            if len(bc_dof_array) > 0:
+                self.bc_dofs.from_numpy(np.pad(bc_dof_array, (0, self.n_dof - len(bc_dof_array))))
+
+            # Populate BC lookup array once
+            self.populate_bc_lookup()
+            self.bc_initialized = True
+
     @ti.kernel
     def compute_min_edge_length(self) -> ti.f64:
         """
@@ -653,32 +686,37 @@ class FEM2D(SIMULATOR):
         return min_edge
 
     @ti.kernel
+    def populate_bc_lookup(self):
+        """
+        Populate boolean lookup array for BC DOFs (O(1) checking).
+        """
+        # Reset all to 0
+        for i in range(self.n_dof):
+            self.is_bc_dof[i] = 0
+
+        # Mark BC DOFs as 1
+        for bc_idx in range(self.num_bc_dofs[None]):
+            bc_dof = self.bc_dofs[bc_idx]
+            self.is_bc_dof[bc_dof] = 1
+
+    @ti.kernel
     def fill_sparse_matrix_builder(self, builder: ti.types.sparse_matrix_builder()):
         """
         Fill the SparseMatrixBuilder directly from data_mat field with boundary conditions applied.
         Reads COO triplets from data_mat and applies Dirichlet BCs by:
         - Skipping entries in rows/cols corresponding to BC DOFs
         - Adding diagonal entries (value=1) for BC DOFs
-        """
-        # Build a lookup set for BC DOFs (mark which DOFs have BCs)
-        # Using a simple linear search since num_bc_dofs is usually small
 
+        Uses O(1) boolean lookup for BC checking.
+        """
         # First pass: Add non-BC entries from data_mat
         for idx in range(self.cnt[None]):
             row = ti.cast(self.data_mat[0, idx], ti.i32)
             col = ti.cast(self.data_mat[1, idx], ti.i32)
             val = self.data_mat[2, idx]
 
-            # Check if this row or col is a BC DOF
-            is_bc_entry = 0
-            for bc_idx in range(self.num_bc_dofs[None]):
-                bc_dof = self.bc_dofs[bc_idx]
-                if row == bc_dof or col == bc_dof:
-                    is_bc_entry = 1
-                    break
-
-            # Only add if not a BC entry
-            if is_bc_entry == 0:
+            # O(1) check if this row or col is a BC DOF
+            if self.is_bc_dof[row] == 0 and self.is_bc_dof[col] == 0:
                 builder[row, col] += val
 
         # Second pass: Add diagonal entries for BC DOFs
@@ -690,6 +728,7 @@ class FEM2D(SIMULATOR):
     def apply_bc_to_rhs(self, rhs: ti.types.ndarray()):
         """
         Apply boundary conditions to RHS by zeroing BC DOF entries.
+        (Takes a NumPy ndarray)
         """
         for bc_idx in range(self.num_bc_dofs[None]):
             bc_dof = self.bc_dofs[bc_idx]
@@ -744,43 +783,37 @@ class FEM2D(SIMULATOR):
             if self.verbose:
                 print(f"  Newton iter {newton_iter}: Total entries: {self.cnt[None]}")
 
-            # Build boundary condition DOF list
-            bc_dof_list = []
-            for node_idx in self.fixed_nodes:
-                bc_dof_list.append(node_idx * self.dim)
-                bc_dof_list.append(node_idx * self.dim + 1)
-
-            # For vibration_bar: constrain all Y DOFs (1D vibration, no Y motion)
-            if self.case == "vibration_bar":
-                for node_idx in range(self.n_particles):
-                    bc_dof_list.append(node_idx * self.dim + 1)  # Y component
-
-            # Remove duplicates and store in Taichi field
-            bc_dof_array = np.unique(np.array(bc_dof_list, dtype=np.int32)) if bc_dof_list else np.array([], dtype=np.int32)
-            self.num_bc_dofs[None] = len(bc_dof_array)
-            if len(bc_dof_array) > 0:
-                self.bc_dofs.from_numpy(np.pad(bc_dof_array, (0, self.n_dof - len(bc_dof_array))))
-
             # Build sparse matrix directly from data_mat field with BCs applied
             # Maximum triplets = original entries + diagonal BC entries
-            max_triplets = self.cnt[None] + len(bc_dof_array)
+            max_triplets = self.cnt[None] + self.num_bc_dofs[None]
             builder = ti.linalg.SparseMatrixBuilder(self.n_dof, self.n_dof, max_num_triplets=max_triplets)
             self.fill_sparse_matrix_builder(builder)
             A = builder.build()
-
-            # Prepare RHS from Taichi field and apply BCs
             b = self.data_rhs.to_numpy()
-            if len(bc_dof_array) > 0:
+            if self.num_bc_dofs[None] > 0:
                 self.apply_bc_to_rhs(b)
+            if not self.sparsity_pattern_analyzed:
+                self.solver.analyze_pattern(A)
+                self.sparsity_pattern_analyzed = True
+                if self.verbose:
+                    print("Sparsity pattern analyzed ONCE.")
 
-            # Solve using Taichi's native solver
-            self.solver.analyze_pattern(A)
-            self.solver.factorize(A)
+            self.solver.factorize(A)  # This STAYS inside the loop
+
             x = self.solver.solve(b)
+            self.data_sol.from_numpy(x)
 
-            # Copy solution back to Taichi
+            # Even simpler, the old code's from_numpy(x) is fine:
             self.data_sol.from_numpy(x)
             self.cnt_linear_solve += 1
+
+            # DEBUG: Check if copy worked correctly
+            if self.verbose and newton_iter == 0:
+                data_sol_np = self.data_sol.to_numpy()
+                print(
+                    f"  DEBUG: After copy - min: {data_sol_np.min():.6e}, max: {data_sol_np.max():.6e}, has_nan: {np.isnan(data_sol_np).any()}"
+                )
+                print(f"  DEBUG: First 5 data_sol values: {data_sol_np[:5]}")
 
             # Check convergence criterion
             # residual is |Δx|_∞, we check if |Δx|/dt < newton_v_res_tol
