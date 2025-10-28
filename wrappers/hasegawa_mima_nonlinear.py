@@ -24,16 +24,41 @@ def _get_sim_path(relative_path):
     return relative_path
 
 
+def format_param_for_path(value):
+    """
+    Format parameter values for clean folder/file names.
+
+    Args:
+        value: Parameter value (float, int, or other)
+
+    Returns:
+        str: Cleanly formatted string suitable for file paths
+    """
+    if isinstance(value, float):
+        if value >= 1e-3 and value < 1e3:
+            # Use fixed point for reasonable range, remove trailing zeros
+            return f"{value:.6g}".rstrip("0").rstrip(".")
+        else:
+            # Use scientific notation for very small/large values
+            return f"{value:.2e}"
+    else:
+        return str(value)
+
+
 def _find_runner_path():
     """Automatically find the correct path to hasegawa_mima_nonlinear.py runner."""
+    # Get current working directory
     cwd = os.getcwd()
 
+    # List of possible runner paths relative to different working directories
     possible_paths = []
 
+    # If working from project root (SimulCost-Bench/)
     if cwd.endswith("SimulCost-Bench"):
         possible_paths.extend(
             ["costsci_tools/runners/hasegawa_mima_nonlinear.py", "runners/hasegawa_mima_nonlinear.py"]
         )
+    # If working from costsci_tools/ subdirectory
     elif cwd.endswith("costsci_tools") or "costsci_tools" in cwd:
         possible_paths.extend(
             [
@@ -42,20 +67,37 @@ def _find_runner_path():
                 "costsci_tools/runners/hasegawa_mima_nonlinear.py",
             ]
         )
-    else:
-        possible_paths.extend(
-            [
-                "runners/hasegawa_mima_nonlinear.py",
-                "costsci_tools/runners/hasegawa_mima_nonlinear.py",
-                "./runners/hasegawa_mima_nonlinear.py",
-            ]
-        )
 
+    # Add generic fallback paths
+    possible_paths.extend(
+        [
+            "runners/hasegawa_mima_nonlinear.py",
+            "costsci_tools/runners/hasegawa_mima_nonlinear.py",
+            "./runners/hasegawa_mima_nonlinear.py",
+            "../runners/hasegawa_mima_nonlinear.py",
+            "../../runners/hasegawa_mima_nonlinear.py",
+        ]
+    )
+
+    # Remove duplicates while preserving order
+    seen = set()
+    unique_paths = []
     for path in possible_paths:
+        if path not in seen:
+            seen.add(path)
+            unique_paths.append(path)
+
+    for path in unique_paths:
         if os.path.exists(path):
             return path
 
-    raise FileNotFoundError(f"Could not find hasegawa_mima_nonlinear.py runner. Searched: {possible_paths}")
+    # If none found, raise an error with helpful information
+    raise FileNotFoundError(
+        f"Could not find hasegawa_mima_nonlinear.py runner in any expected location.\n"
+        f"Current working directory: {cwd}\n"
+        f"Searched paths: {unique_paths}\n"
+        f"Please ensure the runner exists or update the search paths."
+    )
 
 
 def get_results(profile, N, dt):
@@ -70,7 +112,7 @@ def get_results(profile, N, dt):
     Returns:
         tuple: (cost, results_list) where results_list contains all frame data
     """
-    dir_path = _get_sim_path(f"sim_res/hasegawa_mima_nonlinear/{profile}_N_{N}_dt_{dt:.2e}_nonlinear/")
+    dir_path = _get_sim_path(f"sim_res/hasegawa_mima_nonlinear/{profile}_N_{format_param_for_path(N)}_dt_{format_param_for_path(dt)}_nonlinear/")
     meta_path = os.path.join(dir_path, "meta.json")
 
     # Check if the simulation has already been run
@@ -85,7 +127,7 @@ def get_results(profile, N, dt):
         print(f"Running new nonlinear simulation with parameters: N={N}, dt={dt}")
         runner_path = _find_runner_path()
         if SIM_RES_BASE_DIR:
-            dump_dir = os.path.join(SIM_RES_BASE_DIR, f"sim_res/hasegawa_mima_nonlinear/{profile}")
+            dump_dir = os.path.join(SIM_RES_BASE_DIR, f"sim_res/hasegawa_mima_nonlinear/{profile}_N_{format_param_for_path(N)}_dt_{format_param_for_path(dt)}_nonlinear")
             cmd = f"{sys.executable} {runner_path} --config-name={profile} N={N} dt={dt} dump_dir={dump_dir}"
         else:
             cmd = f"{sys.executable} {runner_path} --config-name={profile} N={N} dt={dt}"
