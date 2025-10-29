@@ -11,7 +11,6 @@ import itertools
 import os
 import sys
 import json
-import time
 import matplotlib.pyplot as plt
 import numpy as np
 from collections import defaultdict
@@ -20,7 +19,7 @@ from collections import defaultdict
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from checkouts.config_utils import load_config, build_target_configs
-from dummy_sols.fem2d import find_convergent_nx, find_convergent_cfl, find_optimal_newton_v_res_tol
+from dummy_sols.fem2d import find_convergent_nx, find_convergent_cfl, find_convergent_newton_v_res_tol
 import yaml
 
 
@@ -34,7 +33,13 @@ def get_case_from_profile(profile):
                 return config["case"]
             else:
                 # Return default case names based on profile
-                case_map = {"p1": "cantilever", "p2": "vibration_bar", "p3": "twisting_column"}
+                case_map = {
+                    "p1": "cantilever",
+                    "p2": "vibration_bar",
+                    "p3": "twisting_column",
+                    "p4": "vibration_bar",
+                    "p5": "twisting_column"
+                }
                 return case_map.get(profile, "unknown")
     except FileNotFoundError:
         raise FileNotFoundError(f"Config file {config_path} not found. Please ensure the profile '{profile}' exists.")
@@ -242,7 +247,7 @@ def plot_statistics(statistics, output_dir):
             newton_values, newton_counts = np.unique(
                 list(statistics["optimal_newton_v_res_tol_values"]), return_counts=True
             )
-            f.write("   newton_v_res_tol parameter (0-shot):\n")
+            f.write("   newton_v_res_tol parameter (iterative):\n")
             for newton_tol, count in zip(newton_values, newton_counts):
                 f.write(f"     newton_v_res_tol={newton_tol:.6g}: {count} times\n")
 
@@ -257,14 +262,18 @@ def main():
     print("✅ Configuration loaded successfully")
 
     # Extract configuration sections
+    # Handle both profile-specific and global precision levels
     precision_configs = {}
-    for name, info in config["precision_levels"].items():
-        # Only process precision levels with numeric values (skip placeholders)
-        if isinstance(info["energy_tolerance"], (int, float)) and isinstance(info["var_threshold"], (int, float)):
-            precision_configs[name] = {
-                "energy_tolerance": info["energy_tolerance"],
-                "var_threshold": info["var_threshold"],
-            }
+    for precision_name, precision_info in config["precision_levels"].items():
+        # Check if this is profile-specific (new format) or global (old format)
+        if all(isinstance(val, dict) and "energy_tolerance" in val and "var_threshold" in val
+               for val in precision_info.values()):
+            # New format: profile-specific precision levels
+            precision_configs[precision_name] = precision_info
+        elif isinstance(precision_info.get("energy_tolerance"), (int, float)) and \
+             isinstance(precision_info.get("var_threshold"), (int, float)):
+            # Old format: global precision levels (for backward compatibility)
+            precision_configs[precision_name] = precision_info
 
     profiles = config["profiles"]["active_profiles"]
     target_configs = build_target_configs(config)
@@ -306,6 +315,18 @@ def main():
             case = get_case_from_profile(profile)
             print(f"    Case: {case}")
 
+            # Get profile-specific precision values (or use global if old format)
+            if isinstance(precision_vals, dict) and profile in precision_vals:
+                # New format: profile-specific
+                energy_tolerance = precision_vals[profile]["energy_tolerance"]
+                var_threshold = precision_vals[profile]["var_threshold"]
+            else:
+                # Old format: global values
+                energy_tolerance = precision_vals["energy_tolerance"]
+                var_threshold = precision_vals["var_threshold"]
+
+            print(f"    Precision: energy_tolerance={energy_tolerance}, var_threshold={var_threshold}")
+
             for target_param, target_config in target_configs.items():
                 print(f"    Target parameter: {target_param}")
 
@@ -337,9 +358,9 @@ def main():
                             profile=profile,
                             nx=initial_nx,
                             cfl=task_params["cfl"],
-                            newton_v_res_tol=0.01,  # Default for nx search
-                            energy_tolerance=precision_vals["energy_tolerance"],
-                            var_threshold=precision_vals["var_threshold"],
+                            newton_v_res_tol=task_params["newton_v_res_tol"],
+                            energy_tolerance=energy_tolerance,
+                            var_threshold=var_threshold,
                             multiplication_factor=target_config["multiplication_factor"],
                             max_iteration_num=target_config["max_iteration_num"],
                         )
@@ -353,9 +374,9 @@ def main():
                             profile=profile,
                             nx=task_params["nx"],
                             cfl=initial_cfl,
-                            newton_v_res_tol=0.01,  # Default for cfl search
-                            energy_tolerance=precision_vals["energy_tolerance"],
-                            var_threshold=precision_vals["var_threshold"],
+                            newton_v_res_tol=task_params["newton_v_res_tol"],
+                            energy_tolerance=energy_tolerance,
+                            var_threshold=var_threshold,
                             multiplication_factor=target_config["multiplication_factor"],
                             max_iteration_num=target_config["max_iteration_num"],
                         )
@@ -363,24 +384,18 @@ def main():
                             statistics["optimal_cfl_values"].append(best_param)
 
                     elif target_param == "newton_v_res_tol":
-                        # 0-shot grid search over newton_v_res_tol with fixed nx and cfl
-                        search_range = target_config.get("search_range", [0.001, 0.1])
-                        search_range_min = search_range[0]
-                        search_range_max = search_range[1]
-                        search_range_slice_num = target_config.get("search_range_slice_num", 5)
-
-                        is_converged, best_param, cost_history, param_history = find_optimal_newton_v_res_tol(
+                        # Iterative search for newton_v_res_tol (similar to nx and cfl)
+                        initial_newton_v_res_tol = target_config["initial_values"][profile]
+                        is_converged, best_param, cost_history, param_history = find_convergent_newton_v_res_tol(
                             profile=profile,
                             nx=task_params["nx"],
                             cfl=task_params["cfl"],
-                            energy_tolerance=precision_vals["energy_tolerance"],
-                            var_threshold=precision_vals["var_threshold"],
-                            search_range_min=search_range_min,
-                            search_range_max=search_range_max,
-                            search_range_slice_num=search_range_slice_num,
+                            newton_v_res_tol=initial_newton_v_res_tol,
+                            energy_tolerance=energy_tolerance,
+                            var_threshold=var_threshold,
+                            multiplication_factor=target_config["multiplication_factor"],
+                            max_iteration_num=target_config["max_iteration_num"],
                         )
-
-                        # best_param is just the optimal newton_v_res_tol value
                         if best_param is not None:
                             statistics["optimal_newton_v_res_tol_values"].append(best_param)
 
@@ -390,25 +405,13 @@ def main():
                         "target_parameter": target_param,
                         "profile": profile,
                         "precision_config": {
-                            "energy_tolerance": precision_vals["energy_tolerance"],
-                            "var_threshold": precision_vals["var_threshold"],
+                            "energy_tolerance": energy_tolerance,
+                            "var_threshold": var_threshold,
                         },
                         "target_config": {
-                            "initial_value": (
-                                target_config.get("initial_values", {}).get(profile)
-                                if target_param != "newton_v_res_tol"
-                                else None
-                            ),
+                            "initial_value": target_config.get("initial_values", {}).get(profile),
                             "multiplication_factor": target_config.get("multiplication_factor"),
                             "max_iteration_num": target_config.get("max_iteration_num"),
-                            "search_range": (
-                                target_config.get("search_range") if target_param == "newton_v_res_tol" else None
-                            ),
-                            "search_range_slice_num": (
-                                target_config.get("search_range_slice_num")
-                                if target_param == "newton_v_res_tol"
-                                else None
-                            ),
                         },
                         "non_target_parameters": task_params.copy(),
                         "results": {

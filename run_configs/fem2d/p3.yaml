@@ -32,7 +32,7 @@ mesh_offset:
   - 0.0
 
 # Simulator statics
-record_dt: 0.2
+record_dt: 0.08
 end_frame: 7
 max_newton_iter: 10
 

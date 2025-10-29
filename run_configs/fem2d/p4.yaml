@@ -27,7 +27,7 @@ envs_params:
   x_start: 5.0
   y_start: 0.0
   gravity: 0.0
-  initial_velocity_amplitude: 0.75
+  initial_velocity_amplitude: 0.1  # Reduced from 0.75 in p2 - gentler vibration, less cell crossing
 mesh_scale: 1.0
 mesh_offset:
   - 0.0
@@ -38,5 +38,5 @@ record_dt: 0.8
 end_frame: 7
 max_newton_iter: 10
 
-dump_dir: "sim_res/fem2d/p2"
+dump_dir: "sim_res/fem2d/p4"
 verbose: False

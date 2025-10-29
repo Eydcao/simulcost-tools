@@ -154,130 +154,78 @@ def find_convergent_cfl(
     return converged, best_cfl, cost_history, param_history
 
 
-def find_optimal_newton_v_res_tol(
-    profile, nx, cfl, energy_tolerance, var_threshold, search_range_min, search_range_max, search_range_slice_num
+def find_convergent_newton_v_res_tol(
+    profile, nx, cfl, newton_v_res_tol, energy_tolerance, var_threshold, multiplication_factor, max_iteration_num
 ):
-    """Grid search over newton_v_res_tol for optimal Newton convergence tolerance.
-    Uses fixed nx and cfl values (no nested iterative search).
+    """Iteratively reduce newton_v_res_tol (Newton convergence tolerance) until convergence is achieved.
 
     Args:
         profile: Profile name (p1, p2, p3)
-        nx: Fixed grid resolution
-        cfl: Fixed CFL number
+        nx: Grid resolution
+        cfl: CFL number
+        newton_v_res_tol: Initial Newton velocity residual tolerance
         energy_tolerance: Tolerance for energy comparison
-        var_threshold: Threshold for energy conservation
-        search_range_min: Minimum newton_v_res_tol to search
-        search_range_max: Maximum newton_v_res_tol to search
-        search_range_slice_num: Number of values to test in the range
+        var_threshold: Threshold for energy conservation (coefficient of variation)
+        multiplication_factor: Factor to multiply newton_v_res_tol by each iteration (should be < 1 to reduce tolerance)
+        max_iteration_num: Maximum number of iterations
 
     Returns:
-        tuple: (converged, optimal_newton_v_res_tol, optimal_cost_history, param_history)
-            - converged: True if at least one newton_v_res_tol value succeeded
-            - optimal_newton_v_res_tol: The newton_v_res_tol with minimum cost
-            - optimal_cost_history: Cost history (single value) for the optimal solution
-            - param_history: Full exploration history for all newton_v_res_tol values
+        tuple: (converged, best_newton_v_res_tol, cost_history, param_history)
     """
-    # Use logarithmic spacing for newton_v_res_tol (descending: larger to smaller tolerance)
-    newton_v_res_tol_values = np.logspace(
-        np.log10(search_range_max), np.log10(search_range_min), search_range_slice_num
-    )
-
+    newton_v_res_tol_history = []
+    cost_history = []
     param_history = []
-    newton_results = []  # Save key info for each newton_v_res_tol
 
-    for newton_tol in newton_v_res_tol_values:
-        newton_tol = round(float(newton_tol), 6)
-        print(f"\n=== Testing newton_v_res_tol = {newton_tol} ===")
-        print(f"Using fixed parameters: nx = {nx}, cfl = {cfl}")
+    current_newton_v_res_tol = newton_v_res_tol
+    converged = False
+    best_newton_v_res_tol = None
 
-        # Run single simulation with fixed parameters
-        _, cost = get_fem2d_data(profile=profile, nx=nx, cfl=cfl, newton_v_res_tol=newton_tol)
+    for i in range(max_iteration_num):
+        # Round to avoid floating point issues
+        current_newton_v_res_tol = round(current_newton_v_res_tol, 6)
+        print(f"\nRunning simulation with nx = {nx}, cfl = {cfl}, newton_v_res_tol = {current_newton_v_res_tol}")
 
-        # Record parameter combination
-        param_entry = {"newton_v_res_tol": newton_tol, "nx": nx, "cfl": cfl}
-        param_history.append(param_entry)
+        # Run simulation and load results
+        _, cost_i = get_fem2d_data(profile=profile, nx=nx, cfl=cfl, newton_v_res_tol=current_newton_v_res_tol)
+        cost_history.append(cost_i)
+        newton_v_res_tol_history.append(current_newton_v_res_tol)
+        param_history.append({"nx": nx, "cfl": cfl, "newton_v_res_tol": current_newton_v_res_tol})
 
-        # Record all results (fem2d doesn't have convergence criteria, all runs succeed)
-        newton_results.append(
-            {
-                "newton_v_res_tol": newton_tol,
-                "total_cost": cost,
-                "cost_history": [cost],
-            }
-        )
-        print(f"newton_v_res_tol = {newton_tol}: Total Cost = {cost}")
+        # If we have previous results to compare with
+        if len(newton_v_res_tol_history) > 1:
+            prev_newton_v_res_tol = newton_v_res_tol_history[-2]
 
-    # Select converged solution with minimum total cost
-    if newton_results:
-        min_cost_idx = int(np.argmin([r["total_cost"] for r in newton_results]))
-        opt_rec = newton_results[min_cost_idx]
+            # Compare with previous results
+            is_converged, metrics1, metrics2, avg_energy_diff = compare_energies_fem2d(
+                profile1=profile,
+                nx1=nx,
+                cfl1=cfl,
+                newton_v_res_tol1=prev_newton_v_res_tol,
+                profile2=profile,
+                nx2=nx,
+                cfl2=cfl,
+                newton_v_res_tol2=current_newton_v_res_tol,
+                energy_tolerance=energy_tolerance,
+                var_threshold=var_threshold,
+            )
 
-        optimal_newton_tol = opt_rec["newton_v_res_tol"]
-        optimal_cost_history = opt_rec["cost_history"]
-        is_converged_optimal = True
+            if is_converged:
+                print(
+                    f"Convergence achieved between newton_v_res_tol {prev_newton_v_res_tol} and {current_newton_v_res_tol}"
+                )
+                best_newton_v_res_tol = newton_v_res_tol_history[-1]  # The smaller tolerance that converged
+                converged = True
+                break
+            else:
+                print(f"No convergence between newton_v_res_tol {prev_newton_v_res_tol} and {current_newton_v_res_tol}")
 
-        print(f"\nOptimal newton_v_res_tol found: {optimal_newton_tol}")
-        print(f"Optimal cost: {sum(optimal_cost_history)}")
+        # Prepare next newton_v_res_tol using multiplication factor
+        next_newton_v_res_tol = current_newton_v_res_tol * multiplication_factor
+        current_newton_v_res_tol = next_newton_v_res_tol
+
+    if converged:
+        print(f"\nConvergent newton_v_res_tol found: {best_newton_v_res_tol}")
     else:
-        optimal_newton_tol = None
-        optimal_cost_history = None
-        is_converged_optimal = False
-        print("\nNo optimal newton_v_res_tol found")
+        print(f"\nNo convergence achieved within {max_iteration_num} iterations")
 
-    return is_converged_optimal, optimal_newton_tol, optimal_cost_history, param_history
-
-
-if __name__ == "__main__":
-    # Example usage
-    profile = "p1"
-
-    # Profile-specific initial values
-    # Based on existing configs and expected mesh sizes
-    initial_values = {
-        "p1": {"nx": 20, "cfl": 0.5},  # cantilever: Lx=10.0, Ly=2.0
-        "p2": {"nx": 70, "cfl": 0.5},  # vibration_bar: Lx=25.0, Ly=1.0
-        "p3": {"nx": 20, "cfl": 0.5},  # twisting_column: Lx=2.0, Ly=10.0
-    }
-
-    initial_nx = initial_values[profile]["nx"]
-    cfl = initial_values[profile]["cfl"]
-    newton_v_res_tol = 0.01  # This is a 0-shot only parameter (not iteratively tuned)
-
-    energy_tolerance = 1e-6
-    var_threshold = 0.01
-
-    # Test nx convergence
-    print("=" * 60)
-    print("Testing NX Convergence")
-    print("=" * 60)
-    converged, best_nx, cost_history, param_history = find_convergent_nx(
-        profile=profile,
-        nx=initial_nx,
-        cfl=cfl,
-        newton_v_res_tol=newton_v_res_tol,
-        energy_tolerance=energy_tolerance,
-        var_threshold=var_threshold,
-        multiplication_factor=2,
-        max_iteration_num=4,
-    )
-
-    print(f"\nNX convergence test: {converged}, best_nx: {best_nx}")
-    print(f"Cost history: {cost_history}")
-
-    # Test cfl convergence
-    print("\n" + "=" * 60)
-    print("Testing CFL Convergence")
-    print("=" * 60)
-    converged_cfl, best_cfl, cost_history_cfl, param_history_cfl = find_convergent_cfl(
-        profile=profile,
-        nx=initial_nx,
-        cfl=cfl,
-        newton_v_res_tol=newton_v_res_tol,
-        energy_tolerance=energy_tolerance,
-        var_threshold=var_threshold,
-        multiplication_factor=0.5,  # Reduce cfl by half each iteration
-        max_iteration_num=4,
-    )
-
-    print(f"\nCFL convergence test: {converged_cfl}, best_cfl: {best_cfl}")
-    print(f"Cost history: {cost_history_cfl}")
+    return converged, best_newton_v_res_tol, cost_history, param_history

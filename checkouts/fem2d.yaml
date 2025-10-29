@@ -1,79 +1,130 @@
 # FEM2D Checkout Configuration
-# This file centralizes all parameter settings for both documentation and dummy solution generation
-
-solver_info:
-  name: "FEM2D"
-  numerical_method: "2D Finite Element Method with implicit Newton solver and corotated elasticity"
-  reference: "Implicit FEM with line search for nonlinear elasticity problems"
-
-task_distribution:
-  strategy: "benchmark"
-  total_individuals: 60
-  description: "3 profiles * 3 precision levels * (2 nx tasks + 2 dt tasks + 2 newton_v_res_tol tasks) = 54 tasks"
 
 precision_levels:
   high:
-    energy_tolerance: 0.003
-    var_threshold: 0.015
-    description: "High precision energy convergence - very challenging"
+    p1:
+      energy_tolerance: 0.005
+      var_threshold: 0.015
+    p2:
+      energy_tolerance: 0.005
+      var_threshold: 0.030
+    p3:
+      energy_tolerance: 0.010
+      var_threshold: 0.040
+    p4:  # Gentle vibration - better energy conservation than p2
+      energy_tolerance: 0.0025
+      var_threshold: 0.015
+    p5:  # Strong twist - more challenging than p3
+      energy_tolerance: 0.02
+      var_threshold: 0.080
   medium:
-    energy_tolerance: 0.01
-    var_threshold: 0.02
-    description: "Medium precision energy convergence - challenging"
+    p1:
+      energy_tolerance: 0.010
+      var_threshold: 0.030
+    p2:
+      energy_tolerance: 0.010
+      var_threshold: 0.060
+    p3:
+      energy_tolerance: 0.020
+      var_threshold: 0.080
+    p4:  # Gentle vibration
+      energy_tolerance: 0.005
+      var_threshold: 0.030
+    p5:  # Strong twist
+      energy_tolerance: 0.040
+      var_threshold: 0.160
   low:
-    energy_tolerance: 0.03
-    var_threshold: 0.05
-    description: "Low precision energy convergence - achievable"
+    p1:
+      energy_tolerance: 0.020
+      var_threshold: 0.060
+    p2:
+      energy_tolerance: 0.020
+      var_threshold: 0.120
+    p3:
+      energy_tolerance: 0.040
+      var_threshold: 0.160
+    p4:  # Gentle vibration
+      energy_tolerance: 0.010
+      var_threshold: 0.060
+    p5:  # Strong twist
+      energy_tolerance: 0.080
+      var_threshold: 0.320
 
 profiles:
-  num_profiles: 3
-  active_profiles: ["p1", "p2", "p3"]
-  # active_profiles: ["p1"]
+  active_profiles: ["p1", "p2", "p3", "p4", "p5"]
 
-# Target parameters for optimization
 target_parameters:
   nx:
     search_type: "iterative+0-shot"
-    # Profile-specific initial values
     initial_values:
-      p1: 20   # cantilever: Lx=10.0, Ly=2.0
-      p2: 70   # vibration_bar: Lx=25.0, Ly=1.0
-      p3: 20   # twisting_column: Lx=2.0, Ly=10.0
+      p1: 20   # cantilever: 20→40→80 (Lx=10, Ly=2, ratio 5:1) TODO should we change to dx instead of nx?
+      p2: 50   # vibration_bar: 50→100 (Lx=25, Ly=1, ratio 25:1 needs finer mesh)
+      p3: 4   # twisting_column: 20→40→80 (Lx=2, Ly=10, ratio 1:5)
+      p4: 50   # gentle vibration_bar: same aspect ratio as p2
+      p5: 4    # strong twisting_column: same aspect ratio as p3
     multiplication_factor: 2
     max_iteration_num: 4
     non_target_parameters:
-      dt:
-        p1: [0.0005, 0.00025]  # cantilever
-        p2: [0.005, 0.0025]     # vibration_bar
-        p3: [0.001, 0.0005]     # twisting_column
+      cfl:
+        p1: [1.0]
+        p2: [1.0]
+        p3: [1.0]
+        p4: [1.0]
+        p5: [1.0]
 
-  dt:
+      newton_v_res_tol:
+        p1: [1.0]
+        p2: [1.0]
+        p3: [1.0]
+        p4: [1.0]
+        p5: [1.0]
+
+  cfl:
     search_type: "iterative+0-shot"
-    # Profile-specific initial values
     initial_values:
-      p1: 0.0005  # cantilever
-      p2: 0.005   # vibration_bar
-      p3: 0.001   # twisting_column
+      p1: 16.0
+      p2: 16.0
+      p3: 16.0
+      p4: 16.0
+      p5: 16.0
     multiplication_factor: 0.5
-    max_iteration_num: 4
-    # Profile-specific non_target nx values
+    max_iteration_num: 6
     non_target_parameters:
       nx:
-        p1: [20, 40]   # cantilever
-        p2: [70, 140]  # vibration_bar
-        p3: [20, 40]   # twisting_column
+        p1: [20, 40, 80, 160]
+        p2: [50, 100, 200, 400]
+        p3: [4, 8, 16, 32]
+        p4: [50, 100, 200, 400]
+        p5: [4, 8, 16, 32]
+
+      newton_v_res_tol:
+        p1: [1.0]
+        p2: [1.0]
+        p3: [1.0]
+        p4: [1.0]
+        p5: [1.0]
 
   newton_v_res_tol:
-    search_type: "0-shot"
-    search_range: [0.001, 0.1]  # Logarithmic spacing from tight to loose tolerance
-    search_range_slice_num: 5
-    # Profile-specific non_target parameters
+    search_type: "iterative+0-shot"
+    initial_values:
+      p1: 16.0
+      p2: 16.0
+      p3: 16.0
+      p4: 16.0
+      p5: 16.0
+    multiplication_factor: 0.5
+    max_iteration_num: 6
     non_target_parameters:
       nx:
-        p1: [20, 40]   # cantilever
-        p2: [70, 140]  # vibration_bar
-        p3: [20, 40]   # twisting_column
-      dt:
-        p1: [0.0005, 0.00025]  # cantilever
-        p2: [0.005, 0.0025]     # vibration_bar
-        p3: [0.001, 0.0005]     # twisting_column
+        p1: [20, 40, 80, 160]
+        p2: [50, 100, 200, 400]
+        p3: [4, 8, 16, 32]
+        p4: [50, 100, 200, 400]
+        p5: [4, 8, 16, 32]
+
+      cfl:
+        p1: [1.0]
+        p2: [1.0]
+        p3: [1.0]
+        p4: [1.0]
+        p5: [1.0]

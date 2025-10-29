@@ -176,6 +176,9 @@ def compare_energies_fem2d(
         # Calculate relative difference using L2 norm
         eps = 1e-12
         rel_diff = np.linalg.norm(energy1 - energy2) / (np.linalg.norm(energy1) + np.linalg.norm(energy2) + eps)
+        # print("diff", np.linalg.norm(energy1 - energy2))
+        # print("norm", (np.linalg.norm(energy1) + np.linalg.norm(energy2) + eps))
+        # exit(1)
         all_relative_diffs.append(rel_diff)
 
     # Calculate average relative difference across all energy types
