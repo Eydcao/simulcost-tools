@@ -9,11 +9,16 @@ from wrappers.hasegawa_mima_nonlinear import get_results, compare_solutions
 
 
 def find_convergent_N(profile, N, dt, tolerance_rmse, multiplication_factor, max_iteration_num):
-    """Iteratively increase N (grid resolution) until convergence is achieved."""
+    """
+    Iteratively increase N (grid resolution) until convergence is achieved.
+
+    Note: error_history[i] represents the RMSE comparison between
+    param_history[i] and param_history[i+1], so error_history is one element shorter.
+    """
     N_history = []
     cost_history = []
     param_history = []
-    error_history = []
+    error_history = []  # Note: Will be one element shorter than param_history
 
     current_N = N
     converged = False
@@ -46,8 +51,6 @@ def find_convergent_N(profile, N, dt, tolerance_rmse, multiplication_factor, max
                 break
             else:
                 print(f"No convergence with N = {current_N}, RMSE diff = {rmse_diff:.6e}")
-        else:
-            error_history.append(None)  # No comparison for first iteration
 
         # Prepare next N using multiplication factor
         next_N = int(current_N * multiplication_factor)
@@ -63,27 +66,22 @@ def find_convergent_N(profile, N, dt, tolerance_rmse, multiplication_factor, max
         else:
             best_N = None
 
-    # Return trajectory information
-    trajectory = {
-        "parameter_name": "N",
-        "initial_value": N,
-        "optimal_value": best_N,
-        "converged": converged,
-        "parameter_history": param_history,
-        "cost_history": cost_history,
-        "error_history": error_history,
-        "N_history": N_history
-    }
+    print(f"Cost history: {cost_history}, total cost: {sum(cost_history)}")
 
-    return trajectory
+    return bool(converged), best_N, cost_history, param_history
 
 
 def find_convergent_dt(profile, N, dt, tolerance_rmse, multiplication_factor, max_iteration_num):
-    """Iteratively decrease dt (time step) until convergence is achieved."""
+    """
+    Iteratively decrease dt (time step) until convergence is achieved.
+
+    Note: error_history[i] represents the RMSE comparison between
+    param_history[i] and param_history[i+1], so error_history is one element shorter.
+    """
     dt_history = []
     cost_history = []
     param_history = []
-    error_history = []
+    error_history = []  # Note: Will be one element shorter than param_history
 
     current_dt = dt
     converged = False
@@ -116,8 +114,6 @@ def find_convergent_dt(profile, N, dt, tolerance_rmse, multiplication_factor, ma
                 break
             else:
                 print(f"No convergence with dt = {current_dt}, RMSE diff = {rmse_diff:.6e}")
-        else:
-            error_history.append(None)  # No comparison for first iteration
 
         # Prepare next dt using multiplication factor
         next_dt = current_dt * multiplication_factor
@@ -133,53 +129,6 @@ def find_convergent_dt(profile, N, dt, tolerance_rmse, multiplication_factor, ma
         else:
             best_dt = None
 
-    # Return trajectory information
-    trajectory = {
-        "parameter_name": "dt",
-        "initial_value": dt,
-        "optimal_value": best_dt,
-        "converged": converged,
-        "parameter_history": param_history,
-        "cost_history": cost_history,
-        "error_history": error_history,
-        "dt_history": dt_history
-    }
+    print(f"Cost history: {cost_history}, total cost: {sum(cost_history)}")
 
-    return trajectory
-
-
-def generate_dummy_solution(profile, target_param, initial_params, tolerance_rmse, multiplication_factor, max_iteration_num):
-    """
-    Generate a dummy solution trajectory for parameter optimization.
-
-    Args:
-        profile: Configuration profile name
-        target_param: Parameter to optimize ("N" or "dt")
-        initial_params: Dictionary with initial parameter values
-        tolerance_rmse: RMSE tolerance for convergence
-        multiplication_factor: Factor for parameter updates
-        max_iteration_num: Maximum number of iterations
-
-    Returns:
-        trajectory: Dictionary with optimization trajectory
-    """
-    if target_param == "N":
-        return find_convergent_N(
-            profile=profile,
-            N=initial_params["N"],
-            dt=initial_params["dt"],
-            tolerance_rmse=tolerance_rmse,
-            multiplication_factor=multiplication_factor,
-            max_iteration_num=max_iteration_num
-        )
-    elif target_param == "dt":
-        return find_convergent_dt(
-            profile=profile,
-            N=initial_params["N"],
-            dt=initial_params["dt"],
-            tolerance_rmse=tolerance_rmse,
-            multiplication_factor=multiplication_factor,
-            max_iteration_num=max_iteration_num
-        )
-    else:
-        raise ValueError(f"Unsupported target parameter: {target_param}")
+    return bool(converged), best_dt, cost_history, param_history

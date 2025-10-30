@@ -4,9 +4,25 @@ import numpy as np
 import json
 import sys
 from pathlib import Path
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 # Fixed radii value for all simulations (not a tunable parameter)
 FIXED_RADII = 1.0
+
+# Get base directory for simulation results from environment variable
+# If not set, use current directory (maintains backward compatibility)
+SIM_RES_BASE_DIR = os.getenv("SIM_RES_BASE_DIR", None)
+if SIM_RES_BASE_DIR:
+    print(f"✅ Using custom simulation results directory: {SIM_RES_BASE_DIR}")
+
+def _get_sim_path(relative_path):
+    """Construct simulation path, using absolute path if SIM_RES_BASE_DIR is set."""
+    if SIM_RES_BASE_DIR:
+        return os.path.join(SIM_RES_BASE_DIR, relative_path)
+    return relative_path
 
 
 def _find_runner_path():
@@ -87,7 +103,7 @@ def run_sim_unstruct_mpm(profile, nx, n_part, cfl, case="cantilever"):
     Note: radii is fixed at FIXED_RADII for all simulations.
     """
     # Create directory path based on parameters (matching solver format)
-    dir_path = f"sim_res/unstruct_mpm/{profile}_nx{format_param_for_path(nx)}_npart{n_part}_cfl{format_param_for_path(cfl)}/"
+    dir_path = _get_sim_path(f"sim_res/unstruct_mpm/{profile}_nx{format_param_for_path(nx)}_npart{n_part}_cfl{format_param_for_path(cfl)}/")
     meta_path = os.path.join(dir_path, "meta.json")
 
     # Check if the simulation has already been run
@@ -103,7 +119,11 @@ def run_sim_unstruct_mpm(profile, nx, n_part, cfl, case="cantilever"):
 
     # Build command with parameters using auto-detected runner path
     runner_path = _find_runner_path()
-    cmd = f"{sys.executable} {runner_path} --config-name={profile} nx={nx} n_part={n_part} cfl={cfl} case={case}"
+    if SIM_RES_BASE_DIR:
+        dump_dir = os.path.join(SIM_RES_BASE_DIR, f"sim_res/unstruct_mpm/{profile}")
+        cmd = f"{sys.executable} {runner_path} --config-name={profile} nx={nx} n_part={n_part} cfl={cfl} case={case} dump_dir={dump_dir}"
+    else:
+        cmd = f"{sys.executable} {runner_path} --config-name={profile} nx={nx} n_part={n_part} cfl={cfl} case={case}"
     subprocess.run(cmd, shell=True, check=True)
 
     # Load the cost and convergence status from the meta.json file
@@ -119,7 +139,7 @@ def get_energies_unstruct_mpm(profile, nx, n_part, cfl, case="cantilever"):
     """Load energies data for a given parameter set, triggering a simulation if results are missing.
     Note: radii is fixed at FIXED_RADII for all simulations.
     """
-    dir_path = f"sim_res/unstruct_mpm/{profile}_nx{format_param_for_path(nx)}_npart{n_part}_cfl{format_param_for_path(cfl)}/"
+    dir_path = _get_sim_path(f"sim_res/unstruct_mpm/{profile}_nx{format_param_for_path(nx)}_npart{n_part}_cfl{format_param_for_path(cfl)}/")
     energies_path = os.path.join(dir_path, "energies.npz")
 
     # Check if energies file exists, otherwise trigger a simulation
@@ -166,8 +186,8 @@ def compare_energies_unstruct_mpm(profile1, nx1, n_part1, cfl1,
         return False, None, None, float('inf')
 
     # Check if simulation failed by checking meta.json
-    dir1 = f"sim_res/unstruct_mpm/{profile1}_nx{format_param_for_path(nx1)}_npart{n_part1}_cfl{format_param_for_path(cfl1)}/"
-    dir2 = f"sim_res/unstruct_mpm/{profile2}_nx{format_param_for_path(nx2)}_npart{n_part2}_cfl{format_param_for_path(cfl2)}/"
+    dir1 = _get_sim_path(f"sim_res/unstruct_mpm/{profile1}_nx{format_param_for_path(nx1)}_npart{n_part1}_cfl{format_param_for_path(cfl1)}/")
+    dir2 = _get_sim_path(f"sim_res/unstruct_mpm/{profile2}_nx{format_param_for_path(nx2)}_npart{n_part2}_cfl{format_param_for_path(cfl2)}/")
     
     meta1_path = os.path.join(dir1, "meta.json")
     meta2_path = os.path.join(dir2, "meta.json")

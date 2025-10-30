@@ -33,7 +33,7 @@ class HasegawaMimaNonlinear(SIMULATOR):
         self.dt = cfg.dt  # Time step
 
         # Fixed dealiasing parameter
-        self.dealias_ratio = 2/3  # Stronger dealiasing with smaller ratio
+        self.dealias_ratio = 2 / 3  # Stronger dealiasing with smaller ratio
 
         # Grid setup
         self.dx = self.dy = self.L / self.N
@@ -75,10 +75,11 @@ class HasegawaMimaNonlinear(SIMULATOR):
 
     def create_dealias_mask(self):
         """Create 2/3 rule dealiasing mask"""
+
         def dealias_mask_1d(N):
             cutoff = int(N * self.dealias_ratio // 2)
             mask = np.zeros(N)
-            mask[:cutoff+1] = 1
+            mask[: cutoff + 1] = 1
             mask[-cutoff:] = 1
             return mask
 
@@ -155,11 +156,9 @@ class HasegawaMimaNonlinear(SIMULATOR):
     def rhs(self, q_hat):
         """Compute RHS of nonlinear Hasegawa-Mima equation in spectral space"""
         # Compute phi from q using Poisson equation in spectral space
-        phi_hat = np.copy(q_hat)
         # Avoid division by zero at k=0
         nonzero_mask = np.abs(self.A_fft) > 1e-14
-        phi_hat[nonzero_mask] = q_hat[nonzero_mask] / self.A_fft[nonzero_mask]
-        phi_hat[~nonzero_mask] = 0.0
+        phi_hat = np.where(nonzero_mask, q_hat / self.A_fft, 0.0)
 
         # Compute dealiased Jacobian in spectral space
         jacobian_hat = self.poisson_bracket_dealiased(phi_hat, q_hat)
@@ -213,18 +212,18 @@ class HasegawaMimaNonlinear(SIMULATOR):
         filename = f"frame_{self.record_frame:04d}.h5"
         filepath = os.path.join(self.dump_dir, filename)
 
-        with h5py.File(filepath, 'w') as f:
-            f.create_dataset('phi', data=phi)
-            f.create_dataset('coordinates_x', data=self.x)
-            f.create_dataset('coordinates_y', data=self.y)
+        with h5py.File(filepath, "w") as f:
+            f.create_dataset("phi", data=phi)
+            f.create_dataset("coordinates_x", data=self.x)
+            f.create_dataset("coordinates_y", data=self.y)
 
             # Store metadata as attributes
-            f.attrs['time'] = self.current_time
-            f.attrs['N'] = self.N
-            f.attrs['dt'] = self.dt
-            f.attrs['dealias_ratio'] = self.dealias_ratio
-            f.attrs['fft_operations'] = self.fft_operations
-            f.attrs['poisson_bracket_calls'] = self.poisson_bracket_calls
+            f.attrs["time"] = self.current_time
+            f.attrs["N"] = self.N
+            f.attrs["dt"] = self.dt
+            f.attrs["dealias_ratio"] = self.dealias_ratio
+            f.attrs["fft_operations"] = self.fft_operations
+            f.attrs["poisson_bracket_calls"] = self.poisson_bracket_calls
 
         # Create visualization similar to linear case
         try:
@@ -232,15 +231,15 @@ class HasegawaMimaNonlinear(SIMULATOR):
             vlim = np.max(np.abs(phi))
 
             fig, ax = plt.subplots(1, 1, figsize=(8, 6))
-            im = ax.pcolormesh(X, Y, phi, cmap='RdBu', shading='auto', vmin=-vlim, vmax=vlim)
-            ax.set_title(f'Nonlinear HM φ (t={self.current_time:.3f})')
-            ax.set_xlabel('x')
-            ax.set_ylabel('y')
-            plt.colorbar(im, ax=ax, label='φ')
+            im = ax.pcolormesh(X, Y, phi, cmap="RdBu", shading="auto", vmin=-vlim, vmax=vlim)
+            ax.set_title(f"Nonlinear HM φ (t={self.current_time:.3f})")
+            ax.set_xlabel("x")
+            ax.set_ylabel("y")
+            plt.colorbar(im, ax=ax, label="φ")
 
             plot_file = os.path.join(self.dump_dir, f"frame_{self.record_frame:04d}.png")
             plt.tight_layout()
-            plt.savefig(plot_file, dpi=150, bbox_inches='tight')
+            plt.savefig(plot_file, dpi=150, bbox_inches="tight")
             plt.close(fig)  # Important: close figure to prevent display
         except Exception as e:
             if self.verbose:
@@ -257,22 +256,22 @@ class HasegawaMimaNonlinear(SIMULATOR):
 
         # Save metadata
         meta = {
-            'cost': float(cost),
-            'n_steps': self.num_steps,
-            'fft_operations': self.fft_operations,
-            'poisson_bracket_calls': self.poisson_bracket_calls,
-            'end_time': self.current_time,
-            'N': self.N,
-            'dt': self.dt,
-            'dealias_ratio': self.dealias_ratio,
-            'case': self.case,
-            'L': self.L,
-            'v_star': self.v_star,
-            'Dx': self.Dx
+            "cost": float(cost),
+            "n_steps": self.num_steps,
+            "fft_operations": self.fft_operations,
+            "poisson_bracket_calls": self.poisson_bracket_calls,
+            "end_time": self.current_time,
+            "N": self.N,
+            "dt": self.dt,
+            "dealias_ratio": self.dealias_ratio,
+            "case": self.case,
+            "L": self.L,
+            "v_star": self.v_star,
+            "Dx": self.Dx,
         }
 
-        meta_path = os.path.join(self.dump_dir, 'meta.json')
-        with open(meta_path, 'w') as f:
+        meta_path = os.path.join(self.dump_dir, "meta.json")
+        with open(meta_path, "w") as f:
             json.dump(meta, f, indent=2)
 
         if self.verbose:

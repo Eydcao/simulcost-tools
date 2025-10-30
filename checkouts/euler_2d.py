@@ -1,0 +1,471 @@
+import itertools
+import os
+import sys
+import json
+import time
+import matplotlib.pyplot as plt
+import numpy as np
+from collections import defaultdict
+
+# Add paths for imports
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from dummy_sols.euler_2d import find_convergent_n_grid_x, find_convergent_cfl, find_convergent_cg_tol
+from checkouts.config_utils import load_config, build_target_configs
+
+
+def plot_statistics(statistics, output_dir):
+    """Plot convergence and optimal parameter statistics"""
+    os.makedirs(output_dir, exist_ok=True)
+
+    # Create figure with 2x2 subplots
+    fig, axes = plt.subplots(2, 2, figsize=(15, 12))
+    fig.suptitle("Euler 2D Dummy Search Statistics", fontsize=16)
+
+    # Plot 1: Convergence rates by precision level
+    ax = axes[0, 0]
+    precision_levels = list(statistics["convergence_by_precision"].keys())
+    convergence_rates = []
+    for precision in precision_levels:
+        total = statistics["convergence_by_precision"][precision]["total"]
+        converged = statistics["convergence_by_precision"][precision]["converged"]
+        rate = (converged / total * 100) if total > 0 else 0
+        convergence_rates.append(rate)
+
+    ax.bar(precision_levels, convergence_rates, color=["red", "orange", "green"])
+    ax.set_ylabel("Convergence Rate (%)")
+    ax.set_title("Convergence Rate by Precision Level")
+    ax.set_ylim(0, 110)
+
+    # Add text annotations
+    for i, rate in enumerate(convergence_rates):
+        ax.text(i, rate + 2, f"{rate:.1f}%", ha="center", va="bottom")
+
+    # Plot 2: Convergence rates by target parameter
+    ax = axes[0, 1]
+    target_params = list(statistics["convergence_by_target"].keys())
+    target_rates = []
+    for param in target_params:
+        total = statistics["convergence_by_target"][param]["total"]
+        converged = statistics["convergence_by_target"][param]["converged"]
+        rate = (converged / total * 100) if total > 0 else 0
+        target_rates.append(rate)
+
+    ax.bar(target_params, target_rates, color=["blue", "cyan", "purple"])
+    ax.set_ylabel("Convergence Rate (%)")
+    ax.set_title("Convergence Rate by Target Parameter")
+    ax.set_ylim(0, 110)
+    ax.tick_params(axis="x", rotation=45)
+
+    # Add text annotations
+    for i, rate in enumerate(target_rates):
+        ax.text(i, rate + 2, f"{rate:.1f}%", ha="center", va="bottom")
+
+    # Plot 3: Optimal parameter frequency
+    ax = axes[1, 0]
+    colors = ["skyblue", "lightgreen", "lightcoral"]
+    color_idx = 0
+
+    if statistics["optimal_n_grid_x_values"]:
+        n_grid_x_values, n_grid_x_counts = np.unique(list(statistics["optimal_n_grid_x_values"]), return_counts=True)
+        ax.bar(
+            [str(n) for n in n_grid_x_values],
+            n_grid_x_counts,
+            alpha=0.7,
+            label="n_grid_x",
+            color=colors[color_idx % len(colors)],
+        )
+        color_idx += 1
+
+    if statistics["optimal_cfl_values"]:
+        cfl_values, cfl_counts = np.unique(list(statistics["optimal_cfl_values"]), return_counts=True)
+        ax.bar(
+            [f"{c:.3f}" for c in cfl_values],
+            cfl_counts,
+            alpha=0.7,
+            label="cfl",
+            color=colors[color_idx % len(colors)],
+        )
+        color_idx += 1
+
+    if statistics["optimal_cg_tolerance_values"]:
+        cg_tol_values, cg_tol_counts = np.unique(list(statistics["optimal_cg_tolerance_values"]), return_counts=True)
+        ax.bar(
+            [f"{t:.0e}" for t in cg_tol_values],
+            cg_tol_counts,
+            alpha=0.7,
+            label="cg_tolerance",
+            color=colors[color_idx % len(colors)],
+        )
+
+    ax.set_ylabel("Frequency")
+    ax.set_title("Optimal Parameter Values (All Tasks)")
+    ax.legend()
+    ax.tick_params(axis="x", rotation=45)
+
+    # Plot 4: Cost distribution
+    ax = axes[1, 1]
+    all_costs = []
+    for target in statistics["convergence_by_target"]:
+        all_costs.extend(statistics["convergence_by_target"][target]["costs"])
+
+    if all_costs:
+        ax.hist(all_costs, bins=20, alpha=0.7, edgecolor="black")
+        ax.set_xlabel("Total Cost")
+        ax.set_ylabel("Frequency")
+        ax.set_title("Distribution of Total Costs")
+        ax.set_yscale("log")
+
+    plt.tight_layout()
+    plt.savefig(os.path.join(output_dir, "euler_2d_statistics.png"), dpi=300, bbox_inches="tight")
+    plt.close()
+
+    # Create detailed statistics file
+    stats_file = os.path.join(output_dir, "euler_2d_statistics_summary.txt")
+    with open(stats_file, "w") as f:
+        f.write("=== Euler 2D Dummy Search Statistics Summary ===\n\n")
+
+        f.write("1. Overall Statistics:\n")
+        f.write(f"   Total tasks: {statistics['total_tasks']}\n")
+        f.write(f"   Successfully converged: {statistics['total_converged']}\n")
+        f.write(
+            f"   Overall convergence rate: {(statistics['total_converged']/statistics['total_tasks']*100):.2f}%\n\n"
+        )
+
+        f.write("2. Convergence by Precision Level:\n")
+        for precision, data in statistics["convergence_by_precision"].items():
+            rate = (data["converged"] / data["total"] * 100) if data["total"] > 0 else 0
+            f.write(f"   {precision}: {data['converged']}/{data['total']} ({rate:.2f}%)\n")
+        f.write("\n")
+
+        f.write("3. Convergence by Target Parameter:\n")
+        for param, data in statistics["convergence_by_target"].items():
+            rate = (data["converged"] / data["total"] * 100) if data["total"] > 0 else 0
+            avg_cost = np.mean(data["costs"]) if data["costs"] else 0
+            f.write(f"   {param}: {data['converged']}/{data['total']} ({rate:.2f}%), avg cost: {avg_cost:.0f}\n")
+        f.write("\n")
+
+        f.write("4. Convergence by Profile:\n")
+        for profile, data in statistics["convergence_by_profile"].items():
+            rate = (data["converged"] / data["total"] * 100) if data["total"] > 0 else 0
+            f.write(f"   {profile}: {data['converged']}/{data['total']} ({rate:.2f}%)\n")
+        f.write("\n")
+
+        f.write("5. Optimal Parameter Frequencies (All Tasks):\n")
+        if statistics["optimal_n_grid_x_values"]:
+            n_grid_x_values, n_grid_x_counts = np.unique(
+                list(statistics["optimal_n_grid_x_values"]), return_counts=True
+            )
+            f.write("   n_grid_x parameter (iterative):\n")
+            for n_grid_x, count in zip(n_grid_x_values, n_grid_x_counts):
+                f.write(f"     n_grid_x={n_grid_x}: {count} times\n")
+
+        if statistics["optimal_cfl_values"]:
+            cfl_values, cfl_counts = np.unique(list(statistics["optimal_cfl_values"]), return_counts=True)
+            f.write("   cfl parameter (iterative):\n")
+            for cfl, count in zip(cfl_values, cfl_counts):
+                f.write(f"     cfl={cfl:.3f}: {count} times\n")
+
+        if statistics["optimal_cg_tolerance_values"]:
+            cg_tol_values, cg_tol_counts = np.unique(
+                list(statistics["optimal_cg_tolerance_values"]), return_counts=True
+            )
+            f.write("   cg_tolerance parameter (iterative):\n")
+            for cg_tol, count in zip(cg_tol_values, cg_tol_counts):
+                f.write(f"     cg_tolerance={cg_tol:.0e}: {count} times\n")
+
+
+def save_datasets(successful_tasks, failed_tasks, output_dir):
+    """Save successful and failed tasks as separate JSON datasets in subfolders"""
+    # Create subfolders for successful and failed tasks
+    success_dir = os.path.join(output_dir, "euler_2d", "successful")
+    failed_dir = os.path.join(output_dir, "euler_2d", "failed")
+    os.makedirs(success_dir, exist_ok=True)
+    os.makedirs(failed_dir, exist_ok=True)
+
+    # Save successful tasks
+    success_file = os.path.join(success_dir, "tasks.json")
+    with open(success_file, "w") as f:
+        json.dump(
+            {
+                "metadata": {
+                    "solver": "euler_2d",
+                    "description": "Successfully converged parameter optimization tasks",
+                    "total_tasks": len(successful_tasks),
+                },
+                "tasks": successful_tasks,
+            },
+            f,
+            indent=2,
+        )
+
+    # Save failed tasks
+    failed_file = os.path.join(failed_dir, "tasks.json")
+    with open(failed_file, "w") as f:
+        json.dump(
+            {
+                "metadata": {
+                    "solver": "euler_2d",
+                    "description": "Failed to converge parameter optimization tasks",
+                    "total_tasks": len(failed_tasks),
+                },
+                "tasks": failed_tasks,
+            },
+            f,
+            indent=2,
+        )
+
+    print(f"✅ Saved {len(successful_tasks)} successful tasks to {success_file}")
+    print(f"❌ Saved {len(failed_tasks)} failed tasks to {failed_file}")
+
+    return success_file, failed_file
+
+
+def run_checkout(config_path, output_dir="dataset"):
+    """
+    Run the complete checkout process for Euler 2D solver.
+
+    Args:
+        config_path: Path to euler_2d.yaml config file
+        output_dir: Directory to save results
+        profiles_to_test: List of profile names to test (e.g., ["p1", "p2"]). If None, tests all active profiles.
+    """
+    # Load configuration
+    config = load_config(config_path)
+
+    # Get active profiles
+    active_profiles = config["profiles"]["active_profiles"]
+    # if profiles_to_test:
+    #     active_profiles = [p for p in active_profiles if p in profiles_to_test]
+
+    print(f"{'='*80}")
+    print(f"Euler 2D Solver Checkout")
+    print(f"{'='*80}")
+    print(f"Active profiles: {active_profiles}")
+    print(f"Precision levels: {list(config['precision_levels'].keys())}")
+    print(f"Target parameters: {list(config['target_parameters'].keys())}")
+    print(f"{'='*80}\n")
+
+    # Build all target configurations (parameter-level configs)
+    target_param_configs = build_target_configs(config)
+
+    # Generate all task combinations: profiles × precision levels × target parameters × non-target combinations
+    all_tasks = []
+    for profile in active_profiles:
+        for precision_level in config["precision_levels"].keys():
+            for target_param, param_config in target_param_configs.items():
+                # Get all non-target parameter names and their value lists
+                non_target_params = param_config["non_target_parameters"]
+                param_names = list(non_target_params.keys())
+                param_values = [non_target_params[name] for name in param_names]
+
+                # Generate all combinations using itertools.product
+                for combination in itertools.product(*param_values):
+                    # Build non-target parameters dictionary for this combination
+                    task_non_target_params = dict(zip(param_names, combination))
+
+                    task = {
+                        "profile": profile,
+                        "precision": precision_level,
+                        "tolerance_rmse": config["precision_levels"][precision_level]["tolerance_rmse"],
+                        "target_parameter": target_param,
+                        "non_target_params_combo": task_non_target_params,  # Store the specific combination
+                        **param_config,  # Unpack search parameters (will be overridden by specific combo below)
+                    }
+                    all_tasks.append(task)
+
+    print(f"Total tasks to execute: {len(all_tasks)}\n")
+
+    # Storage for results
+    successful_tasks = []
+    failed_tasks = []
+
+    # Statistics tracking
+    statistics = {
+        "total_tasks": 0,
+        "total_converged": 0,
+        "convergence_by_precision": defaultdict(lambda: {"total": 0, "converged": 0}),
+        "convergence_by_profile": defaultdict(lambda: {"total": 0, "converged": 0}),
+        "convergence_by_target": defaultdict(lambda: {"total": 0, "converged": 0, "costs": []}),
+        "optimal_n_grid_x_values": [],
+        "optimal_cfl_values": [],
+        "optimal_cg_tolerance_values": [],
+        "total_cost": 0,
+        "total_time": 0,
+        "tasks_completed": 0,
+    }
+
+    start_time_total = time.time()
+
+    # Execute each task
+    for idx, task_config in enumerate(all_tasks, 1):
+        profile = task_config["profile"]
+        precision = task_config["precision"]
+        target_param = task_config["target_parameter"]
+        tolerance_rmse = task_config["tolerance_rmse"]
+
+        print(f"\n{'='*80}")
+        print(f"Task {idx}/{len(all_tasks)}")
+        print(f"Profile: {profile}")
+        print(f"Precision: {precision} (tolerance_rmse={tolerance_rmse})")
+        print(f"Target: {target_param}")
+        print(f"{'='*80}")
+
+        # Update statistics
+        statistics["total_tasks"] += 1
+        statistics["convergence_by_precision"][precision]["total"] += 1
+        statistics["convergence_by_profile"][profile]["total"] += 1
+        statistics["convergence_by_target"][target_param]["total"] += 1
+
+        task_start_time = time.time()
+
+        try:
+            # Get the specific non-target parameter combination for this task
+            non_target_params = task_config["non_target_params_combo"]
+
+            # Run search based on target parameter
+            if target_param == "n_grid_x":
+                is_converged, best_n_grid_x, cost_history, param_history = find_convergent_n_grid_x(
+                    profile=profile,
+                    n_grid_x=task_config["initial_value"],
+                    cfl=non_target_params["cfl"],
+                    cg_tolerance=non_target_params["cg_tolerance"],
+                    tolerance_rmse=tolerance_rmse,
+                    multiplication_factor=task_config["multiplication_factor"],
+                    max_iteration_num=task_config["max_iteration_num"],
+                )
+                optimal_params = {"n_grid_x": best_n_grid_x}
+
+            elif target_param == "cfl":
+                is_converged, best_cfl, cost_history, param_history = find_convergent_cfl(
+                    profile=profile,
+                    n_grid_x=non_target_params["n_grid_x"],
+                    cfl=task_config["initial_value"],
+                    cg_tolerance=non_target_params["cg_tolerance"],
+                    tolerance_rmse=tolerance_rmse,
+                    multiplication_factor=task_config["multiplication_factor"],
+                    max_iteration_num=task_config["max_iteration_num"],
+                )
+                optimal_params = {"cfl": best_cfl}
+
+            elif target_param == "cg_tolerance":
+                is_converged, best_cg_tolerance, cost_history, param_history = find_convergent_cg_tol(
+                    profile=profile,
+                    n_grid_x=non_target_params["n_grid_x"],
+                    cfl=non_target_params["cfl"],
+                    cg_tolerance=task_config["initial_value"],
+                    tolerance_rmse=tolerance_rmse,
+                    multiplication_factor=task_config["multiplication_factor"],
+                    max_iteration_num=task_config["max_iteration_num"],
+                )
+                optimal_params = {"cg_tolerance": best_cg_tolerance}
+
+            else:
+                raise ValueError(f"Unknown target parameter: {target_param}")
+
+            task_elapsed = time.time() - task_start_time
+            total_cost = sum(cost_history)
+
+            # Update statistics
+            statistics["total_cost"] += total_cost
+            statistics["total_time"] += task_elapsed
+            statistics["tasks_completed"] += 1
+            statistics["convergence_by_target"][target_param]["costs"].append(total_cost)
+
+            if is_converged:
+                statistics["total_converged"] += 1
+                statistics["convergence_by_precision"][precision]["converged"] += 1
+                statistics["convergence_by_profile"][profile]["converged"] += 1
+                statistics["convergence_by_target"][target_param]["converged"] += 1
+
+                # Track optimal parameter values
+                if target_param == "n_grid_x":
+                    statistics["optimal_n_grid_x_values"].append(optimal_params["n_grid_x"])
+                elif target_param == "cfl":
+                    statistics["optimal_cfl_values"].append(optimal_params["cfl"])
+                elif target_param == "cg_tolerance":
+                    statistics["optimal_cg_tolerance_values"].append(optimal_params["cg_tolerance"])
+
+            # Build task result
+            task_result = {
+                "task_id": f"{profile}_{precision}_{target_param}_{hash(str(non_target_params))}",
+                "profile": profile,
+                "precision_level": precision,
+                "tolerance_rmse": tolerance_rmse,
+                "target_parameter": target_param,
+                "non_target_parameters": non_target_params,
+                "search_type": task_config["search_type"],
+                "is_converged": is_converged,
+                "optimal_parameters": optimal_params,
+                "cost_history": cost_history,
+                "total_cost": total_cost,
+                "execution_time_seconds": task_elapsed,
+                "parameter_history": param_history,
+            }
+
+            if is_converged:
+                successful_tasks.append(task_result)
+                print(f"✅ Task succeeded: {optimal_params}")
+            else:
+                failed_tasks.append(task_result)
+                print(f"❌ Task failed to converge")
+
+        except Exception as e:
+            print(f"❌ Task failed with exception: {e}")
+            task_elapsed = time.time() - task_start_time
+
+            failed_tasks.append(
+                {
+                    "task_id": f"{profile}_{precision}_{target_param}",
+                    "profile": profile,
+                    "precision_level": precision,
+                    "tolerance_rmse": tolerance_rmse,
+                    "target_parameter": target_param,
+                    "is_converged": False,
+                    "error": str(e),
+                    "execution_time_seconds": task_elapsed,
+                }
+            )
+
+    # Calculate final statistics
+    total_elapsed = time.time() - start_time_total
+
+    print(f"\n{'='*80}")
+    print(f"Checkout Complete")
+    print(f"{'='*80}")
+    print(f"Total tasks: {statistics['total_tasks']}")
+    print(f"Successfully converged: {statistics['total_converged']}")
+    print(f"Overall convergence rate: {(statistics['total_converged']/statistics['total_tasks']*100):.2f}%")
+
+    # Generate statistics plots
+    repo_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    stats_output_dir = os.path.join(repo_root, "outputs", "statistics")
+    plot_statistics(statistics, stats_output_dir)
+    print(f"📊 Statistics plots saved to: {stats_output_dir}")
+
+    # Save datasets
+    dataset_dir = os.path.join(repo_root, output_dir)
+    success_file, failed_file = save_datasets(successful_tasks, failed_tasks, dataset_dir)
+    print(f"💾 Dataset files saved to: {dataset_dir}")
+    print(f"   ✅ Successful tasks: {len(successful_tasks)} tasks")
+    print(f"   ❌ Failed tasks: {len(failed_tasks)} tasks")
+
+    # Display dataset summary
+    if len(successful_tasks) > 0:
+        print(f"\n📈 Successful Task Examples:")
+        for i, task in enumerate(successful_tasks[:3]):  # Show first 3 successful tasks
+            print(
+                f"   {i+1}. {task['profile']} profile, {task['target_parameter']} optimization -> {task['optimal_parameters']}"
+            )
+
+    if len(failed_tasks) > 0:
+        print(f"\n📉 Failed Task Examples:")
+        for i, task in enumerate(failed_tasks[:3]):  # Show first 3 failed tasks
+            print(
+                f"   {i+1}. {task['profile']} profile, {task['target_parameter']} optimization (cost: {task['total_cost']})"
+            )
+
+    return successful_tasks, failed_tasks, statistics
+
+
+if __name__ == "__main__":
+    run_checkout("checkouts/euler_2d.yaml", "dataset")

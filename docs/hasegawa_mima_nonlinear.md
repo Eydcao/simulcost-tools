@@ -70,7 +70,24 @@ The case key in the config file sets different initial conditions:
 5. **gauss_x_sin_y** - Gaussian in x, sinusoidal in y:
    - $\phi_0 = 0.1 \exp\left(-\frac{(x-L/2)^2}{2D_x^2}\right) \sin(0.2y)$
 
-The simulated results are considered correct if the L2 RMSE (comparing with higher resolution) meets the precision-dependent tolerance (low: 0.0005, medium: 0.0001, high: 0.00001).
+The simulated results are considered correct if the L2 RMSE (comparing with higher resolution using linear interpolation) meets the precision-dependent tolerance (low: 0.0005, medium: 0.0001, high: 0.00001).
+
+### Convergence Method
+
+The convergence is checked by comparing solutions at different resolutions:
+
+- Take the spatial resolution task as an example, we compare solution at N with solution at 2N (or dt with dt/2)
+- Use linear interpolation to handle different grid sizes
+- Calculate L2 RMSE between interpolated solutions
+- Converged if RMSE < tolerance threshold
+
+### Cost Calculation
+
+Computational cost is estimated based on FFT operations:
+
+$$\text{Cost} = N_{\text{FFT}} \times N^2 \times \log_2(N^2)$$
+
+where $N_{\text{FFT}}$ is the total number of FFT operations (forward, inverse, and temporal integrations) performed during the simulation.
 
 ## Parameter Tuning Tasks and Dummy Strategy
 
@@ -86,10 +103,14 @@ The simulated results are considered correct if the L2 RMSE (comparing with high
 
 1. **N Convergence Search (iterative)**
    - For dummy solution, this means doubling N each iteration (multiplication factor: 2) starting from 32 until convergence
+   - Compares consecutive resolutions (e.g., N=32 vs N=64, then N=64 vs N=128) using linear interpolation
+   - Stops at first convergence (when RMSE between consecutive resolutions < tolerance)
    - **Non-target parameters**: dt∈{5.0, 10.0, 20.0, 40.0}
 
 2. **dt Convergence Search (iterative)**
    - For dummy solution, this means halving dt each iteration (multiplication factor: 0.5) starting from 40.0 until convergence
+   - Compares consecutive time steps (e.g., dt=40 vs dt=20, then dt=20 vs dt=10)
+   - Stops at first convergence (when RMSE between consecutive solutions < tolerance)
    - **Non-target parameters**: N∈{32, 64, 128, 256}
 
 ## Summarized parameter table for developer only (Not LLM)
@@ -118,7 +139,7 @@ More Notes:
 | Dx | Initial condition spatial scale | 5.0 |
 | dealias_ratio | Dealiasing ratio for 2/3 rule | 0.6667 (2/3) |
 | case | Initial condition type | "monopole" |
-| record_dt | Time interval between recordings | 100.0 |
+| record_dt | Time interval between recordings | 10000.0 |
 | end_frame | Simulation end after certain number of frames | 10 |
 | dump_dir | Directory for output files | "sim_res/hasegawa_mima_nonlinear/p1" |
 | verbose | Enable verbose output | false |

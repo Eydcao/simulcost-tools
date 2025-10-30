@@ -2,16 +2,794 @@
   "metadata": {
     "solver": "diff_react_1d",
     "description": "Failed to converge parameter optimization tasks",
-    "total_tasks": 24
+    "total_tasks": 45
   },
   "tasks": [
     {
       "solver": "diff_react_1d",
+      "target_parameter": "cfl",
+      "profile": "p1",
+      "precision_level": "high",
+      "precision_config": {
+        "tolerance_rmse": {
+          "n_space": 0.001,
+          "cfl": 0.0001,
+          "tol": 1e-07
+        }
+      },
+      "target_config": {
+        "initial_value": 2,
+        "multiplication_factor": 0.5,
+        "max_iteration_num": 6
+      },
+      "non_target_parameters": {
+        "n_space": 512,
+        "tol": 1e-06,
+        "reaction_type": "fisher",
+        "record_dt": 25.6,
+        "end_frame": 10,
+        "max_iter": 2000,
+        "min_step": "1e-6",
+        "initial_step_guess": 1.0,
+        "allee_threshold": null
+      },
+      "results": {
+        "converged": false,
+        "optimal_parameter_value": 0.0625,
+        "total_computational_cost": 421772800,
+        "cost_history": [
+          378248704,
+          1287680,
+          4904448,
+          11767808,
+          8671232,
+          16892928
+        ],
+        "parameter_history": [
+          {
+            "cfl": 2,
+            "n_space": 512,
+            "tol": 1e-06,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 1.0,
+            "n_space": 512,
+            "tol": 1e-06,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 0.5,
+            "n_space": 512,
+            "tol": 1e-06,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 0.25,
+            "n_space": 512,
+            "tol": 1e-06,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 0.125,
+            "n_space": 512,
+            "tol": 1e-06,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 0.0625,
+            "n_space": 512,
+            "tol": 1e-06,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          }
+        ]
+      }
+    },
+    {
+      "solver": "diff_react_1d",
+      "target_parameter": "cfl",
+      "profile": "p1",
+      "precision_level": "high",
+      "precision_config": {
+        "tolerance_rmse": {
+          "n_space": 0.001,
+          "cfl": 0.0001,
+          "tol": 1e-07
+        }
+      },
+      "target_config": {
+        "initial_value": 2,
+        "multiplication_factor": 0.5,
+        "max_iteration_num": 6
+      },
+      "non_target_parameters": {
+        "n_space": 512,
+        "tol": 1e-07,
+        "reaction_type": "fisher",
+        "record_dt": 25.6,
+        "end_frame": 10,
+        "max_iter": 2000,
+        "min_step": "1e-6",
+        "initial_step_guess": 1.0,
+        "allee_threshold": null
+      },
+      "results": {
+        "converged": false,
+        "optimal_parameter_value": 0.0625,
+        "total_computational_cost": 462826496,
+        "cost_history": [
+          401910272,
+          1344512,
+          4923904,
+          11874816,
+          25704960,
+          17068032
+        ],
+        "parameter_history": [
+          {
+            "cfl": 2,
+            "n_space": 512,
+            "tol": 1e-07,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 1.0,
+            "n_space": 512,
+            "tol": 1e-07,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 0.5,
+            "n_space": 512,
+            "tol": 1e-07,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 0.25,
+            "n_space": 512,
+            "tol": 1e-07,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 0.125,
+            "n_space": 512,
+            "tol": 1e-07,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 0.0625,
+            "n_space": 512,
+            "tol": 1e-07,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          }
+        ]
+      }
+    },
+    {
+      "solver": "diff_react_1d",
+      "target_parameter": "cfl",
+      "profile": "p1",
+      "precision_level": "high",
+      "precision_config": {
+        "tolerance_rmse": {
+          "n_space": 0.001,
+          "cfl": 0.0001,
+          "tol": 1e-07
+        }
+      },
+      "target_config": {
+        "initial_value": 2,
+        "multiplication_factor": 0.5,
+        "max_iteration_num": 6
+      },
+      "non_target_parameters": {
+        "n_space": 512,
+        "tol": 1e-08,
+        "reaction_type": "fisher",
+        "record_dt": 25.6,
+        "end_frame": 10,
+        "max_iter": 2000,
+        "min_step": "1e-6",
+        "initial_step_guess": 1.0,
+        "allee_threshold": null
+      },
+      "results": {
+        "converged": false,
+        "optimal_parameter_value": 0.0625,
+        "total_computational_cost": 499759104,
+        "cost_history": [
+          402043392,
+          1377792,
+          4966912,
+          11904000,
+          25938432,
+          53528576
+        ],
+        "parameter_history": [
+          {
+            "cfl": 2,
+            "n_space": 512,
+            "tol": 1e-08,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 1.0,
+            "n_space": 512,
+            "tol": 1e-08,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 0.5,
+            "n_space": 512,
+            "tol": 1e-08,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 0.25,
+            "n_space": 512,
+            "tol": 1e-08,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 0.125,
+            "n_space": 512,
+            "tol": 1e-08,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 0.0625,
+            "n_space": 512,
+            "tol": 1e-08,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          }
+        ]
+      }
+    },
+    {
+      "solver": "diff_react_1d",
+      "target_parameter": "cfl",
+      "profile": "p1",
+      "precision_level": "high",
+      "precision_config": {
+        "tolerance_rmse": {
+          "n_space": 0.001,
+          "cfl": 0.0001,
+          "tol": 1e-07
+        }
+      },
+      "target_config": {
+        "initial_value": 2,
+        "multiplication_factor": 0.5,
+        "max_iteration_num": 6
+      },
+      "non_target_parameters": {
+        "n_space": 1024,
+        "tol": 1e-06,
+        "reaction_type": "fisher",
+        "record_dt": 25.6,
+        "end_frame": 10,
+        "max_iter": 2000,
+        "min_step": "1e-6",
+        "initial_step_guess": 1.0,
+        "allee_threshold": null
+      },
+      "results": {
+        "converged": false,
+        "optimal_parameter_value": 0.0625,
+        "total_computational_cost": 300981248,
+        "cost_history": [
+          16879616,
+          25805824,
+          18887680,
+          34987008,
+          68659200,
+          135761920
+        ],
+        "parameter_history": [
+          {
+            "cfl": 2,
+            "n_space": 1024,
+            "tol": 1e-06,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 1.0,
+            "n_space": 1024,
+            "tol": 1e-06,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 0.5,
+            "n_space": 1024,
+            "tol": 1e-06,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 0.25,
+            "n_space": 1024,
+            "tol": 1e-06,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 0.125,
+            "n_space": 1024,
+            "tol": 1e-06,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 0.0625,
+            "n_space": 1024,
+            "tol": 1e-06,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          }
+        ]
+      }
+    },
+    {
+      "solver": "diff_react_1d",
+      "target_parameter": "cfl",
+      "profile": "p1",
+      "precision_level": "high",
+      "precision_config": {
+        "tolerance_rmse": {
+          "n_space": 0.001,
+          "cfl": 0.0001,
+          "tol": 1e-07
+        }
+      },
+      "target_config": {
+        "initial_value": 2,
+        "multiplication_factor": 0.5,
+        "max_iteration_num": 6
+      },
+      "non_target_parameters": {
+        "n_space": 1024,
+        "tol": 1e-07,
+        "reaction_type": "fisher",
+        "record_dt": 25.6,
+        "end_frame": 10,
+        "max_iter": 2000,
+        "min_step": "1e-6",
+        "initial_step_guess": 1.0,
+        "allee_threshold": null
+      },
+      "results": {
+        "converged": false,
+        "optimal_parameter_value": 0.0625,
+        "total_computational_cost": 421854208,
+        "cost_history": [
+          17457152,
+          29853696,
+          54620160,
+          110557184,
+          72040448,
+          137325568
+        ],
+        "parameter_history": [
+          {
+            "cfl": 2,
+            "n_space": 1024,
+            "tol": 1e-07,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 1.0,
+            "n_space": 1024,
+            "tol": 1e-07,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 0.5,
+            "n_space": 1024,
+            "tol": 1e-07,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 0.25,
+            "n_space": 1024,
+            "tol": 1e-07,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 0.125,
+            "n_space": 1024,
+            "tol": 1e-07,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 0.0625,
+            "n_space": 1024,
+            "tol": 1e-07,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          }
+        ]
+      }
+    },
+    {
+      "solver": "diff_react_1d",
+      "target_parameter": "cfl",
+      "profile": "p1",
+      "precision_level": "high",
+      "precision_config": {
+        "tolerance_rmse": {
+          "n_space": 0.001,
+          "cfl": 0.0001,
+          "tol": 1e-07
+        }
+      },
+      "target_config": {
+        "initial_value": 2,
+        "multiplication_factor": 0.5,
+        "max_iteration_num": 6
+      },
+      "non_target_parameters": {
+        "n_space": 1024,
+        "tol": 1e-08,
+        "reaction_type": "fisher",
+        "record_dt": 25.6,
+        "end_frame": 10,
+        "max_iter": 2000,
+        "min_step": "1e-6",
+        "initial_step_guess": 1.0,
+        "allee_threshold": null
+      },
+      "results": {
+        "converged": false,
+        "optimal_parameter_value": 0.0625,
+        "total_computational_cost": 600358912,
+        "cost_history": [
+          19402752,
+          33489920,
+          56120320,
+          112750592,
+          225992704,
+          152602624
+        ],
+        "parameter_history": [
+          {
+            "cfl": 2,
+            "n_space": 1024,
+            "tol": 1e-08,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 1.0,
+            "n_space": 1024,
+            "tol": 1e-08,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 0.5,
+            "n_space": 1024,
+            "tol": 1e-08,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 0.25,
+            "n_space": 1024,
+            "tol": 1e-08,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 0.125,
+            "n_space": 1024,
+            "tol": 1e-08,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 0.0625,
+            "n_space": 1024,
+            "tol": 1e-08,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          }
+        ]
+      }
+    },
+    {
+      "solver": "diff_react_1d",
+      "target_parameter": "cfl",
+      "profile": "p1",
+      "precision_level": "high",
+      "precision_config": {
+        "tolerance_rmse": {
+          "n_space": 0.001,
+          "cfl": 0.0001,
+          "tol": 1e-07
+        }
+      },
+      "target_config": {
+        "initial_value": 2,
+        "multiplication_factor": 0.5,
+        "max_iteration_num": 6
+      },
+      "non_target_parameters": {
+        "n_space": 2048,
+        "tol": 1e-06,
+        "reaction_type": "fisher",
+        "record_dt": 25.6,
+        "end_frame": 10,
+        "max_iter": 2000,
+        "min_step": "1e-6",
+        "initial_step_guess": 1.0,
+        "allee_threshold": null
+      },
+      "results": {
+        "converged": false,
+        "optimal_parameter_value": 0.0625,
+        "total_computational_cost": 2446362624,
+        "cost_history": [
+          161230848,
+          154873856,
+          241522688,
+          270956544,
+          540354560,
+          1077424128
+        ],
+        "parameter_history": [
+          {
+            "cfl": 2,
+            "n_space": 2048,
+            "tol": 1e-06,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 1.0,
+            "n_space": 2048,
+            "tol": 1e-06,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 0.5,
+            "n_space": 2048,
+            "tol": 1e-06,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 0.25,
+            "n_space": 2048,
+            "tol": 1e-06,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 0.125,
+            "n_space": 2048,
+            "tol": 1e-06,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 0.0625,
+            "n_space": 2048,
+            "tol": 1e-06,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          }
+        ]
+      }
+    },
+    {
+      "solver": "diff_react_1d",
+      "target_parameter": "cfl",
+      "profile": "p1",
+      "precision_level": "high",
+      "precision_config": {
+        "tolerance_rmse": {
+          "n_space": 0.001,
+          "cfl": 0.0001,
+          "tol": 1e-07
+        }
+      },
+      "target_config": {
+        "initial_value": 2,
+        "multiplication_factor": 0.5,
+        "max_iteration_num": 6
+      },
+      "non_target_parameters": {
+        "n_space": 2048,
+        "tol": 1e-07,
+        "reaction_type": "fisher",
+        "record_dt": 25.6,
+        "end_frame": 10,
+        "max_iter": 2000,
+        "min_step": "1e-6",
+        "initial_step_guess": 1.0,
+        "allee_threshold": null
+      },
+      "results": {
+        "converged": false,
+        "optimal_parameter_value": 0.0625,
+        "total_computational_cost": 2503741440,
+        "cost_history": [
+          165894144,
+          161320960,
+          281442304,
+          272652288,
+          542556160,
+          1079875584
+        ],
+        "parameter_history": [
+          {
+            "cfl": 2,
+            "n_space": 2048,
+            "tol": 1e-07,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 1.0,
+            "n_space": 2048,
+            "tol": 1e-07,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 0.5,
+            "n_space": 2048,
+            "tol": 1e-07,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 0.25,
+            "n_space": 2048,
+            "tol": 1e-07,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 0.125,
+            "n_space": 2048,
+            "tol": 1e-07,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 0.0625,
+            "n_space": 2048,
+            "tol": 1e-07,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          }
+        ]
+      }
+    },
+    {
+      "solver": "diff_react_1d",
+      "target_parameter": "cfl",
+      "profile": "p1",
+      "precision_level": "high",
+      "precision_config": {
+        "tolerance_rmse": {
+          "n_space": 0.001,
+          "cfl": 0.0001,
+          "tol": 1e-07
+        }
+      },
+      "target_config": {
+        "initial_value": 2,
+        "multiplication_factor": 0.5,
+        "max_iteration_num": 6
+      },
+      "non_target_parameters": {
+        "n_space": 2048,
+        "tol": 1e-08,
+        "reaction_type": "fisher",
+        "record_dt": 25.6,
+        "end_frame": 10,
+        "max_iter": 2000,
+        "min_step": "1e-6",
+        "initial_step_guess": 1.0,
+        "allee_threshold": null
+      },
+      "results": {
+        "converged": false,
+        "optimal_parameter_value": 0.0625,
+        "total_computational_cost": 2988431360,
+        "cost_history": [
+          381546496,
+          247715840,
+          452407296,
+          276023296,
+          546422784,
+          1084315648
+        ],
+        "parameter_history": [
+          {
+            "cfl": 2,
+            "n_space": 2048,
+            "tol": 1e-08,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 1.0,
+            "n_space": 2048,
+            "tol": 1e-08,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 0.5,
+            "n_space": 2048,
+            "tol": 1e-08,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 0.25,
+            "n_space": 2048,
+            "tol": 1e-08,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 0.125,
+            "n_space": 2048,
+            "tol": 1e-08,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 0.0625,
+            "n_space": 2048,
+            "tol": 1e-08,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          }
+        ]
+      }
+    },
+    {
+      "solver": "diff_react_1d",
       "target_parameter": "n_space",
       "profile": "p1",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 1e-10
+        "tolerance_rmse": {
+          "n_space": 0.001,
+          "cfl": 0.0001,
+          "tol": 1e-07
+        }
       },
       "target_config": {
         "initial_value": 512,
@@ -21,43 +799,52 @@
       "non_target_parameters": {
         "cfl": 0.5,
         "tol": 1e-06,
-        "min_step": 0.001,
-        "initial_step_guess": 1.0,
         "reaction_type": "fisher",
         "record_dt": 25.6,
         "end_frame": 10,
-        "max_iter": 2000
+        "max_iter": 2000,
+        "min_step": "1e-6",
+        "initial_step_guess": 1.0,
+        "allee_threshold": null
       },
       "results": {
         "converged": false,
         "optimal_parameter_value": 4096,
-        "total_computational_cost": 2108793856,
+        "total_computational_cost": 2327413248,
         "cost_history": [
-          21152768,
-          46051328,
-          339427328,
-          1702162432
+          4904448,
+          18887680,
+          241522688,
+          2062098432
         ],
         "parameter_history": [
           {
             "cfl": 0.5,
             "n_space": 512,
-            "reaction_type": "fisher"
+            "tol": 1e-06,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
           },
           {
             "cfl": 0.5,
             "n_space": 1024,
-            "reaction_type": "fisher"
+            "tol": 1e-06,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
           },
           {
             "cfl": 0.5,
             "n_space": 2048,
-            "reaction_type": "fisher"
+            "tol": 1e-06,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
           },
           {
             "cfl": 0.5,
             "n_space": 4096,
-            "reaction_type": "fisher"
+            "tol": 1e-06,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
           }
         ]
       }
@@ -68,7 +855,11 @@
       "profile": "p1",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 1e-10
+        "tolerance_rmse": {
+          "n_space": 0.001,
+          "cfl": 0.0001,
+          "tol": 1e-07
+        }
       },
       "target_config": {
         "initial_value": 512,
@@ -78,43 +869,52 @@
       "non_target_parameters": {
         "cfl": 0.5,
         "tol": 1e-07,
-        "min_step": 0.001,
-        "initial_step_guess": 1.0,
         "reaction_type": "fisher",
         "record_dt": 25.6,
         "end_frame": 10,
-        "max_iter": 2000
+        "max_iter": 2000,
+        "min_step": "1e-6",
+        "initial_step_guess": 1.0,
+        "allee_threshold": null
       },
       "results": {
         "converged": false,
         "optimal_parameter_value": 4096,
-        "total_computational_cost": 2108793856,
+        "total_computational_cost": 2416560640,
         "cost_history": [
-          21152768,
-          46051328,
-          339427328,
-          1702162432
+          4923904,
+          54620160,
+          281442304,
+          2075574272
         ],
         "parameter_history": [
           {
             "cfl": 0.5,
             "n_space": 512,
-            "reaction_type": "fisher"
+            "tol": 1e-07,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
           },
           {
             "cfl": 0.5,
             "n_space": 1024,
-            "reaction_type": "fisher"
+            "tol": 1e-07,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
           },
           {
             "cfl": 0.5,
             "n_space": 2048,
-            "reaction_type": "fisher"
+            "tol": 1e-07,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
           },
           {
             "cfl": 0.5,
             "n_space": 4096,
-            "reaction_type": "fisher"
+            "tol": 1e-07,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
           }
         ]
       }
@@ -125,7 +925,11 @@
       "profile": "p1",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 1e-10
+        "tolerance_rmse": {
+          "n_space": 0.001,
+          "cfl": 0.0001,
+          "tol": 1e-07
+        }
       },
       "target_config": {
         "initial_value": 512,
@@ -135,43 +939,52 @@
       "non_target_parameters": {
         "cfl": 0.5,
         "tol": 1e-08,
-        "min_step": 0.001,
-        "initial_step_guess": 1.0,
         "reaction_type": "fisher",
         "record_dt": 25.6,
         "end_frame": 10,
-        "max_iter": 2000
+        "max_iter": 2000,
+        "min_step": "1e-6",
+        "initial_step_guess": 1.0,
+        "allee_threshold": null
       },
       "results": {
         "converged": false,
         "optimal_parameter_value": 4096,
-        "total_computational_cost": 2108793856,
+        "total_computational_cost": 2632576512,
         "cost_history": [
-          21152768,
-          46051328,
-          339427328,
-          1702162432
+          4966912,
+          56120320,
+          452407296,
+          2119081984
         ],
         "parameter_history": [
           {
             "cfl": 0.5,
             "n_space": 512,
-            "reaction_type": "fisher"
+            "tol": 1e-08,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
           },
           {
             "cfl": 0.5,
             "n_space": 1024,
-            "reaction_type": "fisher"
+            "tol": 1e-08,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
           },
           {
             "cfl": 0.5,
             "n_space": 2048,
-            "reaction_type": "fisher"
+            "tol": 1e-08,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
           },
           {
             "cfl": 0.5,
             "n_space": 4096,
-            "reaction_type": "fisher"
+            "tol": 1e-08,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
           }
         ]
       }
@@ -182,7 +995,11 @@
       "profile": "p1",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 1e-10
+        "tolerance_rmse": {
+          "n_space": 0.001,
+          "cfl": 0.0001,
+          "tol": 1e-07
+        }
       },
       "target_config": {
         "initial_value": 1e-05,
@@ -192,47 +1009,52 @@
       "non_target_parameters": {
         "n_space": 1024,
         "cfl": 0.5,
-        "min_step": 0.001,
-        "initial_step_guess": 1.0,
         "reaction_type": "fisher",
         "record_dt": 25.6,
         "end_frame": 10,
-        "max_iter": 2000
+        "max_iter": 2000,
+        "min_step": "1e-6",
+        "initial_step_guess": 1.0,
+        "allee_threshold": null
       },
       "results": {
         "converged": false,
         "optimal_parameter_value": 1e-08,
-        "total_computational_cost": 131293184,
+        "total_computational_cost": 147039232,
         "cost_history": [
-          21344256,
-          21974016,
-          43458560,
-          44516352
+          17411072,
+          18887680,
+          54620160,
+          56120320
         ],
         "parameter_history": [
           {
             "cfl": 0.5,
             "n_space": 1024,
             "tol": 1e-05,
-            "reaction_type": "fisher"
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
           },
           {
             "cfl": 0.5,
             "n_space": 1024,
             "tol": 1e-06,
-            "reaction_type": "fisher"
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
           },
           {
             "cfl": 0.5,
             "n_space": 1024,
             "tol": 1e-07,
-            "reaction_type": "fisher"
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
           },
           {
             "cfl": 0.5,
             "n_space": 1024,
             "tol": 1e-08,
-            "reaction_type": "fisher"
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
           }
         ]
       }
@@ -243,7 +1065,11 @@
       "profile": "p1",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 1e-10
+        "tolerance_rmse": {
+          "n_space": 0.001,
+          "cfl": 0.0001,
+          "tol": 1e-07
+        }
       },
       "target_config": {
         "initial_value": 1e-05,
@@ -253,47 +1079,912 @@
       "non_target_parameters": {
         "n_space": 2048,
         "cfl": 0.5,
-        "min_step": 0.001,
-        "initial_step_guess": 1.0,
         "reaction_type": "fisher",
         "record_dt": 25.6,
         "end_frame": 10,
-        "max_iter": 2000
+        "max_iter": 2000,
+        "min_step": "1e-6",
+        "initial_step_guess": 1.0,
+        "allee_threshold": null
       },
       "results": {
         "converged": false,
         "optimal_parameter_value": 1e-08,
-        "total_computational_cost": 878340096,
+        "total_computational_cost": 1203664896,
         "cost_history": [
-          185059328,
-          191387648,
-          210376704,
-          291516416
+          228292608,
+          241522688,
+          281442304,
+          452407296
         ],
         "parameter_history": [
           {
             "cfl": 0.5,
             "n_space": 2048,
             "tol": 1e-05,
-            "reaction_type": "fisher"
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
           },
           {
             "cfl": 0.5,
             "n_space": 2048,
             "tol": 1e-06,
-            "reaction_type": "fisher"
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
           },
           {
             "cfl": 0.5,
             "n_space": 2048,
             "tol": 1e-07,
-            "reaction_type": "fisher"
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
           },
           {
             "cfl": 0.5,
             "n_space": 2048,
             "tol": 1e-08,
-            "reaction_type": "fisher"
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          }
+        ]
+      }
+    },
+    {
+      "solver": "diff_react_1d",
+      "target_parameter": "cfl",
+      "profile": "p2",
+      "precision_level": "high",
+      "precision_config": {
+        "tolerance_rmse": {
+          "n_space": 0.001,
+          "cfl": 0.0001,
+          "tol": 1e-07
+        }
+      },
+      "target_config": {
+        "initial_value": 2,
+        "multiplication_factor": 0.5,
+        "max_iteration_num": 6
+      },
+      "non_target_parameters": {
+        "n_space": 512,
+        "tol": 1e-08,
+        "reaction_type": "allee",
+        "record_dt": 25.6,
+        "end_frame": 10,
+        "max_iter": 2000,
+        "min_step": "1e-6",
+        "initial_step_guess": 1.0,
+        "allee_threshold": 0.3
+      },
+      "results": {
+        "converged": false,
+        "optimal_parameter_value": 0.0625,
+        "total_computational_cost": 2797300224,
+        "cost_history": [
+          2572146688,
+          34057216,
+          31541248,
+          50025984,
+          52524032,
+          57005056
+        ],
+        "parameter_history": [
+          {
+            "cfl": 2,
+            "n_space": 512,
+            "tol": 1e-08,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 1.0,
+            "n_space": 512,
+            "tol": 1e-08,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 0.5,
+            "n_space": 512,
+            "tol": 1e-08,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 0.25,
+            "n_space": 512,
+            "tol": 1e-08,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 0.125,
+            "n_space": 512,
+            "tol": 1e-08,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 0.0625,
+            "n_space": 512,
+            "tol": 1e-08,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          }
+        ]
+      }
+    },
+    {
+      "solver": "diff_react_1d",
+      "target_parameter": "cfl",
+      "profile": "p3",
+      "precision_level": "high",
+      "precision_config": {
+        "tolerance_rmse": {
+          "n_space": 0.001,
+          "cfl": 0.0001,
+          "tol": 1e-07
+        }
+      },
+      "target_config": {
+        "initial_value": 2,
+        "multiplication_factor": 0.5,
+        "max_iteration_num": 6
+      },
+      "non_target_parameters": {
+        "n_space": 512,
+        "tol": 1e-06,
+        "reaction_type": "cubic",
+        "record_dt": 25.6,
+        "end_frame": 10,
+        "max_iter": 2000,
+        "min_step": "1e-6",
+        "initial_step_guess": 1.0,
+        "allee_threshold": null
+      },
+      "results": {
+        "converged": false,
+        "optimal_parameter_value": 0.0625,
+        "total_computational_cost": 234109440,
+        "cost_history": [
+          170419200,
+          1301504,
+          7993856,
+          11816448,
+          25627136,
+          16951296
+        ],
+        "parameter_history": [
+          {
+            "cfl": 2,
+            "n_space": 512,
+            "tol": 1e-06,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 1.0,
+            "n_space": 512,
+            "tol": 1e-06,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 0.5,
+            "n_space": 512,
+            "tol": 1e-06,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 0.25,
+            "n_space": 512,
+            "tol": 1e-06,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 0.125,
+            "n_space": 512,
+            "tol": 1e-06,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 0.0625,
+            "n_space": 512,
+            "tol": 1e-06,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          }
+        ]
+      }
+    },
+    {
+      "solver": "diff_react_1d",
+      "target_parameter": "cfl",
+      "profile": "p3",
+      "precision_level": "high",
+      "precision_config": {
+        "tolerance_rmse": {
+          "n_space": 0.001,
+          "cfl": 0.0001,
+          "tol": 1e-07
+        }
+      },
+      "target_config": {
+        "initial_value": 2,
+        "multiplication_factor": 0.5,
+        "max_iteration_num": 6
+      },
+      "non_target_parameters": {
+        "n_space": 512,
+        "tol": 1e-07,
+        "reaction_type": "cubic",
+        "record_dt": 25.6,
+        "end_frame": 10,
+        "max_iter": 2000,
+        "min_step": "1e-6",
+        "initial_step_guess": 1.0,
+        "allee_threshold": null
+      },
+      "results": {
+        "converged": false,
+        "optimal_parameter_value": 0.0625,
+        "total_computational_cost": 268631040,
+        "cost_history": [
+          168148992,
+          1336832,
+          8027136,
+          11835904,
+          25831424,
+          53450752
+        ],
+        "parameter_history": [
+          {
+            "cfl": 2,
+            "n_space": 512,
+            "tol": 1e-07,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 1.0,
+            "n_space": 512,
+            "tol": 1e-07,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 0.5,
+            "n_space": 512,
+            "tol": 1e-07,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 0.25,
+            "n_space": 512,
+            "tol": 1e-07,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 0.125,
+            "n_space": 512,
+            "tol": 1e-07,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 0.0625,
+            "n_space": 512,
+            "tol": 1e-07,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          }
+        ]
+      }
+    },
+    {
+      "solver": "diff_react_1d",
+      "target_parameter": "cfl",
+      "profile": "p3",
+      "precision_level": "high",
+      "precision_config": {
+        "tolerance_rmse": {
+          "n_space": 0.001,
+          "cfl": 0.0001,
+          "tol": 1e-07
+        }
+      },
+      "target_config": {
+        "initial_value": 2,
+        "multiplication_factor": 0.5,
+        "max_iteration_num": 6
+      },
+      "non_target_parameters": {
+        "n_space": 512,
+        "tol": 1e-08,
+        "reaction_type": "cubic",
+        "record_dt": 25.6,
+        "end_frame": 10,
+        "max_iter": 2000,
+        "min_step": "1e-6",
+        "initial_step_guess": 1.0,
+        "allee_threshold": null
+      },
+      "results": {
+        "converged": false,
+        "optimal_parameter_value": 0.0625,
+        "total_computational_cost": 306781184,
+        "cost_history": [
+          205801984,
+          1381888,
+          8129024,
+          11855360,
+          25870336,
+          53742592
+        ],
+        "parameter_history": [
+          {
+            "cfl": 2,
+            "n_space": 512,
+            "tol": 1e-08,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 1.0,
+            "n_space": 512,
+            "tol": 1e-08,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 0.5,
+            "n_space": 512,
+            "tol": 1e-08,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 0.25,
+            "n_space": 512,
+            "tol": 1e-08,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 0.125,
+            "n_space": 512,
+            "tol": 1e-08,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 0.0625,
+            "n_space": 512,
+            "tol": 1e-08,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          }
+        ]
+      }
+    },
+    {
+      "solver": "diff_react_1d",
+      "target_parameter": "cfl",
+      "profile": "p3",
+      "precision_level": "high",
+      "precision_config": {
+        "tolerance_rmse": {
+          "n_space": 0.001,
+          "cfl": 0.0001,
+          "tol": 1e-07
+        }
+      },
+      "target_config": {
+        "initial_value": 2,
+        "multiplication_factor": 0.5,
+        "max_iteration_num": 6
+      },
+      "non_target_parameters": {
+        "n_space": 1024,
+        "tol": 1e-06,
+        "reaction_type": "cubic",
+        "record_dt": 25.6,
+        "end_frame": 10,
+        "max_iter": 2000,
+        "min_step": "1e-6",
+        "initial_step_guess": 1.0,
+        "allee_threshold": null
+      },
+      "results": {
+        "converged": false,
+        "optimal_parameter_value": 0.0625,
+        "total_computational_cost": 417871872,
+        "cost_history": [
+          17790976,
+          30887936,
+          53606400,
+          109643776,
+          69966848,
+          135975936
+        ],
+        "parameter_history": [
+          {
+            "cfl": 2,
+            "n_space": 1024,
+            "tol": 1e-06,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 1.0,
+            "n_space": 1024,
+            "tol": 1e-06,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 0.5,
+            "n_space": 1024,
+            "tol": 1e-06,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 0.25,
+            "n_space": 1024,
+            "tol": 1e-06,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 0.125,
+            "n_space": 1024,
+            "tol": 1e-06,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 0.0625,
+            "n_space": 1024,
+            "tol": 1e-06,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          }
+        ]
+      }
+    },
+    {
+      "solver": "diff_react_1d",
+      "target_parameter": "cfl",
+      "profile": "p3",
+      "precision_level": "high",
+      "precision_config": {
+        "tolerance_rmse": {
+          "n_space": 0.001,
+          "cfl": 0.0001,
+          "tol": 1e-07
+        }
+      },
+      "target_config": {
+        "initial_value": 2,
+        "multiplication_factor": 0.5,
+        "max_iteration_num": 6
+      },
+      "non_target_parameters": {
+        "n_space": 1024,
+        "tol": 1e-07,
+        "reaction_type": "cubic",
+        "record_dt": 25.6,
+        "end_frame": 10,
+        "max_iter": 2000,
+        "min_step": "1e-6",
+        "initial_step_guess": 1.0,
+        "allee_threshold": null
+      },
+      "results": {
+        "converged": false,
+        "optimal_parameter_value": 0.0625,
+        "total_computational_cost": 614521856,
+        "cost_history": [
+          24565760,
+          45914112,
+          55000064,
+          110980096,
+          224194560,
+          153867264
+        ],
+        "parameter_history": [
+          {
+            "cfl": 2,
+            "n_space": 1024,
+            "tol": 1e-07,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 1.0,
+            "n_space": 1024,
+            "tol": 1e-07,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 0.5,
+            "n_space": 1024,
+            "tol": 1e-07,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 0.25,
+            "n_space": 1024,
+            "tol": 1e-07,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 0.125,
+            "n_space": 1024,
+            "tol": 1e-07,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 0.0625,
+            "n_space": 1024,
+            "tol": 1e-07,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          }
+        ]
+      }
+    },
+    {
+      "solver": "diff_react_1d",
+      "target_parameter": "cfl",
+      "profile": "p3",
+      "precision_level": "high",
+      "precision_config": {
+        "tolerance_rmse": {
+          "n_space": 0.001,
+          "cfl": 0.0001,
+          "tol": 1e-07
+        }
+      },
+      "target_config": {
+        "initial_value": 2,
+        "multiplication_factor": 0.5,
+        "max_iteration_num": 6
+      },
+      "non_target_parameters": {
+        "n_space": 1024,
+        "tol": 1e-08,
+        "reaction_type": "cubic",
+        "record_dt": 25.6,
+        "end_frame": 10,
+        "max_iter": 2000,
+        "min_step": "1e-6",
+        "initial_step_guess": 1.0,
+        "allee_threshold": null
+      },
+      "results": {
+        "converged": false,
+        "optimal_parameter_value": 0.0625,
+        "total_computational_cost": 984138752,
+        "cost_history": [
+          31396864,
+          63667200,
+          97597440,
+          113206272,
+          225620992,
+          452649984
+        ],
+        "parameter_history": [
+          {
+            "cfl": 2,
+            "n_space": 1024,
+            "tol": 1e-08,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 1.0,
+            "n_space": 1024,
+            "tol": 1e-08,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 0.5,
+            "n_space": 1024,
+            "tol": 1e-08,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 0.25,
+            "n_space": 1024,
+            "tol": 1e-08,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 0.125,
+            "n_space": 1024,
+            "tol": 1e-08,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 0.0625,
+            "n_space": 1024,
+            "tol": 1e-08,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          }
+        ]
+      }
+    },
+    {
+      "solver": "diff_react_1d",
+      "target_parameter": "cfl",
+      "profile": "p3",
+      "precision_level": "high",
+      "precision_config": {
+        "tolerance_rmse": {
+          "n_space": 0.001,
+          "cfl": 0.0001,
+          "tol": 1e-07
+        }
+      },
+      "target_config": {
+        "initial_value": 2,
+        "multiplication_factor": 0.5,
+        "max_iteration_num": 6
+      },
+      "non_target_parameters": {
+        "n_space": 2048,
+        "tol": 1e-06,
+        "reaction_type": "cubic",
+        "record_dt": 25.6,
+        "end_frame": 10,
+        "max_iter": 2000,
+        "min_step": "1e-6",
+        "initial_step_guess": 1.0,
+        "allee_threshold": null
+      },
+      "results": {
+        "converged": false,
+        "optimal_parameter_value": 0.0625,
+        "total_computational_cost": 2494740480,
+        "cost_history": [
+          162455552,
+          159807488,
+          283539456,
+          271034368,
+          540440576,
+          1077463040
+        ],
+        "parameter_history": [
+          {
+            "cfl": 2,
+            "n_space": 2048,
+            "tol": 1e-06,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 1.0,
+            "n_space": 2048,
+            "tol": 1e-06,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 0.5,
+            "n_space": 2048,
+            "tol": 1e-06,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 0.25,
+            "n_space": 2048,
+            "tol": 1e-06,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 0.125,
+            "n_space": 2048,
+            "tol": 1e-06,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 0.0625,
+            "n_space": 2048,
+            "tol": 1e-06,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          }
+        ]
+      }
+    },
+    {
+      "solver": "diff_react_1d",
+      "target_parameter": "cfl",
+      "profile": "p3",
+      "precision_level": "high",
+      "precision_config": {
+        "tolerance_rmse": {
+          "n_space": 0.001,
+          "cfl": 0.0001,
+          "tol": 1e-07
+        }
+      },
+      "target_config": {
+        "initial_value": 2,
+        "multiplication_factor": 0.5,
+        "max_iteration_num": 6
+      },
+      "non_target_parameters": {
+        "n_space": 2048,
+        "tol": 1e-07,
+        "reaction_type": "cubic",
+        "record_dt": 25.6,
+        "end_frame": 10,
+        "max_iter": 2000,
+        "min_step": "1e-6",
+        "initial_step_guess": 1.0,
+        "allee_threshold": null
+      },
+      "results": {
+        "converged": false,
+        "optimal_parameter_value": 0.0625,
+        "total_computational_cost": 2986387456,
+        "cost_history": [
+          377759744,
+          247408640,
+          465182720,
+          273082368,
+          542883840,
+          1080070144
+        ],
+        "parameter_history": [
+          {
+            "cfl": 2,
+            "n_space": 2048,
+            "tol": 1e-07,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 1.0,
+            "n_space": 2048,
+            "tol": 1e-07,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 0.5,
+            "n_space": 2048,
+            "tol": 1e-07,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 0.25,
+            "n_space": 2048,
+            "tol": 1e-07,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 0.125,
+            "n_space": 2048,
+            "tol": 1e-07,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 0.0625,
+            "n_space": 2048,
+            "tol": 1e-07,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          }
+        ]
+      }
+    },
+    {
+      "solver": "diff_react_1d",
+      "target_parameter": "cfl",
+      "profile": "p3",
+      "precision_level": "high",
+      "precision_config": {
+        "tolerance_rmse": {
+          "n_space": 0.001,
+          "cfl": 0.0001,
+          "tol": 1e-07
+        }
+      },
+      "target_config": {
+        "initial_value": 2,
+        "multiplication_factor": 0.5,
+        "max_iteration_num": 6
+      },
+      "non_target_parameters": {
+        "n_space": 2048,
+        "tol": 1e-08,
+        "reaction_type": "cubic",
+        "record_dt": 25.6,
+        "end_frame": 10,
+        "max_iter": 2000,
+        "min_step": "1e-6",
+        "initial_step_guess": 1.0,
+        "allee_threshold": null
+      },
+      "results": {
+        "converged": false,
+        "optimal_parameter_value": 0.0625,
+        "total_computational_cost": 3529553920,
+        "cost_history": [
+          542402560,
+          424175616,
+          614801408,
+          313987072,
+          548851712,
+          1085335552
+        ],
+        "parameter_history": [
+          {
+            "cfl": 2,
+            "n_space": 2048,
+            "tol": 1e-08,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 1.0,
+            "n_space": 2048,
+            "tol": 1e-08,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 0.5,
+            "n_space": 2048,
+            "tol": 1e-08,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 0.25,
+            "n_space": 2048,
+            "tol": 1e-08,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 0.125,
+            "n_space": 2048,
+            "tol": 1e-08,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 0.0625,
+            "n_space": 2048,
+            "tol": 1e-08,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
           }
         ]
       }
@@ -301,10 +1992,14 @@
     {
       "solver": "diff_react_1d",
       "target_parameter": "n_space",
-      "profile": "p2",
+      "profile": "p3",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 1e-10
+        "tolerance_rmse": {
+          "n_space": 0.001,
+          "cfl": 0.0001,
+          "tol": 1e-07
+        }
       },
       "target_config": {
         "initial_value": 512,
@@ -314,44 +2009,52 @@
       "non_target_parameters": {
         "cfl": 0.5,
         "tol": 1e-06,
-        "min_step": 0.001,
-        "initial_step_guess": 1.0,
-        "reaction_type": "allee",
+        "reaction_type": "cubic",
         "record_dt": 25.6,
         "end_frame": 10,
         "max_iter": 2000,
-        "allee_threshold": 0.3
+        "min_step": "1e-6",
+        "initial_step_guess": 1.0,
+        "allee_threshold": null
       },
       "results": {
         "converged": false,
         "optimal_parameter_value": 4096,
-        "total_computational_cost": 2108793856,
+        "total_computational_cost": 2422884864,
         "cost_history": [
-          21152768,
-          46051328,
-          339427328,
-          1702162432
+          7993856,
+          53606400,
+          283539456,
+          2077745152
         ],
         "parameter_history": [
           {
             "cfl": 0.5,
             "n_space": 512,
-            "reaction_type": "fisher"
+            "tol": 1e-06,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
           },
           {
             "cfl": 0.5,
             "n_space": 1024,
-            "reaction_type": "fisher"
+            "tol": 1e-06,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
           },
           {
             "cfl": 0.5,
             "n_space": 2048,
-            "reaction_type": "fisher"
+            "tol": 1e-06,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
           },
           {
             "cfl": 0.5,
             "n_space": 4096,
-            "reaction_type": "fisher"
+            "tol": 1e-06,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
           }
         ]
       }
@@ -359,10 +2062,14 @@
     {
       "solver": "diff_react_1d",
       "target_parameter": "n_space",
-      "profile": "p2",
+      "profile": "p3",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 1e-10
+        "tolerance_rmse": {
+          "n_space": 0.001,
+          "cfl": 0.0001,
+          "tol": 1e-07
+        }
       },
       "target_config": {
         "initial_value": 512,
@@ -372,44 +2079,52 @@
       "non_target_parameters": {
         "cfl": 0.5,
         "tol": 1e-07,
-        "min_step": 0.001,
-        "initial_step_guess": 1.0,
-        "reaction_type": "allee",
+        "reaction_type": "cubic",
         "record_dt": 25.6,
         "end_frame": 10,
         "max_iter": 2000,
-        "allee_threshold": 0.3
+        "min_step": "1e-6",
+        "initial_step_guess": 1.0,
+        "allee_threshold": null
       },
       "results": {
         "converged": false,
         "optimal_parameter_value": 4096,
-        "total_computational_cost": 2108793856,
+        "total_computational_cost": 2659731456,
         "cost_history": [
-          21152768,
-          46051328,
-          339427328,
-          1702162432
+          8027136,
+          55000064,
+          465182720,
+          2131521536
         ],
         "parameter_history": [
           {
             "cfl": 0.5,
             "n_space": 512,
-            "reaction_type": "fisher"
+            "tol": 1e-07,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
           },
           {
             "cfl": 0.5,
             "n_space": 1024,
-            "reaction_type": "fisher"
+            "tol": 1e-07,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
           },
           {
             "cfl": 0.5,
             "n_space": 2048,
-            "reaction_type": "fisher"
+            "tol": 1e-07,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
           },
           {
             "cfl": 0.5,
             "n_space": 4096,
-            "reaction_type": "fisher"
+            "tol": 1e-07,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
           }
         ]
       }
@@ -417,10 +2132,14 @@
     {
       "solver": "diff_react_1d",
       "target_parameter": "n_space",
-      "profile": "p2",
+      "profile": "p3",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 1e-10
+        "tolerance_rmse": {
+          "n_space": 0.001,
+          "cfl": 0.0001,
+          "tol": 1e-07
+        }
       },
       "target_config": {
         "initial_value": 512,
@@ -430,44 +2149,52 @@
       "non_target_parameters": {
         "cfl": 0.5,
         "tol": 1e-08,
-        "min_step": 0.001,
-        "initial_step_guess": 1.0,
-        "reaction_type": "allee",
+        "reaction_type": "cubic",
         "record_dt": 25.6,
         "end_frame": 10,
         "max_iter": 2000,
-        "allee_threshold": 0.3
+        "min_step": "1e-6",
+        "initial_step_guess": 1.0,
+        "allee_threshold": null
       },
       "results": {
         "converged": false,
         "optimal_parameter_value": 4096,
-        "total_computational_cost": 2108793856,
+        "total_computational_cost": 3032736256,
         "cost_history": [
-          21152768,
-          46051328,
-          339427328,
-          1702162432
+          8129024,
+          97597440,
+          614801408,
+          2312208384
         ],
         "parameter_history": [
           {
             "cfl": 0.5,
             "n_space": 512,
-            "reaction_type": "fisher"
+            "tol": 1e-08,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
           },
           {
             "cfl": 0.5,
             "n_space": 1024,
-            "reaction_type": "fisher"
+            "tol": 1e-08,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
           },
           {
             "cfl": 0.5,
             "n_space": 2048,
-            "reaction_type": "fisher"
+            "tol": 1e-08,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
           },
           {
             "cfl": 0.5,
             "n_space": 4096,
-            "reaction_type": "fisher"
+            "tol": 1e-08,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
           }
         ]
       }
@@ -475,10 +2202,14 @@
     {
       "solver": "diff_react_1d",
       "target_parameter": "tol",
-      "profile": "p2",
+      "profile": "p3",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 1e-10
+        "tolerance_rmse": {
+          "n_space": 0.001,
+          "cfl": 0.0001,
+          "tol": 1e-07
+        }
       },
       "target_config": {
         "initial_value": 1e-05,
@@ -488,48 +2219,52 @@
       "non_target_parameters": {
         "n_space": 1024,
         "cfl": 0.5,
-        "min_step": 0.001,
-        "initial_step_guess": 1.0,
-        "reaction_type": "allee",
+        "reaction_type": "cubic",
         "record_dt": 25.6,
         "end_frame": 10,
         "max_iter": 2000,
-        "allee_threshold": 0.3
+        "min_step": "1e-6",
+        "initial_step_guess": 1.0,
+        "allee_threshold": null
       },
       "results": {
         "converged": false,
         "optimal_parameter_value": 1e-08,
-        "total_computational_cost": 131293184,
+        "total_computational_cost": 224782336,
         "cost_history": [
-          21344256,
-          21974016,
-          43458560,
-          44516352
+          18578432,
+          53606400,
+          55000064,
+          97597440
         ],
         "parameter_history": [
           {
             "cfl": 0.5,
             "n_space": 1024,
             "tol": 1e-05,
-            "reaction_type": "fisher"
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
           },
           {
             "cfl": 0.5,
             "n_space": 1024,
             "tol": 1e-06,
-            "reaction_type": "fisher"
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
           },
           {
             "cfl": 0.5,
             "n_space": 1024,
             "tol": 1e-07,
-            "reaction_type": "fisher"
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
           },
           {
             "cfl": 0.5,
             "n_space": 1024,
             "tol": 1e-08,
-            "reaction_type": "fisher"
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
           }
         ]
       }
@@ -537,10 +2272,14 @@
     {
       "solver": "diff_react_1d",
       "target_parameter": "tol",
-      "profile": "p2",
+      "profile": "p3",
       "precision_level": "high",
       "precision_config": {
-        "tolerance_rmse": 1e-10
+        "tolerance_rmse": {
+          "n_space": 0.001,
+          "cfl": 0.0001,
+          "tol": 1e-07
+        }
       },
       "target_config": {
         "initial_value": 1e-05,
@@ -550,48 +2289,310 @@
       "non_target_parameters": {
         "n_space": 2048,
         "cfl": 0.5,
-        "min_step": 0.001,
-        "initial_step_guess": 1.0,
-        "reaction_type": "allee",
+        "reaction_type": "cubic",
         "record_dt": 25.6,
         "end_frame": 10,
         "max_iter": 2000,
-        "allee_threshold": 0.3
+        "min_step": "1e-6",
+        "initial_step_guess": 1.0,
+        "allee_threshold": null
       },
       "results": {
         "converged": false,
         "optimal_parameter_value": 1e-08,
-        "total_computational_cost": 878340096,
+        "total_computational_cost": 1603960832,
         "cost_history": [
-          185059328,
-          191387648,
-          210376704,
-          291516416
+          240437248,
+          283539456,
+          465182720,
+          614801408
         ],
         "parameter_history": [
           {
             "cfl": 0.5,
             "n_space": 2048,
             "tol": 1e-05,
-            "reaction_type": "fisher"
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
           },
           {
             "cfl": 0.5,
             "n_space": 2048,
             "tol": 1e-06,
-            "reaction_type": "fisher"
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
           },
           {
             "cfl": 0.5,
             "n_space": 2048,
             "tol": 1e-07,
-            "reaction_type": "fisher"
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
           },
           {
             "cfl": 0.5,
             "n_space": 2048,
             "tol": 1e-08,
-            "reaction_type": "fisher"
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          }
+        ]
+      }
+    },
+    {
+      "solver": "diff_react_1d",
+      "target_parameter": "cfl",
+      "profile": "p1",
+      "precision_level": "medium",
+      "precision_config": {
+        "tolerance_rmse": {
+          "n_space": 0.01,
+          "cfl": 0.005,
+          "tol": 1e-06
+        }
+      },
+      "target_config": {
+        "initial_value": 2,
+        "multiplication_factor": 0.5,
+        "max_iteration_num": 6
+      },
+      "non_target_parameters": {
+        "n_space": 512,
+        "tol": 1e-06,
+        "reaction_type": "fisher",
+        "record_dt": 25.6,
+        "end_frame": 10,
+        "max_iter": 2000,
+        "min_step": "1e-6",
+        "initial_step_guess": 1.0,
+        "allee_threshold": null
+      },
+      "results": {
+        "converged": false,
+        "optimal_parameter_value": 0.0625,
+        "total_computational_cost": 421772800,
+        "cost_history": [
+          378248704,
+          1287680,
+          4904448,
+          11767808,
+          8671232,
+          16892928
+        ],
+        "parameter_history": [
+          {
+            "cfl": 2,
+            "n_space": 512,
+            "tol": 1e-06,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 1.0,
+            "n_space": 512,
+            "tol": 1e-06,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 0.5,
+            "n_space": 512,
+            "tol": 1e-06,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 0.25,
+            "n_space": 512,
+            "tol": 1e-06,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 0.125,
+            "n_space": 512,
+            "tol": 1e-06,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 0.0625,
+            "n_space": 512,
+            "tol": 1e-06,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          }
+        ]
+      }
+    },
+    {
+      "solver": "diff_react_1d",
+      "target_parameter": "cfl",
+      "profile": "p1",
+      "precision_level": "medium",
+      "precision_config": {
+        "tolerance_rmse": {
+          "n_space": 0.01,
+          "cfl": 0.005,
+          "tol": 1e-06
+        }
+      },
+      "target_config": {
+        "initial_value": 2,
+        "multiplication_factor": 0.5,
+        "max_iteration_num": 6
+      },
+      "non_target_parameters": {
+        "n_space": 512,
+        "tol": 1e-07,
+        "reaction_type": "fisher",
+        "record_dt": 25.6,
+        "end_frame": 10,
+        "max_iter": 2000,
+        "min_step": "1e-6",
+        "initial_step_guess": 1.0,
+        "allee_threshold": null
+      },
+      "results": {
+        "converged": false,
+        "optimal_parameter_value": 0.0625,
+        "total_computational_cost": 462826496,
+        "cost_history": [
+          401910272,
+          1344512,
+          4923904,
+          11874816,
+          25704960,
+          17068032
+        ],
+        "parameter_history": [
+          {
+            "cfl": 2,
+            "n_space": 512,
+            "tol": 1e-07,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 1.0,
+            "n_space": 512,
+            "tol": 1e-07,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 0.5,
+            "n_space": 512,
+            "tol": 1e-07,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 0.25,
+            "n_space": 512,
+            "tol": 1e-07,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 0.125,
+            "n_space": 512,
+            "tol": 1e-07,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 0.0625,
+            "n_space": 512,
+            "tol": 1e-07,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          }
+        ]
+      }
+    },
+    {
+      "solver": "diff_react_1d",
+      "target_parameter": "cfl",
+      "profile": "p1",
+      "precision_level": "medium",
+      "precision_config": {
+        "tolerance_rmse": {
+          "n_space": 0.01,
+          "cfl": 0.005,
+          "tol": 1e-06
+        }
+      },
+      "target_config": {
+        "initial_value": 2,
+        "multiplication_factor": 0.5,
+        "max_iteration_num": 6
+      },
+      "non_target_parameters": {
+        "n_space": 512,
+        "tol": 1e-08,
+        "reaction_type": "fisher",
+        "record_dt": 25.6,
+        "end_frame": 10,
+        "max_iter": 2000,
+        "min_step": "1e-6",
+        "initial_step_guess": 1.0,
+        "allee_threshold": null
+      },
+      "results": {
+        "converged": false,
+        "optimal_parameter_value": 0.0625,
+        "total_computational_cost": 499759104,
+        "cost_history": [
+          402043392,
+          1377792,
+          4966912,
+          11904000,
+          25938432,
+          53528576
+        ],
+        "parameter_history": [
+          {
+            "cfl": 2,
+            "n_space": 512,
+            "tol": 1e-08,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 1.0,
+            "n_space": 512,
+            "tol": 1e-08,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 0.5,
+            "n_space": 512,
+            "tol": 1e-08,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 0.25,
+            "n_space": 512,
+            "tol": 1e-08,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 0.125,
+            "n_space": 512,
+            "tol": 1e-08,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 0.0625,
+            "n_space": 512,
+            "tol": 1e-08,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
           }
         ]
       }
@@ -599,10 +2600,14 @@
     {
       "solver": "diff_react_1d",
       "target_parameter": "n_space",
-      "profile": "p3",
-      "precision_level": "high",
+      "profile": "p1",
+      "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 1e-10
+        "tolerance_rmse": {
+          "n_space": 0.01,
+          "cfl": 0.005,
+          "tol": 1e-06
+        }
       },
       "target_config": {
         "initial_value": 512,
@@ -612,43 +2617,52 @@
       "non_target_parameters": {
         "cfl": 0.5,
         "tol": 1e-06,
-        "min_step": 0.001,
-        "initial_step_guess": 1.0,
-        "reaction_type": "cubic",
+        "reaction_type": "fisher",
         "record_dt": 25.6,
         "end_frame": 10,
-        "max_iter": 2000
+        "max_iter": 2000,
+        "min_step": "1e-6",
+        "initial_step_guess": 1.0,
+        "allee_threshold": null
       },
       "results": {
         "converged": false,
         "optimal_parameter_value": 4096,
-        "total_computational_cost": 2108793856,
+        "total_computational_cost": 2327413248,
         "cost_history": [
-          21152768,
-          46051328,
-          339427328,
-          1702162432
+          4904448,
+          18887680,
+          241522688,
+          2062098432
         ],
         "parameter_history": [
           {
             "cfl": 0.5,
             "n_space": 512,
-            "reaction_type": "fisher"
+            "tol": 1e-06,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
           },
           {
             "cfl": 0.5,
             "n_space": 1024,
-            "reaction_type": "fisher"
+            "tol": 1e-06,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
           },
           {
             "cfl": 0.5,
             "n_space": 2048,
-            "reaction_type": "fisher"
+            "tol": 1e-06,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
           },
           {
             "cfl": 0.5,
             "n_space": 4096,
-            "reaction_type": "fisher"
+            "tol": 1e-06,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
           }
         ]
       }
@@ -656,10 +2670,14 @@
     {
       "solver": "diff_react_1d",
       "target_parameter": "n_space",
-      "profile": "p3",
-      "precision_level": "high",
+      "profile": "p1",
+      "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 1e-10
+        "tolerance_rmse": {
+          "n_space": 0.01,
+          "cfl": 0.005,
+          "tol": 1e-06
+        }
       },
       "target_config": {
         "initial_value": 512,
@@ -669,43 +2687,52 @@
       "non_target_parameters": {
         "cfl": 0.5,
         "tol": 1e-07,
-        "min_step": 0.001,
-        "initial_step_guess": 1.0,
-        "reaction_type": "cubic",
+        "reaction_type": "fisher",
         "record_dt": 25.6,
         "end_frame": 10,
-        "max_iter": 2000
+        "max_iter": 2000,
+        "min_step": "1e-6",
+        "initial_step_guess": 1.0,
+        "allee_threshold": null
       },
       "results": {
         "converged": false,
         "optimal_parameter_value": 4096,
-        "total_computational_cost": 2108793856,
+        "total_computational_cost": 2416560640,
         "cost_history": [
-          21152768,
-          46051328,
-          339427328,
-          1702162432
+          4923904,
+          54620160,
+          281442304,
+          2075574272
         ],
         "parameter_history": [
           {
             "cfl": 0.5,
             "n_space": 512,
-            "reaction_type": "fisher"
+            "tol": 1e-07,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
           },
           {
             "cfl": 0.5,
             "n_space": 1024,
-            "reaction_type": "fisher"
+            "tol": 1e-07,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
           },
           {
             "cfl": 0.5,
             "n_space": 2048,
-            "reaction_type": "fisher"
+            "tol": 1e-07,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
           },
           {
             "cfl": 0.5,
             "n_space": 4096,
-            "reaction_type": "fisher"
+            "tol": 1e-07,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
           }
         ]
       }
@@ -713,10 +2740,14 @@
     {
       "solver": "diff_react_1d",
       "target_parameter": "n_space",
-      "profile": "p3",
-      "precision_level": "high",
+      "profile": "p1",
+      "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 1e-10
+        "tolerance_rmse": {
+          "n_space": 0.01,
+          "cfl": 0.005,
+          "tol": 1e-06
+        }
       },
       "target_config": {
         "initial_value": 512,
@@ -726,43 +2757,52 @@
       "non_target_parameters": {
         "cfl": 0.5,
         "tol": 1e-08,
-        "min_step": 0.001,
-        "initial_step_guess": 1.0,
-        "reaction_type": "cubic",
+        "reaction_type": "fisher",
         "record_dt": 25.6,
         "end_frame": 10,
-        "max_iter": 2000
+        "max_iter": 2000,
+        "min_step": "1e-6",
+        "initial_step_guess": 1.0,
+        "allee_threshold": null
       },
       "results": {
         "converged": false,
         "optimal_parameter_value": 4096,
-        "total_computational_cost": 2108793856,
+        "total_computational_cost": 2632576512,
         "cost_history": [
-          21152768,
-          46051328,
-          339427328,
-          1702162432
+          4966912,
+          56120320,
+          452407296,
+          2119081984
         ],
         "parameter_history": [
           {
             "cfl": 0.5,
             "n_space": 512,
-            "reaction_type": "fisher"
+            "tol": 1e-08,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
           },
           {
             "cfl": 0.5,
             "n_space": 1024,
-            "reaction_type": "fisher"
+            "tol": 1e-08,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
           },
           {
             "cfl": 0.5,
             "n_space": 2048,
-            "reaction_type": "fisher"
+            "tol": 1e-08,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
           },
           {
             "cfl": 0.5,
             "n_space": 4096,
-            "reaction_type": "fisher"
+            "tol": 1e-08,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
           }
         ]
       }
@@ -770,10 +2810,14 @@
     {
       "solver": "diff_react_1d",
       "target_parameter": "tol",
-      "profile": "p3",
-      "precision_level": "high",
+      "profile": "p1",
+      "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 1e-10
+        "tolerance_rmse": {
+          "n_space": 0.01,
+          "cfl": 0.005,
+          "tol": 1e-06
+        }
       },
       "target_config": {
         "initial_value": 1e-05,
@@ -783,47 +2827,52 @@
       "non_target_parameters": {
         "n_space": 1024,
         "cfl": 0.5,
-        "min_step": 0.001,
-        "initial_step_guess": 1.0,
-        "reaction_type": "cubic",
+        "reaction_type": "fisher",
         "record_dt": 25.6,
         "end_frame": 10,
-        "max_iter": 2000
+        "max_iter": 2000,
+        "min_step": "1e-6",
+        "initial_step_guess": 1.0,
+        "allee_threshold": null
       },
       "results": {
         "converged": false,
         "optimal_parameter_value": 1e-08,
-        "total_computational_cost": 131293184,
+        "total_computational_cost": 147039232,
         "cost_history": [
-          21344256,
-          21974016,
-          43458560,
-          44516352
+          17411072,
+          18887680,
+          54620160,
+          56120320
         ],
         "parameter_history": [
           {
             "cfl": 0.5,
             "n_space": 1024,
             "tol": 1e-05,
-            "reaction_type": "fisher"
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
           },
           {
             "cfl": 0.5,
             "n_space": 1024,
             "tol": 1e-06,
-            "reaction_type": "fisher"
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
           },
           {
             "cfl": 0.5,
             "n_space": 1024,
             "tol": 1e-07,
-            "reaction_type": "fisher"
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
           },
           {
             "cfl": 0.5,
             "n_space": 1024,
             "tol": 1e-08,
-            "reaction_type": "fisher"
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
           }
         ]
       }
@@ -831,10 +2880,14 @@
     {
       "solver": "diff_react_1d",
       "target_parameter": "tol",
-      "profile": "p3",
-      "precision_level": "high",
+      "profile": "p1",
+      "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 1e-10
+        "tolerance_rmse": {
+          "n_space": 0.01,
+          "cfl": 0.005,
+          "tol": 1e-06
+        }
       },
       "target_config": {
         "initial_value": 1e-05,
@@ -844,392 +2897,310 @@
       "non_target_parameters": {
         "n_space": 2048,
         "cfl": 0.5,
-        "min_step": 0.001,
-        "initial_step_guess": 1.0,
-        "reaction_type": "cubic",
+        "reaction_type": "fisher",
         "record_dt": 25.6,
         "end_frame": 10,
-        "max_iter": 2000
+        "max_iter": 2000,
+        "min_step": "1e-6",
+        "initial_step_guess": 1.0,
+        "allee_threshold": null
       },
       "results": {
         "converged": false,
         "optimal_parameter_value": 1e-08,
-        "total_computational_cost": 878340096,
+        "total_computational_cost": 1203664896,
         "cost_history": [
-          185059328,
-          191387648,
-          210376704,
-          291516416
+          228292608,
+          241522688,
+          281442304,
+          452407296
         ],
         "parameter_history": [
           {
             "cfl": 0.5,
             "n_space": 2048,
             "tol": 1e-05,
-            "reaction_type": "fisher"
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
           },
           {
             "cfl": 0.5,
             "n_space": 2048,
             "tol": 1e-06,
-            "reaction_type": "fisher"
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
           },
           {
             "cfl": 0.5,
             "n_space": 2048,
             "tol": 1e-07,
-            "reaction_type": "fisher"
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
           },
           {
             "cfl": 0.5,
             "n_space": 2048,
             "tol": 1e-08,
-            "reaction_type": "fisher"
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
           }
         ]
       }
     },
     {
       "solver": "diff_react_1d",
-      "target_parameter": "n_space",
-      "profile": "p1",
+      "target_parameter": "cfl",
+      "profile": "p3",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.0005
+        "tolerance_rmse": {
+          "n_space": 0.01,
+          "cfl": 0.005,
+          "tol": 1e-06
+        }
       },
       "target_config": {
-        "initial_value": 512,
-        "multiplication_factor": 2,
-        "max_iteration_num": 4
+        "initial_value": 2,
+        "multiplication_factor": 0.5,
+        "max_iteration_num": 6
       },
       "non_target_parameters": {
-        "cfl": 0.5,
+        "n_space": 512,
         "tol": 1e-06,
-        "min_step": 0.001,
-        "initial_step_guess": 1.0,
-        "reaction_type": "fisher",
+        "reaction_type": "cubic",
         "record_dt": 25.6,
         "end_frame": 10,
-        "max_iter": 2000
+        "max_iter": 2000,
+        "min_step": "1e-6",
+        "initial_step_guess": 1.0,
+        "allee_threshold": null
       },
       "results": {
         "converged": false,
-        "optimal_parameter_value": 4096,
-        "total_computational_cost": 2108793856,
+        "optimal_parameter_value": 0.0625,
+        "total_computational_cost": 234109440,
         "cost_history": [
-          21152768,
-          46051328,
-          339427328,
-          1702162432
+          170419200,
+          1301504,
+          7993856,
+          11816448,
+          25627136,
+          16951296
         ],
         "parameter_history": [
           {
+            "cfl": 2,
+            "n_space": 512,
+            "tol": 1e-06,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 1.0,
+            "n_space": 512,
+            "tol": 1e-06,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
             "cfl": 0.5,
             "n_space": 512,
-            "reaction_type": "fisher"
+            "tol": 1e-06,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
           },
           {
-            "cfl": 0.5,
-            "n_space": 1024,
-            "reaction_type": "fisher"
+            "cfl": 0.25,
+            "n_space": 512,
+            "tol": 1e-06,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
           },
           {
-            "cfl": 0.5,
-            "n_space": 2048,
-            "reaction_type": "fisher"
+            "cfl": 0.125,
+            "n_space": 512,
+            "tol": 1e-06,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
           },
           {
-            "cfl": 0.5,
-            "n_space": 4096,
-            "reaction_type": "fisher"
+            "cfl": 0.0625,
+            "n_space": 512,
+            "tol": 1e-06,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
           }
         ]
       }
     },
     {
       "solver": "diff_react_1d",
-      "target_parameter": "n_space",
-      "profile": "p1",
+      "target_parameter": "cfl",
+      "profile": "p3",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.0005
+        "tolerance_rmse": {
+          "n_space": 0.01,
+          "cfl": 0.005,
+          "tol": 1e-06
+        }
       },
       "target_config": {
-        "initial_value": 512,
-        "multiplication_factor": 2,
-        "max_iteration_num": 4
+        "initial_value": 2,
+        "multiplication_factor": 0.5,
+        "max_iteration_num": 6
       },
       "non_target_parameters": {
-        "cfl": 0.5,
+        "n_space": 512,
         "tol": 1e-07,
-        "min_step": 0.001,
-        "initial_step_guess": 1.0,
-        "reaction_type": "fisher",
+        "reaction_type": "cubic",
         "record_dt": 25.6,
         "end_frame": 10,
-        "max_iter": 2000
+        "max_iter": 2000,
+        "min_step": "1e-6",
+        "initial_step_guess": 1.0,
+        "allee_threshold": null
       },
       "results": {
         "converged": false,
-        "optimal_parameter_value": 4096,
-        "total_computational_cost": 2108793856,
+        "optimal_parameter_value": 0.0625,
+        "total_computational_cost": 268631040,
         "cost_history": [
-          21152768,
-          46051328,
-          339427328,
-          1702162432
+          168148992,
+          1336832,
+          8027136,
+          11835904,
+          25831424,
+          53450752
         ],
         "parameter_history": [
           {
+            "cfl": 2,
+            "n_space": 512,
+            "tol": 1e-07,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 1.0,
+            "n_space": 512,
+            "tol": 1e-07,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
             "cfl": 0.5,
             "n_space": 512,
-            "reaction_type": "fisher"
+            "tol": 1e-07,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
           },
           {
-            "cfl": 0.5,
-            "n_space": 1024,
-            "reaction_type": "fisher"
+            "cfl": 0.25,
+            "n_space": 512,
+            "tol": 1e-07,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
           },
           {
-            "cfl": 0.5,
-            "n_space": 2048,
-            "reaction_type": "fisher"
+            "cfl": 0.125,
+            "n_space": 512,
+            "tol": 1e-07,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
           },
           {
-            "cfl": 0.5,
-            "n_space": 4096,
-            "reaction_type": "fisher"
+            "cfl": 0.0625,
+            "n_space": 512,
+            "tol": 1e-07,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
           }
         ]
       }
     },
     {
       "solver": "diff_react_1d",
-      "target_parameter": "n_space",
-      "profile": "p1",
+      "target_parameter": "cfl",
+      "profile": "p3",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.0005
+        "tolerance_rmse": {
+          "n_space": 0.01,
+          "cfl": 0.005,
+          "tol": 1e-06
+        }
       },
       "target_config": {
-        "initial_value": 512,
-        "multiplication_factor": 2,
-        "max_iteration_num": 4
+        "initial_value": 2,
+        "multiplication_factor": 0.5,
+        "max_iteration_num": 6
       },
       "non_target_parameters": {
-        "cfl": 0.5,
+        "n_space": 512,
         "tol": 1e-08,
-        "min_step": 0.001,
-        "initial_step_guess": 1.0,
-        "reaction_type": "fisher",
-        "record_dt": 25.6,
-        "end_frame": 10,
-        "max_iter": 2000
-      },
-      "results": {
-        "converged": false,
-        "optimal_parameter_value": 4096,
-        "total_computational_cost": 2108793856,
-        "cost_history": [
-          21152768,
-          46051328,
-          339427328,
-          1702162432
-        ],
-        "parameter_history": [
-          {
-            "cfl": 0.5,
-            "n_space": 512,
-            "reaction_type": "fisher"
-          },
-          {
-            "cfl": 0.5,
-            "n_space": 1024,
-            "reaction_type": "fisher"
-          },
-          {
-            "cfl": 0.5,
-            "n_space": 2048,
-            "reaction_type": "fisher"
-          },
-          {
-            "cfl": 0.5,
-            "n_space": 4096,
-            "reaction_type": "fisher"
-          }
-        ]
-      }
-    },
-    {
-      "solver": "diff_react_1d",
-      "target_parameter": "n_space",
-      "profile": "p2",
-      "precision_level": "medium",
-      "precision_config": {
-        "tolerance_rmse": 0.0005
-      },
-      "target_config": {
-        "initial_value": 512,
-        "multiplication_factor": 2,
-        "max_iteration_num": 4
-      },
-      "non_target_parameters": {
-        "cfl": 0.5,
-        "tol": 1e-06,
-        "min_step": 0.001,
-        "initial_step_guess": 1.0,
-        "reaction_type": "allee",
+        "reaction_type": "cubic",
         "record_dt": 25.6,
         "end_frame": 10,
         "max_iter": 2000,
-        "allee_threshold": 0.3
-      },
-      "results": {
-        "converged": false,
-        "optimal_parameter_value": 4096,
-        "total_computational_cost": 2108793856,
-        "cost_history": [
-          21152768,
-          46051328,
-          339427328,
-          1702162432
-        ],
-        "parameter_history": [
-          {
-            "cfl": 0.5,
-            "n_space": 512,
-            "reaction_type": "fisher"
-          },
-          {
-            "cfl": 0.5,
-            "n_space": 1024,
-            "reaction_type": "fisher"
-          },
-          {
-            "cfl": 0.5,
-            "n_space": 2048,
-            "reaction_type": "fisher"
-          },
-          {
-            "cfl": 0.5,
-            "n_space": 4096,
-            "reaction_type": "fisher"
-          }
-        ]
-      }
-    },
-    {
-      "solver": "diff_react_1d",
-      "target_parameter": "n_space",
-      "profile": "p2",
-      "precision_level": "medium",
-      "precision_config": {
-        "tolerance_rmse": 0.0005
-      },
-      "target_config": {
-        "initial_value": 512,
-        "multiplication_factor": 2,
-        "max_iteration_num": 4
-      },
-      "non_target_parameters": {
-        "cfl": 0.5,
-        "tol": 1e-07,
-        "min_step": 0.001,
+        "min_step": "1e-6",
         "initial_step_guess": 1.0,
-        "reaction_type": "allee",
-        "record_dt": 25.6,
-        "end_frame": 10,
-        "max_iter": 2000,
-        "allee_threshold": 0.3
+        "allee_threshold": null
       },
       "results": {
         "converged": false,
-        "optimal_parameter_value": 4096,
-        "total_computational_cost": 2108793856,
+        "optimal_parameter_value": 0.0625,
+        "total_computational_cost": 306781184,
         "cost_history": [
-          21152768,
-          46051328,
-          339427328,
-          1702162432
+          205801984,
+          1381888,
+          8129024,
+          11855360,
+          25870336,
+          53742592
         ],
         "parameter_history": [
           {
-            "cfl": 0.5,
+            "cfl": 2,
             "n_space": 512,
-            "reaction_type": "fisher"
+            "tol": 1e-08,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
           },
           {
-            "cfl": 0.5,
-            "n_space": 1024,
-            "reaction_type": "fisher"
+            "cfl": 1.0,
+            "n_space": 512,
+            "tol": 1e-08,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
           },
-          {
-            "cfl": 0.5,
-            "n_space": 2048,
-            "reaction_type": "fisher"
-          },
-          {
-            "cfl": 0.5,
-            "n_space": 4096,
-            "reaction_type": "fisher"
-          }
-        ]
-      }
-    },
-    {
-      "solver": "diff_react_1d",
-      "target_parameter": "n_space",
-      "profile": "p2",
-      "precision_level": "medium",
-      "precision_config": {
-        "tolerance_rmse": 0.0005
-      },
-      "target_config": {
-        "initial_value": 512,
-        "multiplication_factor": 2,
-        "max_iteration_num": 4
-      },
-      "non_target_parameters": {
-        "cfl": 0.5,
-        "tol": 1e-08,
-        "min_step": 0.001,
-        "initial_step_guess": 1.0,
-        "reaction_type": "allee",
-        "record_dt": 25.6,
-        "end_frame": 10,
-        "max_iter": 2000,
-        "allee_threshold": 0.3
-      },
-      "results": {
-        "converged": false,
-        "optimal_parameter_value": 4096,
-        "total_computational_cost": 2108793856,
-        "cost_history": [
-          21152768,
-          46051328,
-          339427328,
-          1702162432
-        ],
-        "parameter_history": [
           {
             "cfl": 0.5,
             "n_space": 512,
-            "reaction_type": "fisher"
+            "tol": 1e-08,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
           },
           {
-            "cfl": 0.5,
-            "n_space": 1024,
-            "reaction_type": "fisher"
+            "cfl": 0.25,
+            "n_space": 512,
+            "tol": 1e-08,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
           },
           {
-            "cfl": 0.5,
-            "n_space": 2048,
-            "reaction_type": "fisher"
+            "cfl": 0.125,
+            "n_space": 512,
+            "tol": 1e-08,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
           },
           {
-            "cfl": 0.5,
-            "n_space": 4096,
-            "reaction_type": "fisher"
+            "cfl": 0.0625,
+            "n_space": 512,
+            "tol": 1e-08,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
           }
         ]
       }
@@ -1240,7 +3211,11 @@
       "profile": "p3",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.0005
+        "tolerance_rmse": {
+          "n_space": 0.01,
+          "cfl": 0.005,
+          "tol": 1e-06
+        }
       },
       "target_config": {
         "initial_value": 512,
@@ -1250,43 +3225,52 @@
       "non_target_parameters": {
         "cfl": 0.5,
         "tol": 1e-06,
-        "min_step": 0.001,
-        "initial_step_guess": 1.0,
         "reaction_type": "cubic",
         "record_dt": 25.6,
         "end_frame": 10,
-        "max_iter": 2000
+        "max_iter": 2000,
+        "min_step": "1e-6",
+        "initial_step_guess": 1.0,
+        "allee_threshold": null
       },
       "results": {
         "converged": false,
         "optimal_parameter_value": 4096,
-        "total_computational_cost": 2108793856,
+        "total_computational_cost": 2422884864,
         "cost_history": [
-          21152768,
-          46051328,
-          339427328,
-          1702162432
+          7993856,
+          53606400,
+          283539456,
+          2077745152
         ],
         "parameter_history": [
           {
             "cfl": 0.5,
             "n_space": 512,
-            "reaction_type": "fisher"
+            "tol": 1e-06,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
           },
           {
             "cfl": 0.5,
             "n_space": 1024,
-            "reaction_type": "fisher"
+            "tol": 1e-06,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
           },
           {
             "cfl": 0.5,
             "n_space": 2048,
-            "reaction_type": "fisher"
+            "tol": 1e-06,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
           },
           {
             "cfl": 0.5,
             "n_space": 4096,
-            "reaction_type": "fisher"
+            "tol": 1e-06,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
           }
         ]
       }
@@ -1297,7 +3281,11 @@
       "profile": "p3",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.0005
+        "tolerance_rmse": {
+          "n_space": 0.01,
+          "cfl": 0.005,
+          "tol": 1e-06
+        }
       },
       "target_config": {
         "initial_value": 512,
@@ -1307,43 +3295,52 @@
       "non_target_parameters": {
         "cfl": 0.5,
         "tol": 1e-07,
-        "min_step": 0.001,
-        "initial_step_guess": 1.0,
         "reaction_type": "cubic",
         "record_dt": 25.6,
         "end_frame": 10,
-        "max_iter": 2000
+        "max_iter": 2000,
+        "min_step": "1e-6",
+        "initial_step_guess": 1.0,
+        "allee_threshold": null
       },
       "results": {
         "converged": false,
         "optimal_parameter_value": 4096,
-        "total_computational_cost": 2108793856,
+        "total_computational_cost": 2659731456,
         "cost_history": [
-          21152768,
-          46051328,
-          339427328,
-          1702162432
+          8027136,
+          55000064,
+          465182720,
+          2131521536
         ],
         "parameter_history": [
           {
             "cfl": 0.5,
             "n_space": 512,
-            "reaction_type": "fisher"
+            "tol": 1e-07,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
           },
           {
             "cfl": 0.5,
             "n_space": 1024,
-            "reaction_type": "fisher"
+            "tol": 1e-07,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
           },
           {
             "cfl": 0.5,
             "n_space": 2048,
-            "reaction_type": "fisher"
+            "tol": 1e-07,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
           },
           {
             "cfl": 0.5,
             "n_space": 4096,
-            "reaction_type": "fisher"
+            "tol": 1e-07,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
           }
         ]
       }
@@ -1354,7 +3351,11 @@
       "profile": "p3",
       "precision_level": "medium",
       "precision_config": {
-        "tolerance_rmse": 0.0005
+        "tolerance_rmse": {
+          "n_space": 0.01,
+          "cfl": 0.005,
+          "tol": 1e-06
+        }
       },
       "target_config": {
         "initial_value": 512,
@@ -1364,43 +3365,192 @@
       "non_target_parameters": {
         "cfl": 0.5,
         "tol": 1e-08,
-        "min_step": 0.001,
-        "initial_step_guess": 1.0,
         "reaction_type": "cubic",
         "record_dt": 25.6,
         "end_frame": 10,
-        "max_iter": 2000
+        "max_iter": 2000,
+        "min_step": "1e-6",
+        "initial_step_guess": 1.0,
+        "allee_threshold": null
       },
       "results": {
         "converged": false,
         "optimal_parameter_value": 4096,
-        "total_computational_cost": 2108793856,
+        "total_computational_cost": 3032736256,
         "cost_history": [
-          21152768,
-          46051328,
-          339427328,
-          1702162432
+          8129024,
+          97597440,
+          614801408,
+          2312208384
         ],
         "parameter_history": [
           {
             "cfl": 0.5,
             "n_space": 512,
-            "reaction_type": "fisher"
+            "tol": 1e-08,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
           },
           {
             "cfl": 0.5,
             "n_space": 1024,
-            "reaction_type": "fisher"
+            "tol": 1e-08,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
           },
           {
             "cfl": 0.5,
             "n_space": 2048,
-            "reaction_type": "fisher"
+            "tol": 1e-08,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
           },
           {
             "cfl": 0.5,
             "n_space": 4096,
-            "reaction_type": "fisher"
+            "tol": 1e-08,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          }
+        ]
+      }
+    },
+    {
+      "solver": "diff_react_1d",
+      "target_parameter": "tol",
+      "profile": "p3",
+      "precision_level": "medium",
+      "precision_config": {
+        "tolerance_rmse": {
+          "n_space": 0.01,
+          "cfl": 0.005,
+          "tol": 1e-06
+        }
+      },
+      "target_config": {
+        "initial_value": 1e-05,
+        "multiplication_factor": 0.1,
+        "max_iteration_num": 4
+      },
+      "non_target_parameters": {
+        "n_space": 1024,
+        "cfl": 0.5,
+        "reaction_type": "cubic",
+        "record_dt": 25.6,
+        "end_frame": 10,
+        "max_iter": 2000,
+        "min_step": "1e-6",
+        "initial_step_guess": 1.0,
+        "allee_threshold": null
+      },
+      "results": {
+        "converged": false,
+        "optimal_parameter_value": 1e-08,
+        "total_computational_cost": 224782336,
+        "cost_history": [
+          18578432,
+          53606400,
+          55000064,
+          97597440
+        ],
+        "parameter_history": [
+          {
+            "cfl": 0.5,
+            "n_space": 1024,
+            "tol": 1e-05,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 0.5,
+            "n_space": 1024,
+            "tol": 1e-06,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 0.5,
+            "n_space": 1024,
+            "tol": 1e-07,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 0.5,
+            "n_space": 1024,
+            "tol": 1e-08,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          }
+        ]
+      }
+    },
+    {
+      "solver": "diff_react_1d",
+      "target_parameter": "tol",
+      "profile": "p3",
+      "precision_level": "medium",
+      "precision_config": {
+        "tolerance_rmse": {
+          "n_space": 0.01,
+          "cfl": 0.005,
+          "tol": 1e-06
+        }
+      },
+      "target_config": {
+        "initial_value": 1e-05,
+        "multiplication_factor": 0.1,
+        "max_iteration_num": 4
+      },
+      "non_target_parameters": {
+        "n_space": 2048,
+        "cfl": 0.5,
+        "reaction_type": "cubic",
+        "record_dt": 25.6,
+        "end_frame": 10,
+        "max_iter": 2000,
+        "min_step": "1e-6",
+        "initial_step_guess": 1.0,
+        "allee_threshold": null
+      },
+      "results": {
+        "converged": false,
+        "optimal_parameter_value": 1e-08,
+        "total_computational_cost": 1603960832,
+        "cost_history": [
+          240437248,
+          283539456,
+          465182720,
+          614801408
+        ],
+        "parameter_history": [
+          {
+            "cfl": 0.5,
+            "n_space": 2048,
+            "tol": 1e-05,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 0.5,
+            "n_space": 2048,
+            "tol": 1e-06,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 0.5,
+            "n_space": 2048,
+            "tol": 1e-07,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
+          },
+          {
+            "cfl": 0.5,
+            "n_space": 2048,
+            "tol": 1e-08,
+            "min_step": "1e-6",
+            "initial_step_guess": 1.0
           }
         ]
       }

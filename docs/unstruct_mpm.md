@@ -210,7 +210,7 @@ Cache script: `checkouts/unstruct_mpm.py`
 
 The computational cost is tracked as a measure of computational complexity:
 
-$$\text{Total Cost} = n_{\text{particles}} + \sum_{\text{each particle}} n_{\text{neighbor communications}}$$
+$$\text{Total Cost} = \sum_{\text{iteraton}}n_{\text{particles}} + \sum_{\text{each particle}} n_{\text{neighbor communications}}$$
 
 Where:
 
@@ -219,7 +219,7 @@ Where:
 
 This cost metric captures:
 
-1. **Particle Density Cost**: Scales with total number of particles ($n_x \times n_{\text{part}}$ in 1D)
+1. **Particle Density Cost**: Scales with total number of particles
 2. **Neighbor Communication Cost**: Accounts for particle-particle interactions within support radius (controlled by `radii` parameter, fixed at 1.0)
 3. **Spatial Complexity**: Reflects both discretization density (via `nx` and `n_part`) and interaction complexity (via neighbor search on unstructured mesh)
 

@@ -1,48 +1,30 @@
 # Hasegawa-Mima Nonlinear Solver Checkout Configuration
 # This file centralizes all parameter settings for dummy solution generation
 
-solver_info:
-  name: "Hasegawa-Mima Nonlinear"
-  numerical_method: "Pseudo-spectral method with RK4 time integration and 2/3 rule dealiasing"
-  convergence_method: "Resolution convergence checking (traditional method)"
-  reference: "Hasegawa, A. & Mima, K. (1978). Pseudo-three-dimensional turbulence in magnetized nonuniform plasma."
-
-task_distribution:
-  strategy: "simple_parameters"
-  total_individuals: 120  # Full configuration with 5 profiles
-
 precision_levels:
   low:
-    tolerance_rmse: 0.0005
-    description: "Relaxed convergence criteria"
+    tolerance_rmse: 0.01
   medium:
-    tolerance_rmse: 0.0001
-    description: "Moderate convergence criteria"
+    tolerance_rmse: 0.001
   high:
-    tolerance_rmse: 0.00001
-    description: "Stringent convergence criteria"
+    tolerance_rmse: 0.0001
 
 profiles:
-  num_profiles: 5
-  # Full configuration with all profiles
+  # Available profiles: p1 (monopole), p2 (dipole), p3 (sinusoidal), p4 (sin_x_gauss_y), p5 (gauss_x_sin_y)
   active_profiles: ["p1", "p2", "p3", "p4", "p5"]
 
-# Parameter configurations for each target parameter
+# Target parameter configurations
 target_parameters:
   N:
-    description: "Grid resolution - determines spatial accuracy and computational cost"
-    search_type: "iterative"
     initial_value: 32
     multiplication_factor: 2
     max_iteration_num: 4  # Limits to N: 32, 64, 128, 256
     non_target_parameters:
-      dt: [5.0, 10.0, 20.0, 40.0]
+      dt: [2.5, 5.0, 10.0, 20.0, 40.0]
 
   dt:
-    description: "Time step size - controls temporal accuracy and numerical stability"
-    search_type: "iterative"
     initial_value: 40.0
     multiplication_factor: 0.5
-    max_iteration_num: 4  # Limits to dt: 40.0, 20.0, 10.0, 5.0
+    max_iteration_num: 5  # Limits to dt: 40.0, 20.0, 10.0, 5.0, 2.5
     non_target_parameters:
       N: [32, 64, 128, 256]

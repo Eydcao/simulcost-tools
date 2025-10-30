@@ -78,11 +78,44 @@ The solver supports three different reaction types (profiles):
    - Phase field model with bistable potential
    - Generates interface dynamics
 
-The simulated results are considered correct if they meet the precision-dependent tolerance (low: 0.15, medium: 5×10⁻⁴, high: 10⁻¹⁰) and satisfy convergence criteria:
+The simulated results are considered correct if they meet the precision-dependent tolerance criteria and satisfy convergence criteria:
 
-1. **Newton convergence:** Residual norm falls below specified tolerance
-2. **Physical bounds:** Solution remains bounded and physically reasonable
+**Precision Levels:**
+- **Low precision:** 
+  - n_space: 0.05, cfl: 0.05, tol: 1e-5 (relaxed convergence criteria)
+- **Medium precision:** 
+  - n_space: 0.01, cfl: 0.005, tol: 1e-6 (moderate convergence criteria)  
+- **High precision:** 
+  - n_space: 0.001, cfl: 0.0001, tol: 1e-7 (stringent convergence criteria)
+
+**Convergence Criteria:**
+1. **Wave position convergence:** Relative wave position error falls below specified tolerance
+2. **Physical constraints:** Solution satisfies appropriate physical metrics based on reaction type
 3. **Wave propagation:** For Fisher-KPP, traveling waves propagate at expected speeds
+4. **Specialized metrics:** For Allee effect (p2), wave propagation quality is checked (max gradient > 0.04)
+5. **Reaction balance:** Temporal variation measure for solution stability
+
+### Physical Metrics
+
+The solver computes several physical metrics to assess solution quality:
+
+**For Fisher-KPP and Allen-Cahn reactions:**
+- **Maximum principle:** Solution should be bounded by initial min/max values
+- **Boundary conditions:** Dirichlet conditions u(0,t)=1, u(L,t)=0 must be satisfied
+- **Reaction balance:** Temporal variation measure `np.mean(np.abs(np.diff(u, axis=0)), axis=1)`
+
+**For Allee effect reactions:**
+- **Wave propagation quality:** Checks for sharp wave fronts (max gradient > 0.04)
+- **Reaction balance:** Same temporal variation measure as other reactions
+- **Maximum principle:** Bypassed (hardcoded as satisfied due to expected threshold dynamics)
+- **Boundary conditions:** Bypassed (hardcoded as satisfied due to complex wave behavior)
+
+**Reaction Balance Calculation:**
+The reaction balance measures temporal variation in the solution:
+```python
+reaction_balance = np.mean(np.abs(np.diff(u, axis=0)), axis=1)
+```
+This calculates the average absolute change between consecutive time steps across all spatial points, providing a measure of solution stability and temporal evolution.
 
 ## Parameter Tuning Tasks and Dummy Strategy
 
@@ -91,44 +124,37 @@ The simulated results are considered correct if they meet the precision-dependen
 1. **CFL Convergence Search (iterative+0-shot)**
    - CFL number controls time step size: $\Delta t = \text{CFL} \cdot (\Delta x)^2$ for diffusion stability
    - Higher CFL allows larger time steps but may reduce accuracy
+   - **Initial value:** 2.0, **Multiplication factor:** 0.5, **Max iterations:** 6
 
 2. **n_space Convergence Search (iterative+0-shot)**
    - n_space determines spatial resolution: $\Delta x = L / n_{space}$
    - Higher resolution improves accuracy but increases computational cost
+   - **Initial value:** 512, **Multiplication factor:** 2, **Max iterations:** 4
 
 3. **Tolerance Convergence Search (iterative+0-shot)**
    - Newton solver tolerance controls convergence criteria
    - Stricter tolerance improves solution accuracy but increases iterations
-
-4. **Min Step Optimization (iterative+0-shot)**
-   - Minimum step size for line search controls robustness
-   - Smaller values improve convergence but may increase iterations
-
-5. **Initial Step Guess Optimization (0-shot)**
-   - Initial step size for line search controls aggressiveness
-   - Larger values may converge faster but risk instability
+   - **Initial value:** 1e-5, **Multiplication factor:** 0.1, **Max iterations:** 4
 
 ### Dummy Strategy
 
 1. **CFL Convergence Search (iterative+0-shot)**
-   - Halve CFL each round (multiplication factor: 0.5) starting from 16.0 until convergence
-   - **Non-target parameters:** n_space∈{512,1024,2048}, tol∈{10⁻⁶,10⁻⁷,10⁻⁸}, min_step=10⁻³, initial_step_guess=1.0
+   - Halve CFL each round (multiplication factor: 0.5) starting from 2.0 until convergence
+   - **Non-target parameters:** n_space∈{512,1024,2048}, tol∈{10⁻⁶,10⁻⁷,10⁻⁸}
+   - **Reaction type:** Passed from profile configuration (fisher/allee/cubic)
+   - **Tolerance:** Uses parameter-specific tolerance_rmse value (cfl: 0.05/0.005/0.0001 for low/medium/high)
 
 2. **n_space Convergence Search (iterative+0-shot)**
    - Double n_space each iteration (multiplication factor: 2) starting from 512 until convergence
-   - **Non-target parameters:** cfl=0.5, tol∈{10⁻⁶,10⁻⁷,10⁻⁸}, min_step=10⁻³, initial_step_guess=1.0
+   - **Non-target parameters:** cfl=0.5, tol∈{10⁻⁶,10⁻⁷,10⁻⁸}
+   - **Reaction type:** Passed from profile configuration (fisher/allee/cubic)
+   - **Tolerance:** Uses parameter-specific tolerance_rmse value (n_space: 0.05/0.01/0.001 for low/medium/high)
 
 3. **Tolerance Convergence Search (iterative+0-shot)**
    - Reduce tolerance by factor of 10 each iteration (multiplication factor: 0.1) starting from 10⁻⁵ until convergence
-   - **Non-target parameters:** n_space∈{512,1024,2048}, cfl=0.5, min_step=10⁻³, initial_step_guess=1.0
-
-4. **Min Step Optimization (iterative+0-shot)**
-   - Reduce min_step by factor of 10 each iteration (multiplication factor: 0.1) starting from 10⁻¹ until convergence
-   - **Non-target parameters:** n_space∈{512,1024,2048}, cfl=0.5, tol∈{10⁻⁶,10⁻⁷,10⁻⁸}, initial_step_guess=1.0
-
-5. **Initial Step Guess Optimization (0-shot)**
-   - Grid search over initial_step_guess∈{0.6,0.8,1.0,1.5,2.0,2.5} to find optimal value
-   - **Non-target parameters:** n_space∈{512,1024,2048}, cfl=0.5, tol∈{10⁻⁶,10⁻⁷,10⁻⁸}, min_step=10⁻³
+   - **Non-target parameters:** n_space∈{512,1024,2048}, cfl=0.5
+   - **Reaction type:** Passed from profile configuration (fisher/allee/cubic)
+   - **Tolerance:** Uses parameter-specific tolerance_rmse value (tol: 1e-5/1e-6/1e-7 for low/medium/high)
 
 ## Summarized parameter table for developer only (Not LLM)
 
@@ -171,20 +197,26 @@ More Notes:
   - **p1**: Fisher-KPP reaction - traveling wave dynamics
   - **p2**: Allee effect reaction - critical threshold dynamics  
   - **p3**: Allen-Cahn (cubic) reaction - phase field interface dynamics
-- **Target Parameters**: 5 (CFL, n_space, tol, min_step, initial_step_guess)
-- **Precision Levels**: 3 (low: 0.15, medium: 5×10⁻⁴, high: 10⁻¹⁰)
+- **Target Parameters**: 3 (CFL, n_space, tol)
+- **Precision Levels**: 3 (low, medium, high with parameter-specific tolerances)
+- **Comparison Method**: Wave position comparison with specialized metrics for different reaction types
+- **Tolerance Strategy**: Different tolerance_rmse values for each target parameter within each precision level
 
 ### Task Distribution
 
 Current configuration generates:
 
 - **CFL** (iterative+0-shot): 3 profiles × 9 non-target combos = 27 tasks
-- **n_space** (iterative+0-shot): 3 profiles × 9 non-target combos = 27 tasks
-- **tol** (iterative+0-shot): 3 profiles × 9 non-target combos = 27 tasks
-- **min_step** (iterative+0-shot): 3 profiles × 9 non-target combos = 27 tasks
-- **initial_step_guess** (0-shot): 3 profiles × 9 non-target combos = 27 tasks
-- **Total per precision**: 135 tasks
-- **Total tasks**: 405 tasks (across 3 precision levels)
+- **n_space** (iterative+0-shot): 3 profiles × 3 non-target combos = 9 tasks  
+- **tol** (iterative+0-shot): 3 profiles × 3 non-target combos = 9 tasks
+- **Total per precision**: 45 tasks
+- **Total tasks**: 135 tasks (across 3 precision levels)
+
+**Task breakdown:**
+- 3 profiles (p1: Fisher-KPP, p2: Allee effect, p3: Allen-Cahn)
+- 3 precision levels (low, medium, high with parameter-specific tolerances)
+- 3 target parameters (CFL, n_space, tol)
+- **Parameter-specific tolerance values** within each precision level
 
 ### Dummy Solution Cache
 

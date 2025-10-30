@@ -89,6 +89,5 @@ if __name__ == "__main__":
     ]
 
     profiles = create_hasegawa_nonlinear_profiles(
-        case_configs=case_configs,
-        base_profile_path="./run_configs/hasegawa_mima_nonlinear/p1.yaml"
+        case_configs=case_configs, base_profile_path="./run_configs/hasegawa_mima_nonlinear/p1.yaml"
     )

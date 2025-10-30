@@ -4,6 +4,24 @@ import h5py
 import numpy as np
 import json
 from scipy.interpolate import RegularGridInterpolator
+import sys
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
+
+# Get base directory for simulation results from environment variable
+# If not set, use current directory (maintains backward compatibility)
+SIM_RES_BASE_DIR = os.getenv("SIM_RES_BASE_DIR", None)
+if SIM_RES_BASE_DIR:
+    print(f"✅ Using custom simulation results directory: {SIM_RES_BASE_DIR}")
+
+
+def _get_sim_path(relative_path):
+    """Construct simulation path, using absolute path if SIM_RES_BASE_DIR is set."""
+    if SIM_RES_BASE_DIR:
+        return os.path.join(SIM_RES_BASE_DIR, relative_path)
+    return relative_path
 
 
 def _find_runner_path():
@@ -60,7 +78,7 @@ def _find_runner_path():
 
 def run_sim_ns_channel_2d(profile, boundary_type, mesh_x, mesh_y, omega_u, omega_v, omega_p, diff_u_threshold, diff_v_threshold, res_iter_v_threshold, other_params=None):
     """Run the ns_channel_2d simulation with the given parameters."""
-    dir_path = f"sim_res/ns_channel_2d/{profile}_{boundary_type}_mesh_{mesh_x}_{mesh_y}_relax_{omega_u}_{omega_v}_{omega_p}_error_{diff_u_threshold}_{diff_v_threshold}_itererror_{res_iter_v_threshold}/"
+    dir_path = _get_sim_path(f"sim_res/ns_channel_2d/{profile}_{boundary_type}_mesh_{mesh_x}_{mesh_y}_relax_{omega_u}_{omega_v}_{omega_p}_error_{diff_u_threshold}_{diff_v_threshold}_itererror_{res_iter_v_threshold}/")
     meta_file_path = os.path.join(dir_path, "meta.json")
 
     # Check if the directory and meta.json file with the key of cost and num_steps exist
@@ -68,12 +86,20 @@ def run_sim_ns_channel_2d(profile, boundary_type, mesh_x, mesh_y, omega_u, omega
         with open(meta_file_path, "r") as f:
             meta = json.load(f)
             if "cost" in meta and "num_steps" in meta:
+                print(f"Using existing simulation results from {dir_path}")
                 return meta["cost"], meta["num_steps"]
+
+    # Run the simulation if not already done
+    print(f"Running new simulation with parameters: mesh_x={mesh_x}, mesh_y={mesh_y}, omega_u={omega_u}, omega_v={omega_v}, omega_p={omega_p}")
 
     # Build command with parameters using auto-detected runner path
     runner_path = _find_runner_path()
-    cmd = f"python {runner_path} --config-name={profile} mesh_x={mesh_x} mesh_y={mesh_y} omega_u={omega_u} omega_v={omega_v} omega_p={omega_p} diff_u_threshold={diff_u_threshold} diff_v_threshold={diff_v_threshold} res_iter_v_threshold={res_iter_v_threshold} boundary_condition={boundary_type}"
-    
+    if SIM_RES_BASE_DIR:
+        dump_dir = os.path.join(SIM_RES_BASE_DIR, f"sim_res/ns_channel_2d/{profile}")
+        cmd = f"{sys.executable} {runner_path} --config-name={profile} mesh_x={mesh_x} mesh_y={mesh_y} omega_u={omega_u} omega_v={omega_v} omega_p={omega_p} diff_u_threshold={diff_u_threshold} diff_v_threshold={diff_v_threshold} res_iter_v_threshold={res_iter_v_threshold} boundary_condition={boundary_type} dump_dir={dump_dir}"
+    else:
+        cmd = f"{sys.executable} {runner_path} --config-name={profile} mesh_x={mesh_x} mesh_y={mesh_y} omega_u={omega_u} omega_v={omega_v} omega_p={omega_p} diff_u_threshold={diff_u_threshold} diff_v_threshold={diff_v_threshold} res_iter_v_threshold={res_iter_v_threshold} boundary_condition={boundary_type}"
+
     # Add wall parameters if provided
     if other_params:
         for key, value in other_params.items():
@@ -112,7 +138,7 @@ def run_sim_ns_channel_2d(profile, boundary_type, mesh_x, mesh_y, omega_u, omega
 
 def get_res_ns_channel_2d(profile, boundary_type, mesh_x, mesh_y, omega_u, omega_v, omega_p, diff_u_threshold, diff_v_threshold, res_iter_v_threshold, other_params=None):
     """Load final velocity and pressure fields for given parameters."""
-    dir_path = f"sim_res/ns_channel_2d/{profile}_{boundary_type}_mesh_{mesh_x}_{mesh_y}_relax_{omega_u}_{omega_v}_{omega_p}_error_{diff_u_threshold}_{diff_v_threshold}_itererror_{res_iter_v_threshold}/"
+    dir_path = _get_sim_path(f"sim_res/ns_channel_2d/{profile}_{boundary_type}_mesh_{mesh_x}_{mesh_y}_relax_{omega_u}_{omega_v}_{omega_p}_error_{diff_u_threshold}_{diff_v_threshold}_itererror_{res_iter_v_threshold}/")
     meta_file_path = os.path.join(dir_path, "meta.json")
 
     if not os.path.exists(dir_path):

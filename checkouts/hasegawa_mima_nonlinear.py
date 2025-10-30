@@ -9,7 +9,7 @@ from collections import defaultdict
 
 # Add paths for imports
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from dummy_sols.hasegawa_mima_nonlinear import generate_dummy_solution
+from dummy_sols.hasegawa_mima_nonlinear import find_convergent_N, find_convergent_dt
 from checkouts.config_utils import load_config, build_target_configs
 
 
@@ -24,26 +24,34 @@ def save_datasets(successful_tasks, failed_tasks, output_dir):
     # Save successful tasks (overwrite existing file)
     success_file = os.path.join(success_dir, "tasks.json")
     with open(success_file, "w") as f:
-        json.dump({
-            "metadata": {
-                "solver": "hasegawa_mima_nonlinear",
-                "description": "Successfully converged parameter optimization tasks",
-                "total_tasks": len(successful_tasks)
+        json.dump(
+            {
+                "metadata": {
+                    "solver": "hasegawa_mima_nonlinear",
+                    "description": "Successfully converged parameter optimization tasks",
+                    "total_tasks": len(successful_tasks),
+                },
+                "tasks": successful_tasks,
             },
-            "tasks": successful_tasks
-        }, f, indent=2)
+            f,
+            indent=2,
+        )
 
     # Save failed tasks (overwrite existing file)
     failed_file = os.path.join(failed_dir, "tasks.json")
     with open(failed_file, "w") as f:
-        json.dump({
-            "metadata": {
-                "solver": "hasegawa_mima_nonlinear",
-                "description": "Failed to converge parameter optimization tasks",
-                "total_tasks": len(failed_tasks)
+        json.dump(
+            {
+                "metadata": {
+                    "solver": "hasegawa_mima_nonlinear",
+                    "description": "Failed to converge parameter optimization tasks",
+                    "total_tasks": len(failed_tasks),
+                },
+                "tasks": failed_tasks,
             },
-            "tasks": failed_tasks
-        }, f, indent=2)
+            f,
+            indent=2,
+        )
 
     print(f"✅ Saved {len(successful_tasks)} successful tasks to {success_file}")
     print(f"❌ Saved {len(failed_tasks)} failed tasks to {failed_file}")
@@ -103,7 +111,7 @@ def plot_statistics(statistics, output_dir):
     optimal_values = defaultdict(list)
     for task in statistics["successful_tasks"]:
         param_name = task["target_parameter"]
-        optimal_val = task["trajectory"]["optimal_value"]
+        optimal_val = task["results"]["optimal_parameter_value"]
         if optimal_val is not None:
             optimal_values[param_name].append(optimal_val)
 
@@ -115,8 +123,9 @@ def plot_statistics(statistics, output_dir):
         if param == "N":
             # For N, show as discrete bins
             unique_vals, counts = np.unique(values, return_counts=True)
-            ax.bar([f"{param}\n{val}" for val in unique_vals], counts,
-                   color=colors[i % len(colors)], alpha=0.7, width=0.8)
+            ax.bar(
+                [f"{param}\n{val}" for val in unique_vals], counts, color=colors[i % len(colors)], alpha=0.7, width=0.8
+            )
         else:
             # For dt, show as histogram
             ax.hist(values, bins=5, alpha=0.7, label=f"{param} parameter", color=colors[i % len(colors)])
@@ -127,8 +136,11 @@ def plot_statistics(statistics, output_dir):
 
     # Plot 4: Distribution of total costs
     ax = axes[1, 1]
-    costs = [task["trajectory"]["cost_history"][-1] for task in statistics["successful_tasks"]
-             if task["trajectory"]["cost_history"]]
+    costs = [
+        task["results"]["total_computational_cost"]
+        for task in statistics["successful_tasks"]
+        if task["results"]["total_computational_cost"]
+    ]
 
     if costs:
         ax.hist(costs, bins=20, alpha=0.7, color="skyblue", edgecolor="black")
@@ -187,7 +199,7 @@ def generate_statistics_summary(statistics, output_dir):
         optimal_counts = defaultdict(lambda: defaultdict(int))
         for task in statistics["successful_tasks"]:
             param_name = task["target_parameter"]
-            optimal_val = task["trajectory"]["optimal_value"]
+            optimal_val = task["results"]["optimal_parameter_value"]
             if optimal_val is not None:
                 optimal_counts[param_name][optimal_val] += 1
 
@@ -238,9 +250,13 @@ def main():
     failed_tasks = []
     task_id = 0
 
-    total_tasks = len(profiles) * len(precision_configs) * sum(
-        len(list(itertools.product(*config["non_target_parameters"].values())))
-        for config in target_configs.values()
+    total_tasks = (
+        len(profiles)
+        * len(precision_configs)
+        * sum(
+            len(list(itertools.product(*config["non_target_parameters"].values())))
+            for config in target_configs.values()
+        )
     )
 
     print(f"📋 Total tasks to process: {total_tasks}")
@@ -270,18 +286,32 @@ def main():
                     initial_params = {target_param: target_config["initial_value"]}
                     initial_params.update(task_params)
 
-                    print(f"      Task {task_id}/{total_tasks}: Running {target_param} search with params: {task_params}")
+                    print(
+                        f"      Task {task_id}/{total_tasks}: Running {target_param} search with params: {task_params}"
+                    )
 
                     try:
-                        # Generate dummy solution trajectory
-                        trajectory = generate_dummy_solution(
-                            profile=profile,
-                            target_param=target_param,
-                            initial_params=initial_params,
-                            tolerance_rmse=precision_vals["tolerance_rmse"],
-                            multiplication_factor=target_config["multiplication_factor"],
-                            max_iteration_num=target_config["max_iteration_num"]
-                        )
+                        # Call appropriate search function based on target parameter
+                        if target_param == "N":
+                            is_converged, best_param, cost_history, param_history = find_convergent_N(
+                                profile=profile,
+                                N=target_config["initial_value"],
+                                dt=task_params["dt"],
+                                tolerance_rmse=precision_vals["tolerance_rmse"],
+                                multiplication_factor=target_config["multiplication_factor"],
+                                max_iteration_num=target_config["max_iteration_num"],
+                            )
+                        elif target_param == "dt":
+                            is_converged, best_param, cost_history, param_history = find_convergent_dt(
+                                profile=profile,
+                                N=task_params["N"],
+                                dt=target_config["initial_value"],
+                                tolerance_rmse=precision_vals["tolerance_rmse"],
+                                multiplication_factor=target_config["multiplication_factor"],
+                                max_iteration_num=target_config["max_iteration_num"],
+                            )
+                        else:
+                            raise ValueError(f"Unsupported target parameter: {target_param}")
 
                         # Create task record
                         task = {
@@ -294,15 +324,21 @@ def main():
                             "target_config": {
                                 "initial_value": target_config["initial_value"],
                                 "multiplication_factor": target_config["multiplication_factor"],
-                                "max_iteration_num": target_config["max_iteration_num"]
+                                "max_iteration_num": target_config["max_iteration_num"],
                             },
                             "non_target_parameters": task_params.copy(),
-                            "trajectory": trajectory
+                            "results": {
+                                "converged": is_converged,
+                                "optimal_parameter_value": best_param,
+                                "total_computational_cost": sum(cost_history) if cost_history else 0,
+                                "cost_history": cost_history if cost_history else [],
+                                "parameter_history": param_history if param_history else [],
+                            },
                         }
 
-                        if trajectory["converged"]:
+                        if is_converged:
                             successful_tasks.append(task)
-                            print(f"      ✅ SUCCESS: {target_param}={trajectory['optimal_value']}")
+                            print(f"      ✅ SUCCESS: {target_param}={best_param}")
                         else:
                             failed_tasks.append(task)
                             print(f"      ❌ FAILED: No convergence")
@@ -317,7 +353,7 @@ def main():
                             "tolerance_rmse": precision_vals["tolerance_rmse"],
                             "target_parameter": target_param,
                             "non_target_parameters": task_params.copy(),
-                            "error": str(e)
+                            "error": str(e),
                         }
                         failed_tasks.append(task)
 
@@ -333,7 +369,7 @@ def main():
         "successful_tasks": successful_tasks,
         "failed_tasks": failed_tasks,
         "convergence_by_precision": {},
-        "convergence_by_target": {}
+        "convergence_by_target": {},
     }
 
     # Calculate convergence by precision level
@@ -342,7 +378,7 @@ def main():
         precision_successful = [t for t in successful_tasks if t["precision_level"] == precision]
         statistics["convergence_by_precision"][precision] = {
             "total": len(precision_tasks),
-            "converged": len(precision_successful)
+            "converged": len(precision_successful),
         }
 
     # Calculate convergence by target parameter
@@ -351,14 +387,17 @@ def main():
         param_successful = [t for t in successful_tasks if t["target_parameter"] == param]
         avg_cost = 0
         if param_successful:
-            costs = [t["trajectory"]["cost_history"][-1] for t in param_successful
-                    if t["trajectory"]["cost_history"]]
+            costs = [
+                t["results"]["total_computational_cost"]
+                for t in param_successful
+                if t["results"]["total_computational_cost"]
+            ]
             avg_cost = np.mean(costs) if costs else 0
 
         statistics["convergence_by_target"][param] = {
             "total": len(param_tasks),
             "converged": len(param_successful),
-            "avg_cost": int(avg_cost)
+            "avg_cost": int(avg_cost),
         }
 
     # Save datasets and generate outputs

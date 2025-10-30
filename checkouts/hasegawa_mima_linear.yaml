@@ -1,59 +1,39 @@
 # Hasegawa-Mima Linear Solver Checkout Configuration
-# This file centralizes all parameter settings for both documentation and dummy solution generation
-
-solver_info:
-  name: "Hasegawa-Mima Linear"
-  numerical_method: "RK4 time integration with CG solver for Helmholtz equation"
-  analytical_method: "Spectral solution via 2D FFT"
-  reference: "Hasegawa, A. & Mima, K. (1978). Pseudo-three-dimensional turbulence in magnetized nonuniform plasma."
-
-task_distribution:
-  strategy: "flexible_parameters"
-  total_individuals: 108
+# This file centralizes all parameter settings for dummy solution generation
 
 precision_levels:
   low:
     tolerance_rmse: 0.01
-    description: "Relaxed convergence criteria"
   medium:
     tolerance_rmse: 0.001
-    description: "Moderate convergence criteria"
   high:
     tolerance_rmse: 0.0005
-    description: "Stringent convergence criteria"
 
 profiles:
-  num_profiles: 4
   # Available profiles: p1 (monopole), p2 (dipole), p3 (sin_x_gauss_y), p4 (gauss_x_sin_y)
   active_profiles: ["p1", "p2", "p3", "p4"]
 
-# Parameter configurations for each target parameter
+# Target parameter configurations
 target_parameters:
   N:
-    description: "Grid resolution - determines spatial accuracy and computational cost"
-    search_type: "iterative+0-shot"
     initial_value: 32
     multiplication_factor: 2
     max_iteration_num: 4  # Limits to N: 32, 64, 128, 256
     non_target_parameters:
-      dt: [5.0, 10.0, 20.0, 40.0]  # Avoid dt=1.0 which causes very slow simulations
-      cg_atol: [1e0, 1e-1, 1e-2, 1e-3, 1e-4]  # CG solver tolerance levels
+      dt: [5.0, 10.0, 20.0, 40.0]
+      cg_atol: [1e0, 1e-1, 1e-2, 1e-3, 1e-4]
 
   dt:
-    description: "Time step size - controls temporal accuracy and numerical stability"
-    search_type: "iterative+0-shot"
     initial_value: 40.0
     multiplication_factor: 0.5
     max_iteration_num: 4  # Limits to dt: 40,20,10,5
     non_target_parameters:
-      N: [32, 64, 128,  256]
-      cg_atol: [1e0, 1e-1, 1e-2, 1e-3, 1e-4]  # CG solver tolerance levels
+      N: [32, 64, 128, 256]
+      cg_atol: [1e0, 1e-1, 1e-2, 1e-3, 1e-4]
 
   cg_atol:
-    description: "Conjugate Gradient solver absolute tolerance - controls linear solver accuracy"
-    search_type: "0-shot"
-    search_range: [1e-4, 1e-0]  # Updated range based on sensitivity analysis
-    search_range_slice_num: 5    # 5 logarithmically spaced values
+    search_range: [1e-4, 1e-0]  # Search from coarse (1e0) to fine (1e-4)
+    search_range_slice_num: 5
     non_target_parameters:
-      N: [32, 64, 128,  256]
-      dt: [5.0, 10.0, 20.0, 40.0]  # Avoid dt=1.0 which causes very slow simulations
+      N: [32, 64, 128, 256]
+      dt: [5.0, 10.0, 20.0, 40.0]

@@ -8,39 +8,46 @@ solver_info:
 
 task_distribution:
   strategy: "flexible_parameter"
-  total_individuals: 297
-  description: "3 profile * 3 precision levels * (2 target parameters * 3 combinations + 3 target parameters * 9 combinations) = 297 tasks"
+  total_individuals: 145
+  description: "3 profile * 3 precision levels * (2 target parameters * 3 combinations + 1 target parameters * 9 combinations) = 145 tasks"
 
 precision_levels:
   low:
-    tolerance_rmse: 0.15
-    description: "Relaxed convergence criteria"
+    tolerance_rmse: 
+      n_space: 0.05
+      cfl: 0.05
+      tol: 1e-5
+    description: "Relaxed convergence criteria (wave position based)"
   medium:
-    tolerance_rmse: 5e-4
-    description: "Moderate convergence criteria"
+    tolerance_rmse: 
+      n_space: 0.01
+      cfl: 0.005
+      tol: 1e-6
+    description: "Moderate convergence criteria (wave position based)"
   high:
-    tolerance_rmse: 1e-10
-    description: "Most stringent convergence criteria"
+    tolerance_rmse: 
+      n_space: 0.001
+      cfl: 0.0001
+      tol: 1e-7
+    description: "Most stringent convergence criteria (wave position based)"
 
 profiles:
   num_profiles: 3
   # 3 profiles for different reaction types
   # p1: Fisher-KPP reaction, p2: Allee effect, p3: Allen-Cahn (cubic)
-  active_profiles: ["p1","p2", "p3"]
+  active_profiles: ["p1", "p2", "p3"]
 
 # Parameter configurations for each target parameter
 target_parameters:
   cfl:
     description: "CFL number for temporal stability in diffusion-reaction equation - controls time step size relative to grid spacing squared"
     search_type: "iterative+0-shot"
-    initial_value: 16.0
+    initial_value: 2
     multiplication_factor: 0.5
     max_iteration_num: 6
     non_target_parameters:
       n_space: [512, 1024, 2048]
       tol: [1e-6, 1e-7, 1e-8]
-      min_step: 1e-3
-      initial_step_guess: 1.0
 
   n_space:
     description: "Number of spatial grid points for discretization - determines spatial resolution"
@@ -51,8 +58,6 @@ target_parameters:
     non_target_parameters:
       cfl: 0.5
       tol: [1e-6, 1e-7, 1e-8]
-      min_step: 1e-3
-      initial_step_guess: 1.0
 
   tol:
     description: "Newton solver tolerance - controls convergence of the nonlinear solver"
@@ -63,30 +68,7 @@ target_parameters:
     non_target_parameters:
       n_space: [512, 1024, 2048]
       cfl: 0.5
-      min_step: 1e-3
-      initial_step_guess: 1.0
 
-  min_step:
-    description: "Minimum step size for Newton line search - controls robustness of optimization"
-    search_type: "iterative+0-shot"
-    initial_value: 1e-1
-    multiplication_factor: 0.1
-    max_iteration_num: 5
-    non_target_parameters:
-      n_space: [512, 1024, 2048]
-      cfl: 0.5
-      tol: [1e-6, 1e-7, 1e-8]
-      initial_step_guess: 1.0
-
-  initial_step_guess:
-    description: "Initial step size for Newton line search - controls aggressiveness of optimization"
-    search_type: "0-shot"
-    exact_values: [0.6, 0.8, 1.0, 1.5, 2.0, 2.5]
-    non_target_parameters:
-      n_space: [512, 1024, 2048]
-      cfl: 0.5
-      tol: [1e-6, 1e-7, 1e-8]
-      min_step: 1e-3
 
 # Reaction-specific parameters
 reaction_parameters:

@@ -20,7 +20,7 @@ def main(cfg) -> None:
     simulator.run()
 
     if cfg.verbose:
-        method_name = "Analytical" if cfg.get('analytical', False) else "Numerical"
+        method_name = "Analytical" if cfg.get("analytical", False) else "Numerical"
         print(f"{method_name} simulation completed. Results saved to: {simulator.dump_dir}")
 
 

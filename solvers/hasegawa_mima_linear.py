@@ -190,15 +190,17 @@ class HasegawaMimaLinear(SIMULATOR):
 
         # Store residual trajectory if tracking
         if track_residuals and residual_trajectory:
-            self.cg_residual_trajectories.append({
-                'step': self.current_step,
-                'cg_call': self.cg_calls,
-                'iterations': current_iterations,
-                'final_info': info,
-                'cg_atol': self.cg_atol,
-                'residual_trajectory': residual_trajectory.copy(),
-                'converged': (info == 0)
-            })
+            self.cg_residual_trajectories.append(
+                {
+                    "step": self.current_step,
+                    "cg_call": self.cg_calls,
+                    "iterations": current_iterations,
+                    "final_info": info,
+                    "cg_atol": self.cg_atol,
+                    "residual_trajectory": residual_trajectory.copy(),
+                    "converged": (info == 0),
+                }
+            )
 
         # Track CG performance precisely
         self.cg_calls += 1
@@ -278,7 +280,7 @@ class HasegawaMimaLinear(SIMULATOR):
     #         l2 = np.sqrt(np.mean(diff**2))
     #         l2_norms.append(l2)
 
-        # return np.mean(l2_norms)
+    # return np.mean(l2_norms)
 
     def estimate_cost(self):
         """Estimate computational cost"""
@@ -396,8 +398,8 @@ class HasegawaMimaLinear(SIMULATOR):
         try:
             phi_hat = np.fft.fft2(phi)
             phi_hat_anal = np.fft.fft2(phi_analytical)
-            power = np.log10(np.abs(np.fft.fftshift(phi_hat))**2 + 1e-15)
-            power_anal = np.log10(np.abs(np.fft.fftshift(phi_hat_anal))**2 + 1e-15)
+            power = np.log10(np.abs(np.fft.fftshift(phi_hat)) ** 2 + 1e-15)
+            power_anal = np.log10(np.abs(np.fft.fftshift(phi_hat_anal)) ** 2 + 1e-15)
             power_diff = power - power_anal
 
             kx = np.fft.fftshift(np.fft.fftfreq(self.N, d=self.dx) * 2 * np.pi)
@@ -483,19 +485,21 @@ class HasegawaMimaLinear(SIMULATOR):
             import numpy as np
 
             fig, axes = plt.subplots(2, 2, figsize=(15, 10))
-            fig.suptitle(f'CG Residual Analysis (N={self.N}, dt={self.dt:.1e}, cg_atol={self.cg_atol:.1e})', fontsize=14)
+            fig.suptitle(
+                f"CG Residual Analysis (N={self.N}, dt={self.dt:.1e}, cg_atol={self.cg_atol:.1e})", fontsize=14
+            )
 
             # Plot 1: Residual trajectories vs iterations
             ax1 = axes[0, 0]
             for i, traj_data in enumerate(self.cg_residual_trajectories):
                 if i < 5:  # Only show first 5 trajectories to avoid clutter
-                    residuals = traj_data['residual_trajectory']
+                    residuals = traj_data["residual_trajectory"]
                     ax1.semilogy(residuals, label=f'Step {traj_data["step"]}, Call {traj_data["cg_call"]}')
 
-            ax1.axhline(y=self.cg_atol, color='red', linestyle='--', label=f'atol={self.cg_atol:.1e}')
-            ax1.set_xlabel('CG Iteration')
-            ax1.set_ylabel('Residual Norm')
-            ax1.set_title('Residual Trajectories (First 5 Calls)')
+            ax1.axhline(y=self.cg_atol, color="red", linestyle="--", label=f"atol={self.cg_atol:.1e}")
+            ax1.set_xlabel("CG Iteration")
+            ax1.set_ylabel("Residual Norm")
+            ax1.set_title("Residual Trajectories (First 5 Calls)")
             ax1.legend()
             ax1.grid(True)
 
@@ -504,30 +508,30 @@ class HasegawaMimaLinear(SIMULATOR):
             convergence_rates = []
             step_numbers = []
             for traj_data in self.cg_residual_trajectories:
-                residuals = traj_data['residual_trajectory']
+                residuals = traj_data["residual_trajectory"]
                 if len(residuals) > 1:
                     # Estimate convergence rate from residual drop
                     log_residuals = np.log10(np.array(residuals))
                     if len(log_residuals) > 3:
                         rate = -(log_residuals[-1] - log_residuals[1]) / (len(log_residuals) - 2)
                         convergence_rates.append(rate)
-                        step_numbers.append(traj_data['step'])
+                        step_numbers.append(traj_data["step"])
 
             if convergence_rates:
-                ax2.plot(step_numbers, convergence_rates, 'bo-')
-                ax2.set_xlabel('Simulation Step')
-                ax2.set_ylabel('Log10 Convergence Rate')
-                ax2.set_title('CG Convergence Rate vs Time')
+                ax2.plot(step_numbers, convergence_rates, "bo-")
+                ax2.set_xlabel("Simulation Step")
+                ax2.set_ylabel("Log10 Convergence Rate")
+                ax2.set_title("CG Convergence Rate vs Time")
                 ax2.grid(True)
 
             # Plot 3: Iteration count vs step
             ax3 = axes[1, 0]
-            iterations_per_call = [traj['iterations'] for traj in self.cg_residual_trajectories]
-            steps_per_call = [traj['step'] for traj in self.cg_residual_trajectories]
-            ax3.plot(steps_per_call, iterations_per_call, 'go-')
-            ax3.set_xlabel('Simulation Step')
-            ax3.set_ylabel('CG Iterations')
-            ax3.set_title('CG Iterations Required vs Time')
+            iterations_per_call = [traj["iterations"] for traj in self.cg_residual_trajectories]
+            steps_per_call = [traj["step"] for traj in self.cg_residual_trajectories]
+            ax3.plot(steps_per_call, iterations_per_call, "go-")
+            ax3.set_xlabel("Simulation Step")
+            ax3.set_ylabel("CG Iterations")
+            ax3.set_title("CG Iterations Required vs Time")
             ax3.grid(True)
 
             # Plot 4: Final residual vs atol
@@ -535,27 +539,32 @@ class HasegawaMimaLinear(SIMULATOR):
             final_residuals = []
             atol_values = []
             for traj_data in self.cg_residual_trajectories:
-                if traj_data['residual_trajectory']:
-                    final_residuals.append(traj_data['residual_trajectory'][-1])
-                    atol_values.append(traj_data['cg_atol'])
+                if traj_data["residual_trajectory"]:
+                    final_residuals.append(traj_data["residual_trajectory"][-1])
+                    atol_values.append(traj_data["cg_atol"])
 
             if final_residuals:
-                ax4.loglog(atol_values, final_residuals, 'ro', label='Final Residual')
-                ax4.plot([min(atol_values), max(atol_values)], [min(atol_values), max(atol_values)], 'b--', label='y=x (ideal)')
-                ax4.set_xlabel('CG atol')
-                ax4.set_ylabel('Final Residual')
-                ax4.set_title('Achieved vs Requested Tolerance')
+                ax4.loglog(atol_values, final_residuals, "ro", label="Final Residual")
+                ax4.plot(
+                    [min(atol_values), max(atol_values)],
+                    [min(atol_values), max(atol_values)],
+                    "b--",
+                    label="y=x (ideal)",
+                )
+                ax4.set_xlabel("CG atol")
+                ax4.set_ylabel("Final Residual")
+                ax4.set_title("Achieved vs Requested Tolerance")
                 ax4.legend()
                 ax4.grid(True)
 
             plt.tight_layout()
             residual_plot_file = os.path.join(self.dump_dir, "cg_residual_analysis.png")
-            plt.savefig(residual_plot_file, dpi=200, bbox_inches='tight')
+            plt.savefig(residual_plot_file, dpi=200, bbox_inches="tight")
             plt.close()
 
             # Save summary statistics
             summary_file = os.path.join(self.dump_dir, "cg_residual_summary.txt")
-            with open(summary_file, 'w') as f:
+            with open(summary_file, "w") as f:
                 f.write(f"CG Residual Analysis Summary\n")
                 f.write(f"============================\n\n")
                 f.write(f"Simulation Parameters:\n")
@@ -568,25 +577,31 @@ class HasegawaMimaLinear(SIMULATOR):
                 f.write(f"  Total CG calls tracked: {len(self.cg_residual_trajectories)}\n")
 
                 if self.cg_residual_trajectories:
-                    iterations_list = [traj['iterations'] for traj in self.cg_residual_trajectories]
+                    iterations_list = [traj["iterations"] for traj in self.cg_residual_trajectories]
                     f.write(f"  Average iterations per call: {np.mean(iterations_list):.1f}\n")
                     f.write(f"  Min/Max iterations: {np.min(iterations_list)}/{np.max(iterations_list)}\n")
 
-                    final_residuals_list = [traj['residual_trajectory'][-1] for traj in self.cg_residual_trajectories if traj['residual_trajectory']]
+                    final_residuals_list = [
+                        traj["residual_trajectory"][-1]
+                        for traj in self.cg_residual_trajectories
+                        if traj["residual_trajectory"]
+                    ]
                     if final_residuals_list:
                         f.write(f"  Average final residual: {np.mean(final_residuals_list):.2e}\n")
-                        f.write(f"  Min/Max final residual: {np.min(final_residuals_list):.2e}/{np.max(final_residuals_list):.2e}\n")
+                        f.write(
+                            f"  Min/Max final residual: {np.min(final_residuals_list):.2e}/{np.max(final_residuals_list):.2e}\n"
+                        )
 
                 f.write(f"\nDetailed Call Information:\n")
                 for i, traj_data in enumerate(self.cg_residual_trajectories):
                     f.write(f"  Call {i+1} (Step {traj_data['step']}):\n")
                     f.write(f"    Iterations: {traj_data['iterations']}\n")
                     f.write(f"    Converged: {traj_data['converged']}\n")
-                    if traj_data['residual_trajectory']:
+                    if traj_data["residual_trajectory"]:
                         f.write(f"    Initial residual: {traj_data['residual_trajectory'][0]:.2e}\n")
                         f.write(f"    Final residual: {traj_data['residual_trajectory'][-1]:.2e}\n")
-                        if len(traj_data['residual_trajectory']) > 1:
-                            reduction = traj_data['residual_trajectory'][0] / traj_data['residual_trajectory'][-1]
+                        if len(traj_data["residual_trajectory"]) > 1:
+                            reduction = traj_data["residual_trajectory"][0] / traj_data["residual_trajectory"][-1]
                             f.write(f"    Residual reduction: {reduction:.1e}\n")
                     f.write(f"\n")
 

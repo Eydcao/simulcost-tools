@@ -4,47 +4,89 @@ import h5py
 import numpy as np
 import json
 import matplotlib.pyplot as plt
+import sys
+from pathlib import Path
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
+
+# Get base directory for simulation results from environment variable
+# If not set, use current directory (maintains backward compatibility)
+SIM_RES_BASE_DIR = os.getenv("SIM_RES_BASE_DIR", None)
+if SIM_RES_BASE_DIR:
+    print(f"✅ Using custom simulation results directory: {SIM_RES_BASE_DIR}")
+
+
+def _get_sim_path(relative_path):
+    """Construct simulation path, using absolute path if SIM_RES_BASE_DIR is set."""
+    if SIM_RES_BASE_DIR:
+        return os.path.join(SIM_RES_BASE_DIR, relative_path)
+    return relative_path
 
 
 def _find_runner_path():
     """Automatically find the correct path to hasegawa_mima_linear.py runner."""
+    # Get current working directory
     cwd = os.getcwd()
 
+    # List of possible runner paths relative to different working directories
     possible_paths = []
 
+    # If working from project root (SimulCost-Bench/)
     if cwd.endswith('SimulCost-Bench'):
         possible_paths.extend([
             "costsci_tools/runners/hasegawa_mima_linear.py",
             "runners/hasegawa_mima_linear.py"
         ])
+    # If working from costsci_tools/ subdirectory
     elif cwd.endswith('costsci_tools') or 'costsci_tools' in cwd:
         possible_paths.extend([
             "runners/hasegawa_mima_linear.py",
             "../runners/hasegawa_mima_linear.py",
             "costsci_tools/runners/hasegawa_mima_linear.py"
         ])
-    else:
-        possible_paths.extend([
-            "runners/hasegawa_mima_linear.py",
-            "costsci_tools/runners/hasegawa_mima_linear.py",
-            "./runners/hasegawa_mima_linear.py"
-        ])
 
+    # Add generic fallback paths
+    possible_paths.extend([
+        "runners/hasegawa_mima_linear.py",
+        "costsci_tools/runners/hasegawa_mima_linear.py",
+        "./runners/hasegawa_mima_linear.py",
+        "../runners/hasegawa_mima_linear.py",
+        "../../runners/hasegawa_mima_linear.py"
+    ])
+
+    # Remove duplicates while preserving order
+    seen = set()
+    unique_paths = []
     for path in possible_paths:
+        if path not in seen:
+            seen.add(path)
+            unique_paths.append(path)
+
+    for path in unique_paths:
         if os.path.exists(path):
             return path
 
-    raise FileNotFoundError(f"Could not find hasegawa_mima_linear.py runner. Searched: {possible_paths}")
+    # If none found, raise an error with helpful information
+    raise FileNotFoundError(
+        f"Could not find hasegawa_mima_linear.py runner in any expected location.\n"
+        f"Current working directory: {cwd}\n"
+        f"Searched paths: {unique_paths}\n"
+        f"Please ensure the runner exists or update the search paths."
+    )
 
 
 def run_sim_hasegawa_mima_linear(profile, N, dt, cg_atol, analytical):
     """Run the Hasegawa-Mima linear simulation with the given parameters if not already simulated."""
     if analytical:
         method_suffix = "_analytical"
-        dir_path = f"sim_res/hasegawa_mima_linear/{profile}_N_{N}_dt_{dt:.2e}" + method_suffix + "/"
+        dir_path = _get_sim_path(f"sim_res/hasegawa_mima_linear/{profile}_N_{N}_dt_{dt:.2e}" + method_suffix + "/")
     else:
         method_suffix = "_numerical"
-        dir_path = f"sim_res/hasegawa_mima_linear/{profile}_N_{N}_dt_{dt:.2e}_cg_{cg_atol:.2e}" + method_suffix + "/"
+        dir_path = _get_sim_path(
+            f"sim_res/hasegawa_mima_linear/{profile}_N_{N}_dt_{dt:.2e}_cg_{cg_atol:.2e}" + method_suffix + "/"
+        )
     meta_path = os.path.join(dir_path, "meta.json")
 
     # Check if the simulation has already been run
@@ -59,18 +101,17 @@ def run_sim_hasegawa_mima_linear(profile, N, dt, cg_atol, analytical):
     method_name = "analytical" if analytical else "numerical"
     print(f"Running new {method_name} simulation with parameters: N={N}, dt={dt}, cg_atol={cg_atol:.2e}")
     runner_path = _find_runner_path()
-    cmd = f"PYTHONPATH=/home/yadi/costsci-tools python {runner_path} --config-name={profile} N={N} dt={dt} cg_atol={cg_atol} analytical={analytical}"
+    if SIM_RES_BASE_DIR:
+        dump_dir = os.path.join(SIM_RES_BASE_DIR, f"sim_res/hasegawa_mima_linear/{profile}")
+        cmd = f"{sys.executable} {runner_path} --config-name={profile} N={N} dt={dt} cg_atol={cg_atol} analytical={analytical} dump_dir={dump_dir}"
+    else:
+        cmd = f"{sys.executable} {runner_path} --config-name={profile} N={N} dt={dt} cg_atol={cg_atol} analytical={analytical}"
     subprocess.run(cmd, shell=True, check=True)
 
     # Read the meta.json to get cost
     with open(meta_path, "r") as f:
         meta = json.load(f)
         return meta["cost"]
-
-
-# def run_sim_hasegawa_mima_linear_analytical(profile, N):
-#     """Run analytical solution (dt and cg_atol don't matter for analytical)"""
-#     return run_sim_hasegawa_mima_linear(profile, N, dt=1.0, analytical=True)
 
 
 def run_simulation(config_path, N, dt, cg_atol, analytical, verbose, **kwargs):
@@ -92,9 +133,9 @@ def run_simulation(config_path, N, dt, cg_atol, analytical, verbose, **kwargs):
     runner_path = _find_runner_path()
 
     if config_path:
-        cmd = ["PYTHONPATH=/home/yadi/costsci-tools", "python", runner_path, f"--config-path={config_path}"]
+        cmd = [sys.executable, runner_path, f"--config-path={config_path}"]
     else:
-        cmd = ["PYTHONPATH=/home/yadi/costsci-tools", "python", runner_path]
+        cmd = [sys.executable, runner_path]
 
     # Override parameters
     cmd.extend([f"N={N}", f"dt={dt}", f"cg_atol={cg_atol}", f"analytical={analytical}", f"verbose={verbose}"])
@@ -128,16 +169,16 @@ def load_results(sim_dir, frame):
     results = {}
 
     if os.path.exists(h5_file):
-        with h5py.File(h5_file, 'r') as f:
-            results['phi'] = f['phi'][:]
-            results['coordinates_x'] = f['coordinates_x'][:]
-            results['coordinates_y'] = f['coordinates_y'][:]
-            results['time'] = f.attrs['time']
-            results['N'] = f.attrs['N']
-            results['dt'] = f.attrs['dt']
+        with h5py.File(h5_file, "r") as f:
+            results["phi"] = f["phi"][:]
+            results["coordinates_x"] = f["coordinates_x"][:]
+            results["coordinates_y"] = f["coordinates_y"][:]
+            results["time"] = f.attrs["time"]
+            results["N"] = f.attrs["N"]
+            results["dt"] = f.attrs["dt"]
 
     if os.path.exists(json_file):
-        with open(json_file, 'r') as f:
+        with open(json_file, "r") as f:
             json_data = json.load(f)
             results.update(json_data)
 
@@ -160,15 +201,15 @@ def get_error_metric(numerical_sim_dir):
         print(f"Warning: meta.json not found in {numerical_sim_dir}")
         return None
 
-    with open(meta_file, 'r') as f:
+    with open(meta_file, "r") as f:
         meta = json.load(f)
 
     # Check if this is an analytical run (no error needed)
-    if meta.get('analytical', False):
+    if meta.get("analytical", False):
         return 0.0
 
     # Get analytical reference directory
-    analytical_sim_dir = meta.get('analytical_reference_dir', None)
+    analytical_sim_dir = meta.get("analytical_reference_dir", None)
     if analytical_sim_dir is None:
         print(f"Warning: analytical_reference_dir not found in metadata")
         return None
@@ -204,10 +245,10 @@ def compare_with_analytical(numerical_sim_dir, analytical_sim_dir):
     analytical_results = []
 
     # Find all frame files
-    frame_files = sorted([f for f in os.listdir(numerical_sim_dir) if f.startswith('frame_') and f.endswith('.h5')])
+    frame_files = sorted([f for f in os.listdir(numerical_sim_dir) if f.startswith("frame_") and f.endswith(".h5")])
 
     for frame_file in frame_files:
-        frame_num = int(frame_file.split('_')[1].split('.')[0])
+        frame_num = int(frame_file.split("_")[1].split(".")[0])
 
         num_result = load_results(numerical_sim_dir, frame_num)
         ana_result = load_results(analytical_sim_dir, frame_num)
@@ -224,14 +265,14 @@ def compare_with_analytical(numerical_sim_dir, analytical_sim_dir):
     times = []
 
     for num_res, ana_res in zip(numerical_results, analytical_results):
-        phi_num = np.array(num_res['phi'])
-        phi_ana = np.array(ana_res['phi'])
+        phi_num = np.array(num_res["phi"])
+        phi_ana = np.array(ana_res["phi"])
         diff = phi_num - phi_ana
 
         l2_error = np.sqrt(np.mean(diff**2))
 
         l2_errors.append(l2_error)
-        times.append(num_res['time'])
+        times.append(num_res["time"])
 
     # Note: Plotting removed from wrapper - visualization happens in solver's dump() method
 
@@ -240,100 +281,5 @@ def compare_with_analytical(numerical_sim_dir, analytical_sim_dir):
         "times": times,
         "l2_errors": l2_errors,
         "mean_l2_error": np.mean(l2_errors),
-        "max_l2_error": np.max(l2_errors)
+        "max_l2_error": np.max(l2_errors),
     }
-
-
-# def check_success_criteria(sim_dir, target_error):
-#     """
-#     Check if simulation meets success criteria.
-
-#     Args:
-#         sim_dir: Simulation directory
-#         target_error: Target error threshold
-
-#     Returns:
-#         dict: Success check results
-#     """
-#     try:
-#         error = get_error_metric(sim_dir)
-#         if error is None:
-#             return {"success": False, "reason": "Could not extract error metric"}
-
-#         success = error <= target_error
-#         return {
-#             "success": success,
-#             "error": error,
-#             "target_error": target_error,
-#             "reason": f"Error {error:.2e} {'<=' if success else '>'} target {target_error:.2e}"
-#         }
-#     except Exception as e:
-#         return {"success": False, "reason": f"Error checking results: {str(e)}"}
-
-
-# def run_parameter_sweep(N_values, dt_values, cg_atol_values, config_path, **kwargs):
-#     """
-#     Run parameter sweep over numerical parameters.
-
-#     Args:
-#         N_values: List of N values to test
-#         dt_values: List of dt values to test
-#         cg_atol_values: List of CG tolerance values (optional)
-#         config_path: Base config path
-#         **kwargs: Additional parameters
-
-#     Returns:
-#         dict: Sweep results
-#     """
-#     if cg_atol_values is None:
-#         cg_atol_values = [1e-6]
-
-#     results = []
-
-#     for N in N_values:
-#         for dt in dt_values:
-#             for cg_atol in cg_atol_values:
-#                 print(f"Running simulation with N={N}, dt={dt}, cg_atol={cg_atol:.2e}")
-
-#                 sim_result = run_simulation(
-#                     config_path=config_path,
-#                     N=N,
-#                     dt=dt,
-#                     cg_atol=cg_atol,
-#                     analytical=False,
-#                     **kwargs
-#                 )
-
-#                 if sim_result["success"]:
-#                     # Extract simulation directory from parameters
-#                     sim_dir = f"sim_res/hasegawa_mima_linear/p1_N_{N}_dt_{dt:.2e}_cg_{cg_atol:.2e}_numerical"
-#                     error = get_error_metric(sim_dir)
-
-#                     results.append({
-#                         "N": N,
-#                         "dt": dt,
-#                         "cg_atol": cg_atol,
-#                         "error": error,
-#                         "sim_dir": sim_dir,
-#                         "success": True
-#                     })
-#                 else:
-#                     results.append({
-#                         "N": N,
-#                         "dt": dt,
-#                         "cg_atol": cg_atol,
-#                         "error": None,
-#                         "sim_dir": None,
-#                         "success": False,
-#                         "error_msg": sim_result.get("error", "Unknown error")
-#                     })
-
-#     return {"sweep_results": results}
-
-
-# # Default parameter configurations for different accuracy/cost targets
-# DEFAULT_CONFIGS = {
-#     "fast": {"N": 64, "dt": 50.0, "cg_atol": 1e-4},      # Fast but less accurate
-#     "balanced": {"N": 128, "dt": 20.0, "cg_atol": 1e-5},  # Balanced accuracy/cost
-#     "accurate": {"N": 256, "dt": 10.0, "cg_atol": 1e-6},  # High accuracy
-# }

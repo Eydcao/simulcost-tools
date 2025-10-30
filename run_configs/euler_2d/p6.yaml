@@ -1,0 +1,23 @@
+defaults:
+  - _self_
+  - override hydra/hydra_logging: none
+  - override hydra/job_logging: none
+
+# Test case selection
+testcase: 5           # Strong shock tube (2D version of 1D testcase 2)
+# testcase_name: "strong_tube_2d"
+# Aspect ratio is hardcoded in C++ gas_2d.cpp (testcase 5: 1/Nx for 1D-like behavior with ny=2)
+
+# Numerical parameters (tunable)
+n_grid_x: 64          # Grid resolution in x-direction (y-direction = 1 interior cell to mimic 1D)
+cfl: 0.5              # CFL number for timestep stability (typical range: 0.1-0.9)
+cg_tolerance: 1.0e-7  # CG solver convergence tolerance for pressure projection (typical range: 1e-5 to 1e-9)
+
+# Simulation statics (non-tunable - define the task)
+start_frame: 0        # Starting frame number
+end_frame: 10         # Ending frame number
+record_dt: 2.5e-7     # Time interval between recordings (frame_dt/10, 1D testcase 2: 2.5e-6/10)
+
+# Output configuration
+dump_dir: "sim_res/euler_2d/p6"  # Directory for output files
+verbose: False        # Enable verbose output

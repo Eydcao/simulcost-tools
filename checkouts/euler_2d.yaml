@@ -1,0 +1,38 @@
+precision_levels:
+  low:
+    tolerance_rmse: 0.08
+  medium:
+    tolerance_rmse: 0.04
+  high:
+    tolerance_rmse: 0.008
+
+profiles:
+  active_profiles: ["p1", "p2", "p3", "p4", "p5", "p6", "p7", "p8", "p9"]
+
+target_parameters:
+  cfl:
+    search_type: "iterative+0-shot"
+    initial_value: 0.5
+    multiplication_factor: 0.5  # Corrected from division_factor: 2.0
+    max_iteration_num: 5
+    non_target_parameters:
+      n_grid_x: [32, 64, 128, 256]
+      cg_tolerance: [1.0e-7]
+
+  cg_tolerance:
+    search_type: "iterative+0-shot"
+    initial_value: 1.0e-2
+    multiplication_factor: 0.1  # Corrected from division_factor: 10.0
+    max_iteration_num: 5
+    non_target_parameters:
+      n_grid_x: [32, 64, 128, 256]
+      cfl: [0.25]
+
+  n_grid_x:
+    search_type: "iterative+0-shot"
+    initial_value: 16
+    multiplication_factor: 2.0
+    max_iteration_num: 6
+    non_target_parameters:
+      cfl: [0.25]
+      cg_tolerance: [1.0e-7]
