@@ -1,0 +1,71 @@
+# FEM2D Checkout Configuration
+
+precision_levels:
+  high:
+    p1:
+      energy_tolerance: 0.005
+      var_threshold: 0.015
+    p2:
+      energy_tolerance: 0.005
+      var_threshold: 0.030
+    p3:
+      energy_tolerance: 0.010
+      var_threshold: 0.040
+    p4:  # Gentle vibration - better energy conservation than p2
+      energy_tolerance: 0.004
+      var_threshold: 0.012
+    p5:  # Strong twist - more challenging than p3
+      energy_tolerance: 0.015
+      var_threshold: 0.060
+  medium:
+    p1:
+      energy_tolerance: 0.010
+      var_threshold: 0.030
+    p2:
+      energy_tolerance: 0.010
+      var_threshold: 0.060
+    p3:
+      energy_tolerance: 0.020
+      var_threshold: 0.080
+    p4:  # Gentle vibration
+      energy_tolerance: 0.008
+      var_threshold: 0.024
+    p5:  # Strong twist
+      energy_tolerance: 0.030
+      var_threshold: 0.120
+  low:
+    p1:
+      energy_tolerance: 0.020
+      var_threshold: 0.060
+    p2:
+      energy_tolerance: 0.020
+      var_threshold: 0.120
+    p3:
+      energy_tolerance: 0.040
+      var_threshold: 0.160
+    p4:  # Gentle vibration
+      energy_tolerance: 0.016
+      var_threshold: 0.048
+    p5:  # Strong twist
+      energy_tolerance: 0.060
+      var_threshold: 0.240
+
+profiles:
+  active_profiles: ["p1", "p2", "p3", "p4", "p5"]
+
+target_parameters:
+  dx:
+    search_type: "iterative+0-shot"
+    initial_value: 0.5
+    multiplication_factor: 0.5
+    max_iteration_num: 4
+    non_target_parameters:
+      cfl: [0.5, 1.0, 2.0, 4.0, 8.0, 16.0]
+
+  cfl:
+    search_type: "iterative+0-shot"
+    initial_value: 16.0
+    multiplication_factor: 0.5
+    max_iteration_num: 6
+    non_target_parameters:
+      dx: [0.5, 0.25, 0.125, 0.0625]
