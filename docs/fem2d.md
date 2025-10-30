@@ -68,9 +68,9 @@ The solver supports three different simulation cases (profiles). All units are S
    - **Material**: E = 1.0×10⁵ Pa, ν = 0.29, ρ = 2.0 kg/m³
    - **Gravity**: -9.8 m/s²
    - **Initial conditions**: Beam fixed at left edge (x < small tolerance), initially at rest (v=0)
-   - **Time step**: dt = 0.0005 s (default)
-   - **Newton tolerance**: newton_v_res_tol = 0.01 m/s
-   - **End time**: 4.0 s (200 frames with record_dt = 0.02 s)
+   - **End time**: 1.4 s
+   - **energy_tolerance** (high: 0.005, medium: 0.010, low: 0.020)
+   - **var_threshold** (high: 0.015, medium: 0.030, low: 0.060)
    - **Tests**: Cantilever beam bending under gravity with large deformation
 
 2. **p2 - Vibration Bar Simulation:**
@@ -78,9 +78,9 @@ The solver supports three different simulation cases (profiles). All units are S
    - **Material**: E = 100.0 Pa, ν = 0.0, ρ = 1.0 kg/m³
    - **Gravity**: 0.0 (no gravity - energy conserving)
    - **Initial conditions**: Sinusoidal velocity field $v_x = 0.75 \sin(0.5\pi x/L_x)$ where $L_x$ is effective length, left edge fixed (x < x_start + small tolerance)
-   - **Time step**: dt = 0.005 s (default)
-   - **Newton tolerance**: newton_v_res_tol = 0.01 m/s
-   - **End time**: 40.0 s (200 frames with record_dt = 0.2 s)
+   - **End time**: 5.6 s
+   - **energy_tolerance** (high: 0.005, medium: 0.010, low: 0.020)
+   - **var_threshold** (high: 0.030, medium: 0.060, low: 0.120)
    - **Tests**: 1D elastic wave propagation and compression dynamics
 
 3. **p3 - Twisting Column Simulation:**
@@ -89,10 +89,31 @@ The solver supports three different simulation cases (profiles). All units are S
    - **Gravity**: 0.0 (no gravity - energy conserving)
    - **Initial conditions**: Rotational velocity field around center, amplitude increases with height $y$, bottom edge fixed (y < small tolerance)
    - **Initial velocity**: $v_x = -A \cdot (y - y_c) \cdot (y/L_y)$, $v_y = A \cdot (x - x_c) \cdot (y/L_y)$ where $A$ = 1.0 m/s
-   - **Time step**: dt = 0.001 s (default)
-   - **Newton tolerance**: newton_v_res_tol = 0.01 m/s
-   - **End time**: 4.0 s (200 frames with record_dt = 0.02 s)
+   - **End time**: 0.56 s
+   - **energy_tolerance** (high: 0.010, medium: 0.020, low: 0.040)
+   - **var_threshold** (high: 0.040, medium: 0.080, low: 0.160)
    - **Tests**: 2D rotational dynamics and energy conservation in twisting motion
+
+4. **p4 - Gentle Vibration Bar Simulation:**
+   - **Domain**: 25.0 × 1.0 m (effective material region starts at x=5.0 m)
+   - **Material**: E = 100.0 Pa, ν = 0.0, ρ = 1.0 kg/m³
+   - **Gravity**: 0.0 (no gravity - energy conserving)
+   - **Initial conditions**: Sinusoidal velocity field $v_x = 0.1 \sin(0.5\pi x/L_x)$ where $L_x$ is effective length, left edge fixed (x < x_start + small tolerance)
+   - **End time**: 5.6 s
+   - **energy_tolerance** (high: 0.004, medium: 0.008, low: 0.016)
+   - **var_threshold** (high: 0.012, medium: 0.024, low: 0.048)
+   - **Tests**: 1D elastic wave propagation and compression dynamics with smaller amplitude
+
+5. **p5 - Strong Twisting Column Simulation:**
+   - **Domain**: 2.0 × 10.0 m (tall column)
+   - **Material**: E = 1.0×10⁵ Pa, ν = 0.3, ρ = 1.0 kg/m³
+   - **Gravity**: 0.0 (no gravity - energy conserving)
+   - **Initial conditions**: Rotational velocity field around center, amplitude increases with height $y$, bottom edge fixed (y < small tolerance)
+   - **Initial velocity**: $v_x = -A \cdot (y - y_c) \cdot (y/L_y)$, $v_y = A \cdot (x - x_c) \cdot (y/L_y)$ where $A$ = 2.5 m/s
+   - **End time**: 0.56 s
+   - **energy_tolerance** (high: 0.015, medium: 0.030, low: 0.060)
+   - **var_threshold** (high: 0.060, medium: 0.120, low: 0.240)
+   - **Tests**: 2D rotational dynamics and energy conservation in twisting motion with larger amplitude
 
 ## Convergence Metrics
 
@@ -104,12 +125,8 @@ The simulated results are evaluated using two types of metrics:
    - Total energy variation over time: $\text{var} = \frac{\sigma(E_{\text{tot}})}{\text{mean}(|E_{\text{tot}}|) + \epsilon} < \text{var\_threshold}$
    - Where $E_{\text{tot}} = E_{\text{kinetic}} + E_{\text{elastic\_potential}}$
    - Threshold depends on precision level (high: 0.015, medium: 0.02, low: 0.05)
-   - **Note**: Only **p2** (vibration_bar) and **p3** (twisting_column) conserve energy (gravity = 0). **p1** (cantilever) does not conserve energy due to gravity, so energy conservation check is skipped for p1.
 
 2. **Positivity Preservation**: Kinetic and elastic potential energies must be ≥ 0
-
-3. **Newton Convergence**: All Newton iterations must converge within max_newton_iter (default: 10)
-   - Convergence criterion: $\frac{|\Delta \mathbf{x}|}{\Delta t} < \text{newton\_v\_res\_tol}$
 
 ### Comparison Metrics (Between Adjacent Parameter Sets)
 
@@ -121,7 +138,6 @@ When comparing two simulations with different parameter values:
 
 2. **Convergence Criterion**:
    - $\text{converged} = (\text{avg\_diff} < \text{energy\_tolerance}) \land \text{energy\_conserved}_1 \land \text{energy\_conserved}_2 \land \text{positivity}_1 \land \text{positivity}_2$
-   - Where energy_tolerance depends on precision level (high: 0.003, medium: 0.01, low: 0.03)
 
 ## Parameter Tuning Tasks and Dummy Strategy
 
@@ -131,9 +147,9 @@ When comparing two simulations with different parameter values:
    - dx controls the mesh resolution: element size in the x-direction
    - Smaller dx improves accuracy but increases computational cost quadratically (more elements and DOFs)
 
-2. **dt Time Step Search (iterative+0-shot)**
-   - dt controls the time step size for temporal discretization
-   - Smaller dt improves temporal accuracy and Newton convergence robustness but increases total number of steps
+2. **cfl Search (iterative+0-shot)**
+   - cfl controls the time step size for temporal discretization
+   - Smaller cfl improves temporal accuracy and Newton convergence robustness but increases total number of steps
 
 ### Dummy Strategy
 
@@ -143,8 +159,8 @@ When comparing two simulations with different parameter values:
    - **Multiplication factor**: 0.5, **Max iterations**: 4
    - **Non-target parameters**: cfl∈{[0.5, 1.0, 2.0, 4.0, 8.0, 16.0]}
 
-2. **dt Time Step Search (iterative+0-shot)**
-   - Halve dt each iteration (multiplication factor: 0.5) starting from profile-specific initial values until convergence
+2. **cfl Search (iterative+0-shot)**
+   - Halve cfl each iteration (multiplication factor: 0.5) starting from profile-specific initial values until convergence
    - **Profile-specific initial values**: p1=16.0, p2=16.0, p3=16.0, p4=16.0, p5=16.0
    - **Multiplication factor**: 0.5, **Max iterations**: 6
    - **Non-target parameters**: dx∈{[0.5, 0.25, 0.125, 0.0625]}
@@ -156,12 +172,12 @@ When comparing two simulations with different parameter values:
 | Parameter | Description | Range |
 |-----------|-------------|-------|
 | dx | Mesh resolution (element size in x-direction) | 0.05 ≤ dx ≤ 1.0 |
-| dt | Time step size (seconds) | 0.0001 < dt < 0.01 |
+| cfl | CFL number for time step calculation | 0.1 ≤ cfl ≤ 16.0 |
 
 More Notes:
 
 - **dx**: Determines spatial resolution; smaller values improve accuracy but increase computational cost quadratically
-- **dt**: Time step size for implicit integration; smaller values improve temporal accuracy and Newton convergence robustness
+- **cfl**: Controls the time step size; smaller values improve temporal accuracy and Newton convergence robustness
 
 ### Other
 
@@ -185,8 +201,10 @@ More Notes:
   - **p1**: Cantilever beam - bending under gravity (non-energy-conserving)
   - **p2**: Vibration bar - 1D elastic wave propagation (energy-conserving)
   - **p3**: Twisting column - 2D rotational dynamics (energy-conserving)
-- **Target Parameters**: 2 (dx, dt)
-  - **iterative+0-shot**: dx, dt
+  - **p4**: Gentle vibration bar - 1D elastic wave propagation (energy-conserving)
+  - **p5**: Strong twisting column - 2D rotational dynamics (energy-conserving)
+- **Target Parameters**: 2 (dx, cfl)
+  - **iterative+0-shot**: dx, cfl
 - **Precision Levels**: 3 (high, medium, low)
 
 ### Task Distribution
