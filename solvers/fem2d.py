@@ -111,16 +111,17 @@ class FEM2D(SIMULATOR):
         self.energy_log_gra = []
         self.energy_log_tot = []
 
-    def _get_mesh(self, dx, cfg):
-        mesh_path = f"output/mesh/{self.case}_dx{dx}.obj"
+    def _get_mesh(self, proposed_dx, cfg):
+        mesh_path = f"output/mesh/{self.case}_dx{proposed_dx}.obj"
         if os.path.exists(mesh_path):
             return meshio.read(mesh_path)
 
         Lx = cfg.envs_params.Lx
         Ly = cfg.envs_params.Ly
-        n_gx_e = int(Lx / dx)
+        n_gx_e = int(Lx / proposed_dx)
         n_gy_e = int(n_gx_e * Ly / Lx)
-        dy = Ly / n_gy_e
+        actual_dx = Lx / n_gx_e
+        actual_dy = Ly / n_gy_e
 
         # Get starting position based on case
         if self.case == "vibration_bar":
@@ -137,7 +138,7 @@ class FEM2D(SIMULATOR):
         v_pos = np.zeros((n_vertices, 2), dtype=float)
         for i in range(n_gx_e + 1):
             for j in range(n_gy_e + 1):
-                v_pos[i * (n_gy_e + 1) + j] = np.array([x_start + dx * i, y_start + dy * j])
+                v_pos[i * (n_gy_e + 1) + j] = np.array([x_start + actual_dx * i, y_start + actual_dy * j])
 
         from scipy.spatial import Delaunay
 
@@ -585,13 +586,13 @@ class FEM2D(SIMULATOR):
                 y_pos = self.mesh_particles[i, 1]
                 # Rotational velocity field (counterclockwise)
                 # Scale by distance from center to create differential rotation
-                dx = x_pos - x_center
-                dy = y_pos - y_center
-                r = np.sqrt(dx * dx + dy * dy)
+                x_rel = x_pos - x_center
+                y_rel = y_pos - y_center
+                r = np.sqrt(x_rel * x_rel + y_rel * y_rel)
                 # Linear velocity profile: v = omega * r, scaled by height
                 y_factor = y_pos / Ly  # 0 at bottom, 1 at top
-                initial_v[i, 0] = -amplitude * dy * y_factor
-                initial_v[i, 1] = amplitude * dx * y_factor
+                initial_v[i, 0] = -amplitude * y_rel * y_factor
+                initial_v[i, 1] = amplitude * x_rel * y_factor
 
             self.v.from_numpy(initial_v)
         else:

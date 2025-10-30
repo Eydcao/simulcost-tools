@@ -139,15 +139,15 @@ When comparing two simulations with different parameter values:
 
 1. **dx Grid Resolution Search (iterative+0-shot)**
    - Halve dx each iteration (multiplication factor: 0.5) starting from profile-specific initial values until convergence
-   - **Profile-specific initial values**: p1=0.5, p2=0.5, p3=0.5
+   - **Profile-specific initial values**: p1=0.5, p2=0.5, p3=0.5, p4=0.5, p5=0.5
    - **Multiplication factor**: 0.5, **Max iterations**: 4
-   - **Non-target parameters**: dt∈{p1:[0.0005, 0.00025], p2:[0.005, 0.0025], p3:[0.001, 0.0005]}
+   - **Non-target parameters**: cfl∈{[0.5, 1.0, 2.0, 4.0, 8.0, 16.0]}
 
 2. **dt Time Step Search (iterative+0-shot)**
    - Halve dt each iteration (multiplication factor: 0.5) starting from profile-specific initial values until convergence
-   - **Profile-specific initial values**: p1=0.0005, p2=0.005, p3=0.001
-   - **Multiplication factor**: 0.5, **Max iterations**: 4
-   - **Non-target parameters**: dx∈{p1:[0.5, 0.25], p2:[0.5, 0.25], p3:[0.5, 0.25]}
+   - **Profile-specific initial values**: p1=16.0, p2=16.0, p3=16.0, p4=16.0, p5=16.0
+   - **Multiplication factor**: 0.5, **Max iterations**: 6
+   - **Non-target parameters**: dx∈{[0.5, 0.25, 0.125, 0.0625]}
 
 ## Summarized parameter table for developer only (Not LLM)
 
@@ -193,10 +193,10 @@ More Notes:
 
 Current configuration generates:
 
-- **dx** (iterative+0-shot): 3 profiles × 2 non-target combos = 6 tasks
-- **dt** (iterative+0-shot): 3 profiles × 2 non-target combos = 6 tasks
-- **Total per precision**: 12 tasks
-- **Total tasks**: 36 tasks (across 3 precision levels)
+- **dx** (iterative+0-shot): 5 profiles × 6 non-target combos = 30 tasks
+- **cfl** (iterative+0-shot): 5 profiles × 4 non-target combos = 20 tasks
+- **Total per precision**: 50 tasks
+- **Total tasks**: 150 tasks (across 3 precision levels)
 
 ### Dummy Solution Cache
 

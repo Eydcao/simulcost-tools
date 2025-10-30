@@ -24,12 +24,12 @@
       "results": {
         "converged": false,
         "optimal_parameter_value": null,
-        "total_computational_cost": 56404813238,
+        "total_computational_cost": 56410296758,
         "cost_history": [
-          10600894,
-          126874936,
-          2221341536,
-          54045995872
+          10590014,
+          126765496,
+          2221784416,
+          54051156832
         ],
         "parameter_history": [
           {
@@ -70,12 +70,12 @@
       "results": {
         "converged": false,
         "optimal_parameter_value": null,
-        "total_computational_cost": 28201455754,
+        "total_computational_cost": 28196869514,
         "cost_history": [
-          5252922,
-          62517587,
-          1099705715,
-          27033979530
+          5249082,
+          62568787,
+          1099813235,
+          27029238410
         ],
         "parameter_history": [
           {
@@ -116,12 +116,12 @@
       "results": {
         "converged": false,
         "optimal_parameter_value": null,
-        "total_computational_cost": 14076699354,
+        "total_computational_cost": 14079627354,
         "cost_history": [
-          2624773,
-          31097425,
-          547660294,
-          13495316862
+          2631173,
+          31092945,
+          547575814,
+          13498327422
         ],
         "parameter_history": [
           {
@@ -162,12 +162,12 @@
       "results": {
         "converged": false,
         "optimal_parameter_value": null,
-        "total_computational_cost": 7046364309,
+        "total_computational_cost": 7046535189,
         "cost_history": [
           1344215,
-          15662016,
-          273714058,
-          6755644020
+          15653696,
+          273780618,
+          6755756660
         ],
         "parameter_history": [
           {
@@ -208,12 +208,12 @@
       "results": {
         "converged": false,
         "optimal_parameter_value": null,
-        "total_computational_cost": 3533523232,
+        "total_computational_cost": 3533756512,
         "cost_history": [
-          687943,
-          8002327,
-          137851646,
-          3386981316
+          687623,
+          8005527,
+          137826046,
+          3387237316
         ],
         "parameter_history": [
           {
@@ -254,12 +254,12 @@
       "results": {
         "converged": false,
         "optimal_parameter_value": null,
-        "total_computational_cost": 1786979133,
+        "total_computational_cost": 1787294013,
         "cost_history": [
           373002,
           4095398,
-          70539349,
-          1711971384
+          70639189,
+          1712186424
         ],
         "parameter_history": [
           {
@@ -300,14 +300,14 @@
       "results": {
         "converged": false,
         "optimal_parameter_value": null,
-        "total_computational_cost": 20883749,
+        "total_computational_cost": 20875109,
         "cost_history": [
           373002,
-          687943,
+          687623,
           1344215,
-          2624773,
-          5252922,
-          10600894
+          2631173,
+          5249082,
+          10590014
         ],
         "parameter_history": [
           {
@@ -356,12 +356,12 @@
       "results": {
         "converged": false,
         "optimal_parameter_value": null,
-        "total_computational_cost": 3498547636,
+        "total_computational_cost": 3496841636,
         "cost_history": [
-          769395,
-          8339238,
-          140798054,
-          3348640949
+          762595,
+          8265638,
+          140618854,
+          3347194549
         ],
         "parameter_history": [
           {
@@ -402,12 +402,12 @@
       "results": {
         "converged": false,
         "optimal_parameter_value": null,
-        "total_computational_cost": 1768856860,
+        "total_computational_cost": 1770383060,
         "cost_history": [
-          402624,
-          4383835,
-          71801155,
-          1692269246
+          411224,
+          4407035,
+          71721155,
+          1693843646
         ],
         "parameter_history": [
           {
@@ -448,12 +448,12 @@
       "results": {
         "converged": false,
         "optimal_parameter_value": null,
-        "total_computational_cost": 909640546,
+        "total_computational_cost": 910141546,
         "cost_history": [
-          233071,
-          2409729,
-          38202806,
-          868794940
+          241271,
+          2435329,
+          38286006,
+          869178940
         ],
         "parameter_history": [
           {
@@ -494,12 +494,12 @@
       "results": {
         "converged": false,
         "optimal_parameter_value": null,
-        "total_computational_cost": 487986800,
+        "total_computational_cost": 487682200,
         "cost_history": [
-          89188,
-          1363274,
-          20917931,
-          465616407
+          89388,
+          1384874,
+          20885931,
+          465322007
         ],
         "parameter_history": [
           {
@@ -540,14 +540,14 @@
       "results": {
         "converged": false,
         "optimal_parameter_value": null,
-        "total_computational_cost": 5490098,
+        "total_computational_cost": 5475298,
         "cost_history": [
-          89188,
-          233071,
-          402624,
-          769395,
-          1375691,
-          2620129
+          89388,
+          241271,
+          411224,
+          762595,
+          1362891,
+          2607929
         ],
         "parameter_history": [
           {
@@ -596,14 +596,14 @@
       "results": {
         "converged": false,
         "optimal_parameter_value": null,
-        "total_computational_cost": 64152212,
+        "total_computational_cost": 64044212,
         "cost_history": [
-          1363274,
-          2409729,
-          4383835,
-          8339238,
-          16087653,
-          31568483
+          1384874,
+          2435329,
+          4407035,
+          8265638,
+          16084453,
+          31466883
         ],
         "parameter_history": [
           {
@@ -652,12 +652,12 @@
       "results": {
         "converged": false,
         "optimal_parameter_value": null,
-        "total_computational_cost": 7915742563,
+        "total_computational_cost": 7918506723,
         "cost_history": [
           1513602,
-          17654486,
-          308193935,
-          7588380540
+          17646166,
+          308150415,
+          7591196540
         ],
         "parameter_history": [
           {
@@ -698,12 +698,12 @@
       "results": {
         "converged": false,
         "optimal_parameter_value": null,
-        "total_computational_cost": 3965681714,
+        "total_computational_cost": 3966467314,
         "cost_history": [
-          790151,
-          9030432,
-          155434644,
-          3800426487
+          790471,
+          9029792,
+          155432084,
+          3801214967
         ],
         "parameter_history": [
           {
@@ -744,12 +744,12 @@
       "results": {
         "converged": false,
         "optimal_parameter_value": null,
-        "total_computational_cost": 2004201126,
+        "total_computational_cost": 2004300326,
         "cost_history": [
           397634,
-          4689415,
+          4686215,
           78986508,
-          1920127569
+          1920229969
         ],
         "parameter_history": [
           {
@@ -790,12 +790,12 @@
       "results": {
         "converged": false,
         "optimal_parameter_value": null,
-        "total_computational_cost": 1021830990,
+        "total_computational_cost": 1021943630,
         "cost_history": [
           253360,
           2361122,
           41149020,
-          978067488
+          978180128
         ],
         "parameter_history": [
           {
@@ -836,14 +836,14 @@
       "results": {
         "converged": false,
         "optimal_parameter_value": null,
-        "total_computational_cost": 11858993,
+        "total_computational_cost": 11867153,
         "cost_history": [
           253360,
           397634,
-          790151,
+          790471,
           1513602,
-          2967864,
-          5936382
+          2968024,
+          5944062
         ],
         "parameter_history": [
           {
@@ -892,12 +892,12 @@
       "results": {
         "converged": false,
         "optimal_parameter_value": null,
-        "total_computational_cost": 3406321565,
+        "total_computational_cost": 3409185675,
         "cost_history": [
-          722860,
-          8197225,
-          137225799,
-          3260175681
+          716460,
+          8113225,
+          137123399,
+          3263232591
         ],
         "parameter_history": [
           {
@@ -938,12 +938,12 @@
       "results": {
         "converged": false,
         "optimal_parameter_value": null,
-        "total_computational_cost": 1720401933,
+        "total_computational_cost": 1720292733,
         "cost_history": [
-          408800,
-          4465029,
-          70433202,
-          1645094902
+          402800,
+          4358629,
+          70474802,
+          1645056502
         ],
         "parameter_history": [
           {
@@ -984,12 +984,12 @@
       "results": {
         "converged": false,
         "optimal_parameter_value": null,
-        "total_computational_cost": 884689595,
+        "total_computational_cost": 880534884,
         "cost_history": [
-          237847,
-          2436125,
-          37652655,
-          844362968
+          236047,
+          2431325,
+          37931055,
+          839936457
         ],
         "parameter_history": [
           {
@@ -1030,12 +1030,12 @@
       "results": {
         "converged": false,
         "optimal_parameter_value": null,
-        "total_computational_cost": 472928654,
+        "total_computational_cost": 468934544,
         "cost_history": [
-          105988,
-          1313670,
-          20411430,
-          451097566
+          95988,
+          1320870,
+          20475430,
+          447042256
         ],
         "parameter_history": [
           {
@@ -1076,14 +1076,14 @@
       "results": {
         "converged": false,
         "optimal_parameter_value": null,
-        "total_computational_cost": 5450679,
+        "total_computational_cost": 5393879,
         "cost_history": [
-          105988,
-          237847,
-          408800,
-          722860,
-          1363308,
-          2611876
+          95988,
+          236047,
+          402800,
+          716460,
+          1341108,
+          2601476
         ],
         "parameter_history": [
           {
@@ -1132,14 +1132,14 @@
       "results": {
         "converged": false,
         "optimal_parameter_value": null,
-        "total_computational_cost": 62892115,
+        "total_computational_cost": 62711315,
         "cost_history": [
-          1313670,
-          2436125,
-          4465029,
-          8197225,
-          15680829,
-          30799237
+          1320870,
+          2431325,
+          4358629,
+          8113225,
+          15698429,
+          30788837
         ],
         "parameter_history": [
           {
@@ -1188,12 +1188,12 @@
       "results": {
         "converged": false,
         "optimal_parameter_value": null,
-        "total_computational_cost": 4043972002,
+        "total_computational_cost": 4044023202,
         "cost_history": [
           809344,
           9172856,
           157973017,
-          3876016785
+          3876067985
         ],
         "parameter_history": [
           {
@@ -1234,11 +1234,11 @@
       "results": {
         "converged": false,
         "optimal_parameter_value": null,
-        "total_computational_cost": 2042357824,
+        "total_computational_cost": 2042358784,
         "cost_history": [
-          481610,
-          4813504,
-          81050614,
+          481930,
+          4811584,
+          81053174,
           1956012096
         ],
         "parameter_history": [
@@ -1280,12 +1280,12 @@
       "results": {
         "converged": false,
         "optimal_parameter_value": null,
-        "total_computational_cost": 1048814891,
+        "total_computational_cost": 1049050101,
         "cost_history": [
-          318781,
-          2977574,
-          42271637,
-          1003246899
+          318461,
+          2957734,
+          42475807,
+          1003298099
         ],
         "parameter_history": [
           {
@@ -1326,14 +1326,14 @@
       "results": {
         "converged": false,
         "optimal_parameter_value": null,
-        "total_computational_cost": 12133932,
+        "total_computational_cost": 12134732,
         "cost_history": [
-          318781,
-          481610,
+          318461,
+          481930,
           809344,
-          1538554,
+          1539194,
           3015368,
-          5970275
+          5970435
         ],
         "parameter_history": [
           {
@@ -1382,12 +1382,12 @@
       "results": {
         "converged": false,
         "optimal_parameter_value": null,
-        "total_computational_cost": 28201455754,
+        "total_computational_cost": 28196869514,
         "cost_history": [
-          5252922,
-          62517587,
-          1099705715,
-          27033979530
+          5249082,
+          62568787,
+          1099813235,
+          27029238410
         ],
         "parameter_history": [
           {
@@ -1428,12 +1428,12 @@
       "results": {
         "converged": false,
         "optimal_parameter_value": null,
-        "total_computational_cost": 14076699354,
+        "total_computational_cost": 14079627354,
         "cost_history": [
-          2624773,
-          31097425,
-          547660294,
-          13495316862
+          2631173,
+          31092945,
+          547575814,
+          13498327422
         ],
         "parameter_history": [
           {
@@ -1474,12 +1474,12 @@
       "results": {
         "converged": false,
         "optimal_parameter_value": null,
-        "total_computational_cost": 7046364309,
+        "total_computational_cost": 7046535189,
         "cost_history": [
           1344215,
-          15662016,
-          273714058,
-          6755644020
+          15653696,
+          273780618,
+          6755756660
         ],
         "parameter_history": [
           {
@@ -1520,12 +1520,12 @@
       "results": {
         "converged": false,
         "optimal_parameter_value": null,
-        "total_computational_cost": 3533523232,
+        "total_computational_cost": 3533756512,
         "cost_history": [
-          687943,
-          8002327,
-          137851646,
-          3386981316
+          687623,
+          8005527,
+          137826046,
+          3387237316
         ],
         "parameter_history": [
           {
@@ -1566,12 +1566,12 @@
       "results": {
         "converged": false,
         "optimal_parameter_value": null,
-        "total_computational_cost": 1786979133,
+        "total_computational_cost": 1787294013,
         "cost_history": [
           373002,
           4095398,
-          70539349,
-          1711971384
+          70639189,
+          1712186424
         ],
         "parameter_history": [
           {
@@ -1612,12 +1612,12 @@
       "results": {
         "converged": false,
         "optimal_parameter_value": null,
-        "total_computational_cost": 909640546,
+        "total_computational_cost": 910141546,
         "cost_history": [
-          233071,
-          2409729,
-          38202806,
-          868794940
+          241271,
+          2435329,
+          38286006,
+          869178940
         ],
         "parameter_history": [
           {
@@ -1658,12 +1658,12 @@
       "results": {
         "converged": false,
         "optimal_parameter_value": null,
-        "total_computational_cost": 487986800,
+        "total_computational_cost": 487682200,
         "cost_history": [
-          89188,
-          1363274,
-          20917931,
-          465616407
+          89388,
+          1384874,
+          20885931,
+          465322007
         ],
         "parameter_history": [
           {
@@ -1704,12 +1704,12 @@
       "results": {
         "converged": false,
         "optimal_parameter_value": null,
-        "total_computational_cost": 2004201126,
+        "total_computational_cost": 2004300326,
         "cost_history": [
           397634,
-          4689415,
+          4686215,
           78986508,
-          1920127569
+          1920229969
         ],
         "parameter_history": [
           {
@@ -1750,12 +1750,12 @@
       "results": {
         "converged": false,
         "optimal_parameter_value": null,
-        "total_computational_cost": 1021830990,
+        "total_computational_cost": 1021943630,
         "cost_history": [
           253360,
           2361122,
           41149020,
-          978067488
+          978180128
         ],
         "parameter_history": [
           {
@@ -1796,12 +1796,12 @@
       "results": {
         "converged": false,
         "optimal_parameter_value": null,
-        "total_computational_cost": 1720401933,
+        "total_computational_cost": 1720292733,
         "cost_history": [
-          408800,
-          4465029,
-          70433202,
-          1645094902
+          402800,
+          4358629,
+          70474802,
+          1645056502
         ],
         "parameter_history": [
           {
@@ -1842,12 +1842,12 @@
       "results": {
         "converged": false,
         "optimal_parameter_value": null,
-        "total_computational_cost": 884689595,
+        "total_computational_cost": 880534884,
         "cost_history": [
-          237847,
-          2436125,
-          37652655,
-          844362968
+          236047,
+          2431325,
+          37931055,
+          839936457
         ],
         "parameter_history": [
           {
@@ -1888,12 +1888,12 @@
       "results": {
         "converged": false,
         "optimal_parameter_value": null,
-        "total_computational_cost": 472928654,
+        "total_computational_cost": 468934544,
         "cost_history": [
-          105988,
-          1313670,
-          20411430,
-          451097566
+          95988,
+          1320870,
+          20475430,
+          447042256
         ],
         "parameter_history": [
           {
@@ -1934,14 +1934,14 @@
       "results": {
         "converged": false,
         "optimal_parameter_value": null,
-        "total_computational_cost": 5450679,
+        "total_computational_cost": 5393879,
         "cost_history": [
-          105988,
-          237847,
-          408800,
-          722860,
-          1363308,
-          2611876
+          95988,
+          236047,
+          402800,
+          716460,
+          1341108,
+          2601476
         ],
         "parameter_history": [
           {
@@ -1990,12 +1990,12 @@
       "results": {
         "converged": false,
         "optimal_parameter_value": null,
-        "total_computational_cost": 1786979133,
+        "total_computational_cost": 1787294013,
         "cost_history": [
           373002,
           4095398,
-          70539349,
-          1711971384
+          70639189,
+          1712186424
         ],
         "parameter_history": [
           {
@@ -2036,12 +2036,12 @@
       "results": {
         "converged": false,
         "optimal_parameter_value": null,
-        "total_computational_cost": 487986800,
+        "total_computational_cost": 487682200,
         "cost_history": [
-          89188,
-          1363274,
-          20917931,
-          465616407
+          89388,
+          1384874,
+          20885931,
+          465322007
         ],
         "parameter_history": [
           {
@@ -2082,12 +2082,12 @@
       "results": {
         "converged": false,
         "optimal_parameter_value": null,
-        "total_computational_cost": 884689595,
+        "total_computational_cost": 880534884,
         "cost_history": [
-          237847,
-          2436125,
-          37652655,
-          844362968
+          236047,
+          2431325,
+          37931055,
+          839936457
         ],
         "parameter_history": [
           {
@@ -2128,12 +2128,12 @@
       "results": {
         "converged": false,
         "optimal_parameter_value": null,
-        "total_computational_cost": 472928654,
+        "total_computational_cost": 468934544,
         "cost_history": [
-          105988,
-          1313670,
-          20411430,
-          451097566
+          95988,
+          1320870,
+          20475430,
+          447042256
         ],
         "parameter_history": [
           {
