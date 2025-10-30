@@ -12,11 +12,11 @@ precision_levels:
       energy_tolerance: 0.010
       var_threshold: 0.040
     p4:  # Gentle vibration - better energy conservation than p2
-      energy_tolerance: 0.0025
-      var_threshold: 0.015
+      energy_tolerance: 0.004
+      var_threshold: 0.012
     p5:  # Strong twist - more challenging than p3
-      energy_tolerance: 0.02
-      var_threshold: 0.080
+      energy_tolerance: 0.015
+      var_threshold: 0.060
   medium:
     p1:
       energy_tolerance: 0.010
@@ -28,11 +28,11 @@ precision_levels:
       energy_tolerance: 0.020
       var_threshold: 0.080
     p4:  # Gentle vibration
-      energy_tolerance: 0.005
-      var_threshold: 0.030
+      energy_tolerance: 0.008
+      var_threshold: 0.024
     p5:  # Strong twist
-      energy_tolerance: 0.040
-      var_threshold: 0.160
+      energy_tolerance: 0.030
+      var_threshold: 0.120
   low:
     p1:
       energy_tolerance: 0.020
@@ -44,87 +44,28 @@ precision_levels:
       energy_tolerance: 0.040
       var_threshold: 0.160
     p4:  # Gentle vibration
-      energy_tolerance: 0.010
-      var_threshold: 0.060
+      energy_tolerance: 0.016
+      var_threshold: 0.048
     p5:  # Strong twist
-      energy_tolerance: 0.080
-      var_threshold: 0.320
+      energy_tolerance: 0.060
+      var_threshold: 0.240
 
 profiles:
   active_profiles: ["p1", "p2", "p3", "p4", "p5"]
 
 target_parameters:
-  nx:
+  dx:
     search_type: "iterative+0-shot"
-    initial_values:
-      p1: 20   # cantilever: 20→40→80 (Lx=10, Ly=2, ratio 5:1) TODO should we change to dx instead of nx?
-      p2: 50   # vibration_bar: 50→100 (Lx=25, Ly=1, ratio 25:1 needs finer mesh)
-      p3: 4   # twisting_column: 20→40→80 (Lx=2, Ly=10, ratio 1:5)
-      p4: 50   # gentle vibration_bar: same aspect ratio as p2
-      p5: 4    # strong twisting_column: same aspect ratio as p3
-    multiplication_factor: 2
+    initial_value: 0.5
+    multiplication_factor: 0.5
     max_iteration_num: 4
     non_target_parameters:
-      cfl:
-        p1: [1.0]
-        p2: [1.0]
-        p3: [1.0]
-        p4: [1.0]
-        p5: [1.0]
-
-      newton_v_res_tol:
-        p1: [1.0]
-        p2: [1.0]
-        p3: [1.0]
-        p4: [1.0]
-        p5: [1.0]
+      cfl: [0.5, 1.0, 2.0, 4.0, 8.0, 16.0]
 
   cfl:
     search_type: "iterative+0-shot"
-    initial_values:
-      p1: 16.0
-      p2: 16.0
-      p3: 16.0
-      p4: 16.0
-      p5: 16.0
+    initial_value: 16.0
     multiplication_factor: 0.5
     max_iteration_num: 6
     non_target_parameters:
-      nx:
-        p1: [20, 40, 80, 160]
-        p2: [50, 100, 200, 400]
-        p3: [4, 8, 16, 32]
-        p4: [50, 100, 200, 400]
-        p5: [4, 8, 16, 32]
-
-      newton_v_res_tol:
-        p1: [1.0]
-        p2: [1.0]
-        p3: [1.0]
-        p4: [1.0]
-        p5: [1.0]
-
-  newton_v_res_tol:
-    search_type: "iterative+0-shot"
-    initial_values:
-      p1: 16.0
-      p2: 16.0
-      p3: 16.0
-      p4: 16.0
-      p5: 16.0
-    multiplication_factor: 0.5
-    max_iteration_num: 6
-    non_target_parameters:
-      nx:
-        p1: [20, 40, 80, 160]
-        p2: [50, 100, 200, 400]
-        p3: [4, 8, 16, 32]
-        p4: [50, 100, 200, 400]
-        p5: [4, 8, 16, 32]
-
-      cfl:
-        p1: [1.0]
-        p2: [1.0]
-        p3: [1.0]
-        p4: [1.0]
-        p5: [1.0]
+      dx: [0.5, 0.25, 0.125, 0.0625]

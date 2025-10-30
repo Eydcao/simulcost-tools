@@ -7,14 +7,11 @@ defaults:
 case: "vibration_bar"
 
 # Tunable Parameters
-nx: 70
+dx: 0.36
 # cfl: CFL number for automatic dt calculation
 # Time step will be computed as: dt = cfl * dx / wave_speed
 # where wave_speed = sqrt((lambda + 2*mu) / rho)
 cfl: 0.5
-# newton_v_res_tol: velocity-like residual tolerance for Newton convergence
-# Convergence criterion: |Δx|/dt < newton_v_res_tol, where Δx is position correction
-newton_v_res_tol: 0.01
 
 # Environmental Parameters
 dim: 2
@@ -28,6 +25,7 @@ envs_params:
   y_start: 0.0
   gravity: 0.0
   initial_velocity_amplitude: 0.75
+  newton_v_res_tol: 0.01
 mesh_scale: 1.0
 mesh_offset:
   - 0.0

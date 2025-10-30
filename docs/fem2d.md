@@ -127,39 +127,27 @@ When comparing two simulations with different parameter values:
 
 ### Tasks
 
-1. **nx Grid Resolution Search (iterative+0-shot)**
-   - nx controls the mesh resolution: number of grid cells in the x-direction
-   - Higher resolution improves accuracy but increases computational cost quadratically (more elements and DOFs)
+1. **dx Grid Resolution Search (iterative+0-shot)**
+   - dx controls the mesh resolution: element size in the x-direction
+   - Smaller dx improves accuracy but increases computational cost quadratically (more elements and DOFs)
 
 2. **dt Time Step Search (iterative+0-shot)**
    - dt controls the time step size for temporal discretization
    - Smaller dt improves temporal accuracy and Newton convergence robustness but increases total number of steps
 
-3. **newton_v_res_tol Newton Tolerance (0-shot)**
-   - Controls the Newton solver convergence tolerance (velocity-like residual)
-   - Tighter tolerance improves accuracy but increases Newton iterations per time step
-   - Grid search over logarithmically-spaced values to find optimal balance between accuracy and cost
-
 ### Dummy Strategy
 
-1. **nx Grid Resolution Search (iterative+0-shot)**
-   - Double nx each iteration (multiplication factor: 2) starting from profile-specific initial values until convergence
-   - **Profile-specific initial values**: p1=20, p2=70, p3=20
-   - **Multiplication factor**: 2, **Max iterations**: 4
+1. **dx Grid Resolution Search (iterative+0-shot)**
+   - Halve dx each iteration (multiplication factor: 0.5) starting from profile-specific initial values until convergence
+   - **Profile-specific initial values**: p1=0.5, p2=0.5, p3=0.5
+   - **Multiplication factor**: 0.5, **Max iterations**: 4
    - **Non-target parameters**: dt∈{p1:[0.0005, 0.00025], p2:[0.005, 0.0025], p3:[0.001, 0.0005]}
 
 2. **dt Time Step Search (iterative+0-shot)**
    - Halve dt each iteration (multiplication factor: 0.5) starting from profile-specific initial values until convergence
    - **Profile-specific initial values**: p1=0.0005, p2=0.005, p3=0.001
    - **Multiplication factor**: 0.5, **Max iterations**: 4
-   - **Non-target parameters**: nx∈{p1:[20, 40], p2:[70, 140], p3:[20, 40]}
-
-3. **newton_v_res_tol Newton Tolerance Search (0-shot)**
-   - Grid search with logarithmic spacing from tight to loose tolerance
-   - **Search range**: [0.001, 0.1] (5 values, logarithmically spaced)
-   - For each newton_v_res_tol value, run a single simulation with fixed nx and dt
-   - Select the newton_v_res_tol that achieves convergence with minimum total cost
-   - **Non-target parameters**: nx∈{p1:[20, 40], p2:[70, 140], p3:[20, 40]}, dt∈{p1:[0.0005, 0.00025], p2:[0.005, 0.0025], p3:[0.001, 0.0005]}
+   - **Non-target parameters**: dx∈{p1:[0.5, 0.25], p2:[0.5, 0.25], p3:[0.5, 0.25]}
 
 ## Summarized parameter table for developer only (Not LLM)
 
@@ -167,15 +155,13 @@ When comparing two simulations with different parameter values:
 
 | Parameter | Description | Range |
 |-----------|-------------|-------|
-| nx | Mesh resolution (cells in x-direction) | 10 ≤ nx ≤ 200 |
+| dx | Mesh resolution (element size in x-direction) | 0.05 ≤ dx ≤ 1.0 |
 | dt | Time step size (seconds) | 0.0001 < dt < 0.01 |
-| newton_v_res_tol | Newton velocity residual tolerance (m/s) | 0.001 ≤ newton_v_res_tol ≤ 0.1 |
 
 More Notes:
 
-- **nx**: Determines spatial resolution; mesh aspect ratio maintained based on domain Lx/Ly ratio; higher values improve accuracy but increase computational cost quadratically
+- **dx**: Determines spatial resolution; smaller values improve accuracy but increase computational cost quadratically
 - **dt**: Time step size for implicit integration; smaller values improve temporal accuracy and Newton convergence robustness
-- **newton_v_res_tol**: Convergence tolerance for Newton solver (velocity-like residual); smaller values improve accuracy but increase Newton iterations
 
 ### Other
 
@@ -186,6 +172,7 @@ More Notes:
 | nu | Poisson's ratio | Profile-dependent |
 | density | Material density (kg/m³) | Profile-dependent |
 | max_newton_iter | Maximum Newton iterations per time step | 10 |
+| newton_v_res_tol | Newton velocity residual tolerance (m/s) | 0.01 |
 | mesh_scale | Mesh scaling factor | 1.0 |
 | verbose | Enable verbose output | False |
 | dump_dir | Directory for output files | "sim_res/fem2d/p1" |
@@ -198,20 +185,18 @@ More Notes:
   - **p1**: Cantilever beam - bending under gravity (non-energy-conserving)
   - **p2**: Vibration bar - 1D elastic wave propagation (energy-conserving)
   - **p3**: Twisting column - 2D rotational dynamics (energy-conserving)
-- **Target Parameters**: 3 (nx, dt, newton_v_res_tol)
-  - **iterative+0-shot**: nx, dt
-  - **0-shot only**: newton_v_res_tol
+- **Target Parameters**: 2 (dx, dt)
+  - **iterative+0-shot**: dx, dt
 - **Precision Levels**: 3 (high, medium, low)
 
 ### Task Distribution
 
 Current configuration generates:
 
-- **nx** (iterative+0-shot): 3 profiles × 2 non-target combos = 6 tasks
+- **dx** (iterative+0-shot): 3 profiles × 2 non-target combos = 6 tasks
 - **dt** (iterative+0-shot): 3 profiles × 2 non-target combos = 6 tasks
-- **newton_v_res_tol** (0-shot): 3 profiles × 2 non-target combos = 6 tasks
-- **Total per precision**: 18 tasks
-- **Total tasks**: 54 tasks (across 3 precision levels)
+- **Total per precision**: 12 tasks
+- **Total tasks**: 36 tasks (across 3 precision levels)
 
 ### Dummy Solution Cache
 

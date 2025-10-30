@@ -27,7 +27,7 @@ class FEM2D(SIMULATOR):
         print(f"Lamé parameters: λ={self.la}, μ={self.mu}")
         self.density = cfg.density
         self.cfl = cfg.cfl
-        self.nx = cfg.nx
+        self.dx = cfg.dx
 
         # Case type and gravity
         self.case = cfg.get("case", "cantilever")
@@ -38,9 +38,9 @@ class FEM2D(SIMULATOR):
         # Convergence criterion: |Δx| / dt < newton_v_res_tol
         # where Δx is the position correction from Newton solver
         self.max_newton_iter = cfg.max_newton_iter
-        self.newton_v_res_tol = cfg.newton_v_res_tol
+        self.newton_v_res_tol = cfg.envs_params.newton_v_res_tol
 
-        mesh = self._get_mesh(self.nx, cfg)
+        mesh = self._get_mesh(self.dx, cfg)
         self.mesh_particles = mesh.points
         self.mesh_elements = mesh.cells[0].data
         self.mesh_scale = cfg.mesh_scale
@@ -111,16 +111,15 @@ class FEM2D(SIMULATOR):
         self.energy_log_gra = []
         self.energy_log_tot = []
 
-    def _get_mesh(self, nx, cfg):
-        mesh_path = f"output/mesh/{self.case}_nx{nx}.obj"
+    def _get_mesh(self, dx, cfg):
+        mesh_path = f"output/mesh/{self.case}_dx{dx}.obj"
         if os.path.exists(mesh_path):
             return meshio.read(mesh_path)
 
         Lx = cfg.envs_params.Lx
         Ly = cfg.envs_params.Ly
-        n_gx_e = nx
-        n_gy_e = int(nx * Ly / Lx)
-        dx = Lx / n_gx_e
+        n_gx_e = int(Lx / dx)
+        n_gy_e = int(n_gx_e * Ly / Lx)
         dy = Ly / n_gy_e
 
         # Get starting position based on case
@@ -609,8 +608,7 @@ class FEM2D(SIMULATOR):
             # Fix left edge (x < x_start + small tolerance)
             x_start = self.cfg.envs_params.get("x_start", 0.0)
             Lx = self.cfg.envs_params.Lx
-            dx = Lx / self.nx
-            bc_dist_dx = 0.05 * dx
+            bc_dist_dx = 0.05 * self.dx
 
             for i in range(self.n_particles):
                 if self.mesh_particles[i, 0] < x_start + bc_dist_dx:
@@ -618,7 +616,7 @@ class FEM2D(SIMULATOR):
         elif self.case == "twisting_column":
             # Fix bottom edge (y < small tolerance)
             Ly = self.cfg.envs_params.Ly
-            dy = Ly / int(self.nx * Ly / self.cfg.envs_params.Lx)
+            dy = Ly / int(self.cfg.envs_params.Lx / self.dx * Ly / self.cfg.envs_params.Lx)
             bc_dist_dy = 0.05 * dy
 
             for i in range(self.n_particles):

@@ -25,7 +25,7 @@ def main(cfg: DictConfig) -> None:
     base_dir = os.path.dirname(cfg.dump_dir)
 
     # Create parameterized directory name
-    param_dir = f"{profile}_nx{cfg.nx}_cfl{format_param_for_path(cfg.cfl)}_nvrestol{format_param_for_path(cfg.newton_v_res_tol)}"
+    param_dir = f"{profile}_dx{cfg.dx}_cfl{format_param_for_path(cfg.cfl)}"
     cfg.dump_dir = os.path.join(base_dir, param_dir)
 
     solver = FEM2D(verbose=cfg.verbose, cfg=cfg)

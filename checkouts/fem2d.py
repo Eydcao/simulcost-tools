@@ -14,13 +14,13 @@ import json
 import matplotlib.pyplot as plt
 import numpy as np
 from collections import defaultdict
+import yaml
 
 # Add project root to Python path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from checkouts.config_utils import load_config, build_target_configs
-from dummy_sols.fem2d import find_convergent_nx, find_convergent_cfl, find_convergent_newton_v_res_tol
-import yaml
+from dummy_sols.fem2d import find_convergent_dx, find_convergent_cfl
 
 
 def get_case_from_profile(profile):
@@ -38,7 +38,7 @@ def get_case_from_profile(profile):
                     "p2": "vibration_bar",
                     "p3": "twisting_column",
                     "p4": "vibration_bar",
-                    "p5": "twisting_column"
+                    "p5": "twisting_column",
                 }
                 return case_map.get(profile, "unknown")
     except FileNotFoundError:
@@ -143,13 +143,13 @@ def plot_statistics(statistics, output_dir):
     colors = ["skyblue", "lightgreen", "lightcoral"]
     color_idx = 0
 
-    if statistics["optimal_nx_values"]:
-        nx_values, nx_counts = np.unique(list(statistics["optimal_nx_values"]), return_counts=True)
+    if statistics["optimal_dx_values"]:
+        dx_values, dx_counts = np.unique(list(statistics["optimal_dx_values"]), return_counts=True)
         ax.bar(
-            [str(n) for n in nx_values],
-            nx_counts,
+            [str(n) for n in dx_values],
+            dx_counts,
             alpha=0.7,
-            label="nx parameter",
+            label="dx parameter",
             color=colors[color_idx % len(colors)],
         )
         color_idx += 1
@@ -164,18 +164,6 @@ def plot_statistics(statistics, output_dir):
             color=colors[color_idx % len(colors)],
         )
         color_idx += 1
-
-    if statistics["optimal_newton_v_res_tol_values"]:
-        newton_values, newton_counts = np.unique(
-            list(statistics["optimal_newton_v_res_tol_values"]), return_counts=True
-        )
-        ax.bar(
-            [f"{n:.6g}" for n in newton_values],
-            newton_counts,
-            alpha=0.7,
-            label="newton_v_res_tol parameter",
-            color=colors[color_idx % len(colors)],
-        )
 
     ax.set_ylabel("Frequency")
     ax.set_title("Optimal Parameter Values (All Tasks)")
@@ -231,25 +219,17 @@ def plot_statistics(statistics, output_dir):
         f.write("\n")
 
         f.write("5. Optimal Parameter Frequencies (All Tasks):\n")
-        if statistics["optimal_nx_values"]:
-            nx_values, nx_counts = np.unique(list(statistics["optimal_nx_values"]), return_counts=True)
-            f.write("   nx parameter (iterative):\n")
-            for nx, count in zip(nx_values, nx_counts):
-                f.write(f"     nx={nx}: {count} times\n")
+        if statistics["optimal_dx_values"]:
+            dx_values, dx_counts = np.unique(list(statistics["optimal_dx_values"]), return_counts=True)
+            f.write("   dx parameter (iterative):\n")
+            for dx, count in zip(dx_values, dx_counts):
+                f.write(f"     dx={dx}: {count} times\n")
 
         if statistics["optimal_cfl_values"]:
             cfl_values, cfl_counts = np.unique(list(statistics["optimal_cfl_values"]), return_counts=True)
             f.write("   cfl parameter (iterative):\n")
             for cfl, count in zip(cfl_values, cfl_counts):
                 f.write(f"     cfl={cfl:.6g}: {count} times\n")
-
-        if statistics["optimal_newton_v_res_tol_values"]:
-            newton_values, newton_counts = np.unique(
-                list(statistics["optimal_newton_v_res_tol_values"]), return_counts=True
-            )
-            f.write("   newton_v_res_tol parameter (iterative):\n")
-            for newton_tol, count in zip(newton_values, newton_counts):
-                f.write(f"     newton_v_res_tol={newton_tol:.6g}: {count} times\n")
 
 
 def main():
@@ -266,12 +246,15 @@ def main():
     precision_configs = {}
     for precision_name, precision_info in config["precision_levels"].items():
         # Check if this is profile-specific (new format) or global (old format)
-        if all(isinstance(val, dict) and "energy_tolerance" in val and "var_threshold" in val
-               for val in precision_info.values()):
+        if all(
+            isinstance(val, dict) and "energy_tolerance" in val and "var_threshold" in val
+            for val in precision_info.values()
+        ):
             # New format: profile-specific precision levels
             precision_configs[precision_name] = precision_info
-        elif isinstance(precision_info.get("energy_tolerance"), (int, float)) and \
-             isinstance(precision_info.get("var_threshold"), (int, float)):
+        elif isinstance(precision_info.get("energy_tolerance"), (int, float)) and isinstance(
+            precision_info.get("var_threshold"), (int, float)
+        ):
             # Old format: global precision levels (for backward compatibility)
             precision_configs[precision_name] = precision_info
 
@@ -295,9 +278,8 @@ def main():
         "convergence_by_precision": defaultdict(lambda: {"total": 0, "converged": 0}),
         "convergence_by_target": defaultdict(lambda: {"total": 0, "converged": 0, "costs": []}),
         "convergence_by_profile": defaultdict(lambda: {"total": 0, "converged": 0}),
-        "optimal_nx_values": [],
+        "optimal_dx_values": [],
         "optimal_cfl_values": [],
-        "optimal_newton_v_res_tol_values": [],
     }
 
     # Initialize task collection for datasets
@@ -341,7 +323,7 @@ def main():
                         # Profile-dependent parameter
                         param_values.append(values[profile])
                     else:
-                        param_values.append(values)
+                        param_values.append(values if isinstance(values, list) else [values])
 
                 # Generate all combinations using nested loops (cartesian product)
                 for combination in itertools.product(*param_values):
@@ -351,30 +333,32 @@ def main():
                     print(f"      Running {target_param} search with params: {task_params}")
 
                     # Call appropriate search function based on target parameter
-                    if target_param == "nx":
-                        # Get profile-specific initial nx value
-                        initial_nx = target_config["initial_values"][profile]
-                        is_converged, best_param, cost_history, param_history = find_convergent_nx(
+                    if target_param == "dx":
+                        # Get profile-specific initial dx value
+                        initial_dx = target_config.get("initial_value")
+                        if isinstance(initial_dx, dict):
+                            initial_dx = initial_dx[profile]
+                        is_converged, best_param, cost_history, param_history = find_convergent_dx(
                             profile=profile,
-                            nx=initial_nx,
+                            dx=initial_dx,
                             cfl=task_params["cfl"],
-                            newton_v_res_tol=task_params["newton_v_res_tol"],
                             energy_tolerance=energy_tolerance,
                             var_threshold=var_threshold,
                             multiplication_factor=target_config["multiplication_factor"],
                             max_iteration_num=target_config["max_iteration_num"],
                         )
                         if best_param is not None:
-                            statistics["optimal_nx_values"].append(best_param)
+                            statistics["optimal_dx_values"].append(best_param)
 
                     elif target_param == "cfl":
                         # Get profile-specific initial cfl value
-                        initial_cfl = target_config["initial_values"][profile]
+                        initial_cfl = target_config.get("initial_value")
+                        if isinstance(initial_cfl, dict):
+                            initial_cfl = initial_cfl[profile]
                         is_converged, best_param, cost_history, param_history = find_convergent_cfl(
                             profile=profile,
-                            nx=task_params["nx"],
+                            dx=task_params["dx"],
                             cfl=initial_cfl,
-                            newton_v_res_tol=task_params["newton_v_res_tol"],
                             energy_tolerance=energy_tolerance,
                             var_threshold=var_threshold,
                             multiplication_factor=target_config["multiplication_factor"],
@@ -382,22 +366,6 @@ def main():
                         )
                         if best_param is not None:
                             statistics["optimal_cfl_values"].append(best_param)
-
-                    elif target_param == "newton_v_res_tol":
-                        # Iterative search for newton_v_res_tol (similar to nx and cfl)
-                        initial_newton_v_res_tol = target_config["initial_values"][profile]
-                        is_converged, best_param, cost_history, param_history = find_convergent_newton_v_res_tol(
-                            profile=profile,
-                            nx=task_params["nx"],
-                            cfl=task_params["cfl"],
-                            newton_v_res_tol=initial_newton_v_res_tol,
-                            energy_tolerance=energy_tolerance,
-                            var_threshold=var_threshold,
-                            multiplication_factor=target_config["multiplication_factor"],
-                            max_iteration_num=target_config["max_iteration_num"],
-                        )
-                        if best_param is not None:
-                            statistics["optimal_newton_v_res_tol_values"].append(best_param)
 
                     # Create task record for dataset
                     task_record = {
@@ -409,7 +377,7 @@ def main():
                             "var_threshold": var_threshold,
                         },
                         "target_config": {
-                            "initial_value": target_config.get("initial_values", {}).get(profile),
+                            "initial_value": target_config.get("initial_value"),
                             "multiplication_factor": target_config.get("multiplication_factor"),
                             "max_iteration_num": target_config.get("max_iteration_num"),
                         },
