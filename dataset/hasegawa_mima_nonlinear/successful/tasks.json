@@ -2,7 +2,7 @@
   "metadata": {
     "solver": "hasegawa_mima_nonlinear",
     "description": "Successfully converged parameter optimization tasks",
-    "total_tasks": 62
+    "total_tasks": 100
   },
   "tasks": [
     {
@@ -10,7 +10,42 @@
       "solver": "hasegawa_mima_nonlinear",
       "profile": "p1",
       "precision_level": "low",
-      "tolerance_rmse": 0.0005,
+      "tolerance_rmse": 0.01,
+      "target_parameter": "N",
+      "target_config": {
+        "initial_value": 32,
+        "multiplication_factor": 2,
+        "max_iteration_num": 4
+      },
+      "non_target_parameters": {
+        "dt": 2.5
+      },
+      "results": {
+        "converged": true,
+        "optimal_parameter_value": 64,
+        "total_computational_cost": 85525252096.0,
+        "cost_history": [
+          14745733120.0,
+          70779518976.0
+        ],
+        "parameter_history": [
+          {
+            "N": 32,
+            "dt": 2.5
+          },
+          {
+            "N": 64,
+            "dt": 2.5
+          }
+        ]
+      }
+    },
+    {
+      "task_id": 2,
+      "solver": "hasegawa_mima_nonlinear",
+      "profile": "p1",
+      "precision_level": "low",
+      "tolerance_rmse": 0.01,
       "target_parameter": "N",
       "target_config": {
         "initial_value": 32,
@@ -41,11 +76,11 @@
       }
     },
     {
-      "task_id": 2,
+      "task_id": 3,
       "solver": "hasegawa_mima_nonlinear",
       "profile": "p1",
       "precision_level": "low",
-      "tolerance_rmse": 0.0005,
+      "tolerance_rmse": 0.01,
       "target_parameter": "N",
       "target_config": {
         "initial_value": 32,
@@ -76,11 +111,11 @@
       }
     },
     {
-      "task_id": 3,
+      "task_id": 4,
       "solver": "hasegawa_mima_nonlinear",
       "profile": "p1",
       "precision_level": "low",
-      "tolerance_rmse": 0.0005,
+      "tolerance_rmse": 0.01,
       "target_parameter": "N",
       "target_config": {
         "initial_value": 32,
@@ -111,11 +146,11 @@
       }
     },
     {
-      "task_id": 4,
+      "task_id": 5,
       "solver": "hasegawa_mima_nonlinear",
       "profile": "p1",
       "precision_level": "low",
-      "tolerance_rmse": 0.0005,
+      "tolerance_rmse": 0.01,
       "target_parameter": "N",
       "target_config": {
         "initial_value": 32,
@@ -146,16 +181,16 @@
       }
     },
     {
-      "task_id": 5,
+      "task_id": 6,
       "solver": "hasegawa_mima_nonlinear",
       "profile": "p1",
       "precision_level": "low",
-      "tolerance_rmse": 0.0005,
+      "tolerance_rmse": 0.01,
       "target_parameter": "dt",
       "target_config": {
         "initial_value": 40.0,
         "multiplication_factor": 0.5,
-        "max_iteration_num": 4
+        "max_iteration_num": 5
       },
       "non_target_parameters": {
         "N": 32
@@ -175,41 +210,6 @@
           },
           {
             "N": 32,
-            "dt": 20.0
-          }
-        ]
-      }
-    },
-    {
-      "task_id": 6,
-      "solver": "hasegawa_mima_nonlinear",
-      "profile": "p1",
-      "precision_level": "low",
-      "tolerance_rmse": 0.0005,
-      "target_parameter": "dt",
-      "target_config": {
-        "initial_value": 40.0,
-        "multiplication_factor": 0.5,
-        "max_iteration_num": 4
-      },
-      "non_target_parameters": {
-        "N": 64
-      },
-      "results": {
-        "converged": true,
-        "optimal_parameter_value": 20.0,
-        "total_computational_cost": 13272317952.0,
-        "cost_history": [
-          4424318976.0,
-          8847998976.0
-        ],
-        "parameter_history": [
-          {
-            "N": 64,
-            "dt": 40.0
-          },
-          {
-            "N": 64,
             "dt": 20.0
           }
         ]
@@ -220,12 +220,47 @@
       "solver": "hasegawa_mima_nonlinear",
       "profile": "p1",
       "precision_level": "low",
-      "tolerance_rmse": 0.0005,
+      "tolerance_rmse": 0.01,
       "target_parameter": "dt",
       "target_config": {
         "initial_value": 40.0,
         "multiplication_factor": 0.5,
-        "max_iteration_num": 4
+        "max_iteration_num": 5
+      },
+      "non_target_parameters": {
+        "N": 64
+      },
+      "results": {
+        "converged": true,
+        "optimal_parameter_value": 20.0,
+        "total_computational_cost": 13272317952.0,
+        "cost_history": [
+          4424318976.0,
+          8847998976.0
+        ],
+        "parameter_history": [
+          {
+            "N": 64,
+            "dt": 40.0
+          },
+          {
+            "N": 64,
+            "dt": 20.0
+          }
+        ]
+      }
+    },
+    {
+      "task_id": 8,
+      "solver": "hasegawa_mima_nonlinear",
+      "profile": "p1",
+      "precision_level": "low",
+      "tolerance_rmse": 0.01,
+      "target_parameter": "dt",
+      "target_config": {
+        "initial_value": 40.0,
+        "multiplication_factor": 0.5,
+        "max_iteration_num": 5
       },
       "non_target_parameters": {
         "N": 128
@@ -251,11 +286,46 @@
       }
     },
     {
-      "task_id": 9,
+      "task_id": 10,
       "solver": "hasegawa_mima_nonlinear",
       "profile": "p2",
       "precision_level": "low",
-      "tolerance_rmse": 0.0005,
+      "tolerance_rmse": 0.01,
+      "target_parameter": "N",
+      "target_config": {
+        "initial_value": 32,
+        "multiplication_factor": 2,
+        "max_iteration_num": 4
+      },
+      "non_target_parameters": {
+        "dt": 2.5
+      },
+      "results": {
+        "converged": true,
+        "optimal_parameter_value": 64,
+        "total_computational_cost": 85525252096.0,
+        "cost_history": [
+          14745733120.0,
+          70779518976.0
+        ],
+        "parameter_history": [
+          {
+            "N": 32,
+            "dt": 2.5
+          },
+          {
+            "N": 64,
+            "dt": 2.5
+          }
+        ]
+      }
+    },
+    {
+      "task_id": 11,
+      "solver": "hasegawa_mima_nonlinear",
+      "profile": "p2",
+      "precision_level": "low",
+      "tolerance_rmse": 0.01,
       "target_parameter": "N",
       "target_config": {
         "initial_value": 32,
@@ -267,12 +337,11 @@
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 128,
-        "total_computational_cost": 207916713984.0,
+        "optimal_parameter_value": 64,
+        "total_computational_cost": 42763012096.0,
         "cost_history": [
           7372933120.0,
-          35390078976.0,
-          165153701888.0
+          35390078976.0
         ],
         "parameter_history": [
           {
@@ -282,20 +351,16 @@
           {
             "N": 64,
             "dt": 5.0
-          },
-          {
-            "N": 128,
-            "dt": 5.0
           }
         ]
       }
     },
     {
-      "task_id": 10,
+      "task_id": 12,
       "solver": "hasegawa_mima_nonlinear",
       "profile": "p2",
       "precision_level": "low",
-      "tolerance_rmse": 0.0005,
+      "tolerance_rmse": 0.01,
       "target_parameter": "N",
       "target_config": {
         "initial_value": 32,
@@ -307,12 +372,11 @@
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 128,
-        "total_computational_cost": 103960233984.0,
+        "optimal_parameter_value": 64,
+        "total_computational_cost": 21381892096.0,
         "cost_history": [
           3686533120.0,
-          17695358976.0,
-          82578341888.0
+          17695358976.0
         ],
         "parameter_history": [
           {
@@ -322,20 +386,16 @@
           {
             "N": 64,
             "dt": 10.0
-          },
-          {
-            "N": 128,
-            "dt": 10.0
           }
         ]
       }
     },
     {
-      "task_id": 11,
+      "task_id": 13,
       "solver": "hasegawa_mima_nonlinear",
       "profile": "p2",
       "precision_level": "low",
-      "tolerance_rmse": 0.0005,
+      "tolerance_rmse": 0.01,
       "target_parameter": "N",
       "target_config": {
         "initial_value": 32,
@@ -347,12 +407,11 @@
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 128,
-        "total_computational_cost": 51981993984.0,
+        "optimal_parameter_value": 64,
+        "total_computational_cost": 10691332096.0,
         "cost_history": [
           1843333120.0,
-          8847998976.0,
-          41290661888.0
+          8847998976.0
         ],
         "parameter_history": [
           {
@@ -361,85 +420,6 @@
           },
           {
             "N": 64,
-            "dt": 20.0
-          },
-          {
-            "N": 128,
-            "dt": 20.0
-          }
-        ]
-      }
-    },
-    {
-      "task_id": 12,
-      "solver": "hasegawa_mima_nonlinear",
-      "profile": "p2",
-      "precision_level": "low",
-      "tolerance_rmse": 0.0005,
-      "target_parameter": "N",
-      "target_config": {
-        "initial_value": 32,
-        "multiplication_factor": 2,
-        "max_iteration_num": 4
-      },
-      "non_target_parameters": {
-        "dt": 40.0
-      },
-      "results": {
-        "converged": true,
-        "optimal_parameter_value": 128,
-        "total_computational_cost": 25992873984.0,
-        "cost_history": [
-          921733120.0,
-          4424318976.0,
-          20646821888.0
-        ],
-        "parameter_history": [
-          {
-            "N": 32,
-            "dt": 40.0
-          },
-          {
-            "N": 64,
-            "dt": 40.0
-          },
-          {
-            "N": 128,
-            "dt": 40.0
-          }
-        ]
-      }
-    },
-    {
-      "task_id": 13,
-      "solver": "hasegawa_mima_nonlinear",
-      "profile": "p2",
-      "precision_level": "low",
-      "tolerance_rmse": 0.0005,
-      "target_parameter": "dt",
-      "target_config": {
-        "initial_value": 40.0,
-        "multiplication_factor": 0.5,
-        "max_iteration_num": 4
-      },
-      "non_target_parameters": {
-        "N": 32
-      },
-      "results": {
-        "converged": true,
-        "optimal_parameter_value": 20.0,
-        "total_computational_cost": 2765066240.0,
-        "cost_history": [
-          921733120.0,
-          1843333120.0
-        ],
-        "parameter_history": [
-          {
-            "N": 32,
-            "dt": 40.0
-          },
-          {
-            "N": 32,
             "dt": 20.0
           }
         ]
@@ -450,32 +430,32 @@
       "solver": "hasegawa_mima_nonlinear",
       "profile": "p2",
       "precision_level": "low",
-      "tolerance_rmse": 0.0005,
-      "target_parameter": "dt",
+      "tolerance_rmse": 0.01,
+      "target_parameter": "N",
       "target_config": {
-        "initial_value": 40.0,
-        "multiplication_factor": 0.5,
+        "initial_value": 32,
+        "multiplication_factor": 2,
         "max_iteration_num": 4
       },
       "non_target_parameters": {
-        "N": 64
+        "dt": 40.0
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 20.0,
-        "total_computational_cost": 13272317952.0,
+        "optimal_parameter_value": 64,
+        "total_computational_cost": 5346052096.0,
         "cost_history": [
-          4424318976.0,
-          8847998976.0
+          921733120.0,
+          4424318976.0
         ],
         "parameter_history": [
           {
-            "N": 64,
+            "N": 32,
             "dt": 40.0
           },
           {
             "N": 64,
-            "dt": 20.0
+            "dt": 40.0
           }
         ]
       }
@@ -485,12 +465,82 @@
       "solver": "hasegawa_mima_nonlinear",
       "profile": "p2",
       "precision_level": "low",
-      "tolerance_rmse": 0.0005,
+      "tolerance_rmse": 0.01,
       "target_parameter": "dt",
       "target_config": {
         "initial_value": 40.0,
         "multiplication_factor": 0.5,
-        "max_iteration_num": 4
+        "max_iteration_num": 5
+      },
+      "non_target_parameters": {
+        "N": 32
+      },
+      "results": {
+        "converged": true,
+        "optimal_parameter_value": 20.0,
+        "total_computational_cost": 2765066240.0,
+        "cost_history": [
+          921733120.0,
+          1843333120.0
+        ],
+        "parameter_history": [
+          {
+            "N": 32,
+            "dt": 40.0
+          },
+          {
+            "N": 32,
+            "dt": 20.0
+          }
+        ]
+      }
+    },
+    {
+      "task_id": 16,
+      "solver": "hasegawa_mima_nonlinear",
+      "profile": "p2",
+      "precision_level": "low",
+      "tolerance_rmse": 0.01,
+      "target_parameter": "dt",
+      "target_config": {
+        "initial_value": 40.0,
+        "multiplication_factor": 0.5,
+        "max_iteration_num": 5
+      },
+      "non_target_parameters": {
+        "N": 64
+      },
+      "results": {
+        "converged": true,
+        "optimal_parameter_value": 20.0,
+        "total_computational_cost": 13272317952.0,
+        "cost_history": [
+          4424318976.0,
+          8847998976.0
+        ],
+        "parameter_history": [
+          {
+            "N": 64,
+            "dt": 40.0
+          },
+          {
+            "N": 64,
+            "dt": 20.0
+          }
+        ]
+      }
+    },
+    {
+      "task_id": 17,
+      "solver": "hasegawa_mima_nonlinear",
+      "profile": "p2",
+      "precision_level": "low",
+      "tolerance_rmse": 0.01,
+      "target_parameter": "dt",
+      "target_config": {
+        "initial_value": 40.0,
+        "multiplication_factor": 0.5,
+        "max_iteration_num": 5
       },
       "non_target_parameters": {
         "N": 128
@@ -516,11 +566,46 @@
       }
     },
     {
-      "task_id": 17,
+      "task_id": 19,
       "solver": "hasegawa_mima_nonlinear",
       "profile": "p3",
       "precision_level": "low",
-      "tolerance_rmse": 0.0005,
+      "tolerance_rmse": 0.01,
+      "target_parameter": "N",
+      "target_config": {
+        "initial_value": 32,
+        "multiplication_factor": 2,
+        "max_iteration_num": 4
+      },
+      "non_target_parameters": {
+        "dt": 2.5
+      },
+      "results": {
+        "converged": true,
+        "optimal_parameter_value": 64,
+        "total_computational_cost": 85525252096.0,
+        "cost_history": [
+          14745733120.0,
+          70779518976.0
+        ],
+        "parameter_history": [
+          {
+            "N": 32,
+            "dt": 2.5
+          },
+          {
+            "N": 64,
+            "dt": 2.5
+          }
+        ]
+      }
+    },
+    {
+      "task_id": 20,
+      "solver": "hasegawa_mima_nonlinear",
+      "profile": "p3",
+      "precision_level": "low",
+      "tolerance_rmse": 0.01,
       "target_parameter": "N",
       "target_config": {
         "initial_value": 32,
@@ -532,13 +617,11 @@
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 256,
-        "total_computational_cost": 962905065472.0,
+        "optimal_parameter_value": 64,
+        "total_computational_cost": 42763012096.0,
         "cost_history": [
           7372933120.0,
-          35390078976.0,
-          165153701888.0,
-          754988351488.0
+          35390078976.0
         ],
         "parameter_history": [
           {
@@ -548,59 +631,6 @@
           {
             "N": 64,
             "dt": 5.0
-          },
-          {
-            "N": 128,
-            "dt": 5.0
-          },
-          {
-            "N": 256,
-            "dt": 5.0
-          }
-        ]
-      }
-    },
-    {
-      "task_id": 18,
-      "solver": "hasegawa_mima_nonlinear",
-      "profile": "p3",
-      "precision_level": "low",
-      "tolerance_rmse": 0.0005,
-      "target_parameter": "N",
-      "target_config": {
-        "initial_value": 32,
-        "multiplication_factor": 2,
-        "max_iteration_num": 4
-      },
-      "non_target_parameters": {
-        "dt": 10.0
-      },
-      "results": {
-        "converged": true,
-        "optimal_parameter_value": 256,
-        "total_computational_cost": 481461225472.0,
-        "cost_history": [
-          3686533120.0,
-          17695358976.0,
-          82578341888.0,
-          377500991488.0
-        ],
-        "parameter_history": [
-          {
-            "N": 32,
-            "dt": 10.0
-          },
-          {
-            "N": 64,
-            "dt": 10.0
-          },
-          {
-            "N": 128,
-            "dt": 10.0
-          },
-          {
-            "N": 256,
-            "dt": 10.0
           }
         ]
       }
@@ -610,32 +640,32 @@
       "solver": "hasegawa_mima_nonlinear",
       "profile": "p3",
       "precision_level": "low",
-      "tolerance_rmse": 0.0005,
-      "target_parameter": "dt",
+      "tolerance_rmse": 0.01,
+      "target_parameter": "N",
       "target_config": {
-        "initial_value": 40.0,
-        "multiplication_factor": 0.5,
+        "initial_value": 32,
+        "multiplication_factor": 2,
         "max_iteration_num": 4
       },
       "non_target_parameters": {
-        "N": 32
+        "dt": 10.0
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 20.0,
-        "total_computational_cost": 2765066240.0,
+        "optimal_parameter_value": 64,
+        "total_computational_cost": 21381892096.0,
         "cost_history": [
-          921733120.0,
-          1843333120.0
+          3686533120.0,
+          17695358976.0
         ],
         "parameter_history": [
           {
             "N": 32,
-            "dt": 40.0
+            "dt": 10.0
           },
           {
-            "N": 32,
-            "dt": 20.0
+            "N": 64,
+            "dt": 10.0
           }
         ]
       }
@@ -645,12 +675,117 @@
       "solver": "hasegawa_mima_nonlinear",
       "profile": "p3",
       "precision_level": "low",
-      "tolerance_rmse": 0.0005,
+      "tolerance_rmse": 0.01,
+      "target_parameter": "N",
+      "target_config": {
+        "initial_value": 32,
+        "multiplication_factor": 2,
+        "max_iteration_num": 4
+      },
+      "non_target_parameters": {
+        "dt": 20.0
+      },
+      "results": {
+        "converged": true,
+        "optimal_parameter_value": 64,
+        "total_computational_cost": 10691332096.0,
+        "cost_history": [
+          1843333120.0,
+          8847998976.0
+        ],
+        "parameter_history": [
+          {
+            "N": 32,
+            "dt": 20.0
+          },
+          {
+            "N": 64,
+            "dt": 20.0
+          }
+        ]
+      }
+    },
+    {
+      "task_id": 23,
+      "solver": "hasegawa_mima_nonlinear",
+      "profile": "p3",
+      "precision_level": "low",
+      "tolerance_rmse": 0.01,
+      "target_parameter": "N",
+      "target_config": {
+        "initial_value": 32,
+        "multiplication_factor": 2,
+        "max_iteration_num": 4
+      },
+      "non_target_parameters": {
+        "dt": 40.0
+      },
+      "results": {
+        "converged": true,
+        "optimal_parameter_value": 64,
+        "total_computational_cost": 5346052096.0,
+        "cost_history": [
+          921733120.0,
+          4424318976.0
+        ],
+        "parameter_history": [
+          {
+            "N": 32,
+            "dt": 40.0
+          },
+          {
+            "N": 64,
+            "dt": 40.0
+          }
+        ]
+      }
+    },
+    {
+      "task_id": 24,
+      "solver": "hasegawa_mima_nonlinear",
+      "profile": "p3",
+      "precision_level": "low",
+      "tolerance_rmse": 0.01,
       "target_parameter": "dt",
       "target_config": {
         "initial_value": 40.0,
         "multiplication_factor": 0.5,
-        "max_iteration_num": 4
+        "max_iteration_num": 5
+      },
+      "non_target_parameters": {
+        "N": 32
+      },
+      "results": {
+        "converged": true,
+        "optimal_parameter_value": 20.0,
+        "total_computational_cost": 2765066240.0,
+        "cost_history": [
+          921733120.0,
+          1843333120.0
+        ],
+        "parameter_history": [
+          {
+            "N": 32,
+            "dt": 40.0
+          },
+          {
+            "N": 32,
+            "dt": 20.0
+          }
+        ]
+      }
+    },
+    {
+      "task_id": 25,
+      "solver": "hasegawa_mima_nonlinear",
+      "profile": "p3",
+      "precision_level": "low",
+      "tolerance_rmse": 0.01,
+      "target_parameter": "dt",
+      "target_config": {
+        "initial_value": 40.0,
+        "multiplication_factor": 0.5,
+        "max_iteration_num": 5
       },
       "non_target_parameters": {
         "N": 64
@@ -671,6 +806,41 @@
           {
             "N": 64,
             "dt": 20.0
+          }
+        ]
+      }
+    },
+    {
+      "task_id": 28,
+      "solver": "hasegawa_mima_nonlinear",
+      "profile": "p4",
+      "precision_level": "low",
+      "tolerance_rmse": 0.01,
+      "target_parameter": "N",
+      "target_config": {
+        "initial_value": 32,
+        "multiplication_factor": 2,
+        "max_iteration_num": 4
+      },
+      "non_target_parameters": {
+        "dt": 2.5
+      },
+      "results": {
+        "converged": true,
+        "optimal_parameter_value": 64,
+        "total_computational_cost": 85525252096.0,
+        "cost_history": [
+          14745733120.0,
+          70779518976.0
+        ],
+        "parameter_history": [
+          {
+            "N": 32,
+            "dt": 2.5
+          },
+          {
+            "N": 64,
+            "dt": 2.5
           }
         ]
       }
@@ -680,32 +850,32 @@
       "solver": "hasegawa_mima_nonlinear",
       "profile": "p4",
       "precision_level": "low",
-      "tolerance_rmse": 0.0005,
-      "target_parameter": "dt",
+      "tolerance_rmse": 0.01,
+      "target_parameter": "N",
       "target_config": {
-        "initial_value": 40.0,
-        "multiplication_factor": 0.5,
+        "initial_value": 32,
+        "multiplication_factor": 2,
         "max_iteration_num": 4
       },
       "non_target_parameters": {
-        "N": 32
+        "dt": 5.0
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 20.0,
-        "total_computational_cost": 2765066240.0,
+        "optimal_parameter_value": 64,
+        "total_computational_cost": 42763012096.0,
         "cost_history": [
-          921733120.0,
-          1843333120.0
+          7372933120.0,
+          35390078976.0
         ],
         "parameter_history": [
           {
             "N": 32,
-            "dt": 40.0
+            "dt": 5.0
           },
           {
-            "N": 32,
-            "dt": 20.0
+            "N": 64,
+            "dt": 5.0
           }
         ]
       }
@@ -715,32 +885,32 @@
       "solver": "hasegawa_mima_nonlinear",
       "profile": "p4",
       "precision_level": "low",
-      "tolerance_rmse": 0.0005,
-      "target_parameter": "dt",
+      "tolerance_rmse": 0.01,
+      "target_parameter": "N",
       "target_config": {
-        "initial_value": 40.0,
-        "multiplication_factor": 0.5,
+        "initial_value": 32,
+        "multiplication_factor": 2,
         "max_iteration_num": 4
       },
       "non_target_parameters": {
-        "N": 64
+        "dt": 10.0
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 20.0,
-        "total_computational_cost": 13272317952.0,
+        "optimal_parameter_value": 64,
+        "total_computational_cost": 21381892096.0,
         "cost_history": [
-          4424318976.0,
-          8847998976.0
+          3686533120.0,
+          17695358976.0
         ],
         "parameter_history": [
           {
-            "N": 64,
-            "dt": 40.0
+            "N": 32,
+            "dt": 10.0
           },
           {
             "N": 64,
-            "dt": 20.0
+            "dt": 10.0
           }
         ]
       }
@@ -750,122 +920,7 @@
       "solver": "hasegawa_mima_nonlinear",
       "profile": "p4",
       "precision_level": "low",
-      "tolerance_rmse": 0.0005,
-      "target_parameter": "dt",
-      "target_config": {
-        "initial_value": 40.0,
-        "multiplication_factor": 0.5,
-        "max_iteration_num": 4
-      },
-      "non_target_parameters": {
-        "N": 128
-      },
-      "results": {
-        "converged": true,
-        "optimal_parameter_value": 20.0,
-        "total_computational_cost": 61937483776.0,
-        "cost_history": [
-          20646821888.0,
-          41290661888.0
-        ],
-        "parameter_history": [
-          {
-            "N": 128,
-            "dt": 40.0
-          },
-          {
-            "N": 128,
-            "dt": 20.0
-          }
-        ]
-      }
-    },
-    {
-      "task_id": 33,
-      "solver": "hasegawa_mima_nonlinear",
-      "profile": "p5",
-      "precision_level": "low",
-      "tolerance_rmse": 0.0005,
-      "target_parameter": "N",
-      "target_config": {
-        "initial_value": 32,
-        "multiplication_factor": 2,
-        "max_iteration_num": 4
-      },
-      "non_target_parameters": {
-        "dt": 5.0
-      },
-      "results": {
-        "converged": true,
-        "optimal_parameter_value": 128,
-        "total_computational_cost": 207916713984.0,
-        "cost_history": [
-          7372933120.0,
-          35390078976.0,
-          165153701888.0
-        ],
-        "parameter_history": [
-          {
-            "N": 32,
-            "dt": 5.0
-          },
-          {
-            "N": 64,
-            "dt": 5.0
-          },
-          {
-            "N": 128,
-            "dt": 5.0
-          }
-        ]
-      }
-    },
-    {
-      "task_id": 34,
-      "solver": "hasegawa_mima_nonlinear",
-      "profile": "p5",
-      "precision_level": "low",
-      "tolerance_rmse": 0.0005,
-      "target_parameter": "N",
-      "target_config": {
-        "initial_value": 32,
-        "multiplication_factor": 2,
-        "max_iteration_num": 4
-      },
-      "non_target_parameters": {
-        "dt": 10.0
-      },
-      "results": {
-        "converged": true,
-        "optimal_parameter_value": 128,
-        "total_computational_cost": 103960233984.0,
-        "cost_history": [
-          3686533120.0,
-          17695358976.0,
-          82578341888.0
-        ],
-        "parameter_history": [
-          {
-            "N": 32,
-            "dt": 10.0
-          },
-          {
-            "N": 64,
-            "dt": 10.0
-          },
-          {
-            "N": 128,
-            "dt": 10.0
-          }
-        ]
-      }
-    },
-    {
-      "task_id": 35,
-      "solver": "hasegawa_mima_nonlinear",
-      "profile": "p5",
-      "precision_level": "low",
-      "tolerance_rmse": 0.0005,
+      "tolerance_rmse": 0.01,
       "target_parameter": "N",
       "target_config": {
         "initial_value": 32,
@@ -877,12 +932,11 @@
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 128,
-        "total_computational_cost": 51981993984.0,
+        "optimal_parameter_value": 64,
+        "total_computational_cost": 10691332096.0,
         "cost_history": [
           1843333120.0,
-          8847998976.0,
-          41290661888.0
+          8847998976.0
         ],
         "parameter_history": [
           {
@@ -892,20 +946,16 @@
           {
             "N": 64,
             "dt": 20.0
-          },
-          {
-            "N": 128,
-            "dt": 20.0
           }
         ]
       }
     },
     {
-      "task_id": 36,
+      "task_id": 32,
       "solver": "hasegawa_mima_nonlinear",
-      "profile": "p5",
+      "profile": "p4",
       "precision_level": "low",
-      "tolerance_rmse": 0.0005,
+      "tolerance_rmse": 0.01,
       "target_parameter": "N",
       "target_config": {
         "initial_value": 32,
@@ -917,12 +967,11 @@
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 128,
-        "total_computational_cost": 25992873984.0,
+        "optimal_parameter_value": 64,
+        "total_computational_cost": 5346052096.0,
         "cost_history": [
           921733120.0,
-          4424318976.0,
-          20646821888.0
+          4424318976.0
         ],
         "parameter_history": [
           {
@@ -932,25 +981,21 @@
           {
             "N": 64,
             "dt": 40.0
-          },
-          {
-            "N": 128,
-            "dt": 40.0
           }
         ]
       }
     },
     {
-      "task_id": 37,
+      "task_id": 33,
       "solver": "hasegawa_mima_nonlinear",
-      "profile": "p5",
+      "profile": "p4",
       "precision_level": "low",
-      "tolerance_rmse": 0.0005,
+      "tolerance_rmse": 0.01,
       "target_parameter": "dt",
       "target_config": {
         "initial_value": 40.0,
         "multiplication_factor": 0.5,
-        "max_iteration_num": 4
+        "max_iteration_num": 5
       },
       "non_target_parameters": {
         "N": 32
@@ -976,16 +1021,16 @@
       }
     },
     {
-      "task_id": 38,
+      "task_id": 34,
       "solver": "hasegawa_mima_nonlinear",
-      "profile": "p5",
+      "profile": "p4",
       "precision_level": "low",
-      "tolerance_rmse": 0.0005,
+      "tolerance_rmse": 0.01,
       "target_parameter": "dt",
       "target_config": {
         "initial_value": 40.0,
         "multiplication_factor": 0.5,
-        "max_iteration_num": 4
+        "max_iteration_num": 5
       },
       "non_target_parameters": {
         "N": 64
@@ -1011,16 +1056,16 @@
       }
     },
     {
-      "task_id": 39,
+      "task_id": 35,
       "solver": "hasegawa_mima_nonlinear",
-      "profile": "p5",
+      "profile": "p4",
       "precision_level": "low",
-      "tolerance_rmse": 0.0005,
+      "tolerance_rmse": 0.01,
       "target_parameter": "dt",
       "target_config": {
         "initial_value": 40.0,
         "multiplication_factor": 0.5,
-        "max_iteration_num": 4
+        "max_iteration_num": 5
       },
       "non_target_parameters": {
         "N": 128
@@ -1046,11 +1091,46 @@
       }
     },
     {
-      "task_id": 41,
+      "task_id": 37,
       "solver": "hasegawa_mima_nonlinear",
-      "profile": "p1",
-      "precision_level": "medium",
-      "tolerance_rmse": 0.0001,
+      "profile": "p5",
+      "precision_level": "low",
+      "tolerance_rmse": 0.01,
+      "target_parameter": "N",
+      "target_config": {
+        "initial_value": 32,
+        "multiplication_factor": 2,
+        "max_iteration_num": 4
+      },
+      "non_target_parameters": {
+        "dt": 2.5
+      },
+      "results": {
+        "converged": true,
+        "optimal_parameter_value": 64,
+        "total_computational_cost": 85525252096.0,
+        "cost_history": [
+          14745733120.0,
+          70779518976.0
+        ],
+        "parameter_history": [
+          {
+            "N": 32,
+            "dt": 2.5
+          },
+          {
+            "N": 64,
+            "dt": 2.5
+          }
+        ]
+      }
+    },
+    {
+      "task_id": 38,
+      "solver": "hasegawa_mima_nonlinear",
+      "profile": "p5",
+      "precision_level": "low",
+      "tolerance_rmse": 0.01,
       "target_parameter": "N",
       "target_config": {
         "initial_value": 32,
@@ -1062,12 +1142,11 @@
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 128,
-        "total_computational_cost": 207916713984.0,
+        "optimal_parameter_value": 64,
+        "total_computational_cost": 42763012096.0,
         "cost_history": [
           7372933120.0,
-          35390078976.0,
-          165153701888.0
+          35390078976.0
         ],
         "parameter_history": [
           {
@@ -1077,20 +1156,16 @@
           {
             "N": 64,
             "dt": 5.0
-          },
-          {
-            "N": 128,
-            "dt": 5.0
           }
         ]
       }
     },
     {
-      "task_id": 42,
+      "task_id": 39,
       "solver": "hasegawa_mima_nonlinear",
-      "profile": "p1",
-      "precision_level": "medium",
-      "tolerance_rmse": 0.0001,
+      "profile": "p5",
+      "precision_level": "low",
+      "tolerance_rmse": 0.01,
       "target_parameter": "N",
       "target_config": {
         "initial_value": 32,
@@ -1102,12 +1177,11 @@
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 128,
-        "total_computational_cost": 103960233984.0,
+        "optimal_parameter_value": 64,
+        "total_computational_cost": 21381892096.0,
         "cost_history": [
           3686533120.0,
-          17695358976.0,
-          82578341888.0
+          17695358976.0
         ],
         "parameter_history": [
           {
@@ -1117,20 +1191,16 @@
           {
             "N": 64,
             "dt": 10.0
-          },
-          {
-            "N": 128,
-            "dt": 10.0
           }
         ]
       }
     },
     {
-      "task_id": 43,
+      "task_id": 40,
       "solver": "hasegawa_mima_nonlinear",
-      "profile": "p1",
-      "precision_level": "medium",
-      "tolerance_rmse": 0.0001,
+      "profile": "p5",
+      "precision_level": "low",
+      "tolerance_rmse": 0.01,
       "target_parameter": "N",
       "target_config": {
         "initial_value": 32,
@@ -1142,12 +1212,11 @@
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 128,
-        "total_computational_cost": 51981993984.0,
+        "optimal_parameter_value": 64,
+        "total_computational_cost": 10691332096.0,
         "cost_history": [
           1843333120.0,
-          8847998976.0,
-          41290661888.0
+          8847998976.0
         ],
         "parameter_history": [
           {
@@ -1157,20 +1226,16 @@
           {
             "N": 64,
             "dt": 20.0
-          },
-          {
-            "N": 128,
-            "dt": 20.0
           }
         ]
       }
     },
     {
-      "task_id": 44,
+      "task_id": 41,
       "solver": "hasegawa_mima_nonlinear",
-      "profile": "p1",
-      "precision_level": "medium",
-      "tolerance_rmse": 0.0001,
+      "profile": "p5",
+      "precision_level": "low",
+      "tolerance_rmse": 0.01,
       "target_parameter": "N",
       "target_config": {
         "initial_value": 32,
@@ -1182,12 +1247,11 @@
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 128,
-        "total_computational_cost": 25992873984.0,
+        "optimal_parameter_value": 64,
+        "total_computational_cost": 5346052096.0,
         "cost_history": [
           921733120.0,
-          4424318976.0,
-          20646821888.0
+          4424318976.0
         ],
         "parameter_history": [
           {
@@ -1197,25 +1261,21 @@
           {
             "N": 64,
             "dt": 40.0
-          },
-          {
-            "N": 128,
-            "dt": 40.0
           }
         ]
       }
     },
     {
-      "task_id": 45,
+      "task_id": 42,
       "solver": "hasegawa_mima_nonlinear",
-      "profile": "p1",
-      "precision_level": "medium",
-      "tolerance_rmse": 0.0001,
+      "profile": "p5",
+      "precision_level": "low",
+      "tolerance_rmse": 0.01,
       "target_parameter": "dt",
       "target_config": {
         "initial_value": 40.0,
         "multiplication_factor": 0.5,
-        "max_iteration_num": 4
+        "max_iteration_num": 5
       },
       "non_target_parameters": {
         "N": 32
@@ -1235,6 +1295,76 @@
           },
           {
             "N": 32,
+            "dt": 20.0
+          }
+        ]
+      }
+    },
+    {
+      "task_id": 43,
+      "solver": "hasegawa_mima_nonlinear",
+      "profile": "p5",
+      "precision_level": "low",
+      "tolerance_rmse": 0.01,
+      "target_parameter": "dt",
+      "target_config": {
+        "initial_value": 40.0,
+        "multiplication_factor": 0.5,
+        "max_iteration_num": 5
+      },
+      "non_target_parameters": {
+        "N": 64
+      },
+      "results": {
+        "converged": true,
+        "optimal_parameter_value": 20.0,
+        "total_computational_cost": 13272317952.0,
+        "cost_history": [
+          4424318976.0,
+          8847998976.0
+        ],
+        "parameter_history": [
+          {
+            "N": 64,
+            "dt": 40.0
+          },
+          {
+            "N": 64,
+            "dt": 20.0
+          }
+        ]
+      }
+    },
+    {
+      "task_id": 44,
+      "solver": "hasegawa_mima_nonlinear",
+      "profile": "p5",
+      "precision_level": "low",
+      "tolerance_rmse": 0.01,
+      "target_parameter": "dt",
+      "target_config": {
+        "initial_value": 40.0,
+        "multiplication_factor": 0.5,
+        "max_iteration_num": 5
+      },
+      "non_target_parameters": {
+        "N": 128
+      },
+      "results": {
+        "converged": true,
+        "optimal_parameter_value": 20.0,
+        "total_computational_cost": 61937483776.0,
+        "cost_history": [
+          20646821888.0,
+          41290661888.0
+        ],
+        "parameter_history": [
+          {
+            "N": 128,
+            "dt": 40.0
+          },
+          {
+            "N": 128,
             "dt": 20.0
           }
         ]
@@ -1245,32 +1375,32 @@
       "solver": "hasegawa_mima_nonlinear",
       "profile": "p1",
       "precision_level": "medium",
-      "tolerance_rmse": 0.0001,
-      "target_parameter": "dt",
+      "tolerance_rmse": 0.001,
+      "target_parameter": "N",
       "target_config": {
-        "initial_value": 40.0,
-        "multiplication_factor": 0.5,
+        "initial_value": 32,
+        "multiplication_factor": 2,
         "max_iteration_num": 4
       },
       "non_target_parameters": {
-        "N": 64
+        "dt": 2.5
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 20.0,
-        "total_computational_cost": 13272317952.0,
+        "optimal_parameter_value": 64,
+        "total_computational_cost": 85525252096.0,
         "cost_history": [
-          4424318976.0,
-          8847998976.0
+          14745733120.0,
+          70779518976.0
         ],
         "parameter_history": [
           {
-            "N": 64,
-            "dt": 40.0
+            "N": 32,
+            "dt": 2.5
           },
           {
             "N": 64,
-            "dt": 20.0
+            "dt": 2.5
           }
         ]
       }
@@ -1280,42 +1410,7 @@
       "solver": "hasegawa_mima_nonlinear",
       "profile": "p1",
       "precision_level": "medium",
-      "tolerance_rmse": 0.0001,
-      "target_parameter": "dt",
-      "target_config": {
-        "initial_value": 40.0,
-        "multiplication_factor": 0.5,
-        "max_iteration_num": 4
-      },
-      "non_target_parameters": {
-        "N": 128
-      },
-      "results": {
-        "converged": true,
-        "optimal_parameter_value": 20.0,
-        "total_computational_cost": 61937483776.0,
-        "cost_history": [
-          20646821888.0,
-          41290661888.0
-        ],
-        "parameter_history": [
-          {
-            "N": 128,
-            "dt": 40.0
-          },
-          {
-            "N": 128,
-            "dt": 20.0
-          }
-        ]
-      }
-    },
-    {
-      "task_id": 49,
-      "solver": "hasegawa_mima_nonlinear",
-      "profile": "p2",
-      "precision_level": "medium",
-      "tolerance_rmse": 0.0001,
+      "tolerance_rmse": 0.001,
       "target_parameter": "N",
       "target_config": {
         "initial_value": 32,
@@ -1327,13 +1422,11 @@
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 256,
-        "total_computational_cost": 962905065472.0,
+        "optimal_parameter_value": 64,
+        "total_computational_cost": 42763012096.0,
         "cost_history": [
           7372933120.0,
-          35390078976.0,
-          165153701888.0,
-          754988351488.0
+          35390078976.0
         ],
         "parameter_history": [
           {
@@ -1343,24 +1436,16 @@
           {
             "N": 64,
             "dt": 5.0
-          },
-          {
-            "N": 128,
-            "dt": 5.0
-          },
-          {
-            "N": 256,
-            "dt": 5.0
           }
         ]
       }
     },
     {
-      "task_id": 50,
+      "task_id": 48,
       "solver": "hasegawa_mima_nonlinear",
-      "profile": "p2",
+      "profile": "p1",
       "precision_level": "medium",
-      "tolerance_rmse": 0.0001,
+      "tolerance_rmse": 0.001,
       "target_parameter": "N",
       "target_config": {
         "initial_value": 32,
@@ -1372,13 +1457,11 @@
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 256,
-        "total_computational_cost": 481461225472.0,
+        "optimal_parameter_value": 64,
+        "total_computational_cost": 21381892096.0,
         "cost_history": [
           3686533120.0,
-          17695358976.0,
-          82578341888.0,
-          377500991488.0
+          17695358976.0
         ],
         "parameter_history": [
           {
@@ -1388,29 +1471,91 @@
           {
             "N": 64,
             "dt": 10.0
-          },
-          {
-            "N": 128,
-            "dt": 10.0
-          },
-          {
-            "N": 256,
-            "dt": 10.0
           }
         ]
       }
     },
     {
-      "task_id": 53,
+      "task_id": 49,
       "solver": "hasegawa_mima_nonlinear",
-      "profile": "p2",
+      "profile": "p1",
       "precision_level": "medium",
-      "tolerance_rmse": 0.0001,
+      "tolerance_rmse": 0.001,
+      "target_parameter": "N",
+      "target_config": {
+        "initial_value": 32,
+        "multiplication_factor": 2,
+        "max_iteration_num": 4
+      },
+      "non_target_parameters": {
+        "dt": 20.0
+      },
+      "results": {
+        "converged": true,
+        "optimal_parameter_value": 64,
+        "total_computational_cost": 10691332096.0,
+        "cost_history": [
+          1843333120.0,
+          8847998976.0
+        ],
+        "parameter_history": [
+          {
+            "N": 32,
+            "dt": 20.0
+          },
+          {
+            "N": 64,
+            "dt": 20.0
+          }
+        ]
+      }
+    },
+    {
+      "task_id": 50,
+      "solver": "hasegawa_mima_nonlinear",
+      "profile": "p1",
+      "precision_level": "medium",
+      "tolerance_rmse": 0.001,
+      "target_parameter": "N",
+      "target_config": {
+        "initial_value": 32,
+        "multiplication_factor": 2,
+        "max_iteration_num": 4
+      },
+      "non_target_parameters": {
+        "dt": 40.0
+      },
+      "results": {
+        "converged": true,
+        "optimal_parameter_value": 64,
+        "total_computational_cost": 5346052096.0,
+        "cost_history": [
+          921733120.0,
+          4424318976.0
+        ],
+        "parameter_history": [
+          {
+            "N": 32,
+            "dt": 40.0
+          },
+          {
+            "N": 64,
+            "dt": 40.0
+          }
+        ]
+      }
+    },
+    {
+      "task_id": 51,
+      "solver": "hasegawa_mima_nonlinear",
+      "profile": "p1",
+      "precision_level": "medium",
+      "tolerance_rmse": 0.001,
       "target_parameter": "dt",
       "target_config": {
         "initial_value": 40.0,
         "multiplication_factor": 0.5,
-        "max_iteration_num": 4
+        "max_iteration_num": 5
       },
       "non_target_parameters": {
         "N": 32
@@ -1436,16 +1581,16 @@
       }
     },
     {
-      "task_id": 54,
+      "task_id": 52,
       "solver": "hasegawa_mima_nonlinear",
-      "profile": "p2",
+      "profile": "p1",
       "precision_level": "medium",
-      "tolerance_rmse": 0.0001,
+      "tolerance_rmse": 0.001,
       "target_parameter": "dt",
       "target_config": {
         "initial_value": 40.0,
         "multiplication_factor": 0.5,
-        "max_iteration_num": 4
+        "max_iteration_num": 5
       },
       "non_target_parameters": {
         "N": 64
@@ -1471,16 +1616,16 @@
       }
     },
     {
-      "task_id": 55,
+      "task_id": 53,
       "solver": "hasegawa_mima_nonlinear",
-      "profile": "p2",
+      "profile": "p1",
       "precision_level": "medium",
-      "tolerance_rmse": 0.0001,
+      "tolerance_rmse": 0.001,
       "target_parameter": "dt",
       "target_config": {
         "initial_value": 40.0,
         "multiplication_factor": 0.5,
-        "max_iteration_num": 4
+        "max_iteration_num": 5
       },
       "non_target_parameters": {
         "N": 128
@@ -1506,28 +1651,202 @@
       }
     },
     {
-      "task_id": 61,
+      "task_id": 55,
       "solver": "hasegawa_mima_nonlinear",
-      "profile": "p3",
+      "profile": "p2",
       "precision_level": "medium",
-      "tolerance_rmse": 0.0001,
+      "tolerance_rmse": 0.001,
+      "target_parameter": "N",
+      "target_config": {
+        "initial_value": 32,
+        "multiplication_factor": 2,
+        "max_iteration_num": 4
+      },
+      "non_target_parameters": {
+        "dt": 2.5
+      },
+      "results": {
+        "converged": true,
+        "optimal_parameter_value": 64,
+        "total_computational_cost": 85525252096.0,
+        "cost_history": [
+          14745733120.0,
+          70779518976.0
+        ],
+        "parameter_history": [
+          {
+            "N": 32,
+            "dt": 2.5
+          },
+          {
+            "N": 64,
+            "dt": 2.5
+          }
+        ]
+      }
+    },
+    {
+      "task_id": 56,
+      "solver": "hasegawa_mima_nonlinear",
+      "profile": "p2",
+      "precision_level": "medium",
+      "tolerance_rmse": 0.001,
+      "target_parameter": "N",
+      "target_config": {
+        "initial_value": 32,
+        "multiplication_factor": 2,
+        "max_iteration_num": 4
+      },
+      "non_target_parameters": {
+        "dt": 5.0
+      },
+      "results": {
+        "converged": true,
+        "optimal_parameter_value": 64,
+        "total_computational_cost": 42763012096.0,
+        "cost_history": [
+          7372933120.0,
+          35390078976.0
+        ],
+        "parameter_history": [
+          {
+            "N": 32,
+            "dt": 5.0
+          },
+          {
+            "N": 64,
+            "dt": 5.0
+          }
+        ]
+      }
+    },
+    {
+      "task_id": 57,
+      "solver": "hasegawa_mima_nonlinear",
+      "profile": "p2",
+      "precision_level": "medium",
+      "tolerance_rmse": 0.001,
+      "target_parameter": "N",
+      "target_config": {
+        "initial_value": 32,
+        "multiplication_factor": 2,
+        "max_iteration_num": 4
+      },
+      "non_target_parameters": {
+        "dt": 10.0
+      },
+      "results": {
+        "converged": true,
+        "optimal_parameter_value": 64,
+        "total_computational_cost": 21381892096.0,
+        "cost_history": [
+          3686533120.0,
+          17695358976.0
+        ],
+        "parameter_history": [
+          {
+            "N": 32,
+            "dt": 10.0
+          },
+          {
+            "N": 64,
+            "dt": 10.0
+          }
+        ]
+      }
+    },
+    {
+      "task_id": 58,
+      "solver": "hasegawa_mima_nonlinear",
+      "profile": "p2",
+      "precision_level": "medium",
+      "tolerance_rmse": 0.001,
+      "target_parameter": "N",
+      "target_config": {
+        "initial_value": 32,
+        "multiplication_factor": 2,
+        "max_iteration_num": 4
+      },
+      "non_target_parameters": {
+        "dt": 20.0
+      },
+      "results": {
+        "converged": true,
+        "optimal_parameter_value": 64,
+        "total_computational_cost": 10691332096.0,
+        "cost_history": [
+          1843333120.0,
+          8847998976.0
+        ],
+        "parameter_history": [
+          {
+            "N": 32,
+            "dt": 20.0
+          },
+          {
+            "N": 64,
+            "dt": 20.0
+          }
+        ]
+      }
+    },
+    {
+      "task_id": 59,
+      "solver": "hasegawa_mima_nonlinear",
+      "profile": "p2",
+      "precision_level": "medium",
+      "tolerance_rmse": 0.001,
+      "target_parameter": "N",
+      "target_config": {
+        "initial_value": 32,
+        "multiplication_factor": 2,
+        "max_iteration_num": 4
+      },
+      "non_target_parameters": {
+        "dt": 40.0
+      },
+      "results": {
+        "converged": true,
+        "optimal_parameter_value": 64,
+        "total_computational_cost": 5346052096.0,
+        "cost_history": [
+          921733120.0,
+          4424318976.0
+        ],
+        "parameter_history": [
+          {
+            "N": 32,
+            "dt": 40.0
+          },
+          {
+            "N": 64,
+            "dt": 40.0
+          }
+        ]
+      }
+    },
+    {
+      "task_id": 60,
+      "solver": "hasegawa_mima_nonlinear",
+      "profile": "p2",
+      "precision_level": "medium",
+      "tolerance_rmse": 0.001,
       "target_parameter": "dt",
       "target_config": {
         "initial_value": 40.0,
         "multiplication_factor": 0.5,
-        "max_iteration_num": 4
+        "max_iteration_num": 5
       },
       "non_target_parameters": {
         "N": 32
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 10.0,
-        "total_computational_cost": 6451599360.0,
+        "optimal_parameter_value": 20.0,
+        "total_computational_cost": 2765066240.0,
         "cost_history": [
           921733120.0,
-          1843333120.0,
-          3686533120.0
+          1843333120.0
         ],
         "parameter_history": [
           {
@@ -1537,10 +1856,41 @@
           {
             "N": 32,
             "dt": 20.0
+          }
+        ]
+      }
+    },
+    {
+      "task_id": 61,
+      "solver": "hasegawa_mima_nonlinear",
+      "profile": "p2",
+      "precision_level": "medium",
+      "tolerance_rmse": 0.001,
+      "target_parameter": "dt",
+      "target_config": {
+        "initial_value": 40.0,
+        "multiplication_factor": 0.5,
+        "max_iteration_num": 5
+      },
+      "non_target_parameters": {
+        "N": 64
+      },
+      "results": {
+        "converged": true,
+        "optimal_parameter_value": 20.0,
+        "total_computational_cost": 13272317952.0,
+        "cost_history": [
+          4424318976.0,
+          8847998976.0
+        ],
+        "parameter_history": [
+          {
+            "N": 64,
+            "dt": 40.0
           },
           {
-            "N": 32,
-            "dt": 10.0
+            "N": 64,
+            "dt": 20.0
           }
         ]
       }
@@ -1548,39 +1898,194 @@
     {
       "task_id": 62,
       "solver": "hasegawa_mima_nonlinear",
-      "profile": "p3",
+      "profile": "p2",
       "precision_level": "medium",
-      "tolerance_rmse": 0.0001,
+      "tolerance_rmse": 0.001,
       "target_parameter": "dt",
       "target_config": {
         "initial_value": 40.0,
         "multiplication_factor": 0.5,
-        "max_iteration_num": 4
+        "max_iteration_num": 5
       },
       "non_target_parameters": {
-        "N": 64
+        "N": 128
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 10.0,
-        "total_computational_cost": 30967676928.0,
+        "optimal_parameter_value": 20.0,
+        "total_computational_cost": 61937483776.0,
         "cost_history": [
-          4424318976.0,
-          8847998976.0,
-          17695358976.0
+          20646821888.0,
+          41290661888.0
         ],
         "parameter_history": [
           {
-            "N": 64,
+            "N": 128,
             "dt": 40.0
+          },
+          {
+            "N": 128,
+            "dt": 20.0
+          }
+        ]
+      }
+    },
+    {
+      "task_id": 64,
+      "solver": "hasegawa_mima_nonlinear",
+      "profile": "p3",
+      "precision_level": "medium",
+      "tolerance_rmse": 0.001,
+      "target_parameter": "N",
+      "target_config": {
+        "initial_value": 32,
+        "multiplication_factor": 2,
+        "max_iteration_num": 4
+      },
+      "non_target_parameters": {
+        "dt": 2.5
+      },
+      "results": {
+        "converged": true,
+        "optimal_parameter_value": 128,
+        "total_computational_cost": 415829673984.0,
+        "cost_history": [
+          14745733120.0,
+          70779518976.0,
+          330304421888.0
+        ],
+        "parameter_history": [
+          {
+            "N": 32,
+            "dt": 2.5
+          },
+          {
+            "N": 64,
+            "dt": 2.5
+          },
+          {
+            "N": 128,
+            "dt": 2.5
+          }
+        ]
+      }
+    },
+    {
+      "task_id": 65,
+      "solver": "hasegawa_mima_nonlinear",
+      "profile": "p3",
+      "precision_level": "medium",
+      "tolerance_rmse": 0.001,
+      "target_parameter": "N",
+      "target_config": {
+        "initial_value": 32,
+        "multiplication_factor": 2,
+        "max_iteration_num": 4
+      },
+      "non_target_parameters": {
+        "dt": 5.0
+      },
+      "results": {
+        "converged": true,
+        "optimal_parameter_value": 128,
+        "total_computational_cost": 207916713984.0,
+        "cost_history": [
+          7372933120.0,
+          35390078976.0,
+          165153701888.0
+        ],
+        "parameter_history": [
+          {
+            "N": 32,
+            "dt": 5.0
+          },
+          {
+            "N": 64,
+            "dt": 5.0
+          },
+          {
+            "N": 128,
+            "dt": 5.0
+          }
+        ]
+      }
+    },
+    {
+      "task_id": 66,
+      "solver": "hasegawa_mima_nonlinear",
+      "profile": "p3",
+      "precision_level": "medium",
+      "tolerance_rmse": 0.001,
+      "target_parameter": "N",
+      "target_config": {
+        "initial_value": 32,
+        "multiplication_factor": 2,
+        "max_iteration_num": 4
+      },
+      "non_target_parameters": {
+        "dt": 10.0
+      },
+      "results": {
+        "converged": true,
+        "optimal_parameter_value": 128,
+        "total_computational_cost": 103960233984.0,
+        "cost_history": [
+          3686533120.0,
+          17695358976.0,
+          82578341888.0
+        ],
+        "parameter_history": [
+          {
+            "N": 32,
+            "dt": 10.0
+          },
+          {
+            "N": 64,
+            "dt": 10.0
+          },
+          {
+            "N": 128,
+            "dt": 10.0
+          }
+        ]
+      }
+    },
+    {
+      "task_id": 67,
+      "solver": "hasegawa_mima_nonlinear",
+      "profile": "p3",
+      "precision_level": "medium",
+      "tolerance_rmse": 0.001,
+      "target_parameter": "N",
+      "target_config": {
+        "initial_value": 32,
+        "multiplication_factor": 2,
+        "max_iteration_num": 4
+      },
+      "non_target_parameters": {
+        "dt": 20.0
+      },
+      "results": {
+        "converged": true,
+        "optimal_parameter_value": 128,
+        "total_computational_cost": 51981993984.0,
+        "cost_history": [
+          1843333120.0,
+          8847998976.0,
+          41290661888.0
+        ],
+        "parameter_history": [
+          {
+            "N": 32,
+            "dt": 20.0
           },
           {
             "N": 64,
             "dt": 20.0
           },
           {
-            "N": 64,
-            "dt": 10.0
+            "N": 128,
+            "dt": 20.0
           }
         ]
       }
@@ -1588,14 +2093,14 @@
     {
       "task_id": 69,
       "solver": "hasegawa_mima_nonlinear",
-      "profile": "p4",
+      "profile": "p3",
       "precision_level": "medium",
-      "tolerance_rmse": 0.0001,
+      "tolerance_rmse": 0.001,
       "target_parameter": "dt",
       "target_config": {
         "initial_value": 40.0,
         "multiplication_factor": 0.5,
-        "max_iteration_num": 4
+        "max_iteration_num": 5
       },
       "non_target_parameters": {
         "N": 32
@@ -1623,26 +2128,25 @@
     {
       "task_id": 70,
       "solver": "hasegawa_mima_nonlinear",
-      "profile": "p4",
+      "profile": "p3",
       "precision_level": "medium",
-      "tolerance_rmse": 0.0001,
+      "tolerance_rmse": 0.001,
       "target_parameter": "dt",
       "target_config": {
         "initial_value": 40.0,
         "multiplication_factor": 0.5,
-        "max_iteration_num": 4
+        "max_iteration_num": 5
       },
       "non_target_parameters": {
         "N": 64
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 10.0,
-        "total_computational_cost": 30967676928.0,
+        "optimal_parameter_value": 20.0,
+        "total_computational_cost": 13272317952.0,
         "cost_history": [
           4424318976.0,
-          8847998976.0,
-          17695358976.0
+          8847998976.0
         ],
         "parameter_history": [
           {
@@ -1652,6 +2156,347 @@
           {
             "N": 64,
             "dt": 20.0
+          }
+        ]
+      }
+    },
+    {
+      "task_id": 73,
+      "solver": "hasegawa_mima_nonlinear",
+      "profile": "p4",
+      "precision_level": "medium",
+      "tolerance_rmse": 0.001,
+      "target_parameter": "N",
+      "target_config": {
+        "initial_value": 32,
+        "multiplication_factor": 2,
+        "max_iteration_num": 4
+      },
+      "non_target_parameters": {
+        "dt": 2.5
+      },
+      "results": {
+        "converged": true,
+        "optimal_parameter_value": 256,
+        "total_computational_cost": 1925792745472.0,
+        "cost_history": [
+          14745733120.0,
+          70779518976.0,
+          330304421888.0,
+          1509963071488.0
+        ],
+        "parameter_history": [
+          {
+            "N": 32,
+            "dt": 2.5
+          },
+          {
+            "N": 64,
+            "dt": 2.5
+          },
+          {
+            "N": 128,
+            "dt": 2.5
+          },
+          {
+            "N": 256,
+            "dt": 2.5
+          }
+        ]
+      }
+    },
+    {
+      "task_id": 74,
+      "solver": "hasegawa_mima_nonlinear",
+      "profile": "p4",
+      "precision_level": "medium",
+      "tolerance_rmse": 0.001,
+      "target_parameter": "N",
+      "target_config": {
+        "initial_value": 32,
+        "multiplication_factor": 2,
+        "max_iteration_num": 4
+      },
+      "non_target_parameters": {
+        "dt": 5.0
+      },
+      "results": {
+        "converged": true,
+        "optimal_parameter_value": 256,
+        "total_computational_cost": 962905065472.0,
+        "cost_history": [
+          7372933120.0,
+          35390078976.0,
+          165153701888.0,
+          754988351488.0
+        ],
+        "parameter_history": [
+          {
+            "N": 32,
+            "dt": 5.0
+          },
+          {
+            "N": 64,
+            "dt": 5.0
+          },
+          {
+            "N": 128,
+            "dt": 5.0
+          },
+          {
+            "N": 256,
+            "dt": 5.0
+          }
+        ]
+      }
+    },
+    {
+      "task_id": 75,
+      "solver": "hasegawa_mima_nonlinear",
+      "profile": "p4",
+      "precision_level": "medium",
+      "tolerance_rmse": 0.001,
+      "target_parameter": "N",
+      "target_config": {
+        "initial_value": 32,
+        "multiplication_factor": 2,
+        "max_iteration_num": 4
+      },
+      "non_target_parameters": {
+        "dt": 10.0
+      },
+      "results": {
+        "converged": true,
+        "optimal_parameter_value": 256,
+        "total_computational_cost": 481461225472.0,
+        "cost_history": [
+          3686533120.0,
+          17695358976.0,
+          82578341888.0,
+          377500991488.0
+        ],
+        "parameter_history": [
+          {
+            "N": 32,
+            "dt": 10.0
+          },
+          {
+            "N": 64,
+            "dt": 10.0
+          },
+          {
+            "N": 128,
+            "dt": 10.0
+          },
+          {
+            "N": 256,
+            "dt": 10.0
+          }
+        ]
+      }
+    },
+    {
+      "task_id": 78,
+      "solver": "hasegawa_mima_nonlinear",
+      "profile": "p4",
+      "precision_level": "medium",
+      "tolerance_rmse": 0.001,
+      "target_parameter": "dt",
+      "target_config": {
+        "initial_value": 40.0,
+        "multiplication_factor": 0.5,
+        "max_iteration_num": 5
+      },
+      "non_target_parameters": {
+        "N": 32
+      },
+      "results": {
+        "converged": true,
+        "optimal_parameter_value": 20.0,
+        "total_computational_cost": 2765066240.0,
+        "cost_history": [
+          921733120.0,
+          1843333120.0
+        ],
+        "parameter_history": [
+          {
+            "N": 32,
+            "dt": 40.0
+          },
+          {
+            "N": 32,
+            "dt": 20.0
+          }
+        ]
+      }
+    },
+    {
+      "task_id": 79,
+      "solver": "hasegawa_mima_nonlinear",
+      "profile": "p4",
+      "precision_level": "medium",
+      "tolerance_rmse": 0.001,
+      "target_parameter": "dt",
+      "target_config": {
+        "initial_value": 40.0,
+        "multiplication_factor": 0.5,
+        "max_iteration_num": 5
+      },
+      "non_target_parameters": {
+        "N": 64
+      },
+      "results": {
+        "converged": true,
+        "optimal_parameter_value": 20.0,
+        "total_computational_cost": 13272317952.0,
+        "cost_history": [
+          4424318976.0,
+          8847998976.0
+        ],
+        "parameter_history": [
+          {
+            "N": 64,
+            "dt": 40.0
+          },
+          {
+            "N": 64,
+            "dt": 20.0
+          }
+        ]
+      }
+    },
+    {
+      "task_id": 80,
+      "solver": "hasegawa_mima_nonlinear",
+      "profile": "p4",
+      "precision_level": "medium",
+      "tolerance_rmse": 0.001,
+      "target_parameter": "dt",
+      "target_config": {
+        "initial_value": 40.0,
+        "multiplication_factor": 0.5,
+        "max_iteration_num": 5
+      },
+      "non_target_parameters": {
+        "N": 128
+      },
+      "results": {
+        "converged": true,
+        "optimal_parameter_value": 20.0,
+        "total_computational_cost": 61937483776.0,
+        "cost_history": [
+          20646821888.0,
+          41290661888.0
+        ],
+        "parameter_history": [
+          {
+            "N": 128,
+            "dt": 40.0
+          },
+          {
+            "N": 128,
+            "dt": 20.0
+          }
+        ]
+      }
+    },
+    {
+      "task_id": 82,
+      "solver": "hasegawa_mima_nonlinear",
+      "profile": "p5",
+      "precision_level": "medium",
+      "tolerance_rmse": 0.001,
+      "target_parameter": "N",
+      "target_config": {
+        "initial_value": 32,
+        "multiplication_factor": 2,
+        "max_iteration_num": 4
+      },
+      "non_target_parameters": {
+        "dt": 2.5
+      },
+      "results": {
+        "converged": true,
+        "optimal_parameter_value": 64,
+        "total_computational_cost": 85525252096.0,
+        "cost_history": [
+          14745733120.0,
+          70779518976.0
+        ],
+        "parameter_history": [
+          {
+            "N": 32,
+            "dt": 2.5
+          },
+          {
+            "N": 64,
+            "dt": 2.5
+          }
+        ]
+      }
+    },
+    {
+      "task_id": 83,
+      "solver": "hasegawa_mima_nonlinear",
+      "profile": "p5",
+      "precision_level": "medium",
+      "tolerance_rmse": 0.001,
+      "target_parameter": "N",
+      "target_config": {
+        "initial_value": 32,
+        "multiplication_factor": 2,
+        "max_iteration_num": 4
+      },
+      "non_target_parameters": {
+        "dt": 5.0
+      },
+      "results": {
+        "converged": true,
+        "optimal_parameter_value": 64,
+        "total_computational_cost": 42763012096.0,
+        "cost_history": [
+          7372933120.0,
+          35390078976.0
+        ],
+        "parameter_history": [
+          {
+            "N": 32,
+            "dt": 5.0
+          },
+          {
+            "N": 64,
+            "dt": 5.0
+          }
+        ]
+      }
+    },
+    {
+      "task_id": 84,
+      "solver": "hasegawa_mima_nonlinear",
+      "profile": "p5",
+      "precision_level": "medium",
+      "tolerance_rmse": 0.001,
+      "target_parameter": "N",
+      "target_config": {
+        "initial_value": 32,
+        "multiplication_factor": 2,
+        "max_iteration_num": 4
+      },
+      "non_target_parameters": {
+        "dt": 10.0
+      },
+      "results": {
+        "converged": true,
+        "optimal_parameter_value": 64,
+        "total_computational_cost": 21381892096.0,
+        "cost_history": [
+          3686533120.0,
+          17695358976.0
+        ],
+        "parameter_history": [
+          {
+            "N": 32,
+            "dt": 10.0
           },
           {
             "N": 64,
@@ -1661,10 +2506,535 @@
       }
     },
     {
-      "task_id": 73,
+      "task_id": 85,
       "solver": "hasegawa_mima_nonlinear",
       "profile": "p5",
       "precision_level": "medium",
+      "tolerance_rmse": 0.001,
+      "target_parameter": "N",
+      "target_config": {
+        "initial_value": 32,
+        "multiplication_factor": 2,
+        "max_iteration_num": 4
+      },
+      "non_target_parameters": {
+        "dt": 20.0
+      },
+      "results": {
+        "converged": true,
+        "optimal_parameter_value": 64,
+        "total_computational_cost": 10691332096.0,
+        "cost_history": [
+          1843333120.0,
+          8847998976.0
+        ],
+        "parameter_history": [
+          {
+            "N": 32,
+            "dt": 20.0
+          },
+          {
+            "N": 64,
+            "dt": 20.0
+          }
+        ]
+      }
+    },
+    {
+      "task_id": 86,
+      "solver": "hasegawa_mima_nonlinear",
+      "profile": "p5",
+      "precision_level": "medium",
+      "tolerance_rmse": 0.001,
+      "target_parameter": "N",
+      "target_config": {
+        "initial_value": 32,
+        "multiplication_factor": 2,
+        "max_iteration_num": 4
+      },
+      "non_target_parameters": {
+        "dt": 40.0
+      },
+      "results": {
+        "converged": true,
+        "optimal_parameter_value": 64,
+        "total_computational_cost": 5346052096.0,
+        "cost_history": [
+          921733120.0,
+          4424318976.0
+        ],
+        "parameter_history": [
+          {
+            "N": 32,
+            "dt": 40.0
+          },
+          {
+            "N": 64,
+            "dt": 40.0
+          }
+        ]
+      }
+    },
+    {
+      "task_id": 87,
+      "solver": "hasegawa_mima_nonlinear",
+      "profile": "p5",
+      "precision_level": "medium",
+      "tolerance_rmse": 0.001,
+      "target_parameter": "dt",
+      "target_config": {
+        "initial_value": 40.0,
+        "multiplication_factor": 0.5,
+        "max_iteration_num": 5
+      },
+      "non_target_parameters": {
+        "N": 32
+      },
+      "results": {
+        "converged": true,
+        "optimal_parameter_value": 20.0,
+        "total_computational_cost": 2765066240.0,
+        "cost_history": [
+          921733120.0,
+          1843333120.0
+        ],
+        "parameter_history": [
+          {
+            "N": 32,
+            "dt": 40.0
+          },
+          {
+            "N": 32,
+            "dt": 20.0
+          }
+        ]
+      }
+    },
+    {
+      "task_id": 88,
+      "solver": "hasegawa_mima_nonlinear",
+      "profile": "p5",
+      "precision_level": "medium",
+      "tolerance_rmse": 0.001,
+      "target_parameter": "dt",
+      "target_config": {
+        "initial_value": 40.0,
+        "multiplication_factor": 0.5,
+        "max_iteration_num": 5
+      },
+      "non_target_parameters": {
+        "N": 64
+      },
+      "results": {
+        "converged": true,
+        "optimal_parameter_value": 20.0,
+        "total_computational_cost": 13272317952.0,
+        "cost_history": [
+          4424318976.0,
+          8847998976.0
+        ],
+        "parameter_history": [
+          {
+            "N": 64,
+            "dt": 40.0
+          },
+          {
+            "N": 64,
+            "dt": 20.0
+          }
+        ]
+      }
+    },
+    {
+      "task_id": 89,
+      "solver": "hasegawa_mima_nonlinear",
+      "profile": "p5",
+      "precision_level": "medium",
+      "tolerance_rmse": 0.001,
+      "target_parameter": "dt",
+      "target_config": {
+        "initial_value": 40.0,
+        "multiplication_factor": 0.5,
+        "max_iteration_num": 5
+      },
+      "non_target_parameters": {
+        "N": 128
+      },
+      "results": {
+        "converged": true,
+        "optimal_parameter_value": 20.0,
+        "total_computational_cost": 61937483776.0,
+        "cost_history": [
+          20646821888.0,
+          41290661888.0
+        ],
+        "parameter_history": [
+          {
+            "N": 128,
+            "dt": 40.0
+          },
+          {
+            "N": 128,
+            "dt": 20.0
+          }
+        ]
+      }
+    },
+    {
+      "task_id": 91,
+      "solver": "hasegawa_mima_nonlinear",
+      "profile": "p1",
+      "precision_level": "high",
+      "tolerance_rmse": 0.0001,
+      "target_parameter": "N",
+      "target_config": {
+        "initial_value": 32,
+        "multiplication_factor": 2,
+        "max_iteration_num": 4
+      },
+      "non_target_parameters": {
+        "dt": 2.5
+      },
+      "results": {
+        "converged": true,
+        "optimal_parameter_value": 128,
+        "total_computational_cost": 415829673984.0,
+        "cost_history": [
+          14745733120.0,
+          70779518976.0,
+          330304421888.0
+        ],
+        "parameter_history": [
+          {
+            "N": 32,
+            "dt": 2.5
+          },
+          {
+            "N": 64,
+            "dt": 2.5
+          },
+          {
+            "N": 128,
+            "dt": 2.5
+          }
+        ]
+      }
+    },
+    {
+      "task_id": 92,
+      "solver": "hasegawa_mima_nonlinear",
+      "profile": "p1",
+      "precision_level": "high",
+      "tolerance_rmse": 0.0001,
+      "target_parameter": "N",
+      "target_config": {
+        "initial_value": 32,
+        "multiplication_factor": 2,
+        "max_iteration_num": 4
+      },
+      "non_target_parameters": {
+        "dt": 5.0
+      },
+      "results": {
+        "converged": true,
+        "optimal_parameter_value": 128,
+        "total_computational_cost": 207916713984.0,
+        "cost_history": [
+          7372933120.0,
+          35390078976.0,
+          165153701888.0
+        ],
+        "parameter_history": [
+          {
+            "N": 32,
+            "dt": 5.0
+          },
+          {
+            "N": 64,
+            "dt": 5.0
+          },
+          {
+            "N": 128,
+            "dt": 5.0
+          }
+        ]
+      }
+    },
+    {
+      "task_id": 93,
+      "solver": "hasegawa_mima_nonlinear",
+      "profile": "p1",
+      "precision_level": "high",
+      "tolerance_rmse": 0.0001,
+      "target_parameter": "N",
+      "target_config": {
+        "initial_value": 32,
+        "multiplication_factor": 2,
+        "max_iteration_num": 4
+      },
+      "non_target_parameters": {
+        "dt": 10.0
+      },
+      "results": {
+        "converged": true,
+        "optimal_parameter_value": 128,
+        "total_computational_cost": 103960233984.0,
+        "cost_history": [
+          3686533120.0,
+          17695358976.0,
+          82578341888.0
+        ],
+        "parameter_history": [
+          {
+            "N": 32,
+            "dt": 10.0
+          },
+          {
+            "N": 64,
+            "dt": 10.0
+          },
+          {
+            "N": 128,
+            "dt": 10.0
+          }
+        ]
+      }
+    },
+    {
+      "task_id": 94,
+      "solver": "hasegawa_mima_nonlinear",
+      "profile": "p1",
+      "precision_level": "high",
+      "tolerance_rmse": 0.0001,
+      "target_parameter": "N",
+      "target_config": {
+        "initial_value": 32,
+        "multiplication_factor": 2,
+        "max_iteration_num": 4
+      },
+      "non_target_parameters": {
+        "dt": 20.0
+      },
+      "results": {
+        "converged": true,
+        "optimal_parameter_value": 128,
+        "total_computational_cost": 51981993984.0,
+        "cost_history": [
+          1843333120.0,
+          8847998976.0,
+          41290661888.0
+        ],
+        "parameter_history": [
+          {
+            "N": 32,
+            "dt": 20.0
+          },
+          {
+            "N": 64,
+            "dt": 20.0
+          },
+          {
+            "N": 128,
+            "dt": 20.0
+          }
+        ]
+      }
+    },
+    {
+      "task_id": 95,
+      "solver": "hasegawa_mima_nonlinear",
+      "profile": "p1",
+      "precision_level": "high",
+      "tolerance_rmse": 0.0001,
+      "target_parameter": "N",
+      "target_config": {
+        "initial_value": 32,
+        "multiplication_factor": 2,
+        "max_iteration_num": 4
+      },
+      "non_target_parameters": {
+        "dt": 40.0
+      },
+      "results": {
+        "converged": true,
+        "optimal_parameter_value": 128,
+        "total_computational_cost": 25992873984.0,
+        "cost_history": [
+          921733120.0,
+          4424318976.0,
+          20646821888.0
+        ],
+        "parameter_history": [
+          {
+            "N": 32,
+            "dt": 40.0
+          },
+          {
+            "N": 64,
+            "dt": 40.0
+          },
+          {
+            "N": 128,
+            "dt": 40.0
+          }
+        ]
+      }
+    },
+    {
+      "task_id": 96,
+      "solver": "hasegawa_mima_nonlinear",
+      "profile": "p1",
+      "precision_level": "high",
+      "tolerance_rmse": 0.0001,
+      "target_parameter": "dt",
+      "target_config": {
+        "initial_value": 40.0,
+        "multiplication_factor": 0.5,
+        "max_iteration_num": 5
+      },
+      "non_target_parameters": {
+        "N": 32
+      },
+      "results": {
+        "converged": true,
+        "optimal_parameter_value": 20.0,
+        "total_computational_cost": 2765066240.0,
+        "cost_history": [
+          921733120.0,
+          1843333120.0
+        ],
+        "parameter_history": [
+          {
+            "N": 32,
+            "dt": 40.0
+          },
+          {
+            "N": 32,
+            "dt": 20.0
+          }
+        ]
+      }
+    },
+    {
+      "task_id": 97,
+      "solver": "hasegawa_mima_nonlinear",
+      "profile": "p1",
+      "precision_level": "high",
+      "tolerance_rmse": 0.0001,
+      "target_parameter": "dt",
+      "target_config": {
+        "initial_value": 40.0,
+        "multiplication_factor": 0.5,
+        "max_iteration_num": 5
+      },
+      "non_target_parameters": {
+        "N": 64
+      },
+      "results": {
+        "converged": true,
+        "optimal_parameter_value": 20.0,
+        "total_computational_cost": 13272317952.0,
+        "cost_history": [
+          4424318976.0,
+          8847998976.0
+        ],
+        "parameter_history": [
+          {
+            "N": 64,
+            "dt": 40.0
+          },
+          {
+            "N": 64,
+            "dt": 20.0
+          }
+        ]
+      }
+    },
+    {
+      "task_id": 98,
+      "solver": "hasegawa_mima_nonlinear",
+      "profile": "p1",
+      "precision_level": "high",
+      "tolerance_rmse": 0.0001,
+      "target_parameter": "dt",
+      "target_config": {
+        "initial_value": 40.0,
+        "multiplication_factor": 0.5,
+        "max_iteration_num": 5
+      },
+      "non_target_parameters": {
+        "N": 128
+      },
+      "results": {
+        "converged": true,
+        "optimal_parameter_value": 20.0,
+        "total_computational_cost": 61937483776.0,
+        "cost_history": [
+          20646821888.0,
+          41290661888.0
+        ],
+        "parameter_history": [
+          {
+            "N": 128,
+            "dt": 40.0
+          },
+          {
+            "N": 128,
+            "dt": 20.0
+          }
+        ]
+      }
+    },
+    {
+      "task_id": 100,
+      "solver": "hasegawa_mima_nonlinear",
+      "profile": "p2",
+      "precision_level": "high",
+      "tolerance_rmse": 0.0001,
+      "target_parameter": "N",
+      "target_config": {
+        "initial_value": 32,
+        "multiplication_factor": 2,
+        "max_iteration_num": 4
+      },
+      "non_target_parameters": {
+        "dt": 2.5
+      },
+      "results": {
+        "converged": true,
+        "optimal_parameter_value": 256,
+        "total_computational_cost": 1925792745472.0,
+        "cost_history": [
+          14745733120.0,
+          70779518976.0,
+          330304421888.0,
+          1509963071488.0
+        ],
+        "parameter_history": [
+          {
+            "N": 32,
+            "dt": 2.5
+          },
+          {
+            "N": 64,
+            "dt": 2.5
+          },
+          {
+            "N": 128,
+            "dt": 2.5
+          },
+          {
+            "N": 256,
+            "dt": 2.5
+          }
+        ]
+      }
+    },
+    {
+      "task_id": 101,
+      "solver": "hasegawa_mima_nonlinear",
+      "profile": "p2",
+      "precision_level": "high",
       "tolerance_rmse": 0.0001,
       "target_parameter": "N",
       "target_config": {
@@ -1706,10 +3076,10 @@
       }
     },
     {
-      "task_id": 74,
+      "task_id": 102,
       "solver": "hasegawa_mima_nonlinear",
-      "profile": "p5",
-      "precision_level": "medium",
+      "profile": "p2",
+      "precision_level": "high",
       "tolerance_rmse": 0.0001,
       "target_parameter": "N",
       "target_config": {
@@ -1751,16 +3121,16 @@
       }
     },
     {
-      "task_id": 77,
+      "task_id": 105,
       "solver": "hasegawa_mima_nonlinear",
-      "profile": "p5",
-      "precision_level": "medium",
+      "profile": "p2",
+      "precision_level": "high",
       "tolerance_rmse": 0.0001,
       "target_parameter": "dt",
       "target_config": {
         "initial_value": 40.0,
         "multiplication_factor": 0.5,
-        "max_iteration_num": 4
+        "max_iteration_num": 5
       },
       "non_target_parameters": {
         "N": 32
@@ -1786,16 +3156,16 @@
       }
     },
     {
-      "task_id": 78,
+      "task_id": 106,
       "solver": "hasegawa_mima_nonlinear",
-      "profile": "p5",
-      "precision_level": "medium",
+      "profile": "p2",
+      "precision_level": "high",
       "tolerance_rmse": 0.0001,
       "target_parameter": "dt",
       "target_config": {
         "initial_value": 40.0,
         "multiplication_factor": 0.5,
-        "max_iteration_num": 4
+        "max_iteration_num": 5
       },
       "non_target_parameters": {
         "N": 64
@@ -1821,16 +3191,16 @@
       }
     },
     {
-      "task_id": 79,
+      "task_id": 107,
       "solver": "hasegawa_mima_nonlinear",
-      "profile": "p5",
-      "precision_level": "medium",
+      "profile": "p2",
+      "precision_level": "high",
       "tolerance_rmse": 0.0001,
       "target_parameter": "dt",
       "target_config": {
         "initial_value": 40.0,
         "multiplication_factor": 0.5,
-        "max_iteration_num": 4
+        "max_iteration_num": 5
       },
       "non_target_parameters": {
         "N": 128
@@ -1856,358 +3226,367 @@
       }
     },
     {
-      "task_id": 85,
-      "solver": "hasegawa_mima_nonlinear",
-      "profile": "p1",
-      "precision_level": "high",
-      "tolerance_rmse": 1e-05,
-      "target_parameter": "dt",
-      "target_config": {
-        "initial_value": 40.0,
-        "multiplication_factor": 0.5,
-        "max_iteration_num": 4
-      },
-      "non_target_parameters": {
-        "N": 32
-      },
-      "results": {
-        "converged": true,
-        "optimal_parameter_value": 10.0,
-        "total_computational_cost": 6451599360.0,
-        "cost_history": [
-          921733120.0,
-          1843333120.0,
-          3686533120.0
-        ],
-        "parameter_history": [
-          {
-            "N": 32,
-            "dt": 40.0
-          },
-          {
-            "N": 32,
-            "dt": 20.0
-          },
-          {
-            "N": 32,
-            "dt": 10.0
-          }
-        ]
-      }
-    },
-    {
-      "task_id": 86,
-      "solver": "hasegawa_mima_nonlinear",
-      "profile": "p1",
-      "precision_level": "high",
-      "tolerance_rmse": 1e-05,
-      "target_parameter": "dt",
-      "target_config": {
-        "initial_value": 40.0,
-        "multiplication_factor": 0.5,
-        "max_iteration_num": 4
-      },
-      "non_target_parameters": {
-        "N": 64
-      },
-      "results": {
-        "converged": true,
-        "optimal_parameter_value": 10.0,
-        "total_computational_cost": 30967676928.0,
-        "cost_history": [
-          4424318976.0,
-          8847998976.0,
-          17695358976.0
-        ],
-        "parameter_history": [
-          {
-            "N": 64,
-            "dt": 40.0
-          },
-          {
-            "N": 64,
-            "dt": 20.0
-          },
-          {
-            "N": 64,
-            "dt": 10.0
-          }
-        ]
-      }
-    },
-    {
-      "task_id": 87,
-      "solver": "hasegawa_mima_nonlinear",
-      "profile": "p1",
-      "precision_level": "high",
-      "tolerance_rmse": 1e-05,
-      "target_parameter": "dt",
-      "target_config": {
-        "initial_value": 40.0,
-        "multiplication_factor": 0.5,
-        "max_iteration_num": 4
-      },
-      "non_target_parameters": {
-        "N": 128
-      },
-      "results": {
-        "converged": true,
-        "optimal_parameter_value": 10.0,
-        "total_computational_cost": 144515825664.0,
-        "cost_history": [
-          20646821888.0,
-          41290661888.0,
-          82578341888.0
-        ],
-        "parameter_history": [
-          {
-            "N": 128,
-            "dt": 40.0
-          },
-          {
-            "N": 128,
-            "dt": 20.0
-          },
-          {
-            "N": 128,
-            "dt": 10.0
-          }
-        ]
-      }
-    },
-    {
-      "task_id": 93,
-      "solver": "hasegawa_mima_nonlinear",
-      "profile": "p2",
-      "precision_level": "high",
-      "tolerance_rmse": 1e-05,
-      "target_parameter": "dt",
-      "target_config": {
-        "initial_value": 40.0,
-        "multiplication_factor": 0.5,
-        "max_iteration_num": 4
-      },
-      "non_target_parameters": {
-        "N": 32
-      },
-      "results": {
-        "converged": true,
-        "optimal_parameter_value": 10.0,
-        "total_computational_cost": 6451599360.0,
-        "cost_history": [
-          921733120.0,
-          1843333120.0,
-          3686533120.0
-        ],
-        "parameter_history": [
-          {
-            "N": 32,
-            "dt": 40.0
-          },
-          {
-            "N": 32,
-            "dt": 20.0
-          },
-          {
-            "N": 32,
-            "dt": 10.0
-          }
-        ]
-      }
-    },
-    {
-      "task_id": 94,
-      "solver": "hasegawa_mima_nonlinear",
-      "profile": "p2",
-      "precision_level": "high",
-      "tolerance_rmse": 1e-05,
-      "target_parameter": "dt",
-      "target_config": {
-        "initial_value": 40.0,
-        "multiplication_factor": 0.5,
-        "max_iteration_num": 4
-      },
-      "non_target_parameters": {
-        "N": 64
-      },
-      "results": {
-        "converged": true,
-        "optimal_parameter_value": 10.0,
-        "total_computational_cost": 30967676928.0,
-        "cost_history": [
-          4424318976.0,
-          8847998976.0,
-          17695358976.0
-        ],
-        "parameter_history": [
-          {
-            "N": 64,
-            "dt": 40.0
-          },
-          {
-            "N": 64,
-            "dt": 20.0
-          },
-          {
-            "N": 64,
-            "dt": 10.0
-          }
-        ]
-      }
-    },
-    {
-      "task_id": 95,
-      "solver": "hasegawa_mima_nonlinear",
-      "profile": "p2",
-      "precision_level": "high",
-      "tolerance_rmse": 1e-05,
-      "target_parameter": "dt",
-      "target_config": {
-        "initial_value": 40.0,
-        "multiplication_factor": 0.5,
-        "max_iteration_num": 4
-      },
-      "non_target_parameters": {
-        "N": 128
-      },
-      "results": {
-        "converged": true,
-        "optimal_parameter_value": 10.0,
-        "total_computational_cost": 144515825664.0,
-        "cost_history": [
-          20646821888.0,
-          41290661888.0,
-          82578341888.0
-        ],
-        "parameter_history": [
-          {
-            "N": 128,
-            "dt": 40.0
-          },
-          {
-            "N": 128,
-            "dt": 20.0
-          },
-          {
-            "N": 128,
-            "dt": 10.0
-          }
-        ]
-      }
-    },
-    {
-      "task_id": 101,
+      "task_id": 114,
       "solver": "hasegawa_mima_nonlinear",
       "profile": "p3",
       "precision_level": "high",
-      "tolerance_rmse": 1e-05,
+      "tolerance_rmse": 0.0001,
       "target_parameter": "dt",
       "target_config": {
         "initial_value": 40.0,
         "multiplication_factor": 0.5,
-        "max_iteration_num": 4
+        "max_iteration_num": 5
       },
       "non_target_parameters": {
         "N": 32
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 5.0,
-        "total_computational_cost": 13824532480.0,
+        "optimal_parameter_value": 10.0,
+        "total_computational_cost": 6451599360.0,
         "cost_history": [
           921733120.0,
           1843333120.0,
+          3686533120.0
+        ],
+        "parameter_history": [
+          {
+            "N": 32,
+            "dt": 40.0
+          },
+          {
+            "N": 32,
+            "dt": 20.0
+          },
+          {
+            "N": 32,
+            "dt": 10.0
+          }
+        ]
+      }
+    },
+    {
+      "task_id": 115,
+      "solver": "hasegawa_mima_nonlinear",
+      "profile": "p3",
+      "precision_level": "high",
+      "tolerance_rmse": 0.0001,
+      "target_parameter": "dt",
+      "target_config": {
+        "initial_value": 40.0,
+        "multiplication_factor": 0.5,
+        "max_iteration_num": 5
+      },
+      "non_target_parameters": {
+        "N": 64
+      },
+      "results": {
+        "converged": true,
+        "optimal_parameter_value": 10.0,
+        "total_computational_cost": 30967676928.0,
+        "cost_history": [
+          4424318976.0,
+          8847998976.0,
+          17695358976.0
+        ],
+        "parameter_history": [
+          {
+            "N": 64,
+            "dt": 40.0
+          },
+          {
+            "N": 64,
+            "dt": 20.0
+          },
+          {
+            "N": 64,
+            "dt": 10.0
+          }
+        ]
+      }
+    },
+    {
+      "task_id": 123,
+      "solver": "hasegawa_mima_nonlinear",
+      "profile": "p4",
+      "precision_level": "high",
+      "tolerance_rmse": 0.0001,
+      "target_parameter": "dt",
+      "target_config": {
+        "initial_value": 40.0,
+        "multiplication_factor": 0.5,
+        "max_iteration_num": 5
+      },
+      "non_target_parameters": {
+        "N": 32
+      },
+      "results": {
+        "converged": true,
+        "optimal_parameter_value": 20.0,
+        "total_computational_cost": 2765066240.0,
+        "cost_history": [
+          921733120.0,
+          1843333120.0
+        ],
+        "parameter_history": [
+          {
+            "N": 32,
+            "dt": 40.0
+          },
+          {
+            "N": 32,
+            "dt": 20.0
+          }
+        ]
+      }
+    },
+    {
+      "task_id": 124,
+      "solver": "hasegawa_mima_nonlinear",
+      "profile": "p4",
+      "precision_level": "high",
+      "tolerance_rmse": 0.0001,
+      "target_parameter": "dt",
+      "target_config": {
+        "initial_value": 40.0,
+        "multiplication_factor": 0.5,
+        "max_iteration_num": 5
+      },
+      "non_target_parameters": {
+        "N": 64
+      },
+      "results": {
+        "converged": true,
+        "optimal_parameter_value": 10.0,
+        "total_computational_cost": 30967676928.0,
+        "cost_history": [
+          4424318976.0,
+          8847998976.0,
+          17695358976.0
+        ],
+        "parameter_history": [
+          {
+            "N": 64,
+            "dt": 40.0
+          },
+          {
+            "N": 64,
+            "dt": 20.0
+          },
+          {
+            "N": 64,
+            "dt": 10.0
+          }
+        ]
+      }
+    },
+    {
+      "task_id": 125,
+      "solver": "hasegawa_mima_nonlinear",
+      "profile": "p4",
+      "precision_level": "high",
+      "tolerance_rmse": 0.0001,
+      "target_parameter": "dt",
+      "target_config": {
+        "initial_value": 40.0,
+        "multiplication_factor": 0.5,
+        "max_iteration_num": 5
+      },
+      "non_target_parameters": {
+        "N": 128
+      },
+      "results": {
+        "converged": true,
+        "optimal_parameter_value": 2.5,
+        "total_computational_cost": 639973949440.0,
+        "cost_history": [
+          20646821888.0,
+          41290661888.0,
+          82578341888.0,
+          165153701888.0,
+          330304421888.0
+        ],
+        "parameter_history": [
+          {
+            "N": 128,
+            "dt": 40.0
+          },
+          {
+            "N": 128,
+            "dt": 20.0
+          },
+          {
+            "N": 128,
+            "dt": 10.0
+          },
+          {
+            "N": 128,
+            "dt": 5.0
+          },
+          {
+            "N": 128,
+            "dt": 2.5
+          }
+        ]
+      }
+    },
+    {
+      "task_id": 127,
+      "solver": "hasegawa_mima_nonlinear",
+      "profile": "p5",
+      "precision_level": "high",
+      "tolerance_rmse": 0.0001,
+      "target_parameter": "N",
+      "target_config": {
+        "initial_value": 32,
+        "multiplication_factor": 2,
+        "max_iteration_num": 4
+      },
+      "non_target_parameters": {
+        "dt": 2.5
+      },
+      "results": {
+        "converged": true,
+        "optimal_parameter_value": 256,
+        "total_computational_cost": 1925792745472.0,
+        "cost_history": [
+          14745733120.0,
+          70779518976.0,
+          330304421888.0,
+          1509963071488.0
+        ],
+        "parameter_history": [
+          {
+            "N": 32,
+            "dt": 2.5
+          },
+          {
+            "N": 64,
+            "dt": 2.5
+          },
+          {
+            "N": 128,
+            "dt": 2.5
+          },
+          {
+            "N": 256,
+            "dt": 2.5
+          }
+        ]
+      }
+    },
+    {
+      "task_id": 128,
+      "solver": "hasegawa_mima_nonlinear",
+      "profile": "p5",
+      "precision_level": "high",
+      "tolerance_rmse": 0.0001,
+      "target_parameter": "N",
+      "target_config": {
+        "initial_value": 32,
+        "multiplication_factor": 2,
+        "max_iteration_num": 4
+      },
+      "non_target_parameters": {
+        "dt": 5.0
+      },
+      "results": {
+        "converged": true,
+        "optimal_parameter_value": 256,
+        "total_computational_cost": 962905065472.0,
+        "cost_history": [
+          7372933120.0,
+          35390078976.0,
+          165153701888.0,
+          754988351488.0
+        ],
+        "parameter_history": [
+          {
+            "N": 32,
+            "dt": 5.0
+          },
+          {
+            "N": 64,
+            "dt": 5.0
+          },
+          {
+            "N": 128,
+            "dt": 5.0
+          },
+          {
+            "N": 256,
+            "dt": 5.0
+          }
+        ]
+      }
+    },
+    {
+      "task_id": 129,
+      "solver": "hasegawa_mima_nonlinear",
+      "profile": "p5",
+      "precision_level": "high",
+      "tolerance_rmse": 0.0001,
+      "target_parameter": "N",
+      "target_config": {
+        "initial_value": 32,
+        "multiplication_factor": 2,
+        "max_iteration_num": 4
+      },
+      "non_target_parameters": {
+        "dt": 10.0
+      },
+      "results": {
+        "converged": true,
+        "optimal_parameter_value": 256,
+        "total_computational_cost": 481461225472.0,
+        "cost_history": [
           3686533120.0,
-          7372933120.0
-        ],
-        "parameter_history": [
-          {
-            "N": 32,
-            "dt": 40.0
-          },
-          {
-            "N": 32,
-            "dt": 20.0
-          },
-          {
-            "N": 32,
-            "dt": 10.0
-          },
-          {
-            "N": 32,
-            "dt": 5.0
-          }
-        ]
-      }
-    },
-    {
-      "task_id": 102,
-      "solver": "hasegawa_mima_nonlinear",
-      "profile": "p3",
-      "precision_level": "high",
-      "tolerance_rmse": 1e-05,
-      "target_parameter": "dt",
-      "target_config": {
-        "initial_value": 40.0,
-        "multiplication_factor": 0.5,
-        "max_iteration_num": 4
-      },
-      "non_target_parameters": {
-        "N": 64
-      },
-      "results": {
-        "converged": true,
-        "optimal_parameter_value": 5.0,
-        "total_computational_cost": 66357755904.0,
-        "cost_history": [
-          4424318976.0,
-          8847998976.0,
           17695358976.0,
-          35390078976.0
+          82578341888.0,
+          377500991488.0
         ],
         "parameter_history": [
           {
-            "N": 64,
-            "dt": 40.0
-          },
-          {
-            "N": 64,
-            "dt": 20.0
+            "N": 32,
+            "dt": 10.0
           },
           {
             "N": 64,
             "dt": 10.0
           },
           {
-            "N": 64,
-            "dt": 5.0
+            "N": 128,
+            "dt": 10.0
+          },
+          {
+            "N": 256,
+            "dt": 10.0
           }
         ]
       }
     },
     {
-      "task_id": 109,
+      "task_id": 132,
       "solver": "hasegawa_mima_nonlinear",
-      "profile": "p4",
+      "profile": "p5",
       "precision_level": "high",
-      "tolerance_rmse": 1e-05,
+      "tolerance_rmse": 0.0001,
       "target_parameter": "dt",
       "target_config": {
         "initial_value": 40.0,
         "multiplication_factor": 0.5,
-        "max_iteration_num": 4
+        "max_iteration_num": 5
       },
       "non_target_parameters": {
         "N": 32
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 10.0,
-        "total_computational_cost": 6451599360.0,
+        "optimal_parameter_value": 20.0,
+        "total_computational_cost": 2765066240.0,
         "cost_history": [
           921733120.0,
-          1843333120.0,
-          3686533120.0
+          1843333120.0
         ],
         "parameter_history": [
           {
@@ -2217,38 +3596,32 @@
           {
             "N": 32,
             "dt": 20.0
-          },
-          {
-            "N": 32,
-            "dt": 10.0
           }
         ]
       }
     },
     {
-      "task_id": 110,
+      "task_id": 133,
       "solver": "hasegawa_mima_nonlinear",
-      "profile": "p4",
+      "profile": "p5",
       "precision_level": "high",
-      "tolerance_rmse": 1e-05,
+      "tolerance_rmse": 0.0001,
       "target_parameter": "dt",
       "target_config": {
         "initial_value": 40.0,
         "multiplication_factor": 0.5,
-        "max_iteration_num": 4
+        "max_iteration_num": 5
       },
       "non_target_parameters": {
         "N": 64
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 5.0,
-        "total_computational_cost": 66357755904.0,
+        "optimal_parameter_value": 20.0,
+        "total_computational_cost": 13272317952.0,
         "cost_history": [
           4424318976.0,
-          8847998976.0,
-          17695358976.0,
-          35390078976.0
+          8847998976.0
         ],
         "parameter_history": [
           {
@@ -2258,121 +3631,32 @@
           {
             "N": 64,
             "dt": 20.0
-          },
-          {
-            "N": 64,
-            "dt": 10.0
-          },
-          {
-            "N": 64,
-            "dt": 5.0
           }
         ]
       }
     },
     {
-      "task_id": 117,
+      "task_id": 134,
       "solver": "hasegawa_mima_nonlinear",
       "profile": "p5",
       "precision_level": "high",
-      "tolerance_rmse": 1e-05,
+      "tolerance_rmse": 0.0001,
       "target_parameter": "dt",
       "target_config": {
         "initial_value": 40.0,
         "multiplication_factor": 0.5,
-        "max_iteration_num": 4
-      },
-      "non_target_parameters": {
-        "N": 32
-      },
-      "results": {
-        "converged": true,
-        "optimal_parameter_value": 10.0,
-        "total_computational_cost": 6451599360.0,
-        "cost_history": [
-          921733120.0,
-          1843333120.0,
-          3686533120.0
-        ],
-        "parameter_history": [
-          {
-            "N": 32,
-            "dt": 40.0
-          },
-          {
-            "N": 32,
-            "dt": 20.0
-          },
-          {
-            "N": 32,
-            "dt": 10.0
-          }
-        ]
-      }
-    },
-    {
-      "task_id": 118,
-      "solver": "hasegawa_mima_nonlinear",
-      "profile": "p5",
-      "precision_level": "high",
-      "tolerance_rmse": 1e-05,
-      "target_parameter": "dt",
-      "target_config": {
-        "initial_value": 40.0,
-        "multiplication_factor": 0.5,
-        "max_iteration_num": 4
-      },
-      "non_target_parameters": {
-        "N": 64
-      },
-      "results": {
-        "converged": true,
-        "optimal_parameter_value": 10.0,
-        "total_computational_cost": 30967676928.0,
-        "cost_history": [
-          4424318976.0,
-          8847998976.0,
-          17695358976.0
-        ],
-        "parameter_history": [
-          {
-            "N": 64,
-            "dt": 40.0
-          },
-          {
-            "N": 64,
-            "dt": 20.0
-          },
-          {
-            "N": 64,
-            "dt": 10.0
-          }
-        ]
-      }
-    },
-    {
-      "task_id": 119,
-      "solver": "hasegawa_mima_nonlinear",
-      "profile": "p5",
-      "precision_level": "high",
-      "tolerance_rmse": 1e-05,
-      "target_parameter": "dt",
-      "target_config": {
-        "initial_value": 40.0,
-        "multiplication_factor": 0.5,
-        "max_iteration_num": 4
+        "max_iteration_num": 5
       },
       "non_target_parameters": {
         "N": 128
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 10.0,
-        "total_computational_cost": 144515825664.0,
+        "optimal_parameter_value": 20.0,
+        "total_computational_cost": 61937483776.0,
         "cost_history": [
           20646821888.0,
-          41290661888.0,
-          82578341888.0
+          41290661888.0
         ],
         "parameter_history": [
           {
@@ -2382,10 +3666,6 @@
           {
             "N": 128,
             "dt": 20.0
-          },
-          {
-            "N": 128,
-            "dt": 10.0
           }
         ]
       }

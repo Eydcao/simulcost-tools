@@ -156,11 +156,9 @@ class HasegawaMimaNonlinear(SIMULATOR):
     def rhs(self, q_hat):
         """Compute RHS of nonlinear Hasegawa-Mima equation in spectral space"""
         # Compute phi from q using Poisson equation in spectral space
-        phi_hat = np.copy(q_hat)
         # Avoid division by zero at k=0
         nonzero_mask = np.abs(self.A_fft) > 1e-14
-        phi_hat[nonzero_mask] = q_hat[nonzero_mask] / self.A_fft[nonzero_mask]
-        phi_hat[~nonzero_mask] = 0.0
+        phi_hat = np.where(nonzero_mask, q_hat / self.A_fft, 0.0)
 
         # Compute dealiased Jacobian in spectral space
         jacobian_hat = self.poisson_bracket_dealiased(phi_hat, q_hat)
