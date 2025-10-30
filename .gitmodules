@@ -4,7 +4,7 @@
 
 [submodule "solvers/fastipc_utils"]
 	path = solvers/fastipc_utils
-	url = git@github.com:Eydcao/fem_transient_utils.git
+	url = https://github.com/Eydcao/fem_transient_utils.git
 
 [submodule "solvers/euler_2d_utils/CSMPM_BOW"]
 	path = solvers/euler_2d_utils/CSMPM_BOW
