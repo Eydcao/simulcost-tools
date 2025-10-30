@@ -3,5 +3,5 @@
 	url = https://github.com/Warwick-Plasma/epoch.git
 [submodule "solvers/euler_2d_utils/CSMPM_BOW"]
 	path = solvers/euler_2d_utils/CSMPM_BOW
-	url = git@github.com:Eydcao/CSMPM_BOW.git
+	url = https://github.com/Eydcao/CSMPM_BOW.git
 	branch = costscitools
