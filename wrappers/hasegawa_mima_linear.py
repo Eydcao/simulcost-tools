@@ -195,6 +195,9 @@ def get_error_metric(numerical_sim_dir):
     Returns:
         float: Mean L2 error compared to analytical solution, or None if comparison fails
     """
+    # Apply path transformation to support SIM_RES_BASE_DIR
+    numerical_sim_dir = _get_sim_path(numerical_sim_dir)
+
     # Load metadata to get analytical reference directory
     meta_file = os.path.join(numerical_sim_dir, "meta.json")
     if not os.path.exists(meta_file):
