@@ -217,6 +217,9 @@ def get_error_metric(numerical_sim_dir):
         print(f"Warning: analytical_reference_dir not found in metadata")
         return None
 
+    # Apply path transformation to support SIM_RES_BASE_DIR
+    analytical_sim_dir = _get_sim_path(analytical_sim_dir)
+
     if not os.path.exists(analytical_sim_dir):
         print(f"Warning: Analytical reference directory not found: {analytical_sim_dir}")
         return None
