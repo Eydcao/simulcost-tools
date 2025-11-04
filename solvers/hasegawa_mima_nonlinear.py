@@ -268,6 +268,8 @@ class HasegawaMimaNonlinear(SIMULATOR):
             "L": self.L,
             "v_star": self.v_star,
             "Dx": self.Dx,
+            "wall_time_total": float(self.wall_time_total),
+            "wall_time_exceeded": bool(self.wall_time_exceeded),
         }
 
         meta_path = os.path.join(self.dump_dir, "meta.json")

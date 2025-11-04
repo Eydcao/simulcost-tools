@@ -14,9 +14,10 @@ N: 128                     # Grid resolution (main accuracy parameter)
 dt: 10.0                   # Time step (main efficiency parameter)
 
 # Simulator statics
-record_dt: 10000             # Time interval between recordings (used by base solver)
+record_dt: 1000             # Time interval between recordings (used by base solver)
 end_frame: 10              # Number of recording frames (end_time = record_dt * end_frame)
 
 # Output configuration
 dump_dir: "sim_res/hasegawa_mima_nonlinear/p4"  # Directory for output files
 verbose: false            # Enable verbose output
+max_wall_time: 120         # Maximum wall time in seconds (hard limit)

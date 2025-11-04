@@ -2,7 +2,9 @@
 
 ## Introduction
 
-This simulation solves the linearized Hasegawa-Mima equation for drift wave dynamics in magnetized plasmas, using 4th-order Runge-Kutta time integration with a Conjugate Gradient solver for the Helmholtz equation:
+This simulation solves the linearized Hasegawa-Mima equation for drift wave dynamics in magnetized plasmas, using 4th-order Runge-Kutta time integration with a Conjugate Gradient solver for the Helmholtz equation.
+
+**Wall Time Constraint**: To prevent runaway simulations, a configurable wall time limit (default: 120 seconds) is enforced. Simulations that exceed this limit are terminated early and flagged as incomplete via the function call.
 
 **Governing equation:**
 $$\frac{\partial q}{\partial t} + v_* \frac{\partial \phi}{\partial y} = 0$$
@@ -25,10 +27,18 @@ $$q^{n+1} = q^n + \frac{\Delta t}{6}(k_1 + 2k_2 + 2k_3 + k_4)$$
 
 where $k_i$ are the RK4 stage evaluations of the RHS.
 
+**Simulation Duration:**
+
+- Recording interval: `record_dt = 1000.0` time units
+- Number of frames: `end_frame = 10`
+- Total simulation time: $T = \text{record\_dt} \times \text{end\_frame} = 10{,}000$ time units
+- Number of time steps: $N_{\text{steps}} = T / \Delta t$
+
 ### Spatial Discretization
 
 Finite differences with periodic boundary conditions on a uniform 2D grid:
 
+- Domain size: $L = 2\pi \times 10 \approx 62.83$ (periodic in both x and y)
 - Grid spacing: $\Delta x = \Delta y = L / N$
 - 2D Laplacian operator: $\nabla^2 \phi$ discretized using 5-point stencil
 - Derivative operator: $\partial \phi / \partial y$ using central differences
@@ -86,11 +96,13 @@ Computational cost for the numerical method is estimated as:
 $$\text{Cost} = N_{\text{CG}} \times N^2 + N_{\text{matvec}} \times N^2$$
 
 where:
+
 - $N_{\text{CG}}$ = total CG iterations across all time steps
 - $N_{\text{matvec}}$ = total sparse matrix-vector multiply operations
 - Each CG iteration and matvec operation costs roughly $O(N^2)$
 
 The cost depends on the tunable parameters:
+
 - **N** (spatial resolution): affects $N^2$ term
 - **dt** (time step): smaller dt → more time steps → more CG iterations
 - **cg_atol** (CG tolerance): stricter tolerance → more CG iterations per solve
@@ -114,16 +126,18 @@ Note: The analytical solution (used only as reference for error checking) is not
 
 1. **N Convergence Search (iterative+0-shot)**
    - For dummy solution, this means doubling N each iteration (multiplication factor: 2) starting from 32 until convergence
-   - **Non-target parameters**: dt∈{5.0, 10.0, 20.0, 40.0}, cg_atol∈{1e0, 1e-1, 1e-2, 1e-3, 1e-4}
+   - Max iterations: 4 (N ∈ {32, 64, 128, 256})
+   - **Non-target parameters**: dt∈{5.0, 10.0, 20.0}, cg_atol∈{1e0, 1e-1, 1e-2, 1e-3, 1e-4}
 
 2. **dt Convergence Search (iterative+0-shot)**
    - For dummy solution, this means halving dt each iteration (multiplication factor: 0.5) starting from 40.0 until convergence
-   - **Non-target parameters**: N∈{32, 64, 128, 256}, cg_atol∈{1e0, 1e-1, 1e-2, 1e-3, 1e-4}
+   - Max iterations: 4 (dt ∈ {40.0, 20.0, 10.0, 5.0})
+   - **Non-target parameters**: N∈{64, 128, 256}, cg_atol∈{1e0, 1e-1, 1e-2, 1e-3, 1e-4}
 
 3. **cg_atol Optimization (iterative+0-shot)**
    - For dummy solution, iteratively search from coarse (relaxed) to fine (strict) tolerance, stopping at the first convergent solution
-   - Search follows a logarithmic progression through predefined cg_atol values until convergence is achieved
-   - **Non-target parameters**: N∈{32, 64, 128, 256}, dt∈{5.0, 10.0, 20.0, 40.0}
+   - Search follows a logarithmic progression through 5 predefined cg_atol values until convergence is achieved
+   - **Non-target parameters**: N∈{64, 128, 256}, dt∈{5.0, 10.0, 20.0}
 
 ## Summarized parameter table for developer only (Not LLM)
 
@@ -137,11 +151,15 @@ Note: The analytical solution (used only as reference for error checking) is not
 
 More Notes:
 
-- Smaller N → coarser grid → lower accuracy but lower cost
-- Larger dt → fewer time steps → lower accuracy but lower cost
-- Larger cg_atol → fewer CG iterations → lower accuracy but lower cost
-- cg_atol = 1e0 typically gives very inaccurate results due to loose CG convergence
-- N determines spatial resolution: $\Delta x = L / N$ (larger N = finer grid = higher accuracy but higher cost)
+- **N (Grid Resolution)**: Determines spatial resolution via $\Delta x = \Delta y = L / N$ where $L \approx 62.83$
+  - Smaller N → coarser grid (larger Δx) → lower accuracy but lower cost
+  - Example: N=32 gives Δx≈1.96; N=256 gives Δx≈0.245
+- **dt (Time Step)**: Determines temporal resolution over fixed total time T=10,000
+  - Larger dt → fewer time steps ($N_{\text{steps}} = 10000/dt$) → lower accuracy but lower cost
+  - Example: dt=5.0 needs 2,000 steps; dt=40.0 needs 250 steps
+- **cg_atol (CG Tolerance)**: Controls CG solver convergence
+  - Larger cg_atol → fewer CG iterations → lower accuracy but lower cost
+  - cg_atol = 1e0 typically gives very inaccurate results due to loose CG convergence
 
 ### Other
 
@@ -155,6 +173,7 @@ More Notes:
 | analytical | Use analytical solution (true) or numerical (false) | false |
 | record_dt | Time interval between recordings | 1000.0 |
 | end_frame | Simulation end after certain number of frames | 10 |
+| max_wall_time | Maximum computation time in seconds | 60.0 |
 | dump_dir | Directory for output files | "sim_res/hasegawa_mima_linear/p1" |
 | verbose | Enable verbose output | false |
 
@@ -174,11 +193,11 @@ More Notes:
 
 Current configuration generates:
 
-- **N** (iterative+0-shot): 4 profiles × 20 non-target combos = 80 tasks
-- **dt** (iterative+0-shot): 4 profiles × 20 non-target combos = 80 tasks
-- **cg_atol** (iterative+0-shot): 4 profiles × 16 non-target combos = 64 tasks
-- **Total per precision**: 224 tasks
-- **Total tasks**: 672 tasks (across 3 precision levels)
+- **N** (iterative+0-shot): 4 profiles × 15 non-target combos (3 dt × 5 cg_atol) = 60 tasks
+- **dt** (iterative+0-shot): 4 profiles × 15 non-target combos (3 N × 5 cg_atol) = 60 tasks
+- **cg_atol** (iterative+0-shot): 4 profiles × 9 non-target combos (3 N × 3 dt) = 36 tasks
+- **Total per precision**: 156 tasks
+- **Total tasks**: 468 tasks (across 3 precision levels)
 
 ### Dummy Solution Cache
 

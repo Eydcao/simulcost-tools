@@ -7,6 +7,8 @@ import sys
 from scipy.interpolate import RegularGridInterpolator
 from dotenv import load_dotenv
 
+# from solvers.utils import format_param_for_path
+
 # Load environment variables from .env file
 load_dotenv()
 
@@ -22,27 +24,6 @@ def _get_sim_path(relative_path):
     if SIM_RES_BASE_DIR:
         return os.path.join(SIM_RES_BASE_DIR, relative_path)
     return relative_path
-
-
-def format_param_for_path(value):
-    """
-    Format parameter values for clean folder/file names.
-
-    Args:
-        value: Parameter value (float, int, or other)
-
-    Returns:
-        str: Cleanly formatted string suitable for file paths
-    """
-    if isinstance(value, float):
-        if value >= 1e-3 and value < 1e3:
-            # Use fixed point for reasonable range, remove trailing zeros
-            return f"{value:.6g}".rstrip("0").rstrip(".")
-        else:
-            # Use scientific notation for very small/large values
-            return f"{value:.2e}"
-    else:
-        return str(value)
 
 
 def _find_runner_path():
@@ -100,7 +81,7 @@ def _find_runner_path():
     )
 
 
-def get_results(profile, N, dt):
+def get_results(profile, N, dt, max_wall_time=-1):
     """
     Get simulation results by running the simulation (if needed) and loading all frames.
 
@@ -108,9 +89,14 @@ def get_results(profile, N, dt):
         profile: Configuration profile name
         N: Grid resolution
         dt: Time step size
+        max_wall_time: Override for maximum wall time in seconds (default=-1).
+                      - Default (-1): Use config default
+                      - None: Disable limit (no constraint)
+                      - Positive number: Override to that many seconds
 
     Returns:
-        tuple: (cost, results_list) where results_list contains all frame data
+        tuple: (cost, results_list, simulation_completed) where results_list contains all frame data
+               and simulation_completed is True if wall time was NOT exceeded
     """
     dir_path = _get_sim_path(f"sim_res/hasegawa_mima_nonlinear/{profile}_N_{N}_dt_{dt:.2e}_nonlinear/")
     meta_path = os.path.join(dir_path, "meta.json")
@@ -122,21 +108,51 @@ def get_results(profile, N, dt):
             if "cost" in meta:
                 print(f"Using existing simulation results from {dir_path}")
                 cost = meta["cost"]
+                wall_time_exceeded = meta.get("wall_time_exceeded", False)
+                simulation_completed = not wall_time_exceeded
+
+                if wall_time_exceeded:
+                    print(f"Warning: Simulation did not complete (wall_time_exceeded={wall_time_exceeded})")
     else:
         # Run the simulation if not already done
-        print(f"Running new nonlinear simulation with parameters: N={N}, dt={dt}")
+        # Determine wall time description for logging
+        if max_wall_time is None:
+            wall_time_desc = "disabled"
+        elif max_wall_time == -1:
+            wall_time_desc = "config default"
+        else:
+            wall_time_desc = f"{max_wall_time}s"
+
+        print(f"Running new nonlinear simulation with parameters: N={N}, dt={dt}, max_wall_time={wall_time_desc}")
         runner_path = _find_runner_path()
+
+        # Build command
         if SIM_RES_BASE_DIR:
             dump_dir = os.path.join(SIM_RES_BASE_DIR, f"sim_res/hasegawa_mima_nonlinear/{profile}")
             cmd = f"{sys.executable} {runner_path} --config-name={profile} N={N} dt={dt} dump_dir={dump_dir}"
         else:
             cmd = f"{sys.executable} {runner_path} --config-name={profile} N={N} dt={dt}"
+
+        # Add max_wall_time override if specified
+        if max_wall_time is None:
+            # Disable wall time limit
+            cmd += " max_wall_time=null"
+        elif max_wall_time > 0:
+            # Override to specific value
+            cmd += f" max_wall_time={max_wall_time}"
+        # If max_wall_time == -1 (default), don't add anything - use config default
+
         subprocess.run(cmd, shell=True, check=True)
 
-        # Read the meta.json to get cost
+        # Read the meta.json to get cost and completion status
         with open(meta_path, "r") as f:
             meta = json.load(f)
             cost = meta["cost"]
+            wall_time_exceeded = meta.get("wall_time_exceeded", False)
+            simulation_completed = not wall_time_exceeded
+
+            if wall_time_exceeded:
+                print(f"Warning: Simulation did not complete (wall_time_exceeded={wall_time_exceeded})")
 
     # Load all frames
     results_list = []
@@ -158,7 +174,7 @@ def get_results(profile, N, dt):
             }
             results_list.append(result)
 
-    return cost, results_list
+    return cost, results_list, simulation_completed
 
 
 def compare_solutions(profile, params1, params2, tolerance_rmse):
@@ -175,14 +191,34 @@ def compare_solutions(profile, params1, params2, tolerance_rmse):
     Returns:
         is_converged: Boolean indicating if solutions converged
         cost1: Cost for first simulation
-        cost2: Cost for second simulation
-        rmse_diff: RMSE difference between solutions
+        cost2: Cost for second simulation (or 0 if not run)
+        rmse_diff: RMSE difference between solutions (or None if comparison not possible)
     """
-    # Get both simulation results
-    cost1, results1 = get_results(profile, **params1)
-    cost2, results2 = get_results(profile, **params2)
+    # Run first (coarse) simulation with normal wall time limit (use config default)
+    cost1, results1, completed1 = get_results(profile, **params1)
 
-    if not results1 or not results2:
+    # Check if first simulation completed
+    if not completed1:
+        print(f"⚠️  First simulation hit wall time limit - skipping second simulation")
+        print(f"   Params1: {params1}")
+        return False, cost1, 0, None
+
+    if not results1:
+        print(f"⚠️  First simulation produced no results")
+        return False, cost1, 0, None
+
+    # Run second (fine) simulation with NO wall time limit
+    # This allows higher resolution simulations to complete without false rejections
+    cost2, results2, completed2 = get_results(profile, max_wall_time=None, **params2)
+
+    # Check if second simulation completed
+    if not completed2:
+        print(f"⚠️  Second simulation did not complete (should not happen - no wall time limit)")
+        print(f"   Params2: {params2}")
+        return False, cost1, cost2, None
+
+    if not results2:
+        print(f"⚠️  Second simulation produced no results")
         return False, cost1, cost2, None
 
     # Calculate L2 error between resolutions for all frames using interpolation
