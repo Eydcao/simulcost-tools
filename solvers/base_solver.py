@@ -1,3 +1,6 @@
+import time
+
+
 class SIMULATOR:
     def __init__(self, verbose, cfg):
         # Additional initialization can be added in the derived classes
@@ -13,6 +16,12 @@ class SIMULATOR:
         # Track frame numbers for output files
         self.record_frame = 0
         self.num_steps = 0
+
+        # Wall time tracking
+        self.wall_time_start = None
+        self.wall_time_total = 0.0
+        self.max_wall_time = getattr(cfg, 'max_wall_time', None)  # Maximum allowed wall time in seconds
+        self.wall_time_exceeded = False  # Flag to indicate if wall time limit was hit
 
     def pre_process(self):
         # TODO implement in override
@@ -81,6 +90,9 @@ class SIMULATOR:
         return False
 
     def run(self):
+        # Start wall time tracking
+        self.wall_time_start = time.time()
+
         self.pre_process()
 
         # Initial recording at time 0
@@ -90,6 +102,16 @@ class SIMULATOR:
         self.next_record_time = min(self.current_time + self.record_dt, self.end_time)
 
         while self.current_time < self.end_time - 1e-10:
+            # Check wall time constraint
+            if self.max_wall_time is not None:
+                elapsed_wall_time = time.time() - self.wall_time_start
+                if elapsed_wall_time > self.max_wall_time:
+                    self.wall_time_exceeded = True
+                    if self.verbose:
+                        print(f"Wall time limit exceeded: {elapsed_wall_time:.2f}s > {self.max_wall_time:.2f}s")
+                        print(f"Stopping at simulation time {self.current_time:.6f}")
+                    break
+
             # Calculate base timestep
             base_dt = self.cal_dt()
 
@@ -118,6 +140,14 @@ class SIMULATOR:
                     print(f"Early stopping at time {self.current_time:.6f}")
                 break
 
+        # Calculate total wall time
+        self.wall_time_total = time.time() - self.wall_time_start
+
         if self.verbose:
-            print(f"Simulation completed at time {self.current_time:.6f}, total steps: {self.num_steps}")
+            if self.wall_time_exceeded:
+                print(f"Simulation stopped early due to wall time limit")
+            else:
+                print(f"Simulation completed at time {self.current_time:.6f}, total steps: {self.num_steps}")
+            print(f"Total wall time: {self.wall_time_total:.2f}s")
+
         self.post_process()

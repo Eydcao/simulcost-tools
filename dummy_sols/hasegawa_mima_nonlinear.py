@@ -28,7 +28,7 @@ def find_convergent_N(profile, N, dt, tolerance_rmse, multiplication_factor, max
         print(f"\nRunning simulation with N = {current_N}, dt = {dt}")
 
         # Get simulation results
-        cost_i, _ = get_results(profile=profile, N=current_N, dt=dt)
+        cost_i, _, _ = get_results(profile=profile, N=current_N, dt=dt)
         cost_history.append(cost_i)
         N_history.append(current_N)
         param_history.append({"N": current_N, "dt": dt})
@@ -91,7 +91,7 @@ def find_convergent_dt(profile, N, dt, tolerance_rmse, multiplication_factor, ma
         print(f"\nRunning simulation with N = {N}, dt = {current_dt}")
 
         # Get simulation results
-        cost_i, _ = get_results(profile=profile, N=N, dt=current_dt)
+        cost_i, _, _ = get_results(profile=profile, N=N, dt=current_dt)
         cost_history.append(cost_i)
         dt_history.append(current_dt)
         param_history.append({"N": N, "dt": current_dt})

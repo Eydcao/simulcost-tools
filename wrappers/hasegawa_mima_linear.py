@@ -77,8 +77,24 @@ def _find_runner_path():
     )
 
 
-def run_sim_hasegawa_mima_linear(profile, N, dt, cg_atol, analytical):
-    """Run the Hasegawa-Mima linear simulation with the given parameters if not already simulated."""
+def run_sim_hasegawa_mima_linear(profile, N, dt, cg_atol, analytical, max_wall_time=-1):
+    """
+    Run the Hasegawa-Mima linear simulation with the given parameters if not already simulated.
+
+    Args:
+        profile: Configuration profile name
+        N: Grid resolution
+        dt: Time step
+        cg_atol: CG solver tolerance
+        analytical: Whether to run analytical solution
+        max_wall_time: Override for maximum wall time in seconds (default=-1).
+                      - Default (-1): Use config default
+                      - None: Disable limit (no constraint)
+                      - Positive number: Override to that many seconds
+
+    Returns:
+        cost: Computational cost of the simulation
+    """
     if analytical:
         method_suffix = "_analytical"
         dir_path = _get_sim_path(f"sim_res/hasegawa_mima_linear/{profile}_N_{N}_dt_{dt:.2e}" + method_suffix + "/")
@@ -99,13 +115,25 @@ def run_sim_hasegawa_mima_linear(profile, N, dt, cg_atol, analytical):
 
     # Run the simulation if not already done
     method_name = "analytical" if analytical else "numerical"
-    print(f"Running new {method_name} simulation with parameters: N={N}, dt={dt}, cg_atol={cg_atol:.2e}")
+    print(f"Running new {method_name} simulation with parameters: N={N}, dt={dt}, cg_atol={cg_atol:.2e}, max_wall_time={max_wall_time}")
     runner_path = _find_runner_path()
+
+    # Build command
     if SIM_RES_BASE_DIR:
         dump_dir = os.path.join(SIM_RES_BASE_DIR, f"sim_res/hasegawa_mima_linear/{profile}")
         cmd = f"{sys.executable} {runner_path} --config-name={profile} N={N} dt={dt} cg_atol={cg_atol} analytical={analytical} dump_dir={dump_dir}"
     else:
         cmd = f"{sys.executable} {runner_path} --config-name={profile} N={N} dt={dt} cg_atol={cg_atol} analytical={analytical}"
+
+    # Add max_wall_time override if specified
+    if max_wall_time is None:
+        # Disable wall time limit
+        cmd += " max_wall_time=null"
+    elif max_wall_time > 0:
+        # Override to specific value
+        cmd += f" max_wall_time={max_wall_time}"
+    # If max_wall_time == -1 (default), don't add anything - use config default
+
     subprocess.run(cmd, shell=True, check=True)
 
     # Read the meta.json to get cost
@@ -194,6 +222,7 @@ def get_error_metric(numerical_sim_dir):
 
     Returns:
         float: Mean L2 error compared to analytical solution, or None if comparison fails
+               Returns None if simulation didn't complete (wall time exceeded)
     """
     # Load metadata to get analytical reference directory
     meta_file = os.path.join(numerical_sim_dir, "meta.json")
@@ -203,6 +232,13 @@ def get_error_metric(numerical_sim_dir):
 
     with open(meta_file, "r") as f:
         meta = json.load(f)
+
+    # Check if simulation completed
+    wall_time_exceeded = meta.get("wall_time_exceeded", False)
+
+    if wall_time_exceeded:
+        print(f"Warning: Simulation did not complete (wall_time_exceeded={wall_time_exceeded})")
+        return None
 
     # Check if this is an analytical run (no error needed)
     if meta.get("analytical", False):

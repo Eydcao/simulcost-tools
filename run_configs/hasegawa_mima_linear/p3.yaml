@@ -24,4 +24,7 @@ end_frame: 10             # Number of recording frames (end_time = record_dt * e
 
 # Output configuration
 dump_dir: "sim_res/hasegawa_mima_linear/p3"  # Directory for output files
+
 verbose: false            # Enable verbose output
+
+max_wall_time: 60          # Maximum wall time in seconds (hard limit)

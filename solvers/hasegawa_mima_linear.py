@@ -449,6 +449,8 @@ class HasegawaMimaLinear(SIMULATOR):
             "cg_iterations_total": self.cg_iterations_total,
             "cg_calls": self.cg_calls,
             "matvec_operations": self.matvec_operations,
+            "wall_time_total": float(self.wall_time_total),
+            "wall_time_exceeded": bool(self.wall_time_exceeded),
         }
 
         # For numerical runs, save analytical directory path in metadata
