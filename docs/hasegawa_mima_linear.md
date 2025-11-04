@@ -126,16 +126,18 @@ Note: The analytical solution (used only as reference for error checking) is not
 
 1. **N Convergence Search (iterative+0-shot)**
    - For dummy solution, this means doubling N each iteration (multiplication factor: 2) starting from 32 until convergence
-   - **Non-target parameters**: dt∈{5.0, 10.0, 20.0, 40.0}, cg_atol∈{1e0, 1e-1, 1e-2, 1e-3, 1e-4}
+   - Max iterations: 4 (N ∈ {32, 64, 128, 256})
+   - **Non-target parameters**: dt∈{5.0, 10.0, 20.0}, cg_atol∈{1e0, 1e-1, 1e-2, 1e-3, 1e-4}
 
 2. **dt Convergence Search (iterative+0-shot)**
    - For dummy solution, this means halving dt each iteration (multiplication factor: 0.5) starting from 40.0 until convergence
-   - **Non-target parameters**: N∈{32, 64, 128, 256}, cg_atol∈{1e0, 1e-1, 1e-2, 1e-3, 1e-4}
+   - Max iterations: 4 (dt ∈ {40.0, 20.0, 10.0, 5.0})
+   - **Non-target parameters**: N∈{64, 128, 256}, cg_atol∈{1e0, 1e-1, 1e-2, 1e-3, 1e-4}
 
 3. **cg_atol Optimization (iterative+0-shot)**
    - For dummy solution, iteratively search from coarse (relaxed) to fine (strict) tolerance, stopping at the first convergent solution
-   - Search follows a logarithmic progression through predefined cg_atol values until convergence is achieved
-   - **Non-target parameters**: N∈{32, 64, 128, 256}, dt∈{5.0, 10.0, 20.0, 40.0}
+   - Search follows a logarithmic progression through 5 predefined cg_atol values until convergence is achieved
+   - **Non-target parameters**: N∈{64, 128, 256}, dt∈{5.0, 10.0, 20.0}
 
 ## Summarized parameter table for developer only (Not LLM)
 
@@ -191,11 +193,11 @@ More Notes:
 
 Current configuration generates:
 
-- **N** (iterative+0-shot): 4 profiles × 20 non-target combos = 80 tasks
-- **dt** (iterative+0-shot): 4 profiles × 20 non-target combos = 80 tasks
-- **cg_atol** (iterative+0-shot): 4 profiles × 16 non-target combos = 64 tasks
-- **Total per precision**: 224 tasks
-- **Total tasks**: 672 tasks (across 3 precision levels)
+- **N** (iterative+0-shot): 4 profiles × 15 non-target combos (3 dt × 5 cg_atol) = 60 tasks
+- **dt** (iterative+0-shot): 4 profiles × 15 non-target combos (3 N × 5 cg_atol) = 60 tasks
+- **cg_atol** (iterative+0-shot): 4 profiles × 9 non-target combos (3 N × 3 dt) = 36 tasks
+- **Total per precision**: 156 tasks
+- **Total tasks**: 468 tasks (across 3 precision levels)
 
 ### Dummy Solution Cache
 
