@@ -89,13 +89,18 @@ def format_param_for_path(value):
     """
     if isinstance(value, float):
         if value >= 1e-3 and value < 1e3:
-            # Use fixed point for reasonable range, remove trailing zeros
-            return f"{value:.6g}".rstrip("0").rstrip(".")
+            # Use fixed point for reasonable range, remove trailing zeros only after decimal point
+            formatted = f"{value:.6g}"
+            # Only strip trailing zeros if there's a decimal point
+            if "." in formatted:
+                formatted = formatted.rstrip("0").rstrip(".")
+            return formatted
         else:
             # Use scientific notation for very small/large values
             return f"{value:.2e}"
     else:
         return str(value)
+
 
 
 def run_sim_unstruct_mpm(profile, nx, n_part, cfl, case="cantilever"):

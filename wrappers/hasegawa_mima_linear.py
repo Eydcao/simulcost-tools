@@ -34,27 +34,28 @@ def _find_runner_path():
     possible_paths = []
 
     # If working from project root (SimulCost-Bench/)
-    if cwd.endswith('SimulCost-Bench'):
-        possible_paths.extend([
-            "costsci_tools/runners/hasegawa_mima_linear.py",
-            "runners/hasegawa_mima_linear.py"
-        ])
+    if cwd.endswith("SimulCost-Bench"):
+        possible_paths.extend(["costsci_tools/runners/hasegawa_mima_linear.py", "runners/hasegawa_mima_linear.py"])
     # If working from costsci_tools/ subdirectory
-    elif cwd.endswith('costsci_tools') or 'costsci_tools' in cwd:
-        possible_paths.extend([
-            "runners/hasegawa_mima_linear.py",
-            "../runners/hasegawa_mima_linear.py",
-            "costsci_tools/runners/hasegawa_mima_linear.py"
-        ])
+    elif cwd.endswith("costsci_tools") or "costsci_tools" in cwd:
+        possible_paths.extend(
+            [
+                "runners/hasegawa_mima_linear.py",
+                "../runners/hasegawa_mima_linear.py",
+                "costsci_tools/runners/hasegawa_mima_linear.py",
+            ]
+        )
 
     # Add generic fallback paths
-    possible_paths.extend([
-        "runners/hasegawa_mima_linear.py",
-        "costsci_tools/runners/hasegawa_mima_linear.py",
-        "./runners/hasegawa_mima_linear.py",
-        "../runners/hasegawa_mima_linear.py",
-        "../../runners/hasegawa_mima_linear.py"
-    ])
+    possible_paths.extend(
+        [
+            "runners/hasegawa_mima_linear.py",
+            "costsci_tools/runners/hasegawa_mima_linear.py",
+            "./runners/hasegawa_mima_linear.py",
+            "../runners/hasegawa_mima_linear.py",
+            "../../runners/hasegawa_mima_linear.py",
+        ]
+    )
 
     # Remove duplicates while preserving order
     seen = set()
@@ -115,7 +116,18 @@ def run_sim_hasegawa_mima_linear(profile, N, dt, cg_atol, analytical, max_wall_t
 
     # Run the simulation if not already done
     method_name = "analytical" if analytical else "numerical"
-    print(f"Running new {method_name} simulation with parameters: N={N}, dt={dt}, cg_atol={cg_atol:.2e}, max_wall_time={max_wall_time}")
+
+    # Determine wall time description for logging
+    if max_wall_time is None:
+        wall_time_desc = "disabled"
+    elif max_wall_time == -1:
+        wall_time_desc = "config default"
+    else:
+        wall_time_desc = f"{max_wall_time}s"
+
+    print(
+        f"Running new {method_name} simulation with parameters: N={N}, dt={dt}, cg_atol={cg_atol:.2e}, max_wall_time={wall_time_desc}"
+    )
     runner_path = _find_runner_path()
 
     # Build command

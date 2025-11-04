@@ -7,6 +7,8 @@ import sys
 from scipy.interpolate import RegularGridInterpolator
 from dotenv import load_dotenv
 
+# from solvers.utils import format_param_for_path
+
 # Load environment variables from .env file
 load_dotenv()
 
@@ -22,24 +24,6 @@ def _get_sim_path(relative_path):
     if SIM_RES_BASE_DIR:
         return os.path.join(SIM_RES_BASE_DIR, relative_path)
     return relative_path
-
-
-def format_param_for_path(value):
-    """
-    Format parameter values for clean folder/file names.
-    Must match the format used in solver (hasegawa_mima_nonlinear.py line 59).
-
-    Args:
-        value: Parameter value (float, int, or other)
-
-    Returns:
-        str: Cleanly formatted string suitable for file paths
-    """
-    if isinstance(value, float):
-        # Always use .2e format to match solver's dump_dir naming
-        return f"{value:.2e}"
-    else:
-        return str(value)
 
 
 def _find_runner_path():
@@ -131,7 +115,15 @@ def get_results(profile, N, dt, max_wall_time=-1):
                     print(f"Warning: Simulation did not complete (wall_time_exceeded={wall_time_exceeded})")
     else:
         # Run the simulation if not already done
-        print(f"Running new nonlinear simulation with parameters: N={N}, dt={dt}, max_wall_time={max_wall_time}")
+        # Determine wall time description for logging
+        if max_wall_time is None:
+            wall_time_desc = "disabled"
+        elif max_wall_time == -1:
+            wall_time_desc = "config default"
+        else:
+            wall_time_desc = f"{max_wall_time}s"
+
+        print(f"Running new nonlinear simulation with parameters: N={N}, dt={dt}, max_wall_time={wall_time_desc}")
         runner_path = _find_runner_path()
 
         # Build command

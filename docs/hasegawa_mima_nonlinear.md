@@ -2,7 +2,9 @@
 
 ## Introduction
 
-This simulation solves the nonlinear Hasegawa-Mima equation for drift wave turbulence in magnetized plasmas, using a pseudo-spectral method with RK4 time integration and 2/3 rule dealiasing:
+This simulation solves the nonlinear Hasegawa-Mima equation for drift wave turbulence in magnetized plasmas, using a pseudo-spectral method with RK4 time integration and 2/3 rule dealiasing.
+
+**Wall Time Constraint**: To prevent runaway simulations, a configurable wall time limit (default: 120 seconds) is enforced. Simulations that exceed this limit are terminated early and flagged as incomplete via the function call.
 
 **Governing equation:**
 $$\frac{\partial q}{\partial t} + \left[\{\phi, q\}\right] + v_* \frac{\partial \phi}{\partial y} = 0$$
@@ -27,10 +29,19 @@ $$q^{n+1} = q^n + \frac{\Delta t}{6}(k_1 + 2k_2 + 2k_3 + k_4)$$
 
 where $k_i$ are the RK4 stage evaluations of the RHS in spectral space.
 
+**Simulation Duration:**
+
+- Recording interval: `record_dt = 1000.0` time units
+- Number of frames: `end_frame = 10`
+- Total simulation time: $T = \text{record\_dt} \times \text{end\_frame} = 10{,}000$ time units
+- Number of time steps: $N_{\text{steps}} = T / \Delta t$
+
 ### Spatial Discretization
 
 Pseudo-spectral method using 2D FFT:
 
+- Domain size: $L = 2\pi \times 10 \approx 62.83$ (periodic in both x and y)
+- Grid spacing: $\Delta x = \Delta y = L / N$
 - All spatial derivatives computed via spectral differentiation: $\partial \hat{f}/\partial x= ik_x \hat{f}$
 - Nonlinear terms computed in physical space then transformed back
 - 2/3 rule dealiasing applied to prevent aliasing errors
@@ -124,10 +135,13 @@ where $N_{\text{FFT}}$ is the total number of FFT operations (forward, inverse, 
 
 More Notes:
 
-- Smaller N → coarser grid → lower accuracy but lower cost
-- Larger dt → fewer time steps → risk of instability but lower cost
+- **N (Grid Resolution)**: Determines spatial resolution via $\Delta x = \Delta y = L / N$ where $L \approx 62.83$
+  - Smaller N → coarser grid (larger Δx) → lower accuracy but lower cost
+  - Example: N=32 gives Δx≈1.96; N=256 gives Δx≈0.245
+- **dt (Time Step)**: Determines temporal resolution over fixed total time T=10,000
+  - Larger dt → fewer time steps ($N_{\text{steps}} = 10000/dt$) → risk of instability but lower cost
+  - Example: dt=5.0 needs 2,000 steps; dt=40.0 needs 250 steps
 - Nonlinear solver uses resolution convergence checking (no analytical solution available)
-- N determines spatial resolution: $\Delta x = \Delta y = L / N$ (larger N = finer grid = higher accuracy but higher cost)
 - dealias_ratio fixed at 2/3 for stability (dealiases nonlinear Poisson bracket terms)
 
 ### Other
@@ -139,8 +153,9 @@ More Notes:
 | Dx | Initial condition spatial scale | 5.0 |
 | dealias_ratio | Dealiasing ratio for 2/3 rule | 0.6667 (2/3) |
 | case | Initial condition type | "monopole" |
-| record_dt | Time interval between recordings | 10000.0 |
+| record_dt | Time interval between recordings | 1000.0 |
 | end_frame | Simulation end after certain number of frames | 10 |
+| max_wall_time | Maximum computation time in seconds | 120.0 |
 | dump_dir | Directory for output files | "sim_res/hasegawa_mima_nonlinear/p1" |
 | verbose | Enable verbose output | false |
 
