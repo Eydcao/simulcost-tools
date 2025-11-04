@@ -1,0 +1,34 @@
+defaults:
+  - _self_
+  - override hydra/hydra_logging: none
+  - override hydra/job_logging: none
+
+# Tunable Parameters
+dx: 0.5
+# cfl: CFL number for automatic dt calculation
+# Time step will be computed as: dt = cfl * dx / wave_speed
+# where wave_speed = sqrt((lambda + 2*mu) / rho)
+cfl: 0.5
+
+# Environmental Parameters
+dim: 2
+E: 1e5
+nu: 0.29
+density: 2.0
+envs_params:
+  Lx: 10.0
+  Ly: 2.0
+  gravity: -9.8
+  newton_v_res_tol: 0.01
+mesh_scale: 1.0
+mesh_offset:
+  - 0.0
+  - 0.0
+
+# Simulator statics
+record_dt: 0.2
+end_frame: 7
+max_newton_iter: 10
+
+dump_dir: "sim_res/fem2d/p1"
+verbose: False

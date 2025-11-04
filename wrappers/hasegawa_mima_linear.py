@@ -224,6 +224,9 @@ def get_error_metric(numerical_sim_dir):
         float: Mean L2 error compared to analytical solution, or None if comparison fails
                Returns None if simulation didn't complete (wall time exceeded)
     """
+    # Apply path transformation to support SIM_RES_BASE_DIR
+    numerical_sim_dir = _get_sim_path(numerical_sim_dir)
+
     # Load metadata to get analytical reference directory
     meta_file = os.path.join(numerical_sim_dir, "meta.json")
     if not os.path.exists(meta_file):
@@ -249,6 +252,9 @@ def get_error_metric(numerical_sim_dir):
     if analytical_sim_dir is None:
         print(f"Warning: analytical_reference_dir not found in metadata")
         return None
+
+    # Apply path transformation to support SIM_RES_BASE_DIR
+    analytical_sim_dir = _get_sim_path(analytical_sim_dir)
 
     if not os.path.exists(analytical_sim_dir):
         print(f"Warning: Analytical reference directory not found: {analytical_sim_dir}")

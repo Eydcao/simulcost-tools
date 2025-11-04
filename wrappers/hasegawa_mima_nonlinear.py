@@ -114,7 +114,7 @@ def get_results(profile, N, dt, max_wall_time=-1):
         tuple: (cost, results_list, simulation_completed) where results_list contains all frame data
                and simulation_completed is True if wall time was NOT exceeded
     """
-    dir_path = _get_sim_path(f"sim_res/hasegawa_mima_nonlinear/{profile}_N_{format_param_for_path(N)}_dt_{format_param_for_path(dt)}_nonlinear/")
+    dir_path = _get_sim_path(f"sim_res/hasegawa_mima_nonlinear/{profile}_N_{N}_dt_{dt:.2e}_nonlinear/")
     meta_path = os.path.join(dir_path, "meta.json")
 
     # Check if the simulation has already been run
@@ -136,7 +136,7 @@ def get_results(profile, N, dt, max_wall_time=-1):
 
         # Build command
         if SIM_RES_BASE_DIR:
-            dump_dir = os.path.join(SIM_RES_BASE_DIR, f"sim_res/hasegawa_mima_nonlinear/{profile}_N_{format_param_for_path(N)}_dt_{format_param_for_path(dt)}_nonlinear")
+            dump_dir = os.path.join(SIM_RES_BASE_DIR, f"sim_res/hasegawa_mima_nonlinear/{profile}")
             cmd = f"{sys.executable} {runner_path} --config-name={profile} N={N} dt={dt} dump_dir={dump_dir}"
         else:
             cmd = f"{sys.executable} {runner_path} --config-name={profile} N={N} dt={dt}"

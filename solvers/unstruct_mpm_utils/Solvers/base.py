@@ -599,8 +599,11 @@ class MPM_FIELD_BASE:
 
     def dump_mesh(self):
         cell_key = "triangle" if self.ctrl_data.DIM == 2 else "tetra"
+        v_pos_np = self.ctrl_data.v_pos
+        if self.ctrl_data.DIM == 2:
+            v_pos_np = np.hstack([v_pos_np, np.zeros((v_pos_np.shape[0], 1))])
         mesh_cell = meshio.Mesh(
-            points=self.ctrl_data.v_pos,
+            points=v_pos_np,
             cells={cell_key: self.ctrl_data.cell},
             point_data={"is_bc": self.ctrl_data.is_bc.astype(float)},
         )
@@ -611,28 +614,36 @@ class MPM_FIELD_BASE:
     def dump(self, frame):
         F_np = self.F.to_numpy()
         Sigma_np = self.sigma.to_numpy()
+        x_np = self.x.to_numpy()
+        v_np = self.v.to_numpy()
         if self.ctrl_data.DIM == 2:
+            x_np = np.hstack([x_np, np.zeros((x_np.shape[0], 1))])
+            v_np = np.hstack([v_np, np.zeros((v_np.shape[0], 1))])
+            Fx_np = np.hstack([F_np[:, 0, :], np.zeros((F_np.shape[0], 1))])
+            Fy_np = np.hstack([F_np[:, 1, :], np.zeros((F_np.shape[0], 1))])
+            Sx_np = np.hstack([Sigma_np[:, 0, :], np.zeros((Sigma_np.shape[0], 1))])
+            Sy_np = np.hstack([Sigma_np[:, 1, :], np.zeros((Sigma_np.shape[0], 1))])
             mesh_p = meshio.Mesh(
-                points=self.x.to_numpy(),
+                points=x_np,
                 cells={},
                 point_data={
                     "material": self.material.to_numpy().astype(float),
-                    "v": self.v.to_numpy(),
-                    "Fx": F_np[:, 0, :],
-                    "Fy": F_np[:, 1, :],
-                    "Sx": Sigma_np[:, 0, :],
-                    "Sy": Sigma_np[:, 1, :],
+                    "v": v_np,
+                    "Fx": Fx_np,
+                    "Fy": Fy_np,
+                    "Sx": Sx_np,
+                    "Sy": Sy_np,
                     "Jp": self.Jp.to_numpy(),
                 },
             )
         else:
             # print(self.x.to_numpy().astype(np.float32))
             mesh_p = meshio.Mesh(
-                points=self.x.to_numpy().astype(np.float32),
+                points=x_np.astype(np.float32),
                 cells={},
                 point_data={
                     "material": self.material.to_numpy().astype(float),
-                    "v": self.v.to_numpy(),
+                    "v": v_np,
                     "Fx": F_np[:, 0, :],
                     "Fy": F_np[:, 1, :],
                     "Fz": F_np[:, 2, :],

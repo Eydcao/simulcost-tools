@@ -1,0 +1,40 @@
+defaults:
+  - _self_
+  - override hydra/hydra_logging: none
+  - override hydra/job_logging: none
+
+# Case type
+case: "vibration_bar"
+
+# Tunable Parameters
+dx: 0.36
+# cfl: CFL number for automatic dt calculation
+# Time step will be computed as: dt = cfl * dx / wave_speed
+# where wave_speed = sqrt((lambda + 2*mu) / rho)
+cfl: 0.5
+
+# Environmental Parameters
+dim: 2
+E: 100.0
+nu: 0.0
+density: 1.0
+envs_params:
+  Lx: 25.0
+  Ly: 1.0
+  x_start: 5.0
+  y_start: 0.0
+  gravity: 0.0
+  initial_velocity_amplitude: 0.75
+  newton_v_res_tol: 0.01
+mesh_scale: 1.0
+mesh_offset:
+  - 0.0
+  - 0.0
+
+# Simulator statics
+record_dt: 0.8
+end_frame: 7
+max_newton_iter: 10
+
+dump_dir: "sim_res/fem2d/p2"
+verbose: False

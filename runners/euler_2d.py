@@ -138,14 +138,22 @@ def main(cfg):
     binary_path = find_gas_2d_binary()
 
     # Construct output directory path with all tunable parameters
-    repo_root = Path(__file__).parent.parent
-    profile_name = cfg.dump_dir.replace("sim_res/euler_2d/", "")
-    output_dir = (
-        repo_root
-        / "sim_res"
-        / "euler_2d"
-        / f"{profile_name}_cfl_{cfg.cfl:.3f}_cgtol_{cfg.cg_tolerance:.1e}_nx_{cfg.n_grid_x}"
-    )
+    cgtol_str = f"{cfg.cg_tolerance:.1e}"
+
+    # Check if dump_dir is an absolute path (set via SIM_RES_BASE_DIR)
+    if os.path.isabs(cfg.dump_dir):
+        # Absolute path: directly append parameters (like other solvers)
+        output_dir = Path(f"{cfg.dump_dir}_cfl_{cfg.cfl:.3f}_cgtol_{cgtol_str}_nx_{cfg.n_grid_x}")
+    else:
+        # Relative path: use original logic (construct from repo_root)
+        repo_root = Path(__file__).parent.parent
+        profile_name = cfg.dump_dir.replace("sim_res/euler_2d/", "")
+        output_dir = (
+            repo_root
+            / "sim_res"
+            / "euler_2d"
+            / f"{profile_name}_cfl_{cfg.cfl:.3f}_cgtol_{cgtol_str}_nx_{cfg.n_grid_x}"
+        )
 
     # Ensure parent directory exists
     output_dir.parent.mkdir(parents=True, exist_ok=True)

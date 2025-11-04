@@ -1,7 +1,12 @@
 [submodule "solvers/epoch"]
 	path = solvers/epoch
 	url = https://github.com/Warwick-Plasma/epoch.git
+
+[submodule "solvers/fastipc_utils"]
+	path = solvers/fastipc_utils
+	url = https://github.com/Eydcao/fem_transient_utils.git
+
 [submodule "solvers/euler_2d_utils/CSMPM_BOW"]
 	path = solvers/euler_2d_utils/CSMPM_BOW
-	url = git@github.com:Eydcao/CSMPM_BOW.git
-	branch = costscitools
+	url = https://github.com/Eydcao/CSMPM_BOW.git
+
