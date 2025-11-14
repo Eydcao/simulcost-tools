@@ -108,11 +108,11 @@ def get_results(profile, N, dt, max_wall_time=-1):
             if "cost" in meta:
                 print(f"Using existing simulation results from {dir_path}")
                 cost = meta["cost"]
-                wall_time_exceeded = meta.get("wall_time_exceeded", False)
-                simulation_completed = not wall_time_exceeded
+            wall_time_total = meta["wall_time_total"]
+            simulation_completed = True if wall_time_total < 120 else False
 
-                if wall_time_exceeded:
-                    print(f"Warning: Simulation did not complete (wall_time_exceeded={wall_time_exceeded})")
+            if not simulation_completed:
+                print(f"Warning: Simulation did not complete (wall_time_total={wall_time_total})")
     else:
         # Run the simulation if not already done
         # Determine wall time description for logging
@@ -148,11 +148,11 @@ def get_results(profile, N, dt, max_wall_time=-1):
         with open(meta_path, "r") as f:
             meta = json.load(f)
             cost = meta["cost"]
-            wall_time_exceeded = meta.get("wall_time_exceeded", False)
-            simulation_completed = not wall_time_exceeded
+            wall_time_total = meta["wall_time_total"]
+            simulation_completed = True if wall_time_total < 120 else False
 
-            if wall_time_exceeded:
-                print(f"Warning: Simulation did not complete (wall_time_exceeded={wall_time_exceeded})")
+            if not simulation_completed:
+                print(f"Warning: Simulation did not complete (wall_time_total={wall_time_total})")
 
     # Load all frames
     results_list = []
@@ -213,7 +213,7 @@ def compare_solutions(profile, params1, params2, tolerance_rmse):
 
     # Check if second simulation completed
     if not completed2:
-        print(f"⚠️  Second simulation did not complete (should not happen - no wall time limit)")
+        print(f"⚠️  Second simulation did not complete")
         print(f"   Params2: {params2}")
         return False, cost1, cost2, None
 
