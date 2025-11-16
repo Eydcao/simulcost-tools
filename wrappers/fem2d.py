@@ -4,6 +4,16 @@ import numpy as np
 import json
 import sys
 from pathlib import Path
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
+
+# Get base directory for simulation results from environment variable
+# If not set, use current directory (maintains backward compatibility)
+SIM_RES_BASE_DIR = os.getenv("SIM_RES_BASE_DIR", None)
+if SIM_RES_BASE_DIR:
+    print(f"✅ Using custom simulation results directory: {SIM_RES_BASE_DIR}")
 
 # Add repository root to Python path to import solvers.utils
 repo_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
@@ -11,6 +21,13 @@ if repo_root not in sys.path:
     sys.path.insert(0, repo_root)
 
 from solvers.utils import format_param_for_path
+
+
+def _get_sim_path(relative_path):
+    """Construct simulation path, using absolute path if SIM_RES_BASE_DIR is set."""
+    if SIM_RES_BASE_DIR:
+        return os.path.join(SIM_RES_BASE_DIR, relative_path)
+    return relative_path
 
 
 def _find_runner_path():
@@ -79,7 +96,7 @@ def get_fem2d_data(profile, dx, cfl):
             - cost (float): Simulation cost
     """
     # Create directory path based on parameters
-    dir_path = f"sim_res/fem2d/{profile}_dx{dx}_cfl{format_param_for_path(cfl)}/"
+    dir_path = _get_sim_path(f"sim_res/fem2d/{profile}_dx{dx}_cfl{format_param_for_path(cfl)}/")
     meta_path = os.path.join(dir_path, "meta.json")
     energies_path = os.path.join(dir_path, "energies.npz")
 
@@ -102,7 +119,11 @@ def get_fem2d_data(profile, dx, cfl):
         print(f"Running new simulation: dx={dx}, cfl={cfl}")
 
         runner_path = _find_runner_path()
-        cmd = f"{sys.executable} {runner_path} --config-name={profile} dx={dx} cfl={cfl}"
+        if SIM_RES_BASE_DIR:
+            dump_dir = os.path.join(SIM_RES_BASE_DIR, f"sim_res/fem2d/{profile}")
+            cmd = f"{sys.executable} {runner_path} --config-name={profile} dx={dx} cfl={cfl} dump_dir={dump_dir}"
+        else:
+            cmd = f"{sys.executable} {runner_path} --config-name={profile} dx={dx} cfl={cfl}"
 
         # This will raise CalledProcessError if the command fails
         subprocess.run(cmd, shell=True, check=True)

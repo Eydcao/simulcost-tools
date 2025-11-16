@@ -3,6 +3,9 @@ defaults:
   - override hydra/hydra_logging: none
   - override hydra/job_logging: none
 
+# Case type
+case: "cantilever_beam"
+
 # Tunable Parameters
 dx: 0.5
 # cfl: CFL number for automatic dt calculation
