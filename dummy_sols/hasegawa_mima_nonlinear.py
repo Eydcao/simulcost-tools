@@ -12,6 +12,9 @@ def find_convergent_N(profile, N, dt, tolerance_rmse, multiplication_factor, max
     """
     Iteratively increase N (grid resolution) until convergence is achieved.
 
+    IMPORTANT: dt is scaled inversely with N to maintain CFL stability.
+    When N increases by factor α, dt decreases by factor α (dt_new = dt_old / α).
+
     Note: error_history[i] represents the RMSE comparison between
     param_history[i] and param_history[i+1], so error_history is one element shorter.
     """
@@ -21,50 +24,60 @@ def find_convergent_N(profile, N, dt, tolerance_rmse, multiplication_factor, max
     error_history = []  # Note: Will be one element shorter than param_history
 
     current_N = N
+    current_dt = dt  # Track dt as it scales with N
     converged = False
     best_N = None
+    best_dt = None
 
     for i in range(max_iteration_num):
-        print(f"\nRunning simulation with N = {current_N}, dt = {dt}")
+        print(f"\nRunning simulation with N = {current_N}, dt = {current_dt:.6e}")
 
         # Get simulation results
-        cost_i, _, _ = get_results(profile=profile, N=current_N, dt=dt)
+        cost_i, _, _ = get_results(profile=profile, N=current_N, dt=current_dt)
         cost_history.append(cost_i)
         N_history.append(current_N)
-        param_history.append({"N": current_N, "dt": dt})
+        param_history.append({"N": current_N, "dt": current_dt})
 
         # If this is not the first iteration, compare with previous resolution
         if i > 0:
             previous_N = N_history[-2]
+            previous_dt = param_history[-2]["dt"]
 
             # Compare current resolution with previous resolution
-            params1 = {"N": previous_N, "dt": dt}
-            params2 = {"N": current_N, "dt": dt}
+            params1 = {"N": previous_N, "dt": previous_dt}
+            params2 = {"N": current_N, "dt": current_dt}
 
             is_converged, cost1, cost2, rmse_diff = compare_solutions(profile, params1, params2, tolerance_rmse)
             error_history.append(rmse_diff)
 
             if is_converged:
-                print(f"Convergence achieved with N = {current_N}, RMSE diff = {rmse_diff:.6e}")
+                print(f"Convergence achieved with N = {current_N}, dt = {current_dt:.6e}, RMSE diff = {rmse_diff:.6e}")
                 best_N = current_N
+                best_dt = current_dt
                 converged = True
                 break
             else:
-                print(f"No convergence with N = {current_N}, RMSE diff = {rmse_diff:.6e}")
+                print(f"No convergence with N = {current_N}, dt = {current_dt:.6e}, RMSE diff = {rmse_diff:.6e}")
 
-        # Prepare next N using multiplication factor
+        # Prepare next N and dt using multiplication factor
+        # dt scales inversely with N to maintain CFL stability
         next_N = int(current_N * multiplication_factor)
+        next_dt = current_dt / multiplication_factor
+
         current_N = next_N
+        current_dt = next_dt
 
     if converged:
-        print(f"\nConvergent N found: {best_N}")
+        print(f"\nConvergent parameters found: N = {best_N}, dt = {best_dt:.6e}")
     else:
         print("\nMaximum iterations reached without convergence")
         if len(N_history) > 0:
             best_N = N_history[-1]
-            print(f"Highest tested N: {best_N}")
+            best_dt = param_history[-1]["dt"]
+            print(f"Highest tested: N = {best_N}, dt = {best_dt:.6e}")
         else:
             best_N = None
+            best_dt = None
 
     print(f"Cost history: {cost_history}, total cost: {sum(cost_history)}")
 
