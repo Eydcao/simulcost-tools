@@ -44,7 +44,9 @@ def find_convergent_dx(profile, dx, cfl, energy_tolerance, var_threshold, multip
         if len(dx_history) > 1:
             prev_dx = dx_history[-2]
 
-            # Compare with previous results (max_wall_time=-1 reads from config)
+            # Compare with previous results
+            # - prev_dx (coarser): proposal with wall time constraint
+            # - current_dx (finer): reference without constraint (ground truth)
             is_converged, metrics1, metrics2, avg_energy_diff = compare_energies_fem2d(
                 profile1=profile,
                 dx1=prev_dx,
@@ -54,7 +56,8 @@ def find_convergent_dx(profile, dx, cfl, energy_tolerance, var_threshold, multip
                 cfl2=cfl,
                 energy_tolerance=energy_tolerance,
                 var_threshold=var_threshold,
-                max_wall_time=-1,
+                max_wall_time1=-1,  # Coarse/proposal: read from config
+                max_wall_time2=None,  # Fine/reference: unconstrained
             )
 
             if is_converged:
@@ -113,7 +116,9 @@ def find_convergent_cfl(profile, dx, cfl, energy_tolerance, var_threshold, multi
         if len(cfl_history) > 1:
             prev_cfl = cfl_history[-2]
 
-            # Compare with previous results (max_wall_time=-1 reads from config)
+            # Compare with previous results
+            # - prev_cfl (larger, less stable): proposal with wall time constraint
+            # - current_cfl (smaller, more stable): reference without constraint (ground truth)
             is_converged, metrics1, metrics2, avg_energy_diff = compare_energies_fem2d(
                 profile1=profile,
                 dx1=dx,
@@ -123,7 +128,8 @@ def find_convergent_cfl(profile, dx, cfl, energy_tolerance, var_threshold, multi
                 cfl2=current_cfl,
                 energy_tolerance=energy_tolerance,
                 var_threshold=var_threshold,
-                max_wall_time=-1,
+                max_wall_time1=-1,  # Less stable/proposal: read from config
+                max_wall_time2=None,  # More stable/reference: unconstrained
             )
 
             if is_converged:
