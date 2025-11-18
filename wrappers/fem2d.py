@@ -21,6 +21,27 @@ if repo_root not in sys.path:
     sys.path.insert(0, repo_root)
 
 from solvers.utils import format_param_for_path
+import yaml
+
+
+def _read_config_max_wall_time(profile):
+    """Read max_wall_time from the config file for a given profile."""
+    config_paths = [
+        f"run_configs/fem2d/{profile}.yaml",
+        f"costsci_tools/run_configs/fem2d/{profile}.yaml",
+        f"../run_configs/fem2d/{profile}.yaml",
+    ]
+    for config_path in config_paths:
+        if os.path.exists(config_path):
+            try:
+                with open(config_path, 'r') as f:
+                    config = yaml.safe_load(f)
+                    max_wall_time = config.get('max_wall_time', 120)
+                    return max_wall_time
+            except Exception as e:
+                print(f"Warning: Could not read config from {config_path}: {e}")
+                continue
+    return 120
 
 
 def _get_sim_path(relative_path):
@@ -77,7 +98,7 @@ def _find_runner_path():
     )
 
 
-def get_fem2d_data(profile, dx, cfl):
+def get_fem2d_data(profile, dx, cfl, max_wall_time=-1):
     """
     Retrieves fem2d simulation results, running the simulation if not cached.
 
@@ -89,14 +110,27 @@ def get_fem2d_data(profile, dx, cfl):
         profile: Profile name (p1, p2, p3, etc.)
         dx: Grid resolution parameter
         cfl: CFL number for time step calculation
+        max_wall_time: Maximum wall time in seconds. Use -1 to read from config, None for no limit.
 
     Returns:
         tuple: (energies, cost)
             - energies (dict): Dictionary of energy arrays
             - cost (float): Simulation cost
     """
+    # Directory naming convention:
+    # - Unconstrained (max_wall_time=None): {profile}_dx{dx}_cfl{cfl}/
+    # - Constrained: {profile}_dx{dx}_cfl{cfl}_wall_time_{value}/
+    if max_wall_time is None:
+        dir_suffix = ""
+    elif max_wall_time == -1:
+        actual_wall_time = _read_config_max_wall_time(profile)
+        dir_suffix = f"_wall_time_{actual_wall_time}"
+    else:
+        actual_wall_time = max_wall_time
+        dir_suffix = f"_wall_time_{actual_wall_time}"
+
     # Create directory path based on parameters
-    dir_path = _get_sim_path(f"sim_res/fem2d/{profile}_dx{dx}_cfl{format_param_for_path(cfl)}/")
+    dir_path = _get_sim_path(f"sim_res/fem2d/{profile}_dx{dx}_cfl{format_param_for_path(cfl)}{dir_suffix}/")
     meta_path = os.path.join(dir_path, "meta.json")
     energies_path = os.path.join(dir_path, "energies.npz")
 
@@ -145,7 +179,7 @@ def get_fem2d_data(profile, dx, cfl):
     return energies, cost
 
 
-def compare_energies_fem2d(profile1, dx1, cfl1, profile2, dx2, cfl2, energy_tolerance, var_threshold):
+def compare_energies_fem2d(profile1, dx1, cfl1, profile2, dx2, cfl2, energy_tolerance, var_threshold, max_wall_time=-1):
     """Compare energies between two fem2d simulations.
 
     Args:
@@ -154,6 +188,7 @@ def compare_energies_fem2d(profile1, dx1, cfl1, profile2, dx2, cfl2, energy_tole
         cfl1, cfl2: CFL numbers for time step calculation
         energy_tolerance: Tolerance for energy comparison
         var_threshold: Threshold for energy conservation (coefficient of variation)
+        max_wall_time: Maximum wall time in seconds. Use -1 to read from config, None for no limit.
 
     Returns:
         converged (bool): True if energies are within tolerance
@@ -162,8 +197,8 @@ def compare_energies_fem2d(profile1, dx1, cfl1, profile2, dx2, cfl2, energy_tole
         avg_energy_diff (float): Average relative energy difference
     """
     # Load energies and metadata for both cases
-    energies1, _ = get_fem2d_data(profile1, dx1, cfl1)
-    energies2, _ = get_fem2d_data(profile2, dx2, cfl2)
+    energies1, _ = get_fem2d_data(profile1, dx1, cfl1, max_wall_time=max_wall_time)
+    energies2, _ = get_fem2d_data(profile2, dx2, cfl2, max_wall_time=max_wall_time)
 
     # # Check if either simulation failed
     # if not is_converged1:

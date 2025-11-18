@@ -34,8 +34,8 @@ def find_convergent_dx(profile, dx, cfl, energy_tolerance, var_threshold, multip
     for i in range(max_iteration_num):
         print(f"\nRunning simulation with dx = {current_dx}, cfl = {cfl}")
 
-        # Run simulation and load results
-        _, cost_i = get_fem2d_data(profile=profile, dx=current_dx, cfl=cfl)
+        # Run simulation and load results (max_wall_time=-1 reads from config)
+        _, cost_i = get_fem2d_data(profile=profile, dx=current_dx, cfl=cfl, max_wall_time=-1)
         cost_history.append(cost_i)
         dx_history.append(current_dx)
         param_history.append({"dx": current_dx, "cfl": cfl})
@@ -44,7 +44,7 @@ def find_convergent_dx(profile, dx, cfl, energy_tolerance, var_threshold, multip
         if len(dx_history) > 1:
             prev_dx = dx_history[-2]
 
-            # Compare with previous results
+            # Compare with previous results (max_wall_time=-1 reads from config)
             is_converged, metrics1, metrics2, avg_energy_diff = compare_energies_fem2d(
                 profile1=profile,
                 dx1=prev_dx,
@@ -54,6 +54,7 @@ def find_convergent_dx(profile, dx, cfl, energy_tolerance, var_threshold, multip
                 cfl2=cfl,
                 energy_tolerance=energy_tolerance,
                 var_threshold=var_threshold,
+                max_wall_time=-1,
             )
 
             if is_converged:
@@ -102,8 +103,8 @@ def find_convergent_cfl(profile, dx, cfl, energy_tolerance, var_threshold, multi
     for i in range(max_iteration_num):
         print(f"\nRunning simulation with dx = {dx}, cfl = {current_cfl}")
 
-        # Run simulation and load results
-        _, cost_i = get_fem2d_data(profile=profile, dx=dx, cfl=current_cfl)
+        # Run simulation and load results (max_wall_time=-1 reads from config)
+        _, cost_i = get_fem2d_data(profile=profile, dx=dx, cfl=current_cfl, max_wall_time=-1)
         cost_history.append(cost_i)
         cfl_history.append(current_cfl)
         param_history.append({"dx": dx, "cfl": current_cfl})
@@ -112,7 +113,7 @@ def find_convergent_cfl(profile, dx, cfl, energy_tolerance, var_threshold, multi
         if len(cfl_history) > 1:
             prev_cfl = cfl_history[-2]
 
-            # Compare with previous results
+            # Compare with previous results (max_wall_time=-1 reads from config)
             is_converged, metrics1, metrics2, avg_energy_diff = compare_energies_fem2d(
                 profile1=profile,
                 dx1=dx,
@@ -122,6 +123,7 @@ def find_convergent_cfl(profile, dx, cfl, energy_tolerance, var_threshold, multi
                 cfl2=current_cfl,
                 energy_tolerance=energy_tolerance,
                 var_threshold=var_threshold,
+                max_wall_time=-1,
             )
 
             if is_converged:

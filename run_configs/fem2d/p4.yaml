@@ -35,6 +35,7 @@ mesh_offset:
 record_dt: 0.8
 end_frame: 7
 max_newton_iter: 10
+max_wall_time: 120  # Maximum wall time in seconds (hard limit, 2x safety margin)
 
 dump_dir: "sim_res/fem2d/p4"
 verbose: False

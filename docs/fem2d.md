@@ -4,6 +4,8 @@
 
 This simulation solves solid mechanics problems using the **implicit** Finite Element Method (FEM) with a Newton solver and line search for nonlinear elasticity. The FEM discretizes the continuous solid mechanics problem into a finite-dimensional system of equations solved at each time step.
 
+**Wall Time Constraint**: To prevent runaway simulations, a configurable wall time limit (default: 120 seconds) is enforced. Simulations that exceed this limit are terminated early and flagged as incomplete via the function call.
+
 **Governing Equations:**
 
 The FEM solves the momentum conservation equation:
