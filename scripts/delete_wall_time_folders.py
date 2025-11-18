@@ -7,8 +7,17 @@ _wall_time_{number} suffix. These were created with the wrong case name
 and need to be regenerated.
 
 Usage:
-    python scripts/delete_wall_time_folders.py --dry-run  # Preview what will be deleted
-    python scripts/delete_wall_time_folders.py           # Actually delete
+    # Preview all wall_time folders
+    python scripts/delete_wall_time_folders.py --dry-run
+
+    # Preview only p1 wall_time folders
+    python scripts/delete_wall_time_folders.py --dry-run --profile p1
+
+    # Delete only p1 wall_time folders
+    python scripts/delete_wall_time_folders.py --profile p1
+
+    # Delete all wall_time folders
+    python scripts/delete_wall_time_folders.py
 """
 
 import os
@@ -18,12 +27,13 @@ import argparse
 from pathlib import Path
 
 
-def find_wall_time_folders(base_dir="sim_res/fem2d"):
+def find_wall_time_folders(base_dir="sim_res/fem2d", profile_filter=None):
     """
     Find all directories matching pattern: {profile}_dx{value}_cfl{value}_wall_time_{number}
 
     Args:
         base_dir: Base directory containing simulation results
+        profile_filter: Optional profile name to filter (e.g., "p1", "p2")
 
     Returns:
         List of Path objects for matching directories
@@ -37,7 +47,12 @@ def find_wall_time_folders(base_dir="sim_res/fem2d"):
     # - p1_dx0.5_cfl0.5_wall_time_120
     # - p2_dx0.25_cfl1.0_wall_time_120
     # - p3_dx0.125_cfl2.0_wall_time_120
-    pattern = re.compile(r'^p\d+_dx[\d.]+_cfl[\d.]+_wall_time_\d+$')
+    if profile_filter:
+        # Filter by specific profile
+        pattern = re.compile(rf'^{re.escape(profile_filter)}_dx[\d.]+_cfl[\d.]+_wall_time_\d+$')
+    else:
+        # Match all profiles
+        pattern = re.compile(r'^p\d+_dx[\d.]+_cfl[\d.]+_wall_time_\d+$')
 
     matching_folders = []
     base_path = Path(base_dir)
@@ -101,6 +116,11 @@ def main():
         default="sim_res/fem2d",
         help="Base directory containing simulation results (default: sim_res/fem2d)"
     )
+    parser.add_argument(
+        "--profile",
+        default=None,
+        help="Filter by specific profile (e.g., p1, p2, p3). If not specified, all profiles are included."
+    )
     args = parser.parse_args()
 
     print("=" * 80)
@@ -110,7 +130,9 @@ def main():
 
     # Find matching folders
     print(f"Searching in: {args.base_dir}")
-    folders = find_wall_time_folders(args.base_dir)
+    if args.profile:
+        print(f"Profile filter: {args.profile}")
+    folders = find_wall_time_folders(args.base_dir, profile_filter=args.profile)
 
     if not folders:
         print("No folders with _wall_time suffix found.")
