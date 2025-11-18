@@ -79,7 +79,18 @@ class FEM2D(SIMULATOR):
         self.data_mat = ti.field(self.real, shape=(3, max_matrix_entries))
         self.data_sol = ti.field(self.real, shape=self.n_particles * self.dim)
 
-        self.dump_dir = cfg.dump_dir
+        # Output directory with wall time suffix for cache disambiguation
+        base_dump_dir = cfg.dump_dir
+
+        # Add wall_time suffix if constrained (to separate cached results)
+        # - No suffix: unconstrained reference runs (max_wall_time=None)
+        # - With suffix: constrained evaluation runs (max_wall_time=value)
+        max_wall_time = getattr(cfg, 'max_wall_time', None)
+        if max_wall_time is not None:
+            self.dump_dir = base_dump_dir + f"_wall_time_{max_wall_time}"
+        else:
+            self.dump_dir = base_dump_dir
+
         self.fixed_nodes = []
         self.bc_initialized = False  # Flag to track if BCs have been set up
         if not os.path.exists(self.dump_dir):
@@ -924,6 +935,8 @@ class FEM2D(SIMULATOR):
                 "n_particles": int(self.n_particles),
                 "n_elements": int(self.n_elements),
                 "n_dof": int(n_dof),
+                "wall_time_total": float(self.wall_time_total),
+                "wall_time_exceeded": bool(self.wall_time_exceeded),
             }
             import json
 
