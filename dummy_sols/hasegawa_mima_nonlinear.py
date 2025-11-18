@@ -33,17 +33,9 @@ def find_convergent_N(profile, N, dt, tolerance_rmse, multiplication_factor, max
     best_N = None
 
     for i in range(max_iteration_num):
-        print(f"\nRunning simulation with N = {current_N}, dt = {fixed_dt:.6e}")
-
-        # Get simulation results with FIXED dt (proposal run with wall time constraint)
-        cost_i, _, _ = get_results(profile=profile, N=current_N, dt=fixed_dt)
-        cost_history.append(cost_i)
-        N_history.append(current_N)
-        param_history.append({"N": current_N, "dt": fixed_dt})
-
         # If this is not the first iteration, compare with previous resolution
         if i > 0:
-            previous_N = N_history[-2]
+            previous_N = N_history[-1]
 
             # Compare current resolution with previous resolution
             # Proposal: uses target dt (may violate CFL)
@@ -57,15 +49,24 @@ def find_convergent_N(profile, N, dt, tolerance_rmse, multiplication_factor, max
             print(f"   Comparing: proposal (N={previous_N}, dt={fixed_dt:.6e}) vs reference (N={current_N}, dt={dt_ref:.6e})")
 
             is_converged, cost1, cost2, rmse_diff = compare_solutions(profile, params1, params2, tolerance_rmse)
+            # Add reference cost to history (cost2 is the reference run)
+            cost_history.append(cost2)
             error_history.append(rmse_diff)
 
             if is_converged:
-                print(f"Convergence achieved with N = {current_N}, dt = {fixed_dt:.6e}, RMSE diff = {rmse_diff:.6e}")
-                best_N = current_N
+                print(f"Convergence achieved with N = {previous_N}, dt = {fixed_dt:.6e}, RMSE diff = {rmse_diff:.6e}")
+                best_N = previous_N
                 converged = True
                 break
             else:
-                print(f"No convergence with N = {current_N}, dt = {fixed_dt:.6e}, RMSE diff = {rmse_diff:.6e}")
+                print(f"No convergence with N = {previous_N}, dt = {fixed_dt:.6e}, RMSE diff = {rmse_diff:.6e}")
+
+        # Run next proposal (unless we just converged)
+        print(f"\nRunning proposal: N = {current_N}, dt = {fixed_dt:.6e}")
+        cost_i, _, _ = get_results(profile=profile, N=current_N, dt=fixed_dt)
+        cost_history.append(cost_i)
+        N_history.append(current_N)
+        param_history.append({"N": current_N, "dt": fixed_dt})
 
         # Prepare next N using multiplication factor
         # dt stays FIXED - only N changes
