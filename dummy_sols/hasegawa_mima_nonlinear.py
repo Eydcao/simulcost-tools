@@ -49,8 +49,9 @@ def find_convergent_N(profile, N, dt, tolerance_rmse, multiplication_factor, max
             print(f"   Comparing: proposal (N={previous_N}, dt={fixed_dt:.6e}) vs reference (N={current_N}, dt={dt_ref:.6e})")
 
             is_converged, cost1, cost2, rmse_diff = compare_solutions(profile, params1, params2, tolerance_rmse)
-            # Add reference cost to history (cost2 is the reference run)
+            # Add reference cost and params to history (cost2 is the reference run)
             cost_history.append(cost2)
+            param_history.append(params2)  # Reference params with scaled dt
             error_history.append(rmse_diff)
 
             if is_converged:
