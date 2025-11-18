@@ -56,7 +56,7 @@ class HasegawaMimaNonlinear(SIMULATOR):
         self.poisson_bracket_calls = 0  # Track nonlinear term evaluations
 
         # Output directory with wall time suffix for cache disambiguation
-        base_dir = cfg.dump_dir + f"_N_{self.N}_dt_{self.dt:.2e}_nonlinear"
+        base_dir = cfg.dump_dir + f"_N_{self.N}_dt_{self.dt:.2e}"
 
         # Add wall_time suffix if constrained (to separate cached results)
         # - No suffix: unconstrained reference runs (max_wall_time=None)

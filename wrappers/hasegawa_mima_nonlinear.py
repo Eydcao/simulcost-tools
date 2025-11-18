@@ -134,8 +134,8 @@ def get_results(profile, N, dt, max_wall_time=-1):
 
     Note:
         Directory naming convention to avoid cache ambiguity:
-        - Unconstrained (max_wall_time=None): {profile}_N_{N}_dt_{dt}_nonlinear/
-        - Constrained: {profile}_N_{N}_dt_{dt}_nonlinear_wall_time_{value}/
+        - Unconstrained (max_wall_time=None): {profile}_N_{N}_dt_{dt}/
+        - Constrained: {profile}_N_{N}_dt_{dt}_wall_time_{value}/
     """
     # Determine the actual wall time value for directory naming
     # If max_wall_time is None (unconstrained), no suffix
@@ -152,7 +152,7 @@ def get_results(profile, N, dt, max_wall_time=-1):
         actual_wall_time = max_wall_time
         dir_suffix = f"_wall_time_{actual_wall_time}"
 
-    dir_path = _get_sim_path(f"sim_res/hasegawa_mima_nonlinear/{profile}_N_{N}_dt_{dt:.2e}_nonlinear{dir_suffix}/")
+    dir_path = _get_sim_path(f"sim_res/hasegawa_mima_nonlinear/{profile}_N_{N}_dt_{dt:.2e}{dir_suffix}/")
     meta_path = os.path.join(dir_path, "meta.json")
 
     # Check if the simulation has already been run
@@ -253,8 +253,8 @@ def compare_solutions(profile, params1, params2, tolerance_rmse, max_wall_time=1
         rmse_diff: RMSE difference between solutions (or None if comparison not possible)
 
     Note:
-        - Coarse simulation (params1): runs with wall time constraint (saved to _wall_time_{value}/ folder)
-        - Fine simulation (params2): runs without constraint as reference (saved to regular folder)
+        - Coarse simulation (params1): runs with wall time constraint (suffix: _wall_time_{value})
+        - Fine simulation (params2): runs without constraint as reference (no suffix)
     """
     # Run first (coarse) simulation WITH wall time constraint for evaluation
     cost1, results1, completed1 = get_results(profile, max_wall_time=max_wall_time, **params1)
