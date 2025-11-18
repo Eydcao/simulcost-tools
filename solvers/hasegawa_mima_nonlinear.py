@@ -55,8 +55,18 @@ class HasegawaMimaNonlinear(SIMULATOR):
         self.fft_operations = 0  # Track FFT operations
         self.poisson_bracket_calls = 0  # Track nonlinear term evaluations
 
-        # Output directory
-        self.dump_dir = cfg.dump_dir + f"_N_{self.N}_dt_{self.dt:.2e}_nonlinear"
+        # Output directory with wall time suffix for cache disambiguation
+        base_dir = cfg.dump_dir + f"_N_{self.N}_dt_{self.dt:.2e}_nonlinear"
+
+        # Add wall_time suffix if constrained (to separate cached results)
+        # - No suffix: unconstrained reference runs (max_wall_time=None)
+        # - With suffix: constrained evaluation runs (max_wall_time=value)
+        max_wall_time = getattr(cfg, 'max_wall_time', None)
+        if max_wall_time is not None:
+            self.dump_dir = base_dir + f"_wall_time_{max_wall_time}"
+        else:
+            self.dump_dir = base_dir
+
         if not os.path.exists(self.dump_dir):
             os.makedirs(self.dump_dir)
 
