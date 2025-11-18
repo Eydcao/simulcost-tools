@@ -111,7 +111,7 @@ def analyze_nx_parameter(profiles, config):
         energies_data = []
         for nx in nx_sequence:
             try:
-                energies, cost = get_fem2d_data(profile, nx, cfl, newton_v_res_tol)
+                energies, cost, _ = get_fem2d_data(profile, nx, cfl)
 
                 # Compute metrics with a reference var_threshold
                 var_threshold = 0.01  # Use a reference value
@@ -223,7 +223,7 @@ def analyze_cfl_parameter(profiles, config):
             energies_data = []
             for cfl in cfl_sequence:
                 try:
-                    energies, cost = get_fem2d_data(profile, nx, cfl, newton_v_res_tol)
+                    energies, cost, _ = get_fem2d_data(profile, nx, cfl)
 
                     # Compute metrics with a reference var_threshold
                     var_threshold = 0.01  # Use a reference value

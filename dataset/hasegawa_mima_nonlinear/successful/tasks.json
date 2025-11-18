@@ -2,7 +2,7 @@
   "metadata": {
     "solver": "hasegawa_mima_nonlinear",
     "description": "Successfully converged parameter optimization tasks",
-    "total_tasks": 107
+    "total_tasks": 110
   },
   "tasks": [
     {
@@ -22,11 +22,11 @@
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 64,
-        "total_computational_cost": 8553220096.0,
+        "optimal_parameter_value": 32,
+        "total_computational_cost": 15631108096.0,
         "cost_history": [
           1474693120.0,
-          7078526976.0
+          14156414976.0
         ],
         "parameter_history": [
           {
@@ -35,7 +35,7 @@
           },
           {
             "N": 64,
-            "dt": 2.5
+            "dt": 1.25
           }
         ]
       }
@@ -57,11 +57,11 @@
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 64,
-        "total_computational_cost": 4276996096.0,
+        "optimal_parameter_value": 32,
+        "total_computational_cost": 7815940096.0,
         "cost_history": [
           737413120.0,
-          3539582976.0
+          7078526976.0
         ],
         "parameter_history": [
           {
@@ -70,7 +70,7 @@
           },
           {
             "N": 64,
-            "dt": 5.0
+            "dt": 2.5
           }
         ]
       }
@@ -92,11 +92,11 @@
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 64,
-        "total_computational_cost": 2138884096.0,
+        "optimal_parameter_value": 32,
+        "total_computational_cost": 3908356096.0,
         "cost_history": [
           368773120.0,
-          1770110976.0
+          3539582976.0
         ],
         "parameter_history": [
           {
@@ -105,7 +105,7 @@
           },
           {
             "N": 64,
-            "dt": 10.0
+            "dt": 5.0
           }
         ]
       }
@@ -127,11 +127,11 @@
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 64,
-        "total_computational_cost": 1069828096.0,
+        "optimal_parameter_value": 32,
+        "total_computational_cost": 1954564096.0,
         "cost_history": [
           184453120.0,
-          885374976.0
+          1770110976.0
         ],
         "parameter_history": [
           {
@@ -140,7 +140,7 @@
           },
           {
             "N": 64,
-            "dt": 20.0
+            "dt": 10.0
           }
         ]
       }
@@ -162,11 +162,11 @@
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 64,
-        "total_computational_cost": 535300096.0,
+        "optimal_parameter_value": 32,
+        "total_computational_cost": 977668096.0,
         "cost_history": [
           92293120.0,
-          443006976.0
+          885374976.0
         ],
         "parameter_history": [
           {
@@ -175,7 +175,7 @@
           },
           {
             "N": 64,
-            "dt": 40.0
+            "dt": 20.0
           }
         ]
       }
@@ -302,11 +302,11 @@
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 64,
-        "total_computational_cost": 8553220096.0,
+        "optimal_parameter_value": 32,
+        "total_computational_cost": 15631108096.0,
         "cost_history": [
           1474693120.0,
-          7078526976.0
+          14156414976.0
         ],
         "parameter_history": [
           {
@@ -315,7 +315,7 @@
           },
           {
             "N": 64,
-            "dt": 2.5
+            "dt": 1.25
           }
         ]
       }
@@ -337,11 +337,11 @@
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 64,
-        "total_computational_cost": 4276996096.0,
+        "optimal_parameter_value": 32,
+        "total_computational_cost": 7815940096.0,
         "cost_history": [
           737413120.0,
-          3539582976.0
+          7078526976.0
         ],
         "parameter_history": [
           {
@@ -350,7 +350,7 @@
           },
           {
             "N": 64,
-            "dt": 5.0
+            "dt": 2.5
           }
         ]
       }
@@ -372,11 +372,11 @@
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 64,
-        "total_computational_cost": 2138884096.0,
+        "optimal_parameter_value": 32,
+        "total_computational_cost": 3908356096.0,
         "cost_history": [
           368773120.0,
-          1770110976.0
+          3539582976.0
         ],
         "parameter_history": [
           {
@@ -385,7 +385,7 @@
           },
           {
             "N": 64,
-            "dt": 10.0
+            "dt": 5.0
           }
         ]
       }
@@ -407,11 +407,11 @@
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 64,
-        "total_computational_cost": 1069828096.0,
+        "optimal_parameter_value": 32,
+        "total_computational_cost": 1954564096.0,
         "cost_history": [
           184453120.0,
-          885374976.0
+          1770110976.0
         ],
         "parameter_history": [
           {
@@ -420,7 +420,7 @@
           },
           {
             "N": 64,
-            "dt": 20.0
+            "dt": 10.0
           }
         ]
       }
@@ -442,11 +442,11 @@
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 64,
-        "total_computational_cost": 535300096.0,
+        "optimal_parameter_value": 32,
+        "total_computational_cost": 977668096.0,
         "cost_history": [
           92293120.0,
-          443006976.0
+          885374976.0
         ],
         "parameter_history": [
           {
@@ -455,7 +455,7 @@
           },
           {
             "N": 64,
-            "dt": 40.0
+            "dt": 20.0
           }
         ]
       }
@@ -582,11 +582,11 @@
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 64,
-        "total_computational_cost": 8553220096.0,
+        "optimal_parameter_value": 32,
+        "total_computational_cost": 15631108096.0,
         "cost_history": [
           1474693120.0,
-          7078526976.0
+          14156414976.0
         ],
         "parameter_history": [
           {
@@ -595,7 +595,7 @@
           },
           {
             "N": 64,
-            "dt": 2.5
+            "dt": 1.25
           }
         ]
       }
@@ -617,11 +617,11 @@
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 64,
-        "total_computational_cost": 4276996096.0,
+        "optimal_parameter_value": 32,
+        "total_computational_cost": 7815940096.0,
         "cost_history": [
           737413120.0,
-          3539582976.0
+          7078526976.0
         ],
         "parameter_history": [
           {
@@ -630,7 +630,7 @@
           },
           {
             "N": 64,
-            "dt": 5.0
+            "dt": 2.5
           }
         ]
       }
@@ -652,11 +652,11 @@
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 64,
-        "total_computational_cost": 2138884096.0,
+        "optimal_parameter_value": 32,
+        "total_computational_cost": 3908356096.0,
         "cost_history": [
           368773120.0,
-          1770110976.0
+          3539582976.0
         ],
         "parameter_history": [
           {
@@ -665,7 +665,7 @@
           },
           {
             "N": 64,
-            "dt": 10.0
+            "dt": 5.0
           }
         ]
       }
@@ -687,11 +687,11 @@
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 64,
-        "total_computational_cost": 1069828096.0,
+        "optimal_parameter_value": 32,
+        "total_computational_cost": 1954564096.0,
         "cost_history": [
           184453120.0,
-          885374976.0
+          1770110976.0
         ],
         "parameter_history": [
           {
@@ -700,7 +700,7 @@
           },
           {
             "N": 64,
-            "dt": 20.0
+            "dt": 10.0
           }
         ]
       }
@@ -722,11 +722,11 @@
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 64,
-        "total_computational_cost": 535300096.0,
+        "optimal_parameter_value": 32,
+        "total_computational_cost": 977668096.0,
         "cost_history": [
           92293120.0,
-          443006976.0
+          885374976.0
         ],
         "parameter_history": [
           {
@@ -735,7 +735,7 @@
           },
           {
             "N": 64,
-            "dt": 40.0
+            "dt": 20.0
           }
         ]
       }
@@ -827,11 +827,11 @@
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 64,
-        "total_computational_cost": 8553220096.0,
+        "optimal_parameter_value": 32,
+        "total_computational_cost": 15631108096.0,
         "cost_history": [
           1474693120.0,
-          7078526976.0
+          14156414976.0
         ],
         "parameter_history": [
           {
@@ -840,7 +840,7 @@
           },
           {
             "N": 64,
-            "dt": 2.5
+            "dt": 1.25
           }
         ]
       }
@@ -862,11 +862,11 @@
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 64,
-        "total_computational_cost": 4276996096.0,
+        "optimal_parameter_value": 32,
+        "total_computational_cost": 7815940096.0,
         "cost_history": [
           737413120.0,
-          3539582976.0
+          7078526976.0
         ],
         "parameter_history": [
           {
@@ -875,7 +875,7 @@
           },
           {
             "N": 64,
-            "dt": 5.0
+            "dt": 2.5
           }
         ]
       }
@@ -897,11 +897,11 @@
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 64,
-        "total_computational_cost": 2138884096.0,
+        "optimal_parameter_value": 32,
+        "total_computational_cost": 3908356096.0,
         "cost_history": [
           368773120.0,
-          1770110976.0
+          3539582976.0
         ],
         "parameter_history": [
           {
@@ -910,7 +910,7 @@
           },
           {
             "N": 64,
-            "dt": 10.0
+            "dt": 5.0
           }
         ]
       }
@@ -932,11 +932,11 @@
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 64,
-        "total_computational_cost": 1069828096.0,
+        "optimal_parameter_value": 32,
+        "total_computational_cost": 1954564096.0,
         "cost_history": [
           184453120.0,
-          885374976.0
+          1770110976.0
         ],
         "parameter_history": [
           {
@@ -945,7 +945,7 @@
           },
           {
             "N": 64,
-            "dt": 20.0
+            "dt": 10.0
           }
         ]
       }
@@ -967,11 +967,11 @@
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 64,
-        "total_computational_cost": 535300096.0,
+        "optimal_parameter_value": 32,
+        "total_computational_cost": 977668096.0,
         "cost_history": [
           92293120.0,
-          443006976.0
+          885374976.0
         ],
         "parameter_history": [
           {
@@ -980,7 +980,7 @@
           },
           {
             "N": 64,
-            "dt": 40.0
+            "dt": 20.0
           }
         ]
       }
@@ -1107,11 +1107,11 @@
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 64,
-        "total_computational_cost": 8553220096.0,
+        "optimal_parameter_value": 32,
+        "total_computational_cost": 15631108096.0,
         "cost_history": [
           1474693120.0,
-          7078526976.0
+          14156414976.0
         ],
         "parameter_history": [
           {
@@ -1120,7 +1120,7 @@
           },
           {
             "N": 64,
-            "dt": 2.5
+            "dt": 1.25
           }
         ]
       }
@@ -1142,11 +1142,11 @@
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 64,
-        "total_computational_cost": 4276996096.0,
+        "optimal_parameter_value": 32,
+        "total_computational_cost": 7815940096.0,
         "cost_history": [
           737413120.0,
-          3539582976.0
+          7078526976.0
         ],
         "parameter_history": [
           {
@@ -1155,7 +1155,7 @@
           },
           {
             "N": 64,
-            "dt": 5.0
+            "dt": 2.5
           }
         ]
       }
@@ -1177,11 +1177,11 @@
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 64,
-        "total_computational_cost": 2138884096.0,
+        "optimal_parameter_value": 32,
+        "total_computational_cost": 3908356096.0,
         "cost_history": [
           368773120.0,
-          1770110976.0
+          3539582976.0
         ],
         "parameter_history": [
           {
@@ -1190,7 +1190,7 @@
           },
           {
             "N": 64,
-            "dt": 10.0
+            "dt": 5.0
           }
         ]
       }
@@ -1212,11 +1212,11 @@
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 64,
-        "total_computational_cost": 1069828096.0,
+        "optimal_parameter_value": 32,
+        "total_computational_cost": 1954564096.0,
         "cost_history": [
           184453120.0,
-          885374976.0
+          1770110976.0
         ],
         "parameter_history": [
           {
@@ -1225,7 +1225,7 @@
           },
           {
             "N": 64,
-            "dt": 20.0
+            "dt": 10.0
           }
         ]
       }
@@ -1247,11 +1247,11 @@
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 64,
-        "total_computational_cost": 535300096.0,
+        "optimal_parameter_value": 32,
+        "total_computational_cost": 977668096.0,
         "cost_history": [
           92293120.0,
-          443006976.0
+          885374976.0
         ],
         "parameter_history": [
           {
@@ -1260,7 +1260,7 @@
           },
           {
             "N": 64,
-            "dt": 40.0
+            "dt": 20.0
           }
         ]
       }
@@ -1387,11 +1387,11 @@
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 64,
-        "total_computational_cost": 8553220096.0,
+        "optimal_parameter_value": 32,
+        "total_computational_cost": 15631108096.0,
         "cost_history": [
           1474693120.0,
-          7078526976.0
+          14156414976.0
         ],
         "parameter_history": [
           {
@@ -1400,7 +1400,7 @@
           },
           {
             "N": 64,
-            "dt": 2.5
+            "dt": 1.25
           }
         ]
       }
@@ -1422,11 +1422,11 @@
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 64,
-        "total_computational_cost": 4276996096.0,
+        "optimal_parameter_value": 32,
+        "total_computational_cost": 7815940096.0,
         "cost_history": [
           737413120.0,
-          3539582976.0
+          7078526976.0
         ],
         "parameter_history": [
           {
@@ -1435,7 +1435,7 @@
           },
           {
             "N": 64,
-            "dt": 5.0
+            "dt": 2.5
           }
         ]
       }
@@ -1457,11 +1457,11 @@
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 64,
-        "total_computational_cost": 2138884096.0,
+        "optimal_parameter_value": 32,
+        "total_computational_cost": 3908356096.0,
         "cost_history": [
           368773120.0,
-          1770110976.0
+          3539582976.0
         ],
         "parameter_history": [
           {
@@ -1470,7 +1470,7 @@
           },
           {
             "N": 64,
-            "dt": 10.0
+            "dt": 5.0
           }
         ]
       }
@@ -1492,11 +1492,11 @@
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 64,
-        "total_computational_cost": 1069828096.0,
+        "optimal_parameter_value": 32,
+        "total_computational_cost": 1954564096.0,
         "cost_history": [
           184453120.0,
-          885374976.0
+          1770110976.0
         ],
         "parameter_history": [
           {
@@ -1505,7 +1505,7 @@
           },
           {
             "N": 64,
-            "dt": 20.0
+            "dt": 10.0
           }
         ]
       }
@@ -1527,11 +1527,11 @@
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 64,
-        "total_computational_cost": 535300096.0,
+        "optimal_parameter_value": 32,
+        "total_computational_cost": 977668096.0,
         "cost_history": [
           92293120.0,
-          443006976.0
+          885374976.0
         ],
         "parameter_history": [
           {
@@ -1540,7 +1540,7 @@
           },
           {
             "N": 64,
-            "dt": 40.0
+            "dt": 20.0
           }
         ]
       }
@@ -1667,11 +1667,11 @@
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 64,
-        "total_computational_cost": 8553220096.0,
+        "optimal_parameter_value": 32,
+        "total_computational_cost": 15631108096.0,
         "cost_history": [
           1474693120.0,
-          7078526976.0
+          14156414976.0
         ],
         "parameter_history": [
           {
@@ -1680,7 +1680,7 @@
           },
           {
             "N": 64,
-            "dt": 2.5
+            "dt": 1.25
           }
         ]
       }
@@ -1702,11 +1702,11 @@
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 64,
-        "total_computational_cost": 4276996096.0,
+        "optimal_parameter_value": 32,
+        "total_computational_cost": 7815940096.0,
         "cost_history": [
           737413120.0,
-          3539582976.0
+          7078526976.0
         ],
         "parameter_history": [
           {
@@ -1715,7 +1715,7 @@
           },
           {
             "N": 64,
-            "dt": 5.0
+            "dt": 2.5
           }
         ]
       }
@@ -1737,11 +1737,11 @@
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 64,
-        "total_computational_cost": 2138884096.0,
+        "optimal_parameter_value": 32,
+        "total_computational_cost": 3908356096.0,
         "cost_history": [
           368773120.0,
-          1770110976.0
+          3539582976.0
         ],
         "parameter_history": [
           {
@@ -1750,7 +1750,7 @@
           },
           {
             "N": 64,
-            "dt": 10.0
+            "dt": 5.0
           }
         ]
       }
@@ -1772,11 +1772,11 @@
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 64,
-        "total_computational_cost": 1069828096.0,
+        "optimal_parameter_value": 32,
+        "total_computational_cost": 1954564096.0,
         "cost_history": [
           184453120.0,
-          885374976.0
+          1770110976.0
         ],
         "parameter_history": [
           {
@@ -1785,7 +1785,7 @@
           },
           {
             "N": 64,
-            "dt": 20.0
+            "dt": 10.0
           }
         ]
       }
@@ -1807,11 +1807,11 @@
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 64,
-        "total_computational_cost": 535300096.0,
+        "optimal_parameter_value": 32,
+        "total_computational_cost": 977668096.0,
         "cost_history": [
           92293120.0,
-          443006976.0
+          885374976.0
         ],
         "parameter_history": [
           {
@@ -1820,7 +1820,7 @@
           },
           {
             "N": 64,
-            "dt": 40.0
+            "dt": 20.0
           }
         ]
       }
@@ -1947,12 +1947,13 @@
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 128,
-        "total_computational_cost": 41586345984.0,
+        "optimal_parameter_value": 64,
+        "total_computational_cost": 88772904960.0,
         "cost_history": [
           1474693120.0,
+          14156414976.0,
           7078526976.0,
-          33033125888.0
+          66063269888.0
         ],
         "parameter_history": [
           {
@@ -1961,11 +1962,15 @@
           },
           {
             "N": 64,
+            "dt": 1.25
+          },
+          {
+            "N": 64,
             "dt": 2.5
           },
           {
             "N": 128,
-            "dt": 2.5
+            "dt": 1.25
           }
         ]
       }
@@ -1987,12 +1992,13 @@
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 128,
-        "total_computational_cost": 20795049984.0,
+        "optimal_parameter_value": 64,
+        "total_computational_cost": 44388648960.0,
         "cost_history": [
           737413120.0,
+          7078526976.0,
           3539582976.0,
-          16518053888.0
+          33033125888.0
         ],
         "parameter_history": [
           {
@@ -2001,11 +2007,15 @@
           },
           {
             "N": 64,
+            "dt": 2.5
+          },
+          {
+            "N": 64,
             "dt": 5.0
           },
           {
             "N": 128,
-            "dt": 5.0
+            "dt": 2.5
           }
         ]
       }
@@ -2027,12 +2037,13 @@
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 128,
-        "total_computational_cost": 10399401984.0,
+        "optimal_parameter_value": 64,
+        "total_computational_cost": 22196520960.0,
         "cost_history": [
           368773120.0,
+          3539582976.0,
           1770110976.0,
-          8260517888.0
+          16518053888.0
         ],
         "parameter_history": [
           {
@@ -2041,11 +2052,15 @@
           },
           {
             "N": 64,
+            "dt": 5.0
+          },
+          {
+            "N": 64,
             "dt": 10.0
           },
           {
             "N": 128,
-            "dt": 10.0
+            "dt": 5.0
           }
         ]
       }
@@ -2067,12 +2082,13 @@
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 128,
-        "total_computational_cost": 5201577984.0,
+        "optimal_parameter_value": 64,
+        "total_computational_cost": 11100456960.0,
         "cost_history": [
           184453120.0,
+          1770110976.0,
           885374976.0,
-          4131749888.0
+          8260517888.0
         ],
         "parameter_history": [
           {
@@ -2081,7 +2097,56 @@
           },
           {
             "N": 64,
+            "dt": 10.0
+          },
+          {
+            "N": 64,
             "dt": 20.0
+          },
+          {
+            "N": 128,
+            "dt": 10.0
+          }
+        ]
+      }
+    },
+    {
+      "task_id": 68,
+      "solver": "hasegawa_mima_nonlinear",
+      "profile": "p3",
+      "precision_level": "medium",
+      "tolerance_rmse": 0.001,
+      "target_parameter": "N",
+      "target_config": {
+        "initial_value": 32,
+        "multiplication_factor": 2,
+        "max_iteration_num": 4
+      },
+      "non_target_parameters": {
+        "dt": 40.0
+      },
+      "results": {
+        "converged": true,
+        "optimal_parameter_value": 64,
+        "total_computational_cost": 5552424960.0,
+        "cost_history": [
+          92293120.0,
+          885374976.0,
+          443006976.0,
+          4131749888.0
+        ],
+        "parameter_history": [
+          {
+            "N": 32,
+            "dt": 40.0
+          },
+          {
+            "N": 64,
+            "dt": 20.0
+          },
+          {
+            "N": 64,
+            "dt": 40.0
           },
           {
             "N": 128,
@@ -2177,11 +2242,11 @@
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 64,
-        "total_computational_cost": 8553220096.0,
+        "optimal_parameter_value": 32,
+        "total_computational_cost": 15631108096.0,
         "cost_history": [
           1474693120.0,
-          7078526976.0
+          14156414976.0
         ],
         "parameter_history": [
           {
@@ -2190,7 +2255,7 @@
           },
           {
             "N": 64,
-            "dt": 2.5
+            "dt": 1.25
           }
         ]
       }
@@ -2212,11 +2277,11 @@
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 64,
-        "total_computational_cost": 4276996096.0,
+        "optimal_parameter_value": 32,
+        "total_computational_cost": 7815940096.0,
         "cost_history": [
           737413120.0,
-          3539582976.0
+          7078526976.0
         ],
         "parameter_history": [
           {
@@ -2225,7 +2290,7 @@
           },
           {
             "N": 64,
-            "dt": 5.0
+            "dt": 2.5
           }
         ]
       }
@@ -2247,11 +2312,11 @@
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 64,
-        "total_computational_cost": 2138884096.0,
+        "optimal_parameter_value": 32,
+        "total_computational_cost": 3908356096.0,
         "cost_history": [
           368773120.0,
-          1770110976.0
+          3539582976.0
         ],
         "parameter_history": [
           {
@@ -2260,7 +2325,7 @@
           },
           {
             "N": 64,
-            "dt": 10.0
+            "dt": 5.0
           }
         ]
       }
@@ -2282,11 +2347,11 @@
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 64,
-        "total_computational_cost": 1069828096.0,
+        "optimal_parameter_value": 32,
+        "total_computational_cost": 1954564096.0,
         "cost_history": [
           184453120.0,
-          885374976.0
+          1770110976.0
         ],
         "parameter_history": [
           {
@@ -2295,7 +2360,7 @@
           },
           {
             "N": 64,
-            "dt": 20.0
+            "dt": 10.0
           }
         ]
       }
@@ -2317,11 +2382,11 @@
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 64,
-        "total_computational_cost": 535300096.0,
+        "optimal_parameter_value": 32,
+        "total_computational_cost": 977668096.0,
         "cost_history": [
           92293120.0,
-          443006976.0
+          885374976.0
         ],
         "parameter_history": [
           {
@@ -2330,7 +2395,7 @@
           },
           {
             "N": 64,
-            "dt": 40.0
+            "dt": 20.0
           }
         ]
       }
@@ -2457,11 +2522,11 @@
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 64,
-        "total_computational_cost": 8553220096.0,
+        "optimal_parameter_value": 32,
+        "total_computational_cost": 15631108096.0,
         "cost_history": [
           1474693120.0,
-          7078526976.0
+          14156414976.0
         ],
         "parameter_history": [
           {
@@ -2470,7 +2535,7 @@
           },
           {
             "N": 64,
-            "dt": 2.5
+            "dt": 1.25
           }
         ]
       }
@@ -2492,11 +2557,11 @@
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 64,
-        "total_computational_cost": 4276996096.0,
+        "optimal_parameter_value": 32,
+        "total_computational_cost": 7815940096.0,
         "cost_history": [
           737413120.0,
-          3539582976.0
+          7078526976.0
         ],
         "parameter_history": [
           {
@@ -2505,7 +2570,7 @@
           },
           {
             "N": 64,
-            "dt": 5.0
+            "dt": 2.5
           }
         ]
       }
@@ -2527,11 +2592,11 @@
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 64,
-        "total_computational_cost": 2138884096.0,
+        "optimal_parameter_value": 32,
+        "total_computational_cost": 3908356096.0,
         "cost_history": [
           368773120.0,
-          1770110976.0
+          3539582976.0
         ],
         "parameter_history": [
           {
@@ -2540,7 +2605,7 @@
           },
           {
             "N": 64,
-            "dt": 10.0
+            "dt": 5.0
           }
         ]
       }
@@ -2562,11 +2627,11 @@
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 64,
-        "total_computational_cost": 1069828096.0,
+        "optimal_parameter_value": 32,
+        "total_computational_cost": 1954564096.0,
         "cost_history": [
           184453120.0,
-          885374976.0
+          1770110976.0
         ],
         "parameter_history": [
           {
@@ -2575,7 +2640,7 @@
           },
           {
             "N": 64,
-            "dt": 20.0
+            "dt": 10.0
           }
         ]
       }
@@ -2597,11 +2662,11 @@
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 64,
-        "total_computational_cost": 535300096.0,
+        "optimal_parameter_value": 32,
+        "total_computational_cost": 977668096.0,
         "cost_history": [
           92293120.0,
-          443006976.0
+          885374976.0
         ],
         "parameter_history": [
           {
@@ -2610,7 +2675,7 @@
           },
           {
             "N": 64,
-            "dt": 40.0
+            "dt": 20.0
           }
         ]
       }
@@ -2737,12 +2802,13 @@
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 128,
-        "total_computational_cost": 41586345984.0,
+        "optimal_parameter_value": 64,
+        "total_computational_cost": 88772904960.0,
         "cost_history": [
           1474693120.0,
+          14156414976.0,
           7078526976.0,
-          33033125888.0
+          66063269888.0
         ],
         "parameter_history": [
           {
@@ -2751,11 +2817,15 @@
           },
           {
             "N": 64,
+            "dt": 1.25
+          },
+          {
+            "N": 64,
             "dt": 2.5
           },
           {
             "N": 128,
-            "dt": 2.5
+            "dt": 1.25
           }
         ]
       }
@@ -2777,12 +2847,13 @@
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 128,
-        "total_computational_cost": 20795049984.0,
+        "optimal_parameter_value": 64,
+        "total_computational_cost": 44388648960.0,
         "cost_history": [
           737413120.0,
+          7078526976.0,
           3539582976.0,
-          16518053888.0
+          33033125888.0
         ],
         "parameter_history": [
           {
@@ -2791,11 +2862,15 @@
           },
           {
             "N": 64,
+            "dt": 2.5
+          },
+          {
+            "N": 64,
             "dt": 5.0
           },
           {
             "N": 128,
-            "dt": 5.0
+            "dt": 2.5
           }
         ]
       }
@@ -2817,12 +2892,13 @@
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 128,
-        "total_computational_cost": 10399401984.0,
+        "optimal_parameter_value": 64,
+        "total_computational_cost": 22196520960.0,
         "cost_history": [
           368773120.0,
+          3539582976.0,
           1770110976.0,
-          8260517888.0
+          16518053888.0
         ],
         "parameter_history": [
           {
@@ -2831,11 +2907,15 @@
           },
           {
             "N": 64,
+            "dt": 5.0
+          },
+          {
+            "N": 64,
             "dt": 10.0
           },
           {
             "N": 128,
-            "dt": 10.0
+            "dt": 5.0
           }
         ]
       }
@@ -2857,12 +2937,13 @@
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 128,
-        "total_computational_cost": 5201577984.0,
+        "optimal_parameter_value": 64,
+        "total_computational_cost": 11100456960.0,
         "cost_history": [
           184453120.0,
+          1770110976.0,
           885374976.0,
-          4131749888.0
+          8260517888.0
         ],
         "parameter_history": [
           {
@@ -2871,11 +2952,15 @@
           },
           {
             "N": 64,
+            "dt": 10.0
+          },
+          {
+            "N": 64,
             "dt": 20.0
           },
           {
             "N": 128,
-            "dt": 20.0
+            "dt": 10.0
           }
         ]
       }
@@ -2897,12 +2982,13 @@
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 128,
-        "total_computational_cost": 2602665984.0,
+        "optimal_parameter_value": 64,
+        "total_computational_cost": 5552424960.0,
         "cost_history": [
           92293120.0,
+          885374976.0,
           443006976.0,
-          2067365888.0
+          4131749888.0
         ],
         "parameter_history": [
           {
@@ -2911,11 +2997,15 @@
           },
           {
             "N": 64,
+            "dt": 20.0
+          },
+          {
+            "N": 64,
             "dt": 40.0
           },
           {
             "N": 128,
-            "dt": 40.0
+            "dt": 20.0
           }
         ]
       }
@@ -3042,12 +3132,13 @@
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 128,
-        "total_computational_cost": 41586345984.0,
+        "optimal_parameter_value": 64,
+        "total_computational_cost": 88772904960.0,
         "cost_history": [
           1474693120.0,
+          14156414976.0,
           7078526976.0,
-          33033125888.0
+          66063269888.0
         ],
         "parameter_history": [
           {
@@ -3056,11 +3147,15 @@
           },
           {
             "N": 64,
+            "dt": 1.25
+          },
+          {
+            "N": 64,
             "dt": 2.5
           },
           {
             "N": 128,
-            "dt": 2.5
+            "dt": 1.25
           }
         ]
       }
@@ -3082,12 +3177,13 @@
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 128,
-        "total_computational_cost": 20795049984.0,
+        "optimal_parameter_value": 64,
+        "total_computational_cost": 44388648960.0,
         "cost_history": [
           737413120.0,
+          7078526976.0,
           3539582976.0,
-          16518053888.0
+          33033125888.0
         ],
         "parameter_history": [
           {
@@ -3096,11 +3192,15 @@
           },
           {
             "N": 64,
+            "dt": 2.5
+          },
+          {
+            "N": 64,
             "dt": 5.0
           },
           {
             "N": 128,
-            "dt": 5.0
+            "dt": 2.5
           }
         ]
       }
@@ -3122,12 +3222,13 @@
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 128,
-        "total_computational_cost": 10399401984.0,
+        "optimal_parameter_value": 64,
+        "total_computational_cost": 22196520960.0,
         "cost_history": [
           368773120.0,
+          3539582976.0,
           1770110976.0,
-          8260517888.0
+          16518053888.0
         ],
         "parameter_history": [
           {
@@ -3136,11 +3237,15 @@
           },
           {
             "N": 64,
+            "dt": 5.0
+          },
+          {
+            "N": 64,
             "dt": 10.0
           },
           {
             "N": 128,
-            "dt": 10.0
+            "dt": 5.0
           }
         ]
       }
@@ -3162,12 +3267,13 @@
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 128,
-        "total_computational_cost": 5201577984.0,
+        "optimal_parameter_value": 64,
+        "total_computational_cost": 11100456960.0,
         "cost_history": [
           184453120.0,
+          1770110976.0,
           885374976.0,
-          4131749888.0
+          8260517888.0
         ],
         "parameter_history": [
           {
@@ -3176,11 +3282,15 @@
           },
           {
             "N": 64,
+            "dt": 10.0
+          },
+          {
+            "N": 64,
             "dt": 20.0
           },
           {
             "N": 128,
-            "dt": 20.0
+            "dt": 10.0
           }
         ]
       }
@@ -3202,12 +3312,13 @@
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 128,
-        "total_computational_cost": 2602665984.0,
+        "optimal_parameter_value": 64,
+        "total_computational_cost": 5552424960.0,
         "cost_history": [
           92293120.0,
+          885374976.0,
           443006976.0,
-          2067365888.0
+          4131749888.0
         ],
         "parameter_history": [
           {
@@ -3216,11 +3327,15 @@
           },
           {
             "N": 64,
+            "dt": 20.0
+          },
+          {
+            "N": 64,
             "dt": 40.0
           },
           {
             "N": 128,
-            "dt": 40.0
+            "dt": 20.0
           }
         ]
       }
@@ -3417,13 +3532,15 @@
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 256,
-        "total_computational_cost": 192594921472.0,
+        "optimal_parameter_value": 128,
+        "total_computational_cost": 423809550336.0,
         "cost_history": [
           1474693120.0,
+          14156414976.0,
           7078526976.0,
+          66063269888.0,
           33033125888.0,
-          151008575488.0
+          302003519488.0
         ],
         "parameter_history": [
           {
@@ -3432,7 +3549,15 @@
           },
           {
             "N": 64,
+            "dt": 1.25
+          },
+          {
+            "N": 64,
             "dt": 2.5
+          },
+          {
+            "N": 128,
+            "dt": 1.25
           },
           {
             "N": 128,
@@ -3440,7 +3565,7 @@
           },
           {
             "N": 256,
-            "dt": 2.5
+            "dt": 1.25
           }
         ]
       }
@@ -3462,13 +3587,15 @@
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 256,
-        "total_computational_cost": 96306153472.0,
+        "optimal_parameter_value": 128,
+        "total_computational_cost": 211915278336.0,
         "cost_history": [
           737413120.0,
+          7078526976.0,
           3539582976.0,
+          33033125888.0,
           16518053888.0,
-          75511103488.0
+          151008575488.0
         ],
         "parameter_history": [
           {
@@ -3477,7 +3604,15 @@
           },
           {
             "N": 64,
+            "dt": 2.5
+          },
+          {
+            "N": 64,
             "dt": 5.0
+          },
+          {
+            "N": 128,
+            "dt": 2.5
           },
           {
             "N": 128,
@@ -3485,7 +3620,7 @@
           },
           {
             "N": 256,
-            "dt": 5.0
+            "dt": 2.5
           }
         ]
       }
@@ -3507,13 +3642,15 @@
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 256,
-        "total_computational_cost": 48161769472.0,
+        "optimal_parameter_value": 128,
+        "total_computational_cost": 105968142336.0,
         "cost_history": [
           368773120.0,
+          3539582976.0,
           1770110976.0,
+          16518053888.0,
           8260517888.0,
-          37762367488.0
+          75511103488.0
         ],
         "parameter_history": [
           {
@@ -3522,11 +3659,74 @@
           },
           {
             "N": 64,
+            "dt": 5.0
+          },
+          {
+            "N": 64,
             "dt": 10.0
           },
           {
             "N": 128,
+            "dt": 5.0
+          },
+          {
+            "N": 128,
             "dt": 10.0
+          },
+          {
+            "N": 256,
+            "dt": 5.0
+          }
+        ]
+      }
+    },
+    {
+      "task_id": 121,
+      "solver": "hasegawa_mima_nonlinear",
+      "profile": "p4",
+      "precision_level": "high",
+      "tolerance_rmse": 0.0001,
+      "target_parameter": "N",
+      "target_config": {
+        "initial_value": 32,
+        "multiplication_factor": 2,
+        "max_iteration_num": 4
+      },
+      "non_target_parameters": {
+        "dt": 20.0
+      },
+      "results": {
+        "converged": true,
+        "optimal_parameter_value": 128,
+        "total_computational_cost": 52994574336.0,
+        "cost_history": [
+          184453120.0,
+          1770110976.0,
+          885374976.0,
+          8260517888.0,
+          4131749888.0,
+          37762367488.0
+        ],
+        "parameter_history": [
+          {
+            "N": 32,
+            "dt": 20.0
+          },
+          {
+            "N": 64,
+            "dt": 10.0
+          },
+          {
+            "N": 64,
+            "dt": 20.0
+          },
+          {
+            "N": 128,
+            "dt": 10.0
+          },
+          {
+            "N": 128,
+            "dt": 20.0
           },
           {
             "N": 256,
@@ -3657,13 +3857,15 @@
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 256,
-        "total_computational_cost": 192594921472.0,
+        "optimal_parameter_value": 128,
+        "total_computational_cost": 423809550336.0,
         "cost_history": [
           1474693120.0,
+          14156414976.0,
           7078526976.0,
+          66063269888.0,
           33033125888.0,
-          151008575488.0
+          302003519488.0
         ],
         "parameter_history": [
           {
@@ -3672,7 +3874,15 @@
           },
           {
             "N": 64,
+            "dt": 1.25
+          },
+          {
+            "N": 64,
             "dt": 2.5
+          },
+          {
+            "N": 128,
+            "dt": 1.25
           },
           {
             "N": 128,
@@ -3680,7 +3890,7 @@
           },
           {
             "N": 256,
-            "dt": 2.5
+            "dt": 1.25
           }
         ]
       }
@@ -3702,13 +3912,15 @@
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 256,
-        "total_computational_cost": 96306153472.0,
+        "optimal_parameter_value": 128,
+        "total_computational_cost": 211915278336.0,
         "cost_history": [
           737413120.0,
+          7078526976.0,
           3539582976.0,
+          33033125888.0,
           16518053888.0,
-          75511103488.0
+          151008575488.0
         ],
         "parameter_history": [
           {
@@ -3717,7 +3929,15 @@
           },
           {
             "N": 64,
+            "dt": 2.5
+          },
+          {
+            "N": 64,
             "dt": 5.0
+          },
+          {
+            "N": 128,
+            "dt": 2.5
           },
           {
             "N": 128,
@@ -3725,7 +3945,7 @@
           },
           {
             "N": 256,
-            "dt": 5.0
+            "dt": 2.5
           }
         ]
       }
@@ -3747,13 +3967,15 @@
       },
       "results": {
         "converged": true,
-        "optimal_parameter_value": 256,
-        "total_computational_cost": 48161769472.0,
+        "optimal_parameter_value": 128,
+        "total_computational_cost": 105968142336.0,
         "cost_history": [
           368773120.0,
+          3539582976.0,
           1770110976.0,
+          16518053888.0,
           8260517888.0,
-          37762367488.0
+          75511103488.0
         ],
         "parameter_history": [
           {
@@ -3762,11 +3984,74 @@
           },
           {
             "N": 64,
+            "dt": 5.0
+          },
+          {
+            "N": 64,
             "dt": 10.0
           },
           {
             "N": 128,
+            "dt": 5.0
+          },
+          {
+            "N": 128,
             "dt": 10.0
+          },
+          {
+            "N": 256,
+            "dt": 5.0
+          }
+        ]
+      }
+    },
+    {
+      "task_id": 130,
+      "solver": "hasegawa_mima_nonlinear",
+      "profile": "p5",
+      "precision_level": "high",
+      "tolerance_rmse": 0.0001,
+      "target_parameter": "N",
+      "target_config": {
+        "initial_value": 32,
+        "multiplication_factor": 2,
+        "max_iteration_num": 4
+      },
+      "non_target_parameters": {
+        "dt": 20.0
+      },
+      "results": {
+        "converged": true,
+        "optimal_parameter_value": 128,
+        "total_computational_cost": 52994574336.0,
+        "cost_history": [
+          184453120.0,
+          1770110976.0,
+          885374976.0,
+          8260517888.0,
+          4131749888.0,
+          37762367488.0
+        ],
+        "parameter_history": [
+          {
+            "N": 32,
+            "dt": 20.0
+          },
+          {
+            "N": 64,
+            "dt": 10.0
+          },
+          {
+            "N": 64,
+            "dt": 20.0
+          },
+          {
+            "N": 128,
+            "dt": 10.0
+          },
+          {
+            "N": 128,
+            "dt": 20.0
           },
           {
             "N": 256,

@@ -6,6 +6,7 @@ import json
 import sys
 from scipy.interpolate import RegularGridInterpolator
 from dotenv import load_dotenv
+import yaml
 
 # from solvers.utils import format_param_for_path
 
@@ -24,6 +25,39 @@ def _get_sim_path(relative_path):
     if SIM_RES_BASE_DIR:
         return os.path.join(SIM_RES_BASE_DIR, relative_path)
     return relative_path
+
+
+def _read_config_max_wall_time(profile):
+    """
+    Read max_wall_time from the config file for a given profile.
+
+    Args:
+        profile: Configuration profile name (e.g., "p1")
+
+    Returns:
+        max_wall_time value from config, or 120 if not found
+    """
+    # Try to find config file
+    config_paths = [
+        f"run_configs/hasegawa_mima_nonlinear/{profile}.yaml",
+        f"costsci_tools/run_configs/hasegawa_mima_nonlinear/{profile}.yaml",
+        f"../run_configs/hasegawa_mima_nonlinear/{profile}.yaml",
+    ]
+
+    for config_path in config_paths:
+        if os.path.exists(config_path):
+            try:
+                with open(config_path, 'r') as f:
+                    config = yaml.safe_load(f)
+                    max_wall_time = config.get('max_wall_time', 120)
+                    return max_wall_time
+            except Exception as e:
+                print(f"Warning: Could not read config from {config_path}: {e}")
+                continue
+
+    # Fallback to default if config not found
+    print(f"Warning: Could not find config for profile {profile}, using default max_wall_time=120")
+    return 120
 
 
 def _find_runner_path():
@@ -90,15 +124,35 @@ def get_results(profile, N, dt, max_wall_time=-1):
         N: Grid resolution
         dt: Time step size
         max_wall_time: Override for maximum wall time in seconds (default=-1).
-                      - Default (-1): Use config default
-                      - None: Disable limit (no constraint)
-                      - Positive number: Override to that many seconds
+                      - Default (-1): Use config default (typically 120s)
+                      - None: Disable limit (no constraint) - saves to folder WITHOUT suffix
+                      - Positive number: Override to that many seconds - saves to folder WITH suffix
 
     Returns:
         tuple: (cost, results_list, simulation_completed) where results_list contains all frame data
                and simulation_completed is True if wall time was NOT exceeded
+
+    Note:
+        Directory naming convention to avoid cache ambiguity:
+        - Unconstrained (max_wall_time=None): {profile}_N_{N}_dt_{dt}/
+        - Constrained: {profile}_N_{N}_dt_{dt}_wall_time_{value}/
     """
-    dir_path = _get_sim_path(f"sim_res/hasegawa_mima_nonlinear/{profile}_N_{N}_dt_{dt:.2e}_nonlinear/")
+    # Determine the actual wall time value for directory naming
+    # If max_wall_time is None (unconstrained), no suffix
+    # Otherwise, we need the actual numeric value for the suffix
+    if max_wall_time is None:
+        # Unconstrained reference run - no suffix
+        dir_suffix = ""
+    elif max_wall_time == -1:
+        # Use config default - read from config file
+        actual_wall_time = _read_config_max_wall_time(profile)
+        dir_suffix = f"_wall_time_{actual_wall_time}"
+    else:
+        # Explicit value provided
+        actual_wall_time = max_wall_time
+        dir_suffix = f"_wall_time_{actual_wall_time}"
+
+    dir_path = _get_sim_path(f"sim_res/hasegawa_mima_nonlinear/{profile}_N_{N}_dt_{dt:.2e}{dir_suffix}/")
     meta_path = os.path.join(dir_path, "meta.json")
 
     # Check if the simulation has already been run
@@ -108,11 +162,13 @@ def get_results(profile, N, dt, max_wall_time=-1):
             if "cost" in meta:
                 print(f"Using existing simulation results from {dir_path}")
                 cost = meta["cost"]
-            wall_time_total = meta["wall_time_total"]
-            simulation_completed = True if wall_time_total < 120 else False
+            wall_time_total = meta.get("wall_time_total", 0.0)
+            # Use wall_time_exceeded flag from metadata (more robust than hardcoded comparison)
+            wall_time_exceeded = meta.get("wall_time_exceeded", False)
+            simulation_completed = not wall_time_exceeded
 
             if not simulation_completed:
-                print(f"Warning: Simulation did not complete (wall_time_total={wall_time_total})")
+                print(f"Warning: Simulation did not complete (wall_time_exceeded=True, wall_time_total={wall_time_total:.1f}s)")
     else:
         # Run the simulation if not already done
         # Determine wall time description for logging
@@ -148,11 +204,12 @@ def get_results(profile, N, dt, max_wall_time=-1):
         with open(meta_path, "r") as f:
             meta = json.load(f)
             cost = meta["cost"]
-            wall_time_total = meta["wall_time_total"]
-            simulation_completed = True if wall_time_total < 120 else False
+            wall_time_total = meta.get("wall_time_total", 0.0)
+            wall_time_exceeded = meta.get("wall_time_exceeded", False)
+            simulation_completed = not wall_time_exceeded
 
             if not simulation_completed:
-                print(f"Warning: Simulation did not complete (wall_time_total={wall_time_total})")
+                print(f"Warning: Simulation did not complete (wall_time_exceeded=True, wall_time_total={wall_time_total:.1f}s)")
 
     # Load all frames
     results_list = []
@@ -177,25 +234,31 @@ def get_results(profile, N, dt, max_wall_time=-1):
     return cost, results_list, simulation_completed
 
 
-def compare_solutions(profile, params1, params2, tolerance_rmse):
+def compare_solutions(profile, params1, params2, tolerance_rmse, max_wall_time=120):
     """
     Compare two Hasegawa-Mima nonlinear simulations to check for convergence.
     Uses linear interpolation for different resolutions.
 
     Args:
         profile: Configuration profile name
-        params1: Dictionary with first simulation parameters (coarse)
-        params2: Dictionary with second simulation parameters (fine)
+        params1: Dictionary with first simulation parameters (proposal - to be evaluated)
+        params2: Dictionary with second simulation parameters (reference - ground truth)
         tolerance_rmse: RMSE tolerance for convergence
+        max_wall_time: Wall time limit for the proposal simulation (default: 120s)
 
     Returns:
         is_converged: Boolean indicating if solutions converged
         cost1: Cost for first simulation
         cost2: Cost for second simulation (or 0 if not run)
         rmse_diff: RMSE difference between solutions (or None if comparison not possible)
+
+    Note:
+        - Proposal simulation (params1): runs with wall time constraint (suffix: _wall_time_{value})
+        - Reference simulation (params2): runs without constraint (no suffix)
+        - Caller is responsible for providing appropriate params (e.g., CFL-safe dt for reference)
     """
-    # Run first (coarse) simulation with normal wall time limit (use config default)
-    cost1, results1, completed1 = get_results(profile, **params1)
+    # Run first (coarse) simulation WITH wall time constraint for evaluation
+    cost1, results1, completed1 = get_results(profile, max_wall_time=max_wall_time, **params1)
 
     # Check if first simulation completed
     if not completed1:
@@ -207,18 +270,13 @@ def compare_solutions(profile, params1, params2, tolerance_rmse):
         print(f"⚠️  First simulation produced no results")
         return False, cost1, 0, None
 
-    # Run second (fine) simulation with NO wall time limit
-    # This allows higher resolution simulations to complete without false rejections
+    # Run second (fine) simulation WITHOUT wall time limit (reference/ground truth)
+    # Note: Caller is responsible for providing appropriate params (e.g., CFL-safe dt for reference)
     cost2, results2, completed2 = get_results(profile, max_wall_time=None, **params2)
 
-    # Check if second simulation completed
-    if not completed2:
-        print(f"⚠️  Second simulation did not complete")
-        print(f"   Params2: {params2}")
-        return False, cost1, cost2, None
-
+    # Reference should always complete (no wall time limit)
     if not results2:
-        print(f"⚠️  Second simulation produced no results")
+        print(f"⚠️  Reference simulation produced no results")
         return False, cost1, cost2, None
 
     # Calculate L2 error between resolutions for all frames using interpolation

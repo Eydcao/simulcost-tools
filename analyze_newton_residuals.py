@@ -56,11 +56,10 @@ def collect_residual_data():
 
                 # Run simulation (will use cached if available)
                 try:
-                    energies, cost = get_fem2d_data(
+                    energies, cost, _ = get_fem2d_data(
                         profile=profile,
-                        nx=nx,
-                        cfl=cfl,
-                        newton_v_res_tol=1.0  # Standard value
+                        dx=nx,
+                        cfl=cfl
                     )
 
                     # Load meta.json to get actual dt used

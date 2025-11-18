@@ -16,6 +16,7 @@ This is where you implement your actual PDE solver (only if you choose to implem
 - Provide methods for calculating adaptive time steps (for transient problems)
 - Include output/visualization functionality via the `dump()` method
 - Provide methods for cost estimation (eg, using FLOPs complexity)
+- **Respect wall time constraints**: The base class tracks `wall_time_total` and sets `wall_time_exceeded` flag if simulation exceeds `max_wall_time` (default: 120 seconds). This prevents runaway simulations and separates unconstrained reference runs from constrained evaluation runs in the cache.
 
 **Example**: `burgers_1d.py` implements a 2nd order Roe method with minmod limiter for the inviscid Burgers equation.
 

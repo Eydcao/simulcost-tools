@@ -21,6 +21,27 @@ if repo_root not in sys.path:
     sys.path.insert(0, repo_root)
 
 from solvers.utils import format_param_for_path
+import yaml
+
+
+def _read_config_max_wall_time(profile):
+    """Read max_wall_time from the config file for a given profile."""
+    config_paths = [
+        f"run_configs/fem2d/{profile}.yaml",
+        f"costsci_tools/run_configs/fem2d/{profile}.yaml",
+        f"../run_configs/fem2d/{profile}.yaml",
+    ]
+    for config_path in config_paths:
+        if os.path.exists(config_path):
+            try:
+                with open(config_path, 'r') as f:
+                    config = yaml.safe_load(f)
+                    max_wall_time = config.get('max_wall_time', 120)
+                    return max_wall_time
+            except Exception as e:
+                print(f"Warning: Could not read config from {config_path}: {e}")
+                continue
+    return 120
 
 
 def _get_sim_path(relative_path):
@@ -77,7 +98,7 @@ def _find_runner_path():
     )
 
 
-def get_fem2d_data(profile, dx, cfl):
+def get_fem2d_data(profile, dx, cfl, max_wall_time=-1):
     """
     Retrieves fem2d simulation results, running the simulation if not cached.
 
@@ -89,14 +110,28 @@ def get_fem2d_data(profile, dx, cfl):
         profile: Profile name (p1, p2, p3, etc.)
         dx: Grid resolution parameter
         cfl: CFL number for time step calculation
+        max_wall_time: Maximum wall time in seconds. Use -1 to read from config, None for no limit.
 
     Returns:
-        tuple: (energies, cost)
+        tuple: (energies, cost, wall_time_exceeded)
             - energies (dict): Dictionary of energy arrays
             - cost (float): Simulation cost
+            - wall_time_exceeded (bool): True if simulation exceeded wall time limit
     """
+    # Directory naming convention:
+    # - Unconstrained (max_wall_time=None): {profile}_dx{dx}_cfl{cfl}/
+    # - Constrained: {profile}_dx{dx}_cfl{cfl}_wall_time_{value}/
+    if max_wall_time is None:
+        dir_suffix = ""
+    elif max_wall_time == -1:
+        actual_wall_time = _read_config_max_wall_time(profile)
+        dir_suffix = f"_wall_time_{actual_wall_time}"
+    else:
+        actual_wall_time = max_wall_time
+        dir_suffix = f"_wall_time_{actual_wall_time}"
+
     # Create directory path based on parameters
-    dir_path = _get_sim_path(f"sim_res/fem2d/{profile}_dx{dx}_cfl{format_param_for_path(cfl)}/")
+    dir_path = _get_sim_path(f"sim_res/fem2d/{profile}_dx{dx}_cfl{format_param_for_path(cfl)}{dir_suffix}/")
     meta_path = os.path.join(dir_path, "meta.json")
     energies_path = os.path.join(dir_path, "energies.npz")
 
@@ -134,6 +169,7 @@ def get_fem2d_data(profile, dx, cfl):
     with open(meta_path, "r") as f:
         meta = json.load(f)
         cost = meta["cost"]
+        wall_time_exceeded = meta.get("wall_time_exceeded", False)
         # is_converged = meta["is_converged"]
 
     # Load energies - Will raise FileNotFoundError
@@ -142,10 +178,10 @@ def get_fem2d_data(profile, dx, cfl):
     for key in energies_data.keys():
         energies[key] = energies_data[key]
 
-    return energies, cost
+    return energies, cost, wall_time_exceeded
 
 
-def compare_energies_fem2d(profile1, dx1, cfl1, profile2, dx2, cfl2, energy_tolerance, var_threshold):
+def compare_energies_fem2d(profile1, dx1, cfl1, profile2, dx2, cfl2, energy_tolerance, var_threshold, max_wall_time1=-1, max_wall_time2=None):
     """Compare energies between two fem2d simulations.
 
     Args:
@@ -154,24 +190,37 @@ def compare_energies_fem2d(profile1, dx1, cfl1, profile2, dx2, cfl2, energy_tole
         cfl1, cfl2: CFL numbers for time step calculation
         energy_tolerance: Tolerance for energy comparison
         var_threshold: Threshold for energy conservation (coefficient of variation)
+        max_wall_time1: Wall time limit for simulation 1 (coarse/proposal). Use -1 to read from config, None for no limit.
+        max_wall_time2: Wall time limit for simulation 2 (fine/reference). Default None (unconstrained reference).
 
     Returns:
         converged (bool): True if energies are within tolerance
         metrics1 (dict): Energy metrics for case 1
         metrics2 (dict): Energy metrics for case 2
         avg_energy_diff (float): Average relative energy difference
+
+    Note:
+        - Simulation 1 (coarse/proposal): runs with wall time constraint (default: read from config)
+        - Simulation 2 (fine/reference): runs without constraint (default: None) to serve as ground truth
     """
     # Load energies and metadata for both cases
-    energies1, _ = get_fem2d_data(profile1, dx1, cfl1)
-    energies2, _ = get_fem2d_data(profile2, dx2, cfl2)
+    # Case 1: Coarse/proposal with wall time constraint
+    energies1, cost1, wall_time_exceeded1 = get_fem2d_data(profile1, dx1, cfl1, max_wall_time=max_wall_time1)
 
-    # # Check if either simulation failed
-    # if not is_converged1:
-    #     print(f"Simulation 1 failed: {profile1}_nx{nx1}_dt{dt1}_nvrestol{newton_v_res_tol1}")
-    #     return False, None, None, float("inf")
-    # if not is_converged2:
-    #     print(f"Simulation 2 failed: {profile2}_nx{nx2}_dt{dt2}_nvrestol{newton_v_res_tol2}")
-    #     return False, None, None, float("inf")
+    # Check if first simulation exceeded wall time limit
+    if wall_time_exceeded1:
+        print(f"⚠️  Simulation 1 exceeded wall time: {profile1}_dx{dx1}_cfl{cfl1}")
+        print(f"   Skipping simulation 2 (reference)")
+        return False, None, None, float("inf")
+
+    # Case 2: Fine/reference without wall time constraint (ground truth)
+    energies2, cost2, wall_time_exceeded2 = get_fem2d_data(profile2, dx2, cfl2, max_wall_time=max_wall_time2)
+
+    # Reference should always complete (unconstrained), but check just in case
+    if wall_time_exceeded2:
+        print(f"⚠️  WARNING: Reference simulation exceeded wall time: {profile2}_dx{dx2}_cfl{cfl2}")
+        print(f"   This should not happen for unconstrained references!")
+        return False, None, None, float("inf")
 
     # Compare energies - FEM2D has kinetic, elastic potential, and gravitational energies
     energy_types = ["kin", "pot", "gra"]
