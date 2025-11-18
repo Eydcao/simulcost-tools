@@ -155,7 +155,8 @@ def get_fem2d_data(profile, dx, cfl, max_wall_time=-1):
 
         runner_path = _find_runner_path()
         if SIM_RES_BASE_DIR:
-            dump_dir = os.path.join(SIM_RES_BASE_DIR, f"sim_res/fem2d/{profile}")
+            # Pass the complete directory path including parameters
+            dump_dir = os.path.join(SIM_RES_BASE_DIR, f"sim_res/fem2d/{profile}_dx{dx}_cfl{format_param_for_path(cfl)}")
             cmd = f"{sys.executable} {runner_path} --config-name={profile} dx={dx} cfl={cfl} dump_dir={dump_dir}"
         else:
             cmd = f"{sys.executable} {runner_path} --config-name={profile} dx={dx} cfl={cfl}"
