@@ -4,7 +4,7 @@ defaults:
   - override hydra/job_logging: none
 
 # Case type
-case: "cantilever_beam"
+case: "cantilever"
 
 # Tunable Parameters
 dx: 0.5
