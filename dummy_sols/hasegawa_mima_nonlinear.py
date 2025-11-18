@@ -14,7 +14,9 @@ def find_convergent_N(profile, N, dt, tolerance_rmse, multiplication_factor, max
 
     Goal: Find the best N for a given dt value.
     - Proposal runs: Use the target dt (may violate CFL for high N)
-    - Reference runs: Use CFL-safe dt (automatically scaled in compare_solutions)
+    - Reference runs: Use CFL-safe dt (scaled inversely with N: dt_ref = dt_target * N_prev / N_current)
+
+    This function is responsible for scaling dt for the reference to maintain CFL stability.
 
     Note: error_history[i] represents the RMSE comparison between
     param_history[i] and param_history[i+1], so error_history is one element shorter.
@@ -44,10 +46,15 @@ def find_convergent_N(profile, N, dt, tolerance_rmse, multiplication_factor, max
             previous_N = N_history[-2]
 
             # Compare current resolution with previous resolution
-            # Both use the SAME dt - we're evaluating "which N is better for this dt"
-            # Note: compare_solutions will internally scale dt for the reference to maintain CFL
+            # Proposal: uses target dt (may violate CFL)
+            # Reference: uses CFL-safe dt (scaled by N ratio)
             params1 = {"N": previous_N, "dt": fixed_dt}
-            params2 = {"N": current_N, "dt": fixed_dt}
+
+            # Scale dt for reference to maintain CFL stability (dt ∝ 1/N)
+            dt_ref = fixed_dt * previous_N / current_N
+            params2 = {"N": current_N, "dt": dt_ref}
+
+            print(f"   Comparing: proposal (N={previous_N}, dt={fixed_dt:.6e}) vs reference (N={current_N}, dt={dt_ref:.6e})")
 
             is_converged, cost1, cost2, rmse_diff = compare_solutions(profile, params1, params2, tolerance_rmse)
             error_history.append(rmse_diff)

@@ -241,10 +241,10 @@ def compare_solutions(profile, params1, params2, tolerance_rmse, max_wall_time=1
 
     Args:
         profile: Configuration profile name
-        params1: Dictionary with first simulation parameters (coarse - to be evaluated)
-        params2: Dictionary with second simulation parameters (fine - reference)
+        params1: Dictionary with first simulation parameters (proposal - to be evaluated)
+        params2: Dictionary with second simulation parameters (reference - ground truth)
         tolerance_rmse: RMSE tolerance for convergence
-        max_wall_time: Wall time limit for the coarse (evaluated) simulation (default: 120s)
+        max_wall_time: Wall time limit for the proposal simulation (default: 120s)
 
     Returns:
         is_converged: Boolean indicating if solutions converged
@@ -253,9 +253,9 @@ def compare_solutions(profile, params1, params2, tolerance_rmse, max_wall_time=1
         rmse_diff: RMSE difference between solutions (or None if comparison not possible)
 
     Note:
-        - Coarse simulation (params1): runs with wall time constraint (suffix: _wall_time_{value})
-        - Fine simulation (params2): runs without constraint as reference (no suffix)
-        - For N search: dt is scaled for reference to maintain CFL stability (dt ∝ 1/N)
+        - Proposal simulation (params1): runs with wall time constraint (suffix: _wall_time_{value})
+        - Reference simulation (params2): runs without constraint (no suffix)
+        - Caller is responsible for providing appropriate params (e.g., CFL-safe dt for reference)
     """
     # Run first (coarse) simulation WITH wall time constraint for evaluation
     cost1, results1, completed1 = get_results(profile, max_wall_time=max_wall_time, **params1)
@@ -270,20 +270,9 @@ def compare_solutions(profile, params1, params2, tolerance_rmse, max_wall_time=1
         print(f"⚠️  First simulation produced no results")
         return False, cost1, 0, None
 
-    # Prepare params for reference simulation
-    # If N values differ, scale dt for reference to maintain CFL stability (dt ∝ 1/N)
-    params2_ref = params2.copy()
-    if params1.get("N") != params2.get("N"):
-        N1 = params1["N"]
-        N2 = params2["N"]
-        dt_proposal = params1["dt"]
-        # CFL condition: dt ∝ 1/N, so dt_ref = dt_proposal * N1 / N2
-        dt_ref = dt_proposal * N1 / N2
-        params2_ref["dt"] = dt_ref
-        print(f"   Scaling reference dt: {dt_proposal:.6e} → {dt_ref:.6e} (for CFL stability at N={N2})")
-
     # Run second (fine) simulation WITHOUT wall time limit (reference/ground truth)
-    cost2, results2, completed2 = get_results(profile, max_wall_time=None, **params2_ref)
+    # Note: Caller is responsible for providing appropriate params (e.g., CFL-safe dt for reference)
+    cost2, results2, completed2 = get_results(profile, max_wall_time=None, **params2)
 
     # Reference should always complete (no wall time limit)
     if not results2:
