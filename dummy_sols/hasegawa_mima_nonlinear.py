@@ -10,10 +10,11 @@ from wrappers.hasegawa_mima_nonlinear import get_results, compare_solutions
 
 def find_convergent_N(profile, N, dt, tolerance_rmse, multiplication_factor, max_iteration_num):
     """
-    Iteratively increase N (grid resolution) until convergence is achieved.
+    Iteratively increase N (grid resolution) until convergence is achieved with FIXED dt.
 
-    IMPORTANT: dt is scaled inversely with N to maintain CFL stability.
-    When N increases by factor α, dt decreases by factor α (dt_new = dt_old / α).
+    Goal: Find the best N for a given dt value.
+    - Proposal runs: Use the target dt (may violate CFL for high N)
+    - Reference runs: Use CFL-safe dt (automatically scaled in compare_solutions)
 
     Note: error_history[i] represents the RMSE comparison between
     param_history[i] and param_history[i+1], so error_history is one element shorter.
@@ -24,60 +25,55 @@ def find_convergent_N(profile, N, dt, tolerance_rmse, multiplication_factor, max
     error_history = []  # Note: Will be one element shorter than param_history
 
     current_N = N
-    current_dt = dt  # Track dt as it scales with N
+    # dt stays FIXED throughout the search - we're finding best N for THIS dt
+    fixed_dt = dt
     converged = False
     best_N = None
-    best_dt = None
 
     for i in range(max_iteration_num):
-        print(f"\nRunning simulation with N = {current_N}, dt = {current_dt:.6e}")
+        print(f"\nRunning simulation with N = {current_N}, dt = {fixed_dt:.6e}")
 
-        # Get simulation results
-        cost_i, _, _ = get_results(profile=profile, N=current_N, dt=current_dt)
+        # Get simulation results with FIXED dt (proposal run with wall time constraint)
+        cost_i, _, _ = get_results(profile=profile, N=current_N, dt=fixed_dt)
         cost_history.append(cost_i)
         N_history.append(current_N)
-        param_history.append({"N": current_N, "dt": current_dt})
+        param_history.append({"N": current_N, "dt": fixed_dt})
 
         # If this is not the first iteration, compare with previous resolution
         if i > 0:
             previous_N = N_history[-2]
-            previous_dt = param_history[-2]["dt"]
 
             # Compare current resolution with previous resolution
-            params1 = {"N": previous_N, "dt": previous_dt}
-            params2 = {"N": current_N, "dt": current_dt}
+            # Both use the SAME dt - we're evaluating "which N is better for this dt"
+            # Note: compare_solutions will internally scale dt for the reference to maintain CFL
+            params1 = {"N": previous_N, "dt": fixed_dt}
+            params2 = {"N": current_N, "dt": fixed_dt}
 
             is_converged, cost1, cost2, rmse_diff = compare_solutions(profile, params1, params2, tolerance_rmse)
             error_history.append(rmse_diff)
 
             if is_converged:
-                print(f"Convergence achieved with N = {current_N}, dt = {current_dt:.6e}, RMSE diff = {rmse_diff:.6e}")
+                print(f"Convergence achieved with N = {current_N}, dt = {fixed_dt:.6e}, RMSE diff = {rmse_diff:.6e}")
                 best_N = current_N
-                best_dt = current_dt
                 converged = True
                 break
             else:
-                print(f"No convergence with N = {current_N}, dt = {current_dt:.6e}, RMSE diff = {rmse_diff:.6e}")
+                print(f"No convergence with N = {current_N}, dt = {fixed_dt:.6e}, RMSE diff = {rmse_diff:.6e}")
 
-        # Prepare next N and dt using multiplication factor
-        # dt scales inversely with N to maintain CFL stability
+        # Prepare next N using multiplication factor
+        # dt stays FIXED - only N changes
         next_N = int(current_N * multiplication_factor)
-        next_dt = current_dt / multiplication_factor
-
         current_N = next_N
-        current_dt = next_dt
 
     if converged:
-        print(f"\nConvergent parameters found: N = {best_N}, dt = {best_dt:.6e}")
+        print(f"\nConvergent N found: {best_N} (for dt = {fixed_dt:.6e})")
     else:
         print("\nMaximum iterations reached without convergence")
         if len(N_history) > 0:
             best_N = N_history[-1]
-            best_dt = param_history[-1]["dt"]
-            print(f"Highest tested: N = {best_N}, dt = {best_dt:.6e}")
+            print(f"Highest tested: N = {best_N} (for dt = {fixed_dt:.6e})")
         else:
             best_N = None
-            best_dt = None
 
     print(f"Cost history: {cost_history}, total cost: {sum(cost_history)}")
 
