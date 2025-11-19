@@ -160,6 +160,15 @@ def get_fem2d_data(profile, dx, cfl, max_wall_time=-1):
         else:
             cmd = f"{sys.executable} {runner_path} --config-name={profile} dx={dx} cfl={cfl}"
 
+        # Add max_wall_time override if specified
+        if max_wall_time is None:
+            # Disable wall time limit
+            cmd += " max_wall_time=null"
+        elif max_wall_time > 0:
+            # Override to specific value
+            cmd += f" max_wall_time={max_wall_time}"
+        # If max_wall_time == -1 (default), don't add anything - use config default
+
         # This will raise CalledProcessError if the command fails
         subprocess.run(cmd, shell=True, check=True)
 
