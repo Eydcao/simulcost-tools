@@ -55,6 +55,8 @@ class NSTransient2D(SIMULATOR):
         # Timeout tracking
         self.start_time = None
         self.max_runtime = MAXIMUM_WALL_TIME
+        self.max_wall_time = None  # Disable base class wall time checking - we use our own via early_stop()
+        self.wall_time_exceeded = False  # Required by base class run() method for verbose output
 
         # Pressure solver iteration tracking
         self.total_pressure_iterations = 0
