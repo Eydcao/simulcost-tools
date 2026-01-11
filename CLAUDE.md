@@ -2,6 +2,17 @@
 
 This file provides guidance to Claude Code when working with the costsci-tools repository.
 
+## Python Environment
+
+**IMPORTANT**: Always use the `simulcost` conda environment for Python scripts:
+```bash
+# Activate before running any Python
+conda activate simulcost
+
+# Or use full path
+/home/ubuntu/miniconda3/envs/simulcost/bin/python script.py
+```
+
 ## Project Overview
 
 **CostSci-Tools** is the solver library and API for the SimulCost benchmark. It contains 12 physics-based PDE solvers with cost tracking, used to evaluate LLM agents' parameter optimization capabilities.
@@ -73,6 +84,22 @@ See `guideline_solver_dev.md` for adding new solvers:
 3. Create wrapper in `wrappers/` (run/get/compare API)
 4. Add documentation in `docs/`
 5. Generate task configs in `gen_cfgs/`
+
+## Benchmark Statistics
+
+The `benchmark_stats/` folder contains scripts for extracting and verifying benchmark facts:
+
+```bash
+# Count tasks per solver
+/home/ubuntu/miniconda3/envs/simulcost/bin/python benchmark_stats/count_tasks.py
+
+# Extract precision thresholds
+/home/ubuntu/miniconda3/envs/simulcost/bin/python benchmark_stats/extract_thresholds.py
+```
+
+**Outputs**:
+- `benchmark_stats/task_counts.csv` - Per-solver task counts
+- `benchmark_stats/thresholds.csv` - Per-solver precision thresholds
 
 ## Quick Commands
 
