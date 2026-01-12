@@ -6,7 +6,7 @@ import os
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from solvers import *
+from solvers import UNSTRUCT_MPM
 
 
 @hydra.main(version_base=None, config_path="../run_configs/unstruct_mpm", config_name="p1")

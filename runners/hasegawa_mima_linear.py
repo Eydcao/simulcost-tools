@@ -6,7 +6,7 @@ import os
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from solvers import *
+from solvers import HasegawaMimaLinear
 
 
 @hydra.main(version_base=None, config_path="../run_configs/hasegawa_mima_linear", config_name="p1")
