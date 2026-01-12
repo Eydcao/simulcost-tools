@@ -6,7 +6,7 @@ import os
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from solvers import BurgersRoe2
+from solvers.burgers_1d import BurgersRoe2
 
 
 @hydra.main(version_base=None, config_path="../run_configs/burgers_1d", config_name="p1")

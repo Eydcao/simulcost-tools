@@ -6,7 +6,7 @@ import os
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from solvers import Euler1D
+from solvers.euler_1d import Euler1D
 
 
 @hydra.main(version_base=None, config_path="../run_configs/euler_1d", config_name="p1")

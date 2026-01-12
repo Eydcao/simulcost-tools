@@ -6,7 +6,7 @@ import os
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from solvers import NSTransient2D
+from solvers.ns_transient_2d import NSTransient2D
 
 
 @hydra.main(version_base=None, config_path="../run_configs/ns_transient_2d", config_name="p1")
