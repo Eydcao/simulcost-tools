@@ -85,22 +85,6 @@ See `guideline_solver_dev.md` for adding new solvers:
 4. Add documentation in `docs/`
 5. Generate task configs in `gen_cfgs/`
 
-## Benchmark Statistics
-
-The `benchmark_stats/` folder contains scripts for extracting and verifying benchmark facts:
-
-```bash
-# Count tasks per solver
-/home/ubuntu/miniconda3/envs/simulcost/bin/python benchmark_stats/count_tasks.py
-
-# Extract precision thresholds
-/home/ubuntu/miniconda3/envs/simulcost/bin/python benchmark_stats/extract_thresholds.py
-```
-
-**Outputs**:
-- `benchmark_stats/task_counts.csv` - Per-solver task counts
-- `benchmark_stats/thresholds.csv` - Per-solver precision thresholds
-
 ## Quick Commands
 
 ```bash
