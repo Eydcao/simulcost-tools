@@ -59,7 +59,6 @@ WORKDIR /
 # to retrieve this private key file from the corresponding image layer
 RUN mkdir -p /root/.ssh
 ADD /.ssh/id_rsa /root/.ssh/id_rsa
-ADD /.ssh/id_rsa.pub /root/.ssh/id_rsa.pub
 ADD /.ssh/known_hosts /root/.ssh/known_hosts
 
 # Create known_hosts
@@ -74,8 +73,6 @@ RUN chmod 400 /root/.ssh/config
 RUN chmod 400 /root/.ssh/known_hosts
 
 WORKDIR /home/user/
-
-## NOTE: BRANCH IS SET TO ONLINE FOR TESTING PURPOSES
 
 #Clone this repo and set up conda env (requires conda install)
 RUN git clone --depth=1 --branch cgyro https://github.com/zclawr/costsci-tools.git && \
