@@ -79,7 +79,7 @@ WORKDIR /home/user/
 RUN git clone --depth=1 --branch cgyro git@github.com:zclawr/costsci-tools.git && \
     cd ./costsci-tools && \
     git pull && \
-    git submodule update --init -- src/toolbox solvers/gacode 
+    git submodule update --init --recursive
 
 WORKDIR /home/user/costsci-tools
 
