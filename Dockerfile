@@ -74,11 +74,12 @@ RUN chmod 400 /root/.ssh/known_hosts
 
 WORKDIR /home/user/
 
-#Clone this repo and set up conda env (requires conda install)
+# Clone this repo and set up conda env (requires conda install)
+# Only cloning necessary submodules for cgyro runs due to SSH permission issues for other submodules
 RUN git clone --depth=1 --branch cgyro git@github.com:zclawr/costsci-tools.git && \
     cd ./costsci-tools && \
     git pull && \
-    git submodule update --init --recursive
+    git submodule update --init -- src/toolbox solvers/gacode 
 
 WORKDIR /home/user/costsci-tools
 
