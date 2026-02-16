@@ -1,5 +1,9 @@
-from .heat_1d import run_sim_heat_1d, get_res_heat_1d, compare_res_heat_1d
-from .heat_steady_2d import run_sim_heat_steady_2d, get_res_heat_steady_2d, compare_res_heat_steady_2d
-from .ns_channel_2d import run_sim_ns_channel_2d, get_res_ns_channel_2d, compare_res_ns_channel_2d
-from .ns_transient_2d import run_sim_ns_transient_2d, get_res_ns_transient_2d, compare_res_ns_transient_2d
-from .diff_react_1d import run_sim_diff_react_1d, get_res_diff_react_1d, compare_res_diff_react_1d
+"""
+Wrapper functions for various PDE solvers.
+
+This package uses lazy loading - wrappers are imported on-demand to minimize
+startup time and avoid loading unnecessary dependencies (like Taichi).
+
+IMPORTANT: Do NOT add top-level imports here, as they will break lazy loading.
+Wrappers are loaded dynamically when needed by their respective tool_call modules.
+"""

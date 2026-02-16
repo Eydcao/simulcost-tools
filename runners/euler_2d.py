@@ -145,8 +145,8 @@ def main(cfg):
         # Absolute path: directly append parameters (like other solvers)
         output_dir = Path(f"{cfg.dump_dir}_cfl_{cfg.cfl:.3f}_cgtol_{cgtol_str}_nx_{cfg.n_grid_x}")
     else:
-        # Relative path: use original logic (construct from repo_root)
-        repo_root = Path(__file__).parent.parent
+        # Relative path: go up 3 levels (runners -> costsci_tools -> project root)
+        repo_root = Path(__file__).parent.parent.parent
         profile_name = cfg.dump_dir.replace("sim_res/euler_2d/", "")
         output_dir = (
             repo_root
