@@ -1,0 +1,26 @@
+defaults:
+ - _self_
+ - override hydra/hydra_logging: none
+ - override hydra/job_logging: none
+
+# Scenario / environment parameters ===============
+collision_model: 4   
+ky: 0.05
+n_field: 2   # (if on edge, use 3 fields, o.w. use 2 fields)
+max_time: 500
+
+# Tunable parameters ===============
+n_radial: 8  # \in [8, 12
+           # -- should be solvable by refinement
+           # -- mult. factor of 1.5 from 6
+n_theta: 16 # \in [16, 32] (determined by plasma shaping) (num points along field line) (for R/A = 0.5 \in [16, 24], at edge R/A = 0.95 \in [32, or more])
+           # -- should be solvable by refinement
+           # -- mult. factor of 1.5 from 16
+error_tol: 1e-5 # Determines tolerance for convergence
+           # -- mult. factor of 10 from 1e-5
+
+profile_model: 1
+
+# Output configuration
+dump_dir: "sim_res/cgyro/p1"  # Directory for output files
+verbose: False                # Enable verbose output

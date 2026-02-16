@@ -1,0 +1,47 @@
+defaults:
+ - _self_
+ - override hydra/hydra_logging: none
+ - override hydra/job_logging: none
+
+# Scenario / environment parameters ===============
+collision_model: 4   
+ky: 0.3    # generally gives strongest possible mode at ion scale \in [0.25, 0.4]
+           # can depend on ETG cases (e.g 5, 6, 10) converges fast bc large gamma
+n_field: 2   # (if on edge, use 3 fields, o.w. use 2 fields)
+max_time: 500 # after this point, either mode stable or oscilattes around mode 
+             # (damped sinusoidal oscilattion on long time scale, therefore could converge later)
+             # (in the case above, could average the last 30% and get close (manual check example))
+             # where is peak in distribution of eigenvalues? freq. allows exp fit to maxima
+
+             # Damped case: take fourier of eigenvalues. Will have peak at point corresponding to period of sinusoidal osc.
+             # Fit exponential to damping
+
+             # Some cases are stable within specific ky-regimes, in that case look for other profiles
+
+             # (0.2), 0.5, 0.7, 0.9 rmin locations 
+             # Closer to center, plasma tends to be more stable
+             # Would be interesting to be able to predict which value of rmin finds instability
+
+# Tunable parameters ===============
+n_radial: 8  # \in [8, 12
+           # -- should be solvable by refinement
+           # -- mult. factor of 1.5 from 6
+n_theta: 16 # \in [16, 32] (determined by plasma shaping) (num points along field line) (for R/A = 0.5 \in [16, 24], at edge R/A = 0.95 \in [32, or more])
+           # -- should be solvable by refinement
+           # -- mult. factor of 1.5 from 16
+error_tol: 1e-5 # Determines tolerance for numerical drift / integration error
+           # -- mult. factor of 10 from 1e-5
+freq_tol: 1e-3 # Determines tolerance for error b/w eigenvalues to declare convergence
+           # (e.g. 1e-3, 5e-3)
+delta_t: 1  # If default timestep is too far away from optimal, may take longer
+            # Adaptive timestepping (delta_t_method=1) starts from default delta_t
+            # Vary from range [0.01, 0.04] (ky > 0.3 < 1)
+            # For large ky (e.g. 10), need 5-10x shorter delta_t
+
+            # Maybe try against delta_t_method = 0 (if time permits)
+
+profile_model: 1
+
+# Output configuration
+dump_dir: "sim_res/cgyro/p1"  # Directory for output files
+verbose: False                # Enable verbose output

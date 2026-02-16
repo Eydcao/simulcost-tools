@@ -1,0 +1,57 @@
+# Epoch Solver Checkout Configuration
+# This file centralizes all parameter settings for both documentation and dummy solution generation
+
+solver_info:
+  name: "CGYRO"
+  numerical_method: "Gyrokinetic"
+  reference: "[Literature or standard benchmarks]"
+
+task_distribution:
+  strategy: "benchmark"
+  total_individuals: 180
+  description: "4 profile * 3 precision levels * (3 target parameters * 5 combinations) = 180 tasks"
+
+precision_levels:
+  low:
+    comparison_tolerance: 1e-3
+  medium:
+    comparison_tolerance: 1e-4
+  high:
+    comparison_tolerance: 1e-5
+
+profiles:
+  num_profiles: 4
+  # Available profiles: p1 (ion scale), p2 (microtearing scale), p3 (electron scale), p4 (trapped electron scale)
+  active_profiles: ["p1", "p2"]
+
+# Parameter configurations for each target parameter
+target_parameters:
+  n_radial:
+    description: "Controls number of radial locations"
+    search_type: "iterative+0-shot"
+    initial_value: 4
+    multiplication_factor: 2
+    max_iteration_num: 5
+    non_target_parameters:
+      n_theta: 24
+      error_tol: 1e-5
+
+  n_theta:
+    description: "Controls number of theta locations"
+    search_type: "iterative+0-shot"
+    initial_value: 6
+    multiplication_factor: 2
+    max_iteration_num: 5
+    non_target_parameters:
+      n_radial: 8
+      error_tol: 1e-5
+
+  error_tol:
+    description: "Controls error tolerance for linear CGYRO convergence"
+    search_type: "iterative+0-shot"
+    initial_value: 1e-6
+    multiplication_factor: 10
+    max_iteration_num: 4
+    non_target_parameters:
+      n_radial: 6
+      n_theta: 16

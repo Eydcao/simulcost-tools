@@ -10,3 +10,6 @@
 	path = solvers/euler_2d_utils/CSMPM_BOW
 	url = https://github.com/Eydcao/CSMPM_BOW.git
 
+[submodule "solvers/gacode"]
+	path = solvers/gacode
+	url = https://github.com/gafusion/gacode.git

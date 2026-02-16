@@ -32,3 +32,4 @@ useless/*
 **/Makefile*
 **/*.backup
 **/output*/*
+.env
