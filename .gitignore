@@ -33,3 +33,5 @@ useless/*
 **/*.backup
 **/output*/*
 .env
+.ssh
+src/

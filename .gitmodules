@@ -13,3 +13,7 @@
 [submodule "solvers/gacode"]
 	path = solvers/gacode
 	url = https://github.com/gafusion/gacode.git
+	
+[submodule "src/toolbox"]
+	path = src/toolbox
+	url = https://github.com/Rose-STL-Lab/Zihao-s-Toolbox.git

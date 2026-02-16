@@ -23,7 +23,7 @@ max_time: 500 # after this point, either mode stable or oscilattes around mode
              # Would be interesting to be able to predict which value of rmin finds instability
 
 # Tunable parameters ===============
-n_radial: 8  # \in [8, 12
+n_radial: 8  # \in [8, 12]
            # -- should be solvable by refinement
            # -- mult. factor of 1.5 from 6
 n_theta: 16 # \in [16, 32] (determined by plasma shaping) (num points along field line) (for R/A = 0.5 \in [16, 24], at edge R/A = 0.95 \in [32, or more])
