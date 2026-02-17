@@ -35,3 +35,4 @@ useless/*
 .env
 .ssh
 !requirements.txt
+!Makefile

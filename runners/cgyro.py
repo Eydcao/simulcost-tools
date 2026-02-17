@@ -59,7 +59,17 @@ def main(cfg):
             cfg.dump_dir
             + f"_n_radial_{cfg.n_radial}_n_theta_{cfg.n_theta}_freq_tol_{cfg.freq_tol}_delta_t_{cfg.delta_t}",
         )
-        saveData(savePath)
+
+        simResPath = os.path.join(os.path.dirname(os.path.dirname(script_dir)), "sim_res")
+        s3Path = os.path.join(os.path.dirname(os.path.dirname(script_dir)), "costsci-tools-cgyro")
+        # Get shot dir
+        s3Path_next = os.listdir(s3Path)[0]
+        s3Path = os.path.join(s3Path, s3Path_next)
+        # Get rho dir
+        s3Path_next = os.listdir(s3Path)[0]
+        s3Path = os.path.join(s3Path, s3Path_next)
+
+        saveData(savePath, simResPath, s3Path)
         # Python dictionary representing the data
         metaData = {
             "cost": run_time,
@@ -98,7 +108,7 @@ def main(cfg):
             shutil.copy2(backup_path, input_path)
             os.remove(backup_path)
 
-def saveData(savePath):
+def saveData(savePath, simResPath, s3Path):
     script_dir = os.path.dirname(__file__)
     input_file = os.path.join(script_dir, 'input.cgyro')
     os.makedirs(savePath, exist_ok=True)
@@ -120,6 +130,13 @@ def saveData(savePath):
             f.create_dataset("momentum", data=res['momentum'].to_numpy())
     except ValueError:
         print('CGYRO was unable to start, and therefore did not converge.')
+
+    try:
+        cmd = f"cp -r {simResPath} {s3Path} && make upload file={s3Path}"
+        subprocess.run(cmd, shell=True, check=True, env=env, cwd=os.path.dirname(script_dir))
+        print(f'Successfully uploaded data to S3 at: {s3Path}')
+    except:
+        print('S3 upload failed.')
 
 def updateInputCgyro(cfg, input_path):
     NON_CGYRO_CONFIG_KEYS = {

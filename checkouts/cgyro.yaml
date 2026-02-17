@@ -8,8 +8,8 @@ solver_info:
 
 task_distribution:
   strategy: "benchmark"
-  total_individuals: 180
-  description: "1 profile * 3 precision levels * (3 target parameters * 5 combinations) = 180 tasks"
+  total_individuals: 243
+  description: "1 profile * 3 precision levels * (3^4 target parameter combinations) = 243 tasks"
 
 precision_levels:
   low:
@@ -31,20 +31,19 @@ target_parameters:
     search_type: "iterative+0-shot"
     initial_value: 4
     multiplication_factor: 2
-    max_iteration_num: 4
+    max_iteration_num: 3
     non_target_parameters:
       n_theta: 24
       error_tol: 1e-4
       freq_tol: 1e-3
       delta_t: 1e-2
 
-
   n_theta:
     description: "Controls number of theta locations"
     search_type: "iterative+0-shot"
     initial_value: 6
     multiplication_factor: 2
-    max_iteration_num: 4
+    max_iteration_num: 3
     non_target_parameters:
       n_radial: 8
       error_tol: 1e-4
