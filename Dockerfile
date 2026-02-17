@@ -88,7 +88,7 @@ RUN conda update --all
 RUN conda env create -n costsci-tools --file environment.yml
 RUN conda clean -qafy
 
-# Activate the new conda environment and install pyyaml
+# Activate the new conda environment and install pyyaml for use with Zihaos Toolbox
 SHELL ["/opt/conda/bin/conda", "run", "-n", "costsci-tools", "/bin/bash", "-c"]
 RUN pip install pyyaml
 
