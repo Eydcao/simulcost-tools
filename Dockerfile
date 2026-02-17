@@ -88,7 +88,7 @@ RUN conda update --all
 RUN conda env create -n costsci-tools --file environment.yml
 RUN conda clean -qafy
 
-RUN conda run -n costsci-tools pip install pyyaml
+RUN conda run -n costsci-tools pip install -r requirements.txt
 
 # Uncomment this if you want to test the docker container outside of kube
 # ENTRYPOINT ["sleep", "infinity"]
