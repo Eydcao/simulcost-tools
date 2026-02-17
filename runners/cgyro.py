@@ -132,7 +132,7 @@ def saveData(savePath, simResPath, s3Path):
         print('CGYRO was unable to start, and therefore did not converge.')
 
     try:
-        cmd = f"cp -r {simResPath} {s3Path} && make upload file={s3Path}"
+        cmd = f"cp -r {simResPath} {s3Path} && make upload file=costsci-tools-cgyro"
         subprocess.run(cmd, shell=True, check=True, env=env, cwd=os.path.dirname(script_dir))
         print(f'Successfully uploaded data to S3 at: {s3Path}')
     except:
