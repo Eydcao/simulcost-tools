@@ -22,7 +22,7 @@ precision_levels:
 profiles:
   num_profiles: 4
   # Available profiles: p1 (ion scale), p2 (microtearing scale), p3 (electron scale), p4 (trapped electron scale)
-  active_profiles: ["p1"]
+  active_profiles: ["p1", "p2", "p3", "p4"]
 
 # Parameter configurations for each target parameter
 target_parameters:
@@ -50,18 +50,6 @@ target_parameters:
       error_tol: 1e-4
       freq_tol: 1e-3
       delta_t: 1e-2
-
-  # error_tol:
-  #   description: "Controls error tolerance for adaptive time stepping (integration error)"
-  #   search_type: "iterative+0-shot"
-  #   initial_value: 1e-6
-  #   multiplication_factor: 10
-  #   max_iteration_num: 3
-  #   non_target_parameters:
-  #     n_radial: 8
-  #     n_theta: 24
-  #     freq_tol: 1e-3
-  #     delta_t: 1e-2
   
   freq_tol:
     description: "Controls error tolerance for eigenvalue convergence"
@@ -86,3 +74,15 @@ target_parameters:
       n_theta: 24
       error_tol: 1e-4
       freq_tol: 1e-3
+
+  # error_tol:
+  #   description: "Controls error tolerance for adaptive time stepping (integration error)"
+  #   search_type: "iterative+0-shot"
+  #   initial_value: 1e-6
+  #   multiplication_factor: 10
+  #   max_iteration_num: 3
+  #   non_target_parameters:
+  #     n_radial: 8
+  #     n_theta: 24
+  #     freq_tol: 1e-3
+  #     delta_t: 1e-2
