@@ -84,4 +84,4 @@ RUN git clone --depth=1 --branch cgyro git@github.com:zclawr/costsci-tools.git &
 WORKDIR /home/user/costsci-tools
 
 # Uncomment this if you want to test the docker container
-ENTRYPOINT ["sleep", "infinity"]
+# ENTRYPOINT ["sleep", "infinity"]
