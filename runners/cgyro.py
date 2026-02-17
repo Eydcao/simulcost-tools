@@ -31,7 +31,8 @@ def main(cfg):
     try:
         updateInputCgyro(cfg, input_path)
 
-        cmd = f". {gacode_dir}/shared/bin/gacode_setup && cgyro -i . && cgyro -e . -n 8 -nomp 2"
+        cmd = f". {gacode_dir}/shared/bin/gacode_setup && cgyro -i . && cgyro -e . -n 8"
+        print(f'Running: {cmd}')
         start_time=time.time()
 
         env["GACODE_PLATFORM"] = "MINT_OPENMPI"
@@ -92,7 +93,7 @@ def main(cfg):
                 except OSError:
                     pass  # Ignore if file cannot be removed
 
-        # Restore original input.deck for git cleanliness
+        # Restore original input.cgyro for git cleanliness
         if os.path.exists(backup_path):
             shutil.copy2(backup_path, input_path)
             os.remove(backup_path)
@@ -100,32 +101,46 @@ def main(cfg):
 def saveData(savePath):
     script_dir = os.path.dirname(__file__)
     input_file = os.path.join(script_dir, 'input.cgyro')
-   
-    pyro = Pyro(gk_file=input_file)
-    pyro.load_gk_output()
-    pyro.base_pyro = pyro
-
-    res = pyro.gk_output
-    print(res)
-
     os.makedirs(savePath, exist_ok=True)
-    
-    with h5py.File(os.path.join(savePath, "res.h5"), "w") as f:
-        f.create_dataset("growth_rate", data=res['growth_rate'].to_numpy())
-        f.create_dataset("mode_frequency", data=res['mode_frequency'].to_numpy())
-        f.create_dataset("eigenvalues", data=res['eigenvalues'].to_numpy())
-        f.create_dataset("particle", data=res['particle'].to_numpy())
-        f.create_dataset("heat", data=res['heat'].to_numpy())
-        f.create_dataset("momentum", data=res['momentum'].to_numpy())
+
+    try:
+        pyro = Pyro(gk_file=input_file)
+        pyro.load_gk_output()
+        pyro.base_pyro = pyro
+
+        res = pyro.gk_output
+        print(res)
+        
+        with h5py.File(os.path.join(savePath, "res.h5"), "w") as f:
+            f.create_dataset("growth_rate", data=res['growth_rate'].to_numpy())
+            f.create_dataset("mode_frequency", data=res['mode_frequency'].to_numpy())
+            f.create_dataset("eigenvalues", data=res['eigenvalues'].to_numpy())
+            f.create_dataset("particle", data=res['particle'].to_numpy())
+            f.create_dataset("heat", data=res['heat'].to_numpy())
+            f.create_dataset("momentum", data=res['momentum'].to_numpy())
+    except ValueError:
+        print('CGYRO was unable to start, and therefore did not converge.')
 
 def updateInputCgyro(cfg, input_path):
+    NON_CGYRO_CONFIG_KEYS = {
+        "profile_model",
+        "dump_dir",
+        "verbose",
+        "defaults"
+    }
     with open(input_path, "r") as f:
         lines = f.readlines()
-        for i in range(len(lines)):
-            for key, value in cfg.items():
-                if key.upper() in lines[i]:
+        for key, value in cfg.items():
+            found_key = False
+            for i in range(len(lines)):
+                if key.upper().strip() == lines[i].split("=")[0].strip():
                     lines[i] = f"{key.upper()}={value}\n"
-        
+                    found_key = True
+            if not found_key: # Append to end of lines
+                if key.strip() in NON_CGYRO_CONFIG_KEYS:
+                    continue
+                lines.append(f"{key.upper()}={value}\n")
+
     with open(input_path, "w") as f:
         f.writelines(lines)
 

@@ -104,77 +104,86 @@ def runCgyro(profile, n_radial, n_theta, error_tol, freq_tol, delta_t):
   return cost, converged
 
 def get_res_cgyro(profile, n_radial, n_theta, error_tol, freq_tol, delta_t):
-  dir_path = _get_sim_path(
-      f"sim_res/cgyro/{profile}_n_radial_{n_radial}_n_theta_{n_theta}_freq_tol_{freq_tol}_delta_t_{delta_t}"
-  )
+    dir_path = _get_sim_path(
+        f"sim_res/cgyro/{profile}_n_radial_{n_radial}_n_theta_{n_theta}_freq_tol_{freq_tol}_delta_t_{delta_t}"
+    )
 
-  results_file = os.path.join(dir_path, "res.h5")
+    results_file = os.path.join(dir_path, "res.h5")
 
-  if not os.path.exists(results_file):
-      print(f"No results found for parameters: n_radial={n_radial}, n_theta={n_theta}, error_tol={error_tol}, freq_tol={freq_tol}, delta_t={delta_t}. Triggering simulation.")
-      cost, converged = runCgyro(profile, n_radial, n_theta, error_tol, freq_tol, delta_t)
-  else:
-      meta_file = os.path.join(dir_path, "meta.json")
-      # Load the cost from the meta.json file
-      with open(meta_file, "r") as f:
-         meta = json.load(f)
-         cost = meta["cost"]
-         converged = meta["converged"]
+    if not os.path.exists(results_file):
+        print(f"No results found for parameters: n_radial={n_radial}, n_theta={n_theta}, error_tol={error_tol}, freq_tol={freq_tol}, delta_t={delta_t}. Triggering simulation.")
+        cost, converged = runCgyro(profile, n_radial, n_theta, error_tol, freq_tol, delta_t)
+    else:
+        meta_file = os.path.join(dir_path, "meta.json")
+        # Load the cost from the meta.json file
+        with open(meta_file, "r") as f:
+            meta = json.load(f)
+            cost = meta["cost"]
+            converged = meta["converged"]
+    
+    try:
+        results = []
+        with h5py.File(results_file, "r") as f:
+            
+            results = {
+                "growth_rate": f["growth_rate"][:],
+                "mode_frequency": f["mode_frequency"][:],
+                "eigenvalues": f["eigenvalues"][:],
+                "particle": f["particle"][:],
+                "heat": f["heat"][:],
+                "momentum": f["momentum"][:],
+            }
 
-  results = []
-  with h5py.File(results_file, "r") as f:
-     
-      results = {
-          "growth_rate": f["growth_rate"][:],
-          "mode_frequency": f["mode_frequency"][:],
-          "eigenvalues": f["eigenvalues"][:],
-          "particle": f["particle"][:],
-          "heat": f["heat"][:],
-          "momentum": f["momentum"][:],
-      }
+        return results, cost, converged
+    except FileNotFoundError:
+        print('No results .h5 found due to CGYRO unexpectedly closing.')
+        return results, cost, converged
 
-  return results, cost, converged
 
 def check_convergence_cgyro(profile, n_radial, n_theta, error_tol, freq_tol, delta_t):
-   res, cost, converged = get_res_cgyro(profile, n_radial, n_theta, error_tol, freq_tol, delta_t)
+    res, cost, converged = get_res_cgyro(profile, n_radial, n_theta, error_tol, freq_tol, delta_t)
 
-   # Simple convergence check within each result checking in out.cgyro.info (there should be an output flag)
-   # Use this as first pass, if it does NOT converge, run manual check after to verify (see below)
-   if converged:
-       return res
-  
-   eigenvalues = res['eigenvalues'].squeeze()
-   # Check convergence within each result using the average of the last K (30%) timesteps,
-   # and compare abs difference to last timestep and verify that it is within acceptable error tolerance
-   # could also use distribution comparison to capture oscilattory behavior
-   MANUAL_CONVERGENCE_LENGTH_FACTOR = 0.30
-   K = int(eigenvalues.shape[0] * MANUAL_CONVERGENCE_LENGTH_FACTOR)
-   last_k_eig = eigenvalues[ (-K)-1 : -2 ]
-   last_k_avg_eig = np.average(last_k_eig, axis=0)
-   last_k_avg_real = np.real(last_k_avg_eig)
-   last_k_avg_imag = np.imag(last_k_avg_eig)
-
-   last_eig = eigenvalues[-1]
-   last_real = np.real(last_eig)
-   last_imag = np.imag(last_eig)
-
-   diff_real = np.abs(last_k_avg_real - last_real)
-   diff_imag = np.abs(last_k_avg_imag - last_imag)
-   if (diff_real < error_tol) and (diff_imag < error_tol):
+    # Simple convergence check within each result checking in out.cgyro.info (there should be an output flag)
+    # Use this as first pass, if it does NOT converge, run manual check after to verify (see below)
+    if converged:
         return res
-   else:
+    
+    # If CGYRO closes unexpectedly, results array will be empty
+    if len(res) == 0:
         return None
+    
+    eigenvalues = res['eigenvalues'].squeeze()
+    # Check convergence within each result using the average of the last K (30%) timesteps,
+    # and compare abs difference to last timestep and verify that it is within acceptable error tolerance
+    # could also use distribution comparison to capture oscilattory behavior
+    MANUAL_CONVERGENCE_LENGTH_FACTOR = 0.30
+    K = int(eigenvalues.shape[0] * MANUAL_CONVERGENCE_LENGTH_FACTOR)
+    last_k_eig = eigenvalues[ (-K)-1 : -2 ]
+    last_k_avg_eig = np.average(last_k_eig, axis=0)
+    last_k_avg_real = np.real(last_k_avg_eig)
+    last_k_avg_imag = np.imag(last_k_avg_eig)
 
-   # WARNING: ALL MANUAL CHECKS SHOULD VERIFY REAL AND IMAG INDEPENDENTLY, NEED BOTH TO CONVERGE
-   #          - (For relatively stable) imag should oscilatte around 0, real should oscillate around point
-   #          - (Competing modes case) imag oscilattes around growth rate of 1st root, jumps to 2nd root (probably negative bc diff mode), etc
-   #                                  - will likely see 2 attractors in growth rate + freq
+    last_eig = eigenvalues[-1]
+    last_real = np.real(last_eig)
+    last_imag = np.imag(last_eig)
 
-   # In case of competing oscilatting modes:
-   # -------------------------------------------------
-   # Potential K-means-type algorithm:
-   # Detect whether eigenvalue jumps from mode 1 to mode 2, based on centerpoint of mode clusters,
-   # determine whether at boundary of modes or oscilatting around many different clusters because the case is stable
+    diff_real = np.abs(last_k_avg_real - last_real)
+    diff_imag = np.abs(last_k_avg_imag - last_imag)
+    if (diff_real < error_tol) and (diff_imag < error_tol):
+            return res
+    else:
+            return None
+
+    # WARNING: ALL MANUAL CHECKS SHOULD VERIFY REAL AND IMAG INDEPENDENTLY, NEED BOTH TO CONVERGE
+    #          - (For relatively stable) imag should oscilatte around 0, real should oscillate around point
+    #          - (Competing modes case) imag oscilattes around growth rate of 1st root, jumps to 2nd root (probably negative bc diff mode), etc
+    #                                  - will likely see 2 attractors in growth rate + freq
+
+    # In case of competing oscilatting modes:
+    # -------------------------------------------------
+    # Potential K-means-type algorithm:
+    # Detect whether eigenvalue jumps from mode 1 to mode 2, based on centerpoint of mode clusters,
+    # determine whether at boundary of modes or oscilatting around many different clusters because the case is stable
 
 def compare_res_cgyro(profile1, n_radial1, n_theta1, error_tol1, freq_tol1, delta_t1, profile2, n_radial2, n_theta2, error_tol2, freq_tol2, delta_t2, tolerance):
   res1 = check_convergence_cgyro(profile1, n_radial1, n_theta1, error_tol1, freq_tol1, delta_t1)
