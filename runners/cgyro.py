@@ -61,7 +61,7 @@ def main(cfg):
         )
 
         simResPath = os.path.join(os.path.dirname(os.path.dirname(script_dir)), "sim_res")
-        s3Path = os.path.join(os.path.dirname(os.path.dirname(script_dir)), "costsci-tools-cgyro")
+        s3Path = os.path.join(os.path.dirname(script_dir), "costsci-tools-cgyro")
         # Get shot dir
         s3Path_next = os.listdir(s3Path)[0]
         s3Path = os.path.join(s3Path, s3Path_next)
