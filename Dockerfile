@@ -83,5 +83,5 @@ RUN git clone --depth=1 --branch cgyro git@github.com:zclawr/costsci-tools.git &
 
 WORKDIR /home/user/costsci-tools
 
-# Uncomment this if you want to test the docker container
+# Uncomment this if you want to test the docker container outside of kube
 # ENTRYPOINT ["sleep", "infinity"]
