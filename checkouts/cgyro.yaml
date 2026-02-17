@@ -9,7 +9,7 @@ solver_info:
 task_distribution:
   strategy: "benchmark"
   total_individuals: 180
-  description: "4 profile * 3 precision levels * (3 target parameters * 5 combinations) = 180 tasks"
+  description: "1 profile * 3 precision levels * (3 target parameters * 5 combinations) = 180 tasks"
 
 precision_levels:
   low:
@@ -51,17 +51,17 @@ target_parameters:
       freq_tol: 1e-3
       delta_t: 1e-2
 
-  error_tol:
-    description: "Controls error tolerance for adaptive time stepping (integration error)"
-    search_type: "iterative+0-shot"
-    initial_value: 1e-6
-    multiplication_factor: 10
-    max_iteration_num: 3
-    non_target_parameters:
-      n_radial: 8
-      n_theta: 24
-      freq_tol: 1e-3
-      delta_t: 1e-2
+  # error_tol:
+  #   description: "Controls error tolerance for adaptive time stepping (integration error)"
+  #   search_type: "iterative+0-shot"
+  #   initial_value: 1e-6
+  #   multiplication_factor: 10
+  #   max_iteration_num: 3
+  #   non_target_parameters:
+  #     n_radial: 8
+  #     n_theta: 24
+  #     freq_tol: 1e-3
+  #     delta_t: 1e-2
   
   freq_tol:
     description: "Controls error tolerance for eigenvalue convergence"
