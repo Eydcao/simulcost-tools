@@ -34,3 +34,4 @@ useless/*
 **/output*/*
 .env
 .ssh
+!requirements.txt

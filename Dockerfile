@@ -88,10 +88,7 @@ RUN conda update --all
 RUN conda env create -n costsci-tools --file environment.yml
 RUN conda clean -qafy
 
-# Activate the new conda environment and install poetry
-SHELL ["/opt/conda/bin/conda", "run", "-n", "costsci-tools", "/bin/bash", "-c"]
-RUN poetry install --no-root
-RUN pip install pyyaml
+RUN conda run -n costsci-tools pip install pyyaml
 
 # Uncomment this if you want to test the docker container outside of kube
 # ENTRYPOINT ["sleep", "infinity"]
