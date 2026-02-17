@@ -2,7 +2,7 @@ project_name: costsci-tools
 model:
   checkout:
     command: >- #copy shot+rho-specific input.cgyro into runners directory, then run checkout and push sim_res results to s3
-      []() mkdir /home/user/costsci-tools-cgyro/; mkdir /home/user/costsci-tools-cgyro/<shot>/; mkdir /home/user/costsci-tools-cgyro/<shot>/p<rho>/; cp data/<shot>/p<rho>/input.cgyro runners/input.cgyro; python checkouts/cgyro.py; mv ../sim_res costsci-tools-cgyro/<shot>/p<rho>/sim_res make upload file=costsci-tools-cgyro/<shot>/p<rho>/sim_res/;
+      []() mkdir /home/user/costsci-tools-cgyro/; mkdir /home/user/costsci-tools-cgyro/<shot>/; mkdir /home/user/costsci-tools-cgyro/<shot>/p<rho>/; cp data/<shot>/p<rho>/input.cgyro runners/input.cgyro; python solvers/setup_cgyro.py; python checkouts/cgyro.py; mv ../sim_res costsci-tools-cgyro/<shot>/p<rho>/sim_res make upload file=costsci-tools-cgyro/<shot>/p<rho>/sim_res/;
     image: gitlab-registry.nrp-nautilus.io/zclawrence/gacode-simulation:latest
 dataset:
   shot1_rho1:

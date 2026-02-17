@@ -7,3 +7,4 @@ pyrokinetics
 scipy
 dotenv
 pyyaml
+hydra-core
