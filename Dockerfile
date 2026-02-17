@@ -83,5 +83,14 @@ RUN git clone --depth=1 --branch cgyro git@github.com:zclawr/costsci-tools.git &
 
 WORKDIR /home/user/costsci-tools
 
+# Install conda environment
+RUN conda update --all
+RUN conda env create -n costsci-tools --file environment.yml
+RUN conda clean -qafy
+
+# Activate the new conda environment and install pyyaml
+SHELL ["/opt/conda/bin/conda", "run", "-n", "costsci-tools", "/bin/bash", "-c"]
+RUN pip install pyyaml
+
 # Uncomment this if you want to test the docker container outside of kube
 # ENTRYPOINT ["sleep", "infinity"]

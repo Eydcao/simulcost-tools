@@ -34,4 +34,3 @@ useless/*
 **/output*/*
 .env
 .ssh
-src/
