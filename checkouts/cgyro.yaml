@@ -1,4 +1,4 @@
-# Epoch Solver Checkout Configuration
+# CGYRO Solver Checkout Configuration
 # This file centralizes all parameter settings for both documentation and dummy solution generation
 
 solver_info:
@@ -22,7 +22,7 @@ precision_levels:
 profiles:
   num_profiles: 4
   # Available profiles: p1 (ion scale), p2 (microtearing scale), p3 (electron scale), p4 (trapped electron scale)
-  active_profiles: ["p1", "p2"]
+  active_profiles: ["p1"]
 
 # Parameter configurations for each target parameter
 target_parameters:
@@ -31,27 +31,58 @@ target_parameters:
     search_type: "iterative+0-shot"
     initial_value: 4
     multiplication_factor: 2
-    max_iteration_num: 5
+    max_iteration_num: 4
     non_target_parameters:
       n_theta: 24
-      error_tol: 1e-5
+      error_tol: 1e-4
+      freq_tol: 1e-3
+      delta_t: 1e-2
+
 
   n_theta:
     description: "Controls number of theta locations"
     search_type: "iterative+0-shot"
     initial_value: 6
     multiplication_factor: 2
-    max_iteration_num: 5
+    max_iteration_num: 4
     non_target_parameters:
       n_radial: 8
-      error_tol: 1e-5
+      error_tol: 1e-4
+      freq_tol: 1e-3
+      delta_t: 1e-2
 
   error_tol:
-    description: "Controls error tolerance for linear CGYRO convergence"
+    description: "Controls error tolerance for adaptive time stepping (integration error)"
     search_type: "iterative+0-shot"
     initial_value: 1e-6
     multiplication_factor: 10
-    max_iteration_num: 4
+    max_iteration_num: 3
     non_target_parameters:
-      n_radial: 6
-      n_theta: 16
+      n_radial: 8
+      n_theta: 24
+      freq_tol: 1e-3
+      delta_t: 1e-2
+  
+  freq_tol:
+    description: "Controls error tolerance for eigenvalue convergence"
+    search_type: "iterative+0-shot"
+    initial_value: 1e-5
+    multiplication_factor: 10
+    max_iteration_num: 3
+    non_target_parameters:
+      n_radial: 8
+      n_theta: 24
+      error_tol: 1e-4
+      delta_t: 1e-2
+  
+  delta_t:
+    description: "Controls initial timestep size for adaptive timestepping procedure"
+    search_type: "iterative+0-shot"
+    initial_value: 1e-2
+    multiplication_factor: 2
+    max_iteration_num: 3
+    non_target_parameters:
+      n_radial: 8
+      n_theta: 24
+      error_tol: 1e-4
+      freq_tol: 1e-3

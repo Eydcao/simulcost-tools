@@ -56,7 +56,7 @@ def main(cfg):
         savePath = os.path.join(
             os.path.dirname(os.path.dirname(script_dir)),  # Go up two levels: runners -> costsci_tools -> SimulCost-Bench
             cfg.dump_dir
-            + f"_n_radial_{cfg.n_radial}_n_theta_{cfg.n_theta}_error_tol_{cfg.error_tol}",
+            + f"_n_radial_{cfg.n_radial}_n_theta_{cfg.n_theta}_freq_tol_{cfg.freq_tol}_delta_t_{cfg.delta_t}",
         )
         saveData(savePath)
         # Python dictionary representing the data
@@ -65,7 +65,9 @@ def main(cfg):
             "converged": converged,
             "n_radial": cfg.n_radial,
             "n_theta": cfg.n_theta,
-            "error_tol": cfg.error_tol
+            "error_tol": cfg.error_tol,
+            "freq_tol": cfg.freq_tol,
+            "delta_t": cfg.delta_t
         }
         # Write the Python dictionary to a JSON file
         with open(os.path.join(savePath, "meta.json"), "w") as json_file:
@@ -126,7 +128,6 @@ def updateInputCgyro(cfg, input_path):
         
     with open(input_path, "w") as f:
         f.writelines(lines)
-
 
 if __name__ == "__main__":
     main()

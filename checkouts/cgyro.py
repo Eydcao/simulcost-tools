@@ -12,7 +12,9 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from dummy_sols.cgyro import (
     find_convergent_nradial,
     find_convergent_ntheta,
-    find_convergent_error_tol
+    find_convergent_error_tol,
+    find_convergent_freq_tol,
+    find_convergent_delta_t
 )
 from checkouts.config_utils import load_config, build_target_configs
 
@@ -147,6 +149,28 @@ def plot_statistics(statistics, output_dir):
             color=colors[color_idx % len(colors)],
         )
         color_idx += 1
+    
+    if statistics["optimal_freq_tol_values"]:
+        freq_tol_values, freq_tol_counts = np.unique(list(statistics["optimal_freq_tol_values"]), return_counts=True)
+        ax.bar(
+            [str(p) for p in freq_tol_values],
+            freq_tol_counts,
+            alpha=0.7,
+            label="freq_tol parameter",
+            color=colors[color_idx % len(colors)],
+        )
+        color_idx += 1
+    
+    if statistics["optimal_delta_t_values"]:
+        delta_t_values, delta_t_counts = np.unique(list(statistics["optimal_delta_t_values"]), return_counts=True)
+        ax.bar(
+            [str(p) for p in delta_t_values],
+            delta_t_counts,
+            alpha=0.7,
+            label="delta_t parameter",
+            color=colors[color_idx % len(colors)],
+        )
+        color_idx += 1
 
     ax.set_ylabel("Frequency")
     ax.set_title("Optimal Parameter Values (All Tasks)")
@@ -219,6 +243,18 @@ def plot_statistics(statistics, output_dir):
             f.write("   error_tol parameter (0-shot):\n")
             for error_tol, count in zip(error_tol_values, error_tol_counts):
                 f.write(f"     error_tol={error_tol}: {count} times\n")
+        
+        if statistics["optimal_freq_tol_values"]:
+            freq_tol_values, freq_tol_counts = np.unique(list(statistics["optimal_freq_tol_values"]), return_counts=True)
+            f.write("   freq_tol parameter (0-shot):\n")
+            for freq_tol, count in zip(freq_tol_values, freq_tol_counts):
+                f.write(f"     freq_tol={freq_tol}: {count} times\n")
+        
+        if statistics["optimal_delta_t_values"]:
+            delta_t_values, delta_t_counts = np.unique(list(statistics["optimal_delta_t_values"]), return_counts=True)
+            f.write("   delta_t parameter (0-shot):\n")
+            for delta_t, count in zip(delta_t_values, delta_t_counts):
+                f.write(f"     delta_t={delta_t}: {count} times\n")
 
 
 def main():
@@ -262,6 +298,8 @@ def main():
         "optimal_nradial_values": [],
         "optimal_ntheta_values": [],
         "optimal_error_tol_values": [],
+        "optimal_freq_tol_values": [],
+        "optimal_delta_t_values": []
     }
 
     # Initialize task collection for datasets
@@ -296,6 +334,8 @@ def main():
                             n_radial=target_config["initial_value"],
                             n_theta=task_params["n_theta"],
                             error_tol=task_params["error_tol"],
+                            freq_tol=task_params["freq_tol"],
+                            delta_t=task_params["delta_t"],
                             comparison_tolerance=precision_vals["comparison_tolerance"],
                             multiplication_factor=target_config["multiplication_factor"],
                             max_iteration_num=target_config["max_iteration_num"],
@@ -310,6 +350,8 @@ def main():
                             n_radial=task_params["n_radial"],
                             n_theta=target_config["initial_value"],
                             error_tol=task_params["error_tol"],
+                            freq_tol=task_params["freq_tol"],
+                            delta_t=task_params["delta_t"],
                             comparison_tolerance=precision_vals["comparison_tolerance"],
                             multiplication_factor=target_config["multiplication_factor"],
                             max_iteration_num=target_config["max_iteration_num"],
@@ -324,12 +366,44 @@ def main():
                             n_radial=task_params["n_radial"],
                             n_theta=task_params["n_theta"],
                             error_tol=target_config["initial_value"],
+                            freq_tol=task_params["freq_tol"],
+                            delta_t=task_params["delta_t"],
                             multiplication_factor=target_config["multiplication_factor"],
                             max_iteration_num=target_config["max_iteration_num"],
                         )
                         if error_tol_param is not None:
                             statistics["optimal_error_tol_values"].append(error_tol_param)
                         optimal_value = error_tol_param
+                    
+                    elif target_param == "freq_tol":
+                        is_converged, freq_tol_param, cost_history, param_history = find_convergent_freq_tol(
+                            profile=profile,
+                            n_radial=task_params["n_radial"],
+                            n_theta=task_params["n_theta"],
+                            error_tol=task_params["error_tol"],
+                            freq_tol=target_config["initial_value"],
+                            delta_t=task_params["delta_t"],
+                            multiplication_factor=target_config["multiplication_factor"],
+                            max_iteration_num=target_config["max_iteration_num"],
+                        )
+                        if freq_tol_param is not None:
+                            statistics["optimal_freq_tol_values"].append(freq_tol_param)
+                        optimal_value = freq_tol_param
+                    
+                    elif target_param == "delta_t":
+                        is_converged, delta_t_param, cost_history, param_history = find_convergent_delta_t(
+                            profile=profile,
+                            n_radial=task_params["n_radial"],
+                            n_theta=task_params["n_theta"],
+                            error_tol=task_params["error_tol"],
+                            freq_tol=task_params["freq_tol"],
+                            delta_t=target_config["initial_value"],
+                            multiplication_factor=target_config["multiplication_factor"],
+                            max_iteration_num=target_config["max_iteration_num"],
+                        )
+                        if delta_t_param is not None:
+                            statistics["optimal_delta_t_values"].append(delta_t_param)
+                        optimal_value = delta_t_param
                     
                     # Create task record for dataset
                     task_record = {

@@ -14,6 +14,8 @@ def find_convergent_nradial(
     n_radial,
     n_theta,
     error_tol,
+    freq_tol,
+    delta_t,
     comparison_tolerance,
     multiplication_factor,
     max_iteration_num,
@@ -29,18 +31,20 @@ def find_convergent_nradial(
 
     for i in range(max_iteration_num):
         print(
-            f"\nRunning simulation with n_radial = {current_nradial}, n_theta = {n_theta}, error_tol = {error_tol}"
+            f"\nRunning simulation with n_radial = {current_nradial}, n_theta = {n_theta}, error_tol = {error_tol}, freq_tol = {freq_tol}, delta_t = {delta_t}"
         )
 
         # Run simulation with fixed params
-        cost_i, _ = runCgyro(profile, current_nradial, n_theta, error_tol)
+        cost_i, _ = runCgyro(profile, current_nradial, n_theta, error_tol, freq_tol, delta_t)
         cost_history.append(cost_i)
         nradial_history.append(current_nradial)
         param_history.append(
             {
                 "n_radial": current_nradial,
                 "n_theta": n_theta,
-                "error_tol": error_tol
+                "error_tol": error_tol,
+                "freq_tol": freq_tol,
+                "delta_t": delta_t
             }
         )
 
@@ -54,10 +58,14 @@ def find_convergent_nradial(
                 prev_nradial,
                 n_theta,
                 error_tol,
+                freq_tol,
+                delta_t,
                 profile,
                 current_nradial,
                 n_theta,
                 error_tol,
+                freq_tol,
+                delta_t,
                 comparison_tolerance
             )
 
@@ -94,6 +102,8 @@ def find_convergent_ntheta(
     n_radial,
     n_theta,
     error_tol,
+    freq_tol,
+    delta_t,
     comparison_tolerance,
     multiplication_factor,
     max_iteration_num,
@@ -109,18 +119,20 @@ def find_convergent_ntheta(
 
     for i in range(max_iteration_num):
         print(
-            f"\nRunning simulation with n_radial = {n_radial}, n_theta = {current_ntheta}, error_tol = {error_tol}"
+            f"\nRunning simulation with n_radial = {n_radial}, n_theta = {current_ntheta}, error_tol = {error_tol}, freq_tol = {freq_tol}, delta_t = {delta_t}"
         )
 
         # Run simulation with fixed params
-        cost_i, _ = runCgyro(profile, n_radial, current_ntheta, error_tol)
+        cost_i, _ = runCgyro(profile, n_radial, current_ntheta, error_tol, freq_tol, delta_t)
         cost_history.append(cost_i)
         ntheta_history.append(current_ntheta)
         param_history.append(
             {
                 "n_radial": n_radial,
                 "n_theta": current_ntheta,
-                "error_tol": error_tol
+                "error_tol": error_tol,
+                "freq_tol": freq_tol,
+                "delta_t": delta_t
             }
         )
 
@@ -134,10 +146,14 @@ def find_convergent_ntheta(
                 n_radial,
                 prev_ntheta,
                 error_tol,
+                freq_tol,
+                delta_t,
                 profile,
                 n_radial,
                 current_ntheta,
                 error_tol,
+                freq_tol,
+                delta_t,
                 comparison_tolerance
             )
 
@@ -174,6 +190,8 @@ def find_convergent_error_tol(
     n_radial,
     n_theta,
     error_tol,
+    freq_tol,
+    delta_t,
     multiplication_factor,
     max_iteration_num,
 ):
@@ -188,22 +206,24 @@ def find_convergent_error_tol(
 
     for i in range(max_iteration_num):
         print(
-            f"\nRunning simulation with n_radial = {n_radial}, n_theta = {n_theta}, error_tol = {current_error_tol}"
+            f"\nRunning simulation with n_radial = {n_radial}, n_theta = {n_theta}, error_tol = {current_error_tol}, freq_tol = {freq_tol}, delta_t = {delta_t}"
         )
 
         # Run simulation with fixed params
-        cost_i, _ = runCgyro(profile, n_radial, n_theta, current_error_tol)
+        cost_i, _ = runCgyro(profile, n_radial, n_theta, current_error_tol, freq_tol, delta_t)
         cost_history.append(cost_i)
         error_tol_history.append(current_error_tol)
         param_history.append(
             {
                 "n_radial": n_radial,
                 "n_theta": n_theta,
-                "error_tol": current_error_tol
+                "error_tol": current_error_tol,
+                "freq_tol": freq_tol,
+                "delta_t": delta_t
             }
         )
 
-        is_converged = (check_convergence_cgyro(profile, n_radial, n_theta, current_error_tol) != None)
+        is_converged = (check_convergence_cgyro(profile, n_radial, n_theta, current_error_tol, freq_tol, delta_t) != None)
         
         if is_converged:
             print(f"Convergence achieved at error_tol {current_error_tol}")
@@ -231,6 +251,142 @@ def find_convergent_error_tol(
 
     return bool(converged), best_error_tol, cost_history, param_history
 
+# freq_tol should be solvable by refinement, however convergence is found within each run, rather than between multiple
+# In this case, we take the lowest error tolerance possible to achieve convergence, and no result comparison is necessary
+def find_convergent_freq_tol( 
+    profile,
+    n_radial,
+    n_theta,
+    error_tol,
+    freq_tol,
+    delta_t,
+    multiplication_factor,
+    max_iteration_num,
+):
+    """Iteratively increase freq_tol until convergence is achieved with fixed parameters."""
+    freq_tol_history = []
+    cost_history = []
+    param_history = []
+
+    current_freq_tol = float(freq_tol)
+    converged = False
+    best_freq_tol = None
+
+    for i in range(max_iteration_num):
+        print(
+            f"\nRunning simulation with n_radial = {n_radial}, n_theta = {n_theta}, error_tol = {error_tol}, freq_tol = {current_freq_tol}, delta_t = {delta_t}"
+        )
+
+        # Run simulation with fixed params
+        cost_i, _ = runCgyro(profile, n_radial, n_theta, error_tol, current_freq_tol, delta_t)
+        cost_history.append(cost_i)
+        freq_tol_history.append(current_freq_tol)
+        param_history.append(
+            {
+                "n_radial": n_radial,
+                "n_theta": n_theta,
+                "error_tol": error_tol,
+                "freq_tol": current_freq_tol,
+                "delta_t": delta_t
+            }
+        )
+
+        is_converged = (check_convergence_cgyro(profile, n_radial, n_theta, error_tol, current_freq_tol, delta_t) != None)
+        
+        if is_converged:
+            print(f"Convergence achieved at freq_tol {current_freq_tol}")
+            best_freq_tol = freq_tol_history[-1]  # The finer grid that converged
+            converged = True
+            break
+        else:
+            print(f"No convergence at freq_tol {current_freq_tol}")
+
+        # Prepare next n_space using multiplication factor
+        next_freq_tol = float(current_freq_tol * multiplication_factor)
+        current_freq_tol = next_freq_tol
+
+    if converged:
+        print(f"\nConvergent freq_tol found: {best_freq_tol}")
+    else:
+        print("\nMaximum iterations reached without convergence")
+        if len(freq_tol_history) > 1:
+            best_freq_tol = freq_tol_history[-1]
+            print(f"Finest tested freq_tol: {best_freq_tol}")
+        else:
+            best_freq_tol = None
+
+    print(f"Cost history: {cost_history}, total cost: {sum(cost_history)}")
+
+    return bool(converged), best_freq_tol, cost_history, param_history
+
+# delta_t should be solvable by refinement, however convergence is found within each run, rather than between multiple
+# In this case, we take the lowest error tolerance possible to achieve convergence, and no result comparison is necessary
+def find_convergent_delta_t( 
+    profile,
+    n_radial,
+    n_theta,
+    error_tol,
+    freq_tol,
+    delta_t,
+    multiplication_factor,
+    max_iteration_num,
+):
+    """Iteratively increase freq_tol until convergence is achieved with fixed parameters."""
+    delta_t_history = []
+    cost_history = []
+    param_history = []
+
+    current_delta_t = float(delta_t)
+    converged = False
+    best_delta_t = None
+
+    for i in range(max_iteration_num):
+        print(
+            f"\nRunning simulation with n_radial = {n_radial}, n_theta = {n_theta}, error_tol = {error_tol}, freq_tol = {freq_tol}, delta_t = {current_delta_t}"
+        )
+
+        # Run simulation with fixed params
+        cost_i, _ = runCgyro(profile, n_radial, n_theta, error_tol, freq_tol, current_delta_t)
+        cost_history.append(cost_i)
+        delta_t_history.append(current_delta_t)
+        param_history.append(
+            {
+                "n_radial": n_radial,
+                "n_theta": n_theta,
+                "error_tol": error_tol,
+                "freq_tol": freq_tol,
+                "delta_t": current_delta_t
+            }
+        )
+
+        is_converged = (check_convergence_cgyro(profile, n_radial, n_theta, error_tol, freq_tol, current_delta_t) != None)
+        
+        if is_converged:
+            print(f"Convergence achieved at delta_t {current_delta_t}")
+            best_delta_t = delta_t_history[-1]  # The finer grid that converged
+            converged = True
+            break
+        else:
+            print(f"No convergence at delta_t {current_delta_t}")
+
+        # Prepare next n_space using multiplication factor
+        next_delta_t = float(current_delta_t * multiplication_factor)
+        current_delta_t = next_delta_t
+
+    if converged:
+        print(f"\nConvergent delta_t found: {best_delta_t}")
+    else:
+        print("\nMaximum iterations reached without convergence")
+        if len(delta_t_history) > 1:
+            best_delta_t = delta_t_history[-1]
+            print(f"Finest tested delta_t: {best_delta_t}")
+        else:
+            best_delta_t = None
+
+    print(f"Cost history: {cost_history}, total cost: {sum(cost_history)}")
+
+    return bool(converged), best_delta_t, cost_history, param_history
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Find optimal parameters for CGYRO simulation")
 
@@ -250,6 +406,8 @@ if __name__ == "__main__":
     parser.add_argument("--n_radial", type=int, default=6, help="Initial n_radial")
     parser.add_argument("--n_theta", type=int, default=16, help="Initial n_theta")
     parser.add_argument("--error_tol", type=float, default=1e-3, help="Initial error tolerance")
+    parser.add_argument("--freq_tol", type=float, default=1e-3, help="Initial freq_tol")
+    parser.add_argument("--delta_t", type=float, default=0.01, help="Initial delta_t")
    
     # Tolerance parameters
     parser.add_argument("--comparison_tolerance", type=float, default=1e-3, help="Tolerance for convergence checking")
@@ -274,6 +432,8 @@ if __name__ == "__main__":
             n_radial=args.n_radial,
             n_theta=args.n_theta,
             error_tol=args.error_tol,
+            freq_tol=args.freq_tol,
+            delta_t=args.delta_t,
             comparison_tolerance=args.comparison_tolerance,
             multiplication_factor=args.multiplication_factor,
             max_iteration_num=args.max_iteration_num,
@@ -291,6 +451,8 @@ if __name__ == "__main__":
             n_radial=args.n_radial,
             n_theta=args.n_theta,
             error_tol=args.error_tol,
+            freq_tol=args.freq_tol,
+            delta_t=args.delta_t,
             comparison_tolerance=args.comparison_tolerance,
             multiplication_factor=args.multiplication_factor,
             max_iteration_num=args.max_iteration_num,
@@ -308,6 +470,8 @@ if __name__ == "__main__":
             n_radial=args.n_radial,
             n_theta=args.n_theta,
             error_tol=args.error_tol,
+            freq_tol=args.freq_tol,
+            delta_t=args.delta_t,
             multiplication_factor=args.multiplication_factor,
             max_iteration_num=args.max_iteration_num,
         )
@@ -316,5 +480,39 @@ if __name__ == "__main__":
             print(f"\nRecommended error_tol: {best_error_tol}, total cost: {sum(cost_history)}")
         else:
             print(f"\nNo convergent error_tol found, total cost: {sum(cost_history)}")
+    elif args.task == "freq_tol":
+        print("\n=== Starting freq_tol parameter search ===")
+        is_converged, best_freq_tol, cost_history, param_history = find_convergent_freq_tol(
+            profile=args.profile,
+            n_radial=args.n_radial,
+            n_theta=args.n_theta,
+            error_tol=args.error_tol,
+            freq_tol=args.freq_tol,
+            delta_t=args.delta_t,
+            multiplication_factor=args.multiplication_factor,
+            max_iteration_num=args.max_iteration_num,
+        )
+
+        if best_freq_tol is not None:
+            print(f"\nRecommended freq_tol: {best_freq_tol}, total cost: {sum(cost_history)}")
+        else:
+            print(f"\nNo convergent freq_tol found, total cost: {sum(cost_history)}")
+    elif args.task == "delta_t":
+        print("\n=== Starting delta_t parameter search ===")
+        is_converged, best_delta_t, cost_history, param_history = find_convergent_delta_t(
+            profile=args.profile,
+            n_radial=args.n_radial,
+            n_theta=args.n_theta,
+            error_tol=args.error_tol,
+            freq_tol=args.freq_tol,
+            delta_t=args.delta_t,
+            multiplication_factor=args.multiplication_factor,
+            max_iteration_num=args.max_iteration_num,
+        )
+        
+        if best_delta_t is not None:
+            print(f"\nRecommended delta_t: {best_delta_t}, total cost: {sum(cost_history)}")
+        else:
+            print(f"\nNo convergent delta_t found, total cost: {sum(cost_history)}")
     else:
         print(f"\nTask type '{args.task}' is not supported.")
