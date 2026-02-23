@@ -5,7 +5,7 @@ user: zclawrence
 # uncomment these if you are using a pod and need GPU 
 gpu_count: 1           # 1 or 2 is allowed for an interactive pod
 cpu_count: 16          # optional, keeps the scheduler happy
-memory: 64
+memory: 8
 ephemeral_storage: 300
 
 hostname_blacklist:
