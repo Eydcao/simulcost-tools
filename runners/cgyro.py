@@ -57,7 +57,7 @@ def main(cfg):
         savePath = os.path.join(
             os.path.dirname(os.path.dirname(script_dir)),  # Go up two levels: runners -> costsci_tools -> SimulCost-Bench
             cfg.dump_dir
-            + f"_n_radial_{cfg.n_radial}_n_theta_{cfg.n_theta}_freq_tol_{cfg.freq_tol}_delta_t_{cfg.delta_t}",
+            + f"_n_radial_{cfg.n_radial}_n_theta_{cfg.n_theta}_freq_tol_{cfg.freq_tol}_delta_t_{cfg.delta_t}_n_xi_{cfg.n_xi}_n_energy_{cfg.n_energy}",
         )
 
         simResPath = os.path.join(os.path.dirname(os.path.dirname(script_dir)), "sim_res")
@@ -78,7 +78,9 @@ def main(cfg):
             "n_theta": cfg.n_theta,
             "error_tol": cfg.error_tol,
             "freq_tol": cfg.freq_tol,
-            "delta_t": cfg.delta_t
+            "delta_t": cfg.delta_t,
+            "n_xi": cfg.n_xi,
+            "n_energy": cfg.n_energy
         }
         # Write the Python dictionary to a JSON file
         with open(os.path.join(savePath, "meta.json"), "w") as json_file:

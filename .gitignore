@@ -34,5 +34,6 @@ useless/*
 **/output*/*
 .env
 .ssh
+build/
 !requirements.txt
 !Makefile

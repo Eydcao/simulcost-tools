@@ -14,7 +14,9 @@ from dummy_sols.cgyro import (
     find_convergent_ntheta,
     find_convergent_error_tol,
     find_convergent_freq_tol,
-    find_convergent_delta_t
+    find_convergent_delta_t,
+    find_convergent_nxi,
+    find_convergent_nenergy
 )
 from checkouts.config_utils import load_config, build_target_configs
 
@@ -114,7 +116,7 @@ def plot_statistics(statistics, output_dir):
 
     # Plot 3: Optimal parameter frequency (for all tasks)
     ax = axes[1, 0]
-    colors = ["skyblue", "lightgreen", "lightcoral", "gold", "pink"]
+    colors = ["skyblue", "lightgreen", "lightcoral", "gold", "pink", "red", "orange"]
     color_idx = 0
 
     if statistics["optimal_nradial_values"]:
@@ -135,6 +137,28 @@ def plot_statistics(statistics, output_dir):
             ntheta_counts,
             alpha=0.7,
             label="n_theta parameter",
+            color=colors[color_idx % len(colors)],
+        )
+        color_idx += 1
+    
+    if statistics["optimal_nxi_values"]:
+        nxi_values, nxi_counts = np.unique(list(statistics["optimal_nxi_values"]), return_counts=True)
+        ax.bar(
+            [str(n) for n in nxi_values],
+            nxi_counts,
+            alpha=0.7,
+            label="n_xi parameter",
+            color=colors[color_idx % len(colors)],
+        )
+        color_idx += 1
+    
+    if statistics["optimal_nenergy_values"]:
+        nenergy_values, nenergy_counts = np.unique(list(statistics["optimal_nenergy_values"]), return_counts=True)
+        ax.bar(
+            [str(n) for n in nenergy_values],
+            nenergy_counts,
+            alpha=0.7,
+            label="n_energy parameter",
             color=colors[color_idx % len(colors)],
         )
         color_idx += 1
@@ -237,6 +261,18 @@ def plot_statistics(statistics, output_dir):
             f.write("   n_theta parameter (iterative):\n")
             for n_theta, count in zip(ntheta_values, ntheta_counts):
                 f.write(f"     n_theta={n_theta}: {count} times\n")
+        
+        if statistics["optimal_nxi_values"]:
+            nxi_values, nxi_counts = np.unique(list(statistics["optimal_nxi_values"]), return_counts=True)
+            f.write("   n_xi parameter (iterative):\n")
+            for n_xi, count in zip(nxi_values, nxi_counts):
+                f.write(f"     n_xi={n_xi}: {count} times\n")
+        
+        if statistics["optimal_nenergy_values"]:
+            nenergy_values, nenergy_counts = np.unique(list(statistics["optimal_nenergy_values"]), return_counts=True)
+            f.write("   n_energy parameter (iterative):\n")
+            for n_energy, count in zip(nenergy_values, nenergy_counts):
+                f.write(f"     n_energy={n_energy}: {count} times\n")
 
         if statistics["optimal_error_tol_values"]:
             error_tol_values, error_tol_counts = np.unique(list(statistics["optimal_error_tol_values"]), return_counts=True)
@@ -336,6 +372,8 @@ def main():
                             error_tol=task_params["error_tol"],
                             freq_tol=task_params["freq_tol"],
                             delta_t=task_params["delta_t"],
+                            n_xi=task_params["n_xi"],
+                            n_energy=task_params["n_energy"],
                             comparison_tolerance=precision_vals["comparison_tolerance"],
                             multiplication_factor=target_config["multiplication_factor"],
                             max_iteration_num=target_config["max_iteration_num"],
@@ -352,6 +390,8 @@ def main():
                             error_tol=task_params["error_tol"],
                             freq_tol=task_params["freq_tol"],
                             delta_t=task_params["delta_t"],
+                            n_xi=task_params["n_xi"],
+                            n_energy=task_params["n_energy"],
                             comparison_tolerance=precision_vals["comparison_tolerance"],
                             multiplication_factor=target_config["multiplication_factor"],
                             max_iteration_num=target_config["max_iteration_num"],
@@ -359,6 +399,42 @@ def main():
                         if ntheta_param is not None:
                             statistics["optimal_ntheta_values"].append(ntheta_param)
                         optimal_value = ntheta_param
+                    
+                    elif target_param == "n_xi":
+                        is_converged, nxi_param, cost_history, param_history = find_convergent_nxi(
+                            profile=profile,
+                            n_radial=task_params["n_radial"],
+                            n_theta=task_params["n_theta"],
+                            error_tol=task_params["error_tol"],
+                            freq_tol=task_params["freq_tol"],
+                            delta_t=task_params["delta_t"],
+                            n_xi=target_config["initial_value"],
+                            n_energy=task_params["n_energy"],
+                            comparison_tolerance=precision_vals["comparison_tolerance"],
+                            multiplication_factor=target_config["multiplication_factor"],
+                            max_iteration_num=target_config["max_iteration_num"],
+                        )
+                        if nxi_param is not None:
+                            statistics["optimal_nxi_values"].append(nxi_param)
+                        optimal_value = nxi_param
+                    
+                    elif target_param == "n_energy":
+                        is_converged, nenergy_param, cost_history, param_history = find_convergent_nenergy(
+                            profile=profile,
+                            n_radial=task_params["n_radial"],
+                            n_theta=task_params["n_theta"],
+                            error_tol=task_params["error_tol"],
+                            freq_tol=task_params["freq_tol"],
+                            delta_t=task_params["delta_t"],
+                            n_xi=task_params["n_xi"],
+                            n_energy=target_config["initial_value"],
+                            comparison_tolerance=precision_vals["comparison_tolerance"],
+                            multiplication_factor=target_config["multiplication_factor"],
+                            max_iteration_num=target_config["max_iteration_num"],
+                        )
+                        if nenergy_param is not None:
+                            statistics["optimal_nenergy_values"].append(nenergy_param)
+                        optimal_value = nenergy_param
                     
                     elif target_param == "error_tol":
                         is_converged, error_tol_param, cost_history, param_history = find_convergent_error_tol(
@@ -368,6 +444,8 @@ def main():
                             error_tol=target_config["initial_value"],
                             freq_tol=task_params["freq_tol"],
                             delta_t=task_params["delta_t"],
+                            n_xi=task_params["n_xi"],
+                            n_energy=task_params["n_energy"],
                             multiplication_factor=target_config["multiplication_factor"],
                             max_iteration_num=target_config["max_iteration_num"],
                         )
@@ -383,6 +461,8 @@ def main():
                             error_tol=task_params["error_tol"],
                             freq_tol=target_config["initial_value"],
                             delta_t=task_params["delta_t"],
+                            n_xi=task_params["n_xi"],
+                            n_energy=task_params["n_energy"],
                             multiplication_factor=target_config["multiplication_factor"],
                             max_iteration_num=target_config["max_iteration_num"],
                         )
@@ -398,6 +478,8 @@ def main():
                             error_tol=task_params["error_tol"],
                             freq_tol=task_params["freq_tol"],
                             delta_t=target_config["initial_value"],
+                            n_xi=task_params["n_xi"],
+                            n_energy=task_params["n_energy"],
                             multiplication_factor=target_config["multiplication_factor"],
                             max_iteration_num=target_config["max_iteration_num"],
                         )

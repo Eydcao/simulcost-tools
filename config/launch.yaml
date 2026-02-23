@@ -2,8 +2,8 @@ project_name: costsci-tools
 model:
   checkout:
     command: >- #copy shot+rho-specific input.cgyro into runners directory, then run checkout and push sim_res results to s3
-      []() mkdir costsci-tools-cgyro/; mkdir costsci-tools-cgyro/<shot>/; mkdir costsci-tools-cgyro/<shot>/p<rho>/; cp data/<shot>/p<rho>/input.cgyro runners/input.cgyro; python solvers/setup_cgyro.py; python checkouts/cgyro.py; mv ../sim_res costsci-tools-cgyro/<shot>/p<rho>/sim_res; make upload file=costsci-tools-cgyro/<shot>/p<rho>/;
-    image: gitlab-registry.nrp-nautilus.io/zclawrence/gacode-simulation:latest
+      []() mkdir costsci-tools-cgyro/; mkdir costsci-tools-cgyro/<shot>/; mkdir costsci-tools-cgyro/<shot>/p<rho>/; cp data/<shot>/p<rho>/input.cgyro runners/input.cgyro; conda init; source ~/.bashrc; conda activate costsci-tools; python solvers/setup_cgyro.py; python checkouts/cgyro.py;
+    image: gitlab-registry.nrp-nautilus.io/zclawrence/costsci-tools:latest
 dataset:
   shot1_rho1:
     hparam:
@@ -258,7 +258,7 @@ dataset:
       _shot: "180533.03300"
       _rho: "0.9"
 run:
-  dataset: [shot1_rho1]
+  dataset: [shot5_rho1]
   model: [checkout]
 
 # Rhos = [

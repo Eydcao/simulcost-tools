@@ -71,9 +71,9 @@ def _find_runner_path():
       f"Please ensure the runner exists or update the search paths."
   )
 
-def runCgyro(profile, n_radial, n_theta, error_tol, freq_tol, delta_t):
+def runCgyro(profile, n_radial, n_theta, error_tol, freq_tol, delta_t, n_xi, n_energy):
   dir_path = _get_sim_path(
-      f"sim_res/cgyro/{profile}_n_radial_{n_radial}_n_theta_{n_theta}_freq_tol_{freq_tol}_delta_t_{delta_t}"
+      f"sim_res/cgyro/{profile}_n_radial_{n_radial}_n_theta_{n_theta}_freq_tol_{freq_tol}_delta_t_{delta_t}_n_xi_{n_xi}_n_energy_{n_energy}"
   )
   meta_file = os.path.join(dir_path, "meta.json")
 
@@ -86,13 +86,13 @@ def runCgyro(profile, n_radial, n_theta, error_tol, freq_tol, delta_t):
               return meta["cost"], meta["converged"]
 
   # Run the simulation if not already done
-  print(f"Running new simulation with parameters: n_radial={n_radial}, n_theta={n_theta}, error_tol={error_tol}, freq_tol={freq_tol}, delta_t={delta_t}")
+  print(f"Running new simulation with parameters: n_radial={n_radial}, n_theta={n_theta}, error_tol={error_tol}, freq_tol={freq_tol}, delta_t={delta_t}, n_xi={n_xi}, n_energy={n_energy}")
   runner_path = _find_runner_path()
   if SIM_RES_BASE_DIR:
       dump_dir = os.path.join(SIM_RES_BASE_DIR, f"sim_res/cgyro/{profile}")
-      cmd = f"{sys.executable} {runner_path} --config-name={profile} n_radial={n_radial} n_theta={n_theta} error_tol={error_tol} freq_tol={freq_tol} delta_t={delta_t} dump_dir={dump_dir}"
+      cmd = f"{sys.executable} {runner_path} --config-name={profile} n_radial={n_radial} n_theta={n_theta} error_tol={error_tol} freq_tol={freq_tol} delta_t={delta_t} n_xi={n_xi} n_energy={n_energy} dump_dir={dump_dir}"
   else:
-      cmd = f"{sys.executable} {runner_path} --config-name={profile} n_radial={n_radial} n_theta={n_theta} error_tol={error_tol} freq_tol={freq_tol} delta_t={delta_t}"
+      cmd = f"{sys.executable} {runner_path} --config-name={profile} n_radial={n_radial} n_theta={n_theta} error_tol={error_tol} freq_tol={freq_tol} delta_t={delta_t} n_xi={n_xi} n_energy={n_energy}"
   subprocess.run(cmd, shell=True, check=True)
 
   # Load the cost from the meta.json file
@@ -103,16 +103,16 @@ def runCgyro(profile, n_radial, n_theta, error_tol, freq_tol, delta_t):
 
   return cost, converged
 
-def get_res_cgyro(profile, n_radial, n_theta, error_tol, freq_tol, delta_t):
+def get_res_cgyro(profile, n_radial, n_theta, error_tol, freq_tol, delta_t, n_xi, n_energy):
     dir_path = _get_sim_path(
-        f"sim_res/cgyro/{profile}_n_radial_{n_radial}_n_theta_{n_theta}_freq_tol_{freq_tol}_delta_t_{delta_t}"
+        f"sim_res/cgyro/{profile}_n_radial_{n_radial}_n_theta_{n_theta}_freq_tol_{freq_tol}_delta_t_{delta_t}_n_xi_{n_xi}_n_energy_{n_energy}"
     )
 
     results_file = os.path.join(dir_path, "res.h5")
 
     if not os.path.exists(results_file):
-        print(f"No results found for parameters: n_radial={n_radial}, n_theta={n_theta}, error_tol={error_tol}, freq_tol={freq_tol}, delta_t={delta_t}. Triggering simulation.")
-        cost, converged = runCgyro(profile, n_radial, n_theta, error_tol, freq_tol, delta_t)
+        print(f"No results found for parameters: n_radial={n_radial}, n_theta={n_theta}, error_tol={error_tol}, freq_tol={freq_tol}, delta_t={delta_t}, n_xi={n_xi}, n_energy={n_energy}. Triggering simulation.")
+        cost, converged = runCgyro(profile, n_radial, n_theta, error_tol, freq_tol, delta_t, n_xi, n_energy)
     else:
         meta_file = os.path.join(dir_path, "meta.json")
         # Load the cost from the meta.json file
@@ -140,8 +140,8 @@ def get_res_cgyro(profile, n_radial, n_theta, error_tol, freq_tol, delta_t):
         return results, cost, converged
 
 
-def check_convergence_cgyro(profile, n_radial, n_theta, error_tol, freq_tol, delta_t):
-    res, cost, converged = get_res_cgyro(profile, n_radial, n_theta, error_tol, freq_tol, delta_t)
+def check_convergence_cgyro(profile, n_radial, n_theta, error_tol, freq_tol, delta_t, n_xi, n_energy):
+    res, cost, converged = get_res_cgyro(profile, n_radial, n_theta, error_tol, freq_tol, delta_t, n_xi, n_energy)
 
     # Simple convergence check within each result checking in out.cgyro.info (there should be an output flag)
     # Use this as first pass, if it does NOT converge, run manual check after to verify (see below)
@@ -185,9 +185,9 @@ def check_convergence_cgyro(profile, n_radial, n_theta, error_tol, freq_tol, del
     # Detect whether eigenvalue jumps from mode 1 to mode 2, based on centerpoint of mode clusters,
     # determine whether at boundary of modes or oscilatting around many different clusters because the case is stable
 
-def compare_res_cgyro(profile1, n_radial1, n_theta1, error_tol1, freq_tol1, delta_t1, profile2, n_radial2, n_theta2, error_tol2, freq_tol2, delta_t2, tolerance):
-  res1 = check_convergence_cgyro(profile1, n_radial1, n_theta1, error_tol1, freq_tol1, delta_t1)
-  res2 = check_convergence_cgyro(profile2, n_radial2, n_theta2, error_tol2, freq_tol2, delta_t2)
+def compare_res_cgyro(profile1, n_radial1, n_theta1, error_tol1, freq_tol1, delta_t1, n_xi1, n_energy1, profile2, n_radial2, n_theta2, error_tol2, freq_tol2, delta_t2, n_xi2, n_energy2, tolerance):
+  res1 = check_convergence_cgyro(profile1, n_radial1, n_theta1, error_tol1, freq_tol1, delta_t1, n_xi1, n_energy1)
+  res2 = check_convergence_cgyro(profile2, n_radial2, n_theta2, error_tol2, freq_tol2, delta_t2, n_xi2, n_energy2)
 
    # if either result is None, one or both of the runs didn't converge,
    # in which case the two runs cannot converge relative to one another
@@ -211,5 +211,5 @@ def compare_res_cgyro(profile1, n_radial1, n_theta1, error_tol1, freq_tol1, delt
   return (diff_last_real < tolerance) and (diff_last_imag < tolerance)
 
 if __name__ == "__main__":
-  converged = compare_res_cgyro("p1", 6, 24, 0.001, 0.001, 1, "p1", 6, 24, 0.001, 0.001, 1, 1e-4)
+  converged = compare_res_cgyro("p1", 6, 24, 0.001, 0.001, 1, 8, 8, "p1", 6, 24, 0.001, 0.001, 1, 8, 8, 1e-4)
   print(f'Converged: {converged}')
