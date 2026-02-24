@@ -73,7 +73,7 @@ def find_convergent_nradial(
                 freq_tol,
                 delta_t,
                 n_xi,
-                n_energy
+                n_energy,
                 comparison_tolerance
             )
 

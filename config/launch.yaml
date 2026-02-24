@@ -258,7 +258,37 @@ dataset:
       _shot: "180533.03300"
       _rho: "0.9"
 run:
-  dataset: [shot5_rho1]
+  # dataset: [shot1_rho1, shot1_rho2, shot1_rho3,
+  #           shot2_rho1, shot2_rho2, shot2_rho3,
+  #           shot3_rho1, shot3_rho2, shot3_rho3,
+  #           shot4_rho1, shot4_rho2, shot4_rho3,
+  #           shot5_rho1, shot5_rho2, shot5_rho3,
+  #           shot6_rho1, shot6_rho2, shot6_rho3,
+  #           shot7_rho1, shot7_rho2, shot7_rho3,
+  #           shot8_rho1, shot8_rho2, shot8_rho3,
+  #           shot9_rho1, shot9_rho2, shot9_rho3,
+  #           shot10_rho1, shot10_rho2, shot10_rho3,
+  #           shot11_rho1, shot11_rho2, shot11_rho3,
+  #           shot12_rho1, shot12_rho2, shot12_rho3,
+  #           shot13_rho1, shot13_rho2, shot13_rho3,
+  #           shot14_rho1, shot14_rho2, shot14_rho3,
+  #           shot15_rho1, shot15_rho2, shot15_rho3,
+  #           shot16_rho1, shot16_rho2, shot16_rho3,
+  #           shot17_rho1, shot17_rho2, shot17_rho3,
+  #           shot18_rho1, shot18_rho2, shot18_rho3,
+  #           shot19_rho1, shot19_rho2, shot19_rhmao3,
+  #           shot20_rho1, shot20_rho2, shot20_rho3,
+  #           shot21_rho1, shot21_rho2, shot21_rho3]
+    dataset: [shot1_rho1, shot1_rho2, shot1_rho3,
+            shot2_rho1, shot2_rho2, shot2_rho3,
+            shot3_rho1, shot3_rho2, shot3_rho3,
+            shot4_rho1, shot4_rho2, shot4_rho3,
+            shot5_rho1, shot5_rho2, shot5_rho3,
+            shot6_rho1, shot6_rho2, shot6_rho3,
+            shot7_rho1, shot7_rho2, shot7_rho3,
+            shot8_rho1, shot8_rho2, shot8_rho3,
+            shot9_rho1, shot9_rho2, shot9_rho3,
+            shot10_rho1, shot10_rho2, shot10_rho3]
   model: [checkout]
 
 # Rhos = [
