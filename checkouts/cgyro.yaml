@@ -9,7 +9,7 @@ solver_info:
 task_distribution:
   strategy: "benchmark"
   total_individuals: 243
-  description: "1 profile * 3 precision levels * (3^4 target parameter combinations) = 243 tasks"
+  description: "1 profile * 3 precision levels * (3^5 * 4 target parameter combinations) = 2916 tasks"
 
 precision_levels:
   low:
@@ -34,6 +34,8 @@ target_parameters:
     max_iteration_num: 3
     non_target_parameters:
       n_theta: 24
+      n_xi: 16
+      n_energy: 8
       error_tol: 1e-4
       freq_tol: 1e-3
       delta_t: 1e-2
@@ -46,6 +48,36 @@ target_parameters:
     max_iteration_num: 3
     non_target_parameters:
       n_radial: 8
+      n_xi: 16
+      n_energy: 8
+      error_tol: 1e-4
+      freq_tol: 1e-3
+      delta_t: 1e-2
+  
+  n_xi:
+    description: "Controls number of pitch angle meshpoints"
+    search_type: "iterative+0-shot"
+    initial_value: 6
+    multiplication_factor: 2
+    max_iteration_num: 4
+    non_target_parameters:
+      n_radial: 8
+      n_theta: 24
+      n_energy: 8
+      error_tol: 1e-4
+      freq_tol: 1e-3
+      delta_t: 1e-2
+  
+  n_energy:
+    description: "Controls number of energy meshpoints"
+    search_type: "iterative+0-shot"
+    initial_value: 4
+    multiplication_factor: 2
+    max_iteration_num: 3
+    non_target_parameters:
+      n_radial: 8
+      n_theta: 24
+      n_xi: 16
       error_tol: 1e-4
       freq_tol: 1e-3
       delta_t: 1e-2
@@ -59,6 +91,8 @@ target_parameters:
     non_target_parameters:
       n_radial: 8
       n_theta: 24
+      n_xi: 16
+      n_energy: 8
       error_tol: 1e-4
       delta_t: 1e-2
   
@@ -71,6 +105,8 @@ target_parameters:
     non_target_parameters:
       n_radial: 8
       n_theta: 24
+      n_xi: 16
+      n_energy: 8
       error_tol: 1e-4
       freq_tol: 1e-3
 
