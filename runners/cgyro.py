@@ -139,7 +139,26 @@ def main(cfg):
 
 def saveData(savePath, simResPath, s3Path):
     script_dir = os.path.dirname(__file__)
+    input_file = os.path.join(script_dir, 'input.cgyro')
     os.makedirs(savePath, exist_ok=True)
+
+    try:
+        pyro = Pyro(gk_file=input_file)
+        pyro.load_gk_output()
+        pyro.base_pyro = pyro
+
+        res = pyro.gk_output
+        print(res)
+        
+        with h5py.File(os.path.join(savePath, "res.h5"), "w") as f:
+            f.create_dataset("growth_rate", data=res['growth_rate'].to_numpy())
+            f.create_dataset("mode_frequency", data=res['mode_frequency'].to_numpy())
+            f.create_dataset("eigenvalues", data=res['eigenvalues'].to_numpy())
+            f.create_dataset("particle", data=res['particle'].to_numpy())
+            f.create_dataset("heat", data=res['heat'].to_numpy())
+            f.create_dataset("momentum", data=res['momentum'].to_numpy())
+    except ValueError as e:
+        print(f'Exception: {e}')
 
     try:
         cmd = f"cp -r {simResPath} {s3Path} && make upload file=costsci-tools-cgyro"
