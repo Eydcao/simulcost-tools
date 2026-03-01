@@ -333,6 +333,8 @@ def main():
         "convergence_by_profile": defaultdict(lambda: {"total": 0, "converged": 0}),
         "optimal_nradial_values": [],
         "optimal_ntheta_values": [],
+        "optimal_nxi_values": [],
+        "optimal_nenergy_values": [],
         "optimal_error_tol_values": [],
         "optimal_freq_tol_values": [],
         "optimal_delta_t_values": []
