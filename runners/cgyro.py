@@ -45,12 +45,15 @@ def main(cfg):
         run_time=end_time-start_time
 
         converged = False
-        with open(os.path.join(script_dir, "out.cgyro.info"), "r") as f:
-            lines = f.readlines()
-            for i in range(len(lines) - 1, 0, -1):
-                if "EXIT: (CGYRO) Linear converged" in lines[i]:
-                    converged = True
-                    break
+        try:
+            with open(os.path.join(script_dir, "out.cgyro.info"), "r") as f:
+                lines = f.readlines()
+                for i in range(len(lines) - 1, 0, -1):
+                    if "EXIT: (CGYRO) Linear converged" in lines[i]:
+                        converged = True
+                        break
+        except FileNotFoundError:
+            print('FileNotFoundError: out.cgyro.info not found, marking converged as false')
             
         print(f"Elapsed time: {run_time:.4f} seconds")
 
