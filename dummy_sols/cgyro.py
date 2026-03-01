@@ -399,6 +399,8 @@ def find_convergent_error_tol(
     error_tol,
     freq_tol,
     delta_t,
+    n_xi,
+    n_energy,
     multiplication_factor,
     max_iteration_num,
 ):
@@ -413,11 +415,11 @@ def find_convergent_error_tol(
 
     for i in range(max_iteration_num):
         print(
-            f"\nRunning simulation with n_radial = {n_radial}, n_theta = {n_theta}, error_tol = {current_error_tol}, freq_tol = {freq_tol}, delta_t = {delta_t}"
+            f"\nRunning simulation with n_radial = {n_radial}, n_theta = {n_theta}, error_tol = {current_error_tol}, freq_tol = {freq_tol}, delta_t = {delta_t}, n_xi = {n_xi}, n_energy = {n_energy}"
         )
 
         # Run simulation with fixed params
-        cost_i, _ = runCgyro(profile, n_radial, n_theta, current_error_tol, freq_tol, delta_t)
+        cost_i, _ = runCgyro(profile, n_radial, n_theta, current_error_tol, freq_tol, delta_t, n_xi, n_energy)
         cost_history.append(cost_i)
         error_tol_history.append(current_error_tol)
         param_history.append(
@@ -426,11 +428,13 @@ def find_convergent_error_tol(
                 "n_theta": n_theta,
                 "error_tol": current_error_tol,
                 "freq_tol": freq_tol,
-                "delta_t": delta_t
+                "delta_t": delta_t,
+                "n_xi": n_xi,
+                "n_energy": n_energy
             }
         )
 
-        is_converged = (check_convergence_cgyro(profile, n_radial, n_theta, current_error_tol, freq_tol, delta_t) != None)
+        is_converged = (check_convergence_cgyro(profile, n_radial, n_theta, current_error_tol, freq_tol, delta_t, n_xi, n_energy) != None)
         
         if is_converged:
             print(f"Convergence achieved at error_tol {current_error_tol}")
@@ -467,6 +471,8 @@ def find_convergent_freq_tol(
     error_tol,
     freq_tol,
     delta_t,
+    n_xi,
+    n_energy,
     multiplication_factor,
     max_iteration_num,
 ):
@@ -481,11 +487,11 @@ def find_convergent_freq_tol(
 
     for i in range(max_iteration_num):
         print(
-            f"\nRunning simulation with n_radial = {n_radial}, n_theta = {n_theta}, error_tol = {error_tol}, freq_tol = {current_freq_tol}, delta_t = {delta_t}"
+            f"\nRunning simulation with n_radial = {n_radial}, n_theta = {n_theta}, error_tol = {error_tol}, freq_tol = {current_freq_tol}, delta_t = {delta_t}, n_xi = {n_xi}, n_energy = {n_energy}"
         )
 
         # Run simulation with fixed params
-        cost_i, _ = runCgyro(profile, n_radial, n_theta, error_tol, current_freq_tol, delta_t)
+        cost_i, _ = runCgyro(profile, n_radial, n_theta, error_tol, current_freq_tol, delta_t, n_xi, n_energy)
         cost_history.append(cost_i)
         freq_tol_history.append(current_freq_tol)
         param_history.append(
@@ -494,11 +500,13 @@ def find_convergent_freq_tol(
                 "n_theta": n_theta,
                 "error_tol": error_tol,
                 "freq_tol": current_freq_tol,
-                "delta_t": delta_t
+                "delta_t": delta_t,
+                "n_xi": n_xi,
+                "n_energy": n_energy
             }
         )
 
-        is_converged = (check_convergence_cgyro(profile, n_radial, n_theta, error_tol, current_freq_tol, delta_t) != None)
+        is_converged = (check_convergence_cgyro(profile, n_radial, n_theta, error_tol, current_freq_tol, delta_t, n_xi, n_energy) != None)
         
         if is_converged:
             print(f"Convergence achieved at freq_tol {current_freq_tol}")
@@ -535,6 +543,8 @@ def find_convergent_delta_t(
     error_tol,
     freq_tol,
     delta_t,
+    n_xi,
+    n_energy,
     multiplication_factor,
     max_iteration_num,
 ):
@@ -549,11 +559,11 @@ def find_convergent_delta_t(
 
     for i in range(max_iteration_num):
         print(
-            f"\nRunning simulation with n_radial = {n_radial}, n_theta = {n_theta}, error_tol = {error_tol}, freq_tol = {freq_tol}, delta_t = {current_delta_t}"
+            f"\nRunning simulation with n_radial = {n_radial}, n_theta = {n_theta}, error_tol = {error_tol}, freq_tol = {freq_tol}, delta_t = {current_delta_t}, n_xi = {n_xi}, n_energy = {n_energy}"
         )
 
         # Run simulation with fixed params
-        cost_i, _ = runCgyro(profile, n_radial, n_theta, error_tol, freq_tol, current_delta_t)
+        cost_i, _ = runCgyro(profile, n_radial, n_theta, error_tol, freq_tol, current_delta_t, n_xi, n_energy)
         cost_history.append(cost_i)
         delta_t_history.append(current_delta_t)
         param_history.append(
@@ -562,11 +572,13 @@ def find_convergent_delta_t(
                 "n_theta": n_theta,
                 "error_tol": error_tol,
                 "freq_tol": freq_tol,
-                "delta_t": current_delta_t
+                "delta_t": current_delta_t,
+                "n_xi": n_xi,
+                "n_energy": n_energy
             }
         )
 
-        is_converged = (check_convergence_cgyro(profile, n_radial, n_theta, error_tol, freq_tol, current_delta_t) != None)
+        is_converged = (check_convergence_cgyro(profile, n_radial, n_theta, error_tol, freq_tol, current_delta_t, n_xi, n_energy) != None)
         
         if is_converged:
             print(f"Convergence achieved at delta_t {current_delta_t}")
