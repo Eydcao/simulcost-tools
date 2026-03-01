@@ -91,5 +91,5 @@ RUN conda clean -qafy
 # Install requirements.txt to conda environment
 RUN conda run -n costsci-tools pip install -r requirements.txt
 
-# Uncomment this if you want to test the docker container outside of kube (i.e. locally)
+# Uncomment this if you want to test the docker container outside of kube
 # ENTRYPOINT ["sleep", "infinity"]
