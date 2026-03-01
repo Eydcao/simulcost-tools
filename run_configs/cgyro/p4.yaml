@@ -4,7 +4,7 @@ defaults:
  - override hydra/job_logging: none
 
 # Scenario / environment parameters ===============
-collision_model: 4   
+collision_model: 1   
 ky: 2.5      # trapped electron scale
 n_field: 2   # (if on edge, use 3 fields, o.w. use 2 fields)
 max_time: 500

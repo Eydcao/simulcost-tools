@@ -5,7 +5,7 @@ defaults:
 
 # Scenario / environment parameters ===============
 collision_model: 1   
-ky: 0.05
+ky: 6.0
 n_field: 2   # (if on edge, use 3 fields, o.w. use 2 fields)
 max_time: 500
 
@@ -31,8 +31,8 @@ delta_t: 1e-2 # If default timestep is too far away from optimal, may take longe
 
 delta_t_method: 1 # adaptive time stepping from initial delta_t
 
-profile_model: 2
+profile_model: 5
 
 # Output configuration
-dump_dir: "sim_res/cgyro/p2"  # Directory for output files
+dump_dir: "sim_res/cgyro/p5"  # Directory for output files
 verbose: False                # Enable verbose output

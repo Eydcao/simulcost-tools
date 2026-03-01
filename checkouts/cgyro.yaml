@@ -21,8 +21,8 @@ precision_levels:
 
 profiles:
   num_profiles: 4
-  # Available profiles: p1 (ion scale), p2 (microtearing scale), p3 (electron scale), p4 (trapped electron scale)
-  active_profiles: ["p1", "p2", "p3", "p4"]
+  # Available profiles: p1 (ion scale), p2 (microtearing scale), p3 (electron scale), p4 (trapped electron scale), p5, p6 (ETG regimes)
+  active_profiles: ["p1", "p2", "p3", "p4", "p5", "p6"]
 
 # Parameter configurations for each target parameter
 target_parameters:
