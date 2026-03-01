@@ -3,20 +3,14 @@ import argparse
 
 Z_EFF_VALUE = 2
 
-KSUFFIX_REPLACEMENT_DICT = {
-    '_4': '_3'
-}
-
-KV_REPLACEMENT_DICT = {
-    'N_SPECIES': 3,
-    'COLLISION_MODEL': 1,
+KV_ADD_DICT = {
     'Z_EFF_METHOD': 1,
     'Z_EFF': Z_EFF_VALUE
 }
-
-DELETE_KSUFFIX = [
-    '_3'
-]
+KV_REPLACEMENT_DICT = {
+    'N_SPECIES': 3,
+    'COLLISION_MODEL': 1,
+}
 
 PERTURBATION_KEYS = [
     'SHIFT',
@@ -44,39 +38,78 @@ PERTURBATION_KEYS = [
 # Remove 3rd ion (change NS=3)
 # N4 becomes N3 (for all fields)
 # Remove all *_3, replace all *_4 with *_3
-def replace_ion3(input_dict):
-    new_dict = input_dict.copy()
+def replace_ion3(input_file, output_file):
+    try:
+        with open(input_file, 'r') as file:
+            lines = []
+            updated_lines = []
 
-    # Delete keys by suffix
-    for ksuffix in DELETE_KSUFFIX:
-        for key, _ in input_dict.items():
-            if ksuffix in key:
-                del new_dict[key]
-    
-    # Replace keys
-    for key, new_val in KV_REPLACEMENT_DICT.items():
-        new_dict[key] = new_val
+            for line in file:
+                lines.append(line)
+            for line in lines:
+                foundline = False
+                for key, value in KV_REPLACEMENT_DICT.items():
+                    if key in line:
+                        new_line = f'{key}={value}\n'
+                        updated_lines.append(new_line)
+                        foundline = True
+                        break
+                if ('_3' not in line) and ('_4' not in line) and (not foundline):
+                    updated_lines.append(line)
+                if '_4' in line:
+                    new_line = line.split('_4')[0] + '_3' + line.split('_4')[1]
+                    updated_lines.append(new_line)
+            
+            for key, value in KV_ADD_DICT.items():
+                new_line = f'{key}={value}\n'
+                updated_lines.append(new_line)
+                    
+        with open(output_file, 'w') as f:
+            f.writelines(updated_lines)
+            
+    except FileNotFoundError:
+        print(f"Error: The file {input_file} was not found.")
+    except Exception as e:
+        print(f"An error occurred: {e}")
 
-    # Replace keys by suffix
-    for ksuffix, new_ksuffix in KSUFFIX_REPLACEMENT_DICT.items():
-        for key, value in input_dict.items():
-            if ksuffix in key:
-                new_key = key.split('_')[0] + new_ksuffix
-                new_dict[new_key] = value
-                del new_dict[key]
+def enforce_quasineutrality(input_file, input_dict):
+    dens_3 = input_dict['DENS_3']
+    dens_1 = dens_3 * (6 - Z_EFF_VALUE) / 5
+    dens_2 = dens_3 * (Z_EFF_VALUE - 1) / 30
+    try:
+        with open(input_file, 'r') as file:
+            lines = []
+            updated_lines = []
 
-    # print(new_dict)
-    return new_dict
+            for line in file:
+                lines.append(line)
+
+            for line in lines:
+                if 'DENS_1' in line:
+                    new_line = f'DENS_1={dens_1}\n'
+                    updated_lines.append(new_line)
+                elif 'DENS_2' in line:
+                    new_line = f'DENS_2={dens_2}\n'
+                    updated_lines.append(new_line)
+                else:
+                    updated_lines.append(line)
+                    
+        with open(input_file, 'w') as f:
+            f.writelines(updated_lines)
+            
+    except FileNotFoundError:
+        print(f"Error: The file {input_file} was not found.")
+    except Exception as e:
+        print(f"An error occurred: {e}")
 
 # Replaces input_file in-place with perturbed inputs, saves old input file to temp_file
 # Computes the error between perturbed inputs and stores as npy array
 def perturb_inputs(input_file, temp_file, error_file, original_input_file):
-    input_dict = get_input_dict(original_input_file)
-    input_dict_no_ion3 = replace_ion3(input_dict)
-    input_dict_qn = enforce_quasineutrality(input_dict_no_ion3)
+    input_dict_no_ion3 = replace_ion3(original_input_file, input_file)
+    input_dict_no_ion3 = get_input_dict(input_file)
 
-    # Rewrite input file after replacing ion3 and enforcing QN
-    update_input_file(input_file, temp_file, input_dict_qn)
+    enforce_quasineutrality(input_file, input_dict_no_ion3)
+    input_dict_qn = get_input_dict(input_file)
 
     # Apply perturbations to updated input file
     perturbation_dict = compute_perturbations(PERTURBATION_KEYS, input_dict_qn, error_file)
@@ -98,15 +131,6 @@ def get_input_dict(input_file):
     except Exception as e:
         print(f"An error occurred: {e}")
     return None
-
-def enforce_quasineutrality(input_dict):
-    dens_3 = input_dict['DENS_3']
-    dens_1 = dens_3 * (6 - Z_EFF_VALUE) / 5
-    dens_2 = dens_3 * (Z_EFF_VALUE - 1) / 30
-
-    input_dict['DENS_1'] = dens_1
-    input_dict['DENS_2'] = dens_2
-    return input_dict
 
 def compute_perturbations(perturbation_keys, input_dict, error_file, mean=0, std=0.04, clamp=0.10):
     perturbation_dict = {}
@@ -153,29 +177,6 @@ def apply_perturbations(input_file, temp_file, perturbation_dict):
                     
         with open(input_file, 'w') as f:
             f.writelines(perturbed_lines)
-
-        with open(temp_file, 'w') as f:
-            f.writelines(lines)
-            
-    except FileNotFoundError:
-        print(f"Error: The file {input_file} was not found.")
-    except Exception as e:
-        print(f"An error occurred: {e}")
-
-def update_input_file(input_file, temp_file, dict):
-    try:
-        with open(input_file, 'r') as file:
-            lines = []
-            updated_lines = []
-
-            for line in file:
-                lines.append(line)
-            
-            for key, value in dict.items():
-                updated_lines.append(f'{key}={value}\n') 
-                    
-        with open(input_file, 'w') as f:
-            f.writelines(updated_lines)
 
         with open(temp_file, 'w') as f:
             f.writelines(lines)
