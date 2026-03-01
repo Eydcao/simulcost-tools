@@ -106,7 +106,7 @@ def main(cfg):
             for file_path in glob.glob(os.path.join(script_dir, pattern)):
                 zip_files.append(file_path)
         
-        archive_name = "cgyro_outputs.tar.gz"
+        archive_name = os.path.join(savePath, "cgyro_outputs.tar.gz")
         # Create the compressed tar archive
         try:
             with tarfile.open(archive_name, "w:gz") as tar:
