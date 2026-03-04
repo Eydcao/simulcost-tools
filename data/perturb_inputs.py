@@ -13,7 +13,6 @@ KV_REPLACEMENT_DICT = {
 }
 
 PERTURBATION_KEYS = [
-    'NU_EE', # Collisionality (b/w 0.05 - 0.8) can sample uniformly
     'SHIFT',
     'Q',
     'S',
@@ -74,8 +73,9 @@ def replace_ion3(input_file, output_file):
         print(f"An error occurred: {e}")
 
 
-def sample_collisionality(input_file, min=0.05, max=0.8):
-    nu_ee = np.random.uniform(min, max)
+# 'NU_EE' : Collisionality (b/w 0.05 - 0.8) can sample uniformly
+def sample_collisionality(input_file, low=0.05, high=0.8):
+    nu_ee = np.random.uniform(low, high)
     try:
         with open(input_file, 'r') as file:
             lines = []
@@ -138,7 +138,7 @@ def perturb_inputs(input_file, temp_file, error_file, original_input_file):
     enforce_quasineutrality(input_file, input_dict_no_ion3)
     sample_collisionality(input_file)
     input_dict_qn = get_input_dict(input_file)
-    
+
     # Apply perturbations to updated input file
     perturbation_dict = compute_perturbations(PERTURBATION_KEYS, input_dict_qn, error_file)
     apply_perturbations(input_file, temp_file, perturbation_dict)
