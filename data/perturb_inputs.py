@@ -1,18 +1,19 @@
 import numpy as np
 import argparse
 
-Z_EFF_VALUE = 2
+Z_EFF_VALUE = 1.8 # Updated 
 
 KV_ADD_DICT = {
-    'Z_EFF_METHOD': 1,
-    'Z_EFF': Z_EFF_VALUE
+    'Z_EFF_METHOD': 2,      # Updated
+    # 'Z_EFF': Z_EFF_VALUE  # Updated, ZEFF will automatically be given based on density values
 }
 KV_REPLACEMENT_DICT = {
     'N_SPECIES': 3,
-    'COLLISION_MODEL': 1,
+    'COLLISION_MODEL': 4,
 }
 
 PERTURBATION_KEYS = [
+    'NU_EE', # Collisionality (b/w 0.05 - 0.8) can sample uniformly
     'SHIFT',
     'Q',
     'S',
@@ -27,10 +28,10 @@ PERTURBATION_KEYS = [
     # 'TEMP_1',
     'DLNNDR_1',
     'DLNTDR_1',
-    # 'TEMP_2',
+    # 'TEMP_2', # If perturb, match to TEMP_1
     'DLNNDR_2',
     'DLNTDR_2',
-    # 'TEMP_3',
+    # 'TEMP_3', # Do not perturb, needs to remain 1 for normalization scaling
     'DLNNDR_3', 
     'DLNTDR_3',
 ]
@@ -65,6 +66,32 @@ def replace_ion3(input_file, output_file):
                 updated_lines.append(new_line)
                     
         with open(output_file, 'w') as f:
+            f.writelines(updated_lines)
+            
+    except FileNotFoundError:
+        print(f"Error: The file {input_file} was not found.")
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
+
+def sample_collisionality(input_file, min=0.05, max=0.8):
+    nu_ee = np.random.uniform(min, max)
+    try:
+        with open(input_file, 'r') as file:
+            lines = []
+            updated_lines = []
+
+            for line in file:
+                lines.append(line)
+
+            for line in lines:
+                if 'NU_EE' in line:
+                    new_line = f'NU_EE={nu_ee}\n'
+                    updated_lines.append(new_line)
+                else:
+                    updated_lines.append(line)
+                    
+        with open(input_file, 'w') as f:
             f.writelines(updated_lines)
             
     except FileNotFoundError:
@@ -109,8 +136,9 @@ def perturb_inputs(input_file, temp_file, error_file, original_input_file):
     input_dict_no_ion3 = get_input_dict(input_file)
 
     enforce_quasineutrality(input_file, input_dict_no_ion3)
+    sample_collisionality(input_file)
     input_dict_qn = get_input_dict(input_file)
-
+    
     # Apply perturbations to updated input file
     perturbation_dict = compute_perturbations(PERTURBATION_KEYS, input_dict_qn, error_file)
     apply_perturbations(input_file, temp_file, perturbation_dict)
@@ -132,7 +160,7 @@ def get_input_dict(input_file):
         print(f"An error occurred: {e}")
     return None
 
-def compute_perturbations(perturbation_keys, input_dict, error_file, mean=0, std=0.04, clamp=0.10):
+def compute_perturbations(perturbation_keys, input_dict, error_file, mean=0, std=0.05, clamp=0.10):
     perturbation_dict = {}
     errors = []
     print(f'Relative errors after perturbations from Normal with mean={mean}, std={std}: ' + ("=" * 30))
@@ -140,7 +168,8 @@ def compute_perturbations(perturbation_keys, input_dict, error_file, mean=0, std
         old_value = input_dict[key]
         perturbation = np.random.normal(loc=mean, scale=std)
         # Clamp perturbation
-        perturbation = min(perturbation, clamp)
+        if np.abs(perturbation) > clamp:
+            perturbation = (perturbation * clamp) / np.abs(perturbation)
 
         new_value = old_value + (old_value * perturbation)
 
