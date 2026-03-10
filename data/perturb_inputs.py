@@ -13,6 +13,7 @@ KV_REPLACEMENT_DICT = {
 }
 
 PERTURBATION_KEYS = [
+    'BETAE_UNIT',
     'SHIFT',
     'Q',
     'S',
@@ -159,7 +160,7 @@ def get_input_dict(input_file):
         print(f"An error occurred: {e}")
     return None
 
-def compute_perturbations(perturbation_keys, input_dict, error_file, mean=0, std=0.05, clamp=0.10):
+def compute_perturbations(perturbation_keys, input_dict, error_file, mean=0, std=0.08, clamp=0.20):
     perturbation_dict = {}
     errors = []
     print(f'Relative errors after perturbations from Normal with mean={mean}, std={std}: ' + ("=" * 30))
