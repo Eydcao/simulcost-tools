@@ -72,7 +72,6 @@ def replace_ion3(input_file, output_file):
     except Exception as e:
         print(f"An error occurred: {e}")
 
-
 # 'NU_EE' : Collisionality (b/w 0.05 - 0.8) can sample uniformly
 def sample_collisionality(input_file, low=0.05, high=0.8):
     nu_ee = np.random.uniform(low, high)
@@ -132,7 +131,7 @@ def enforce_quasineutrality(input_file, input_dict):
 # Replaces input_file in-place with perturbed inputs, saves old input file to temp_file
 # Computes the error between perturbed inputs and stores as npy array
 def perturb_inputs(input_file, temp_file, error_file, original_input_file):
-    input_dict_no_ion3 = replace_ion3(original_input_file, input_file)
+    replace_ion3(original_input_file, input_file)
     input_dict_no_ion3 = get_input_dict(input_file)
 
     enforce_quasineutrality(input_file, input_dict_no_ion3)
@@ -166,19 +165,19 @@ def compute_perturbations(perturbation_keys, input_dict, error_file, mean=0, std
     print(f'Relative errors after perturbations from Normal with mean={mean}, std={std}: ' + ("=" * 30))
     for key in perturbation_keys:
         old_value = input_dict[key]
-        perturbation = np.random.normal(loc=mean, scale=std)
+        perturbation_factor = np.random.normal(loc=mean, scale=std)
         # Clamp perturbation
-        if np.abs(perturbation) > clamp:
-            perturbation = (perturbation * clamp) / np.abs(perturbation)
+        if np.abs(perturbation_factor) > clamp:
+            perturbation_factor = (perturbation_factor * clamp) / np.abs(perturbation_factor)
 
-        new_value = old_value + (old_value * perturbation)
+        perturbation = perturbation_factor * old_value
 
         epsilon = 1e-12
-        error = np.abs(np.abs(old_value - new_value) / (old_value + epsilon))
+        error = np.abs(np.abs(old_value - (old_value + perturbation)) / (old_value + epsilon))
         errors.append(error)
         print(f'{key}: {error * 100}%')
 
-        perturbation_dict[key] = new_value
+        perturbation_dict[key] = perturbation
     errors = np.stack(errors, axis=0)
     np.save(error_file, errors)
     return perturbation_dict
