@@ -6,11 +6,13 @@ Solver library and API for the SimulCost benchmark. Contains 12 physics-based PD
 
 ### Setup
 
+First, follow the environment setup instructions in the [main repository README](../README.md#-environment-setup). Then:
+
 ```bash
 # Activate the simulcost conda environment
 conda activate simulcost
 
-# Install dependencies
+# Install costsci_tools in development mode
 pip install -e .
 ```
 
