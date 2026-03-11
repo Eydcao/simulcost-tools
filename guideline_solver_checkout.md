@@ -1,10 +1,10 @@
 # Solver Checkout Guidelines
 
-This document provides guidelines for solver developers to prepare their solvers for LLM-automation tasks. The checkout process uses delivers a config file and a section in the main document to ensure consistent parameter and task definitions, and dummy solution generation.
+This document provides guidelines for solver developers to prepare their solvers for LLM-automation tasks. The checkout process delivers a config file and a documentation section to ensure consistent parameter definitions, task definitions, and dummy solution generation.
 
 ## Task Distribution Strategy
 
-Each **tunnable parameter of the solver** should provide approximately **30~100 individual variations (tasks)**; Hence each solver should provide about **200~1000 individual tasks**. This can be distributed across:
+Each **tunable parameter of the solver** should provide approximately **30~100 individual variations (tasks)**; Hence each solver should provide about **200~1000 individual tasks**. This can be distributed across:
 
 - **Different profiles** (solver-dependent)
 - **3 precision levels** (always required)
