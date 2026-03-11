@@ -1,4 +1,4 @@
-# CostSci Tools
+# SimulCost Tools
 
 Solver library and API for the SimulCost benchmark. Contains 12 physics-based PDE solvers with cost tracking, used to evaluate LLM agents' parameter optimization capabilities.
 
@@ -72,7 +72,3 @@ All solvers inherit from the `SIMULATOR` base class in `solvers/base_solver.py`,
 - Accuracy metrics (RMSE, L∞ norm)
 
 See `docs/` for solver-specific physics background, parameter ranges, and accuracy thresholds.
-
-## Development
-
-For adding new solvers, see `guideline_solver_dev.md`.
