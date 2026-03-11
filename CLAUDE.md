@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code when working with the costsci-tools repository.
+This file provides guidance to Claude Code when working with the simulcost-tools repository.
 
 ## Python Environment
 
@@ -15,12 +15,12 @@ conda activate simulcost
 
 ## Project Overview
 
-**CostSci-Tools** is the solver library and API for the SimulCost benchmark. It contains 12 physics-based PDE solvers with cost tracking, used to evaluate LLM agents' parameter optimization capabilities.
+**SimulCost-Tools** is the solver library and API for the SimulCost benchmark. It contains 12 physics-based PDE solvers with cost tracking, used to evaluate LLM agents' parameter optimization capabilities.
 
 ## Repository Structure
 
 ```
-costsci-tools/
+simulcost-tools/
 ├── solvers/          # Core numerical implementations (inherit from SIMULATOR base class)
 ├── runners/          # CLI entry points using Hydra config
 ├── wrappers/         # High-level APIs: run_sim_*, get_res_*, compare_res_*
