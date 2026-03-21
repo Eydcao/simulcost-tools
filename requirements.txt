@@ -3,7 +3,7 @@ numpy
 h5py
 pyrokinetics
 scipy
-dotenv
+python-dotenv
 pyyaml
 hydra-core
 boto3
