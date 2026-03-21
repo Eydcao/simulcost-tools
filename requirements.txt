@@ -1,8 +1,6 @@
 matplotlib
 numpy
-argparse
 h5py
-pathlib
 pyrokinetics
 scipy
 dotenv
