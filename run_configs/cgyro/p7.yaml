@@ -1,0 +1,102 @@
+defaults:
+ - _self_
+ - override hydra/hydra_logging: none
+ - override hydra/job_logging: none
+
+# THIS CORRESPONDS TO SHOT 180533.02300 with rmin=0.5, ky=0.3
+# Plasma parameters ===============================
+# Geometry (Miller)
+RMIN: +5.00000E-01
+RMAJ: +2.95031E+00
+
+SHIFT: -0.1089696445087806
+ZMAG: -9.93710E-02
+DZMAG: -2.45660E-02
+Q: 1.1970520816004784
+S: 1.4106001748337762
+KAPPA: 1.1842077452220874
+S_KAPPA: 0.09459647074361295
+DELTA: -0.02538293217077062
+S_DELTA: -0.049562256056514375
+ZETA: -0.017682368640353673
+S_ZETA: -0.045016108958230695
+
+# Geometry (Advanced)
+SHAPE_SIN3: +2.52595E-03
+SHAPE_S_SIN3: +9.45302E-03
+SHAPE_SIN4: +1.14782E-03
+SHAPE_S_SIN4: +3.32842E-03
+SHAPE_SIN5: +2.37704E-04
+SHAPE_S_SIN5: -9.00392E-04
+SHAPE_SIN6: +0.00000E+00
+SHAPE_S_SIN6: +0.00000E+00
+SHAPE_COS0: -3.10793E-02
+SHAPE_S_COS0: -1.88346E-02
+SHAPE_COS1: -1.57344E-02
+SHAPE_S_COS1: -2.57629E-02
+SHAPE_COS2: +5.62783E-03
+SHAPE_S_COS2: +1.52819E-02
+SHAPE_COS3: -3.95329E-04
+SHAPE_S_COS3: -1.63714E-03
+SHAPE_COS4: -5.41972E-04
+SHAPE_S_COS4: -6.03036E-03
+SHAPE_COS5: -1.94649E-04
+SHAPE_S_COS5: +1.26379E-03
+SHAPE_COS6: +0.00000E+00
+SHAPE_S_COS6: +0.00000E+00
+
+# Rotation (Sonic)
+GAMMA_E: +5.82477E-02
+GAMMA_P: -0.4107329069574173
+MACH: -0.2172813387899723
+
+# Collisions (Sugama)
+NU_EE: 0.7697444832920246
+
+BETAE_UNIT: 0.004639439007566366
+LAMBDA_STAR: +1.92916E-02
+
+# Species
+Z_1: 1
+MASS_1: +1.00000E+00
+DENS_1: 0.8400000000000001
+TEMP_1: +8.04399E-01
+DLNNDR_1: 1.4574365812832797
+DLNTDR_1: 1.2906670482168718
+SDLNNDR_1: +4.45281E-03
+SDLNTDR_1: -4.75711E-02
+
+Z_2: 6
+MASS_2: +6.00535E+00
+DENS_2: 0.02666666666666667
+TEMP_2: +8.04399E-01
+DLNNDR_2: 0.5531623479546685
+DLNTDR_2: 1.1877986302598127
+SDLNNDR_2: +2.35454E-02
+SDLNTDR_2: -4.75711E-02
+
+
+Z_3: -1
+MASS_3: +2.72444E-04
+DENS_3: +1.00000E+00
+TEMP_3: +1.00000E+00
+DLNNDR_3: 1.5960467975187245
+DLNTDR_3: 2.8116457608583856
+SDLNNDR_3: +4.53868E-03
+SDLNTDR_3: -1.12372E-02
+
+# Scenario / environment parameters ===============
+collision_model: 4
+
+ky: 0.3       # generally gives strongest possible mode at ion scale \in [0.25, 0.4]
+              # can depend on ETG cases (e.g 5, 6, 10) converges fast bc large gamma
+n_field: 2    # (if on edge, use 3 fields, o.w. use 2 fields)
+max_time: 500 # after this point, either mode stable or oscilattes around mode 
+  
+delta_t_method: 1 # adaptive time stepping from initial delta_t
+
+profile_model: 7
+
+# Output configuration
+dump_dir: "sim_res/cgyro/p7"  # Directory for output files
+verbose: False                # Enable verbose output

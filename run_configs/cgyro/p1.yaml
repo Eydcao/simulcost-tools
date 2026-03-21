@@ -3,45 +3,94 @@ defaults:
  - override hydra/hydra_logging: none
  - override hydra/job_logging: none
 
+# THIS CORRESPONDS TO SHOT 171421.03400 with rmin=0.5, ky=0.3
+# Plasma parameters ===============================
+# Geometry (Miller)
+rmin: +5.00000E-01
+rmaj: +2.90649E+00
+
+shift: -0.1872629444596013
+zmag: -2.68171E-03
+dzmag: -2.05044E-03
+q: 1.4179081595973515
+s: 1.0083171364887469
+kappa: 1.1671600347038182
+s_kappa: 0.042937971092645306
+delta: -0.0679427487959698
+s_delta: -0.1208945559385504
+zeta: -0.015626691855600405
+s_zeta: -0.0419571544050462
+
+# Geometry (Advanced)
+SHAPE_SIN3: +3.15584E-03
+SHAPE_S_SIN3: +1.04859E-02
+SHAPE_SIN4: +1.49584E-03
+SHAPE_S_SIN4: +5.69859E-03
+SHAPE_SIN5: +9.62072E-05
+SHAPE_S_SIN5: +4.39022E-04
+SHAPE_SIN6: +0.00000E+00
+SHAPE_S_SIN6: +0.00000E+00
+SHAPE_COS0: -9.87385E-03
+SHAPE_S_COS0: -2.30467E-03
+SHAPE_COS1: -1.80864E-03
+SHAPE_S_COS1: -5.32188E-04
+SHAPE_COS2: -3.21931E-04
+SHAPE_S_COS2: -1.07251E-03
+SHAPE_COS3: -1.57206E-04
+SHAPE_S_COS3: -1.49920E-04
+SHAPE_COS4: -7.90500E-05
+SHAPE_S_COS4: -1.80997E-04
+SHAPE_COS5: -1.99103E-05
+SHAPE_S_COS5: +9.60189E-04
+SHAPE_COS6: +0.00000E+00
+SHAPE_S_COS6: +0.00000E+00
+
+# Rotation (Sonic)
+GAMMA_E: +9.25776E-02
+GAMMA_P: -0.7156620884345505
+MACH: -0.31420074821106353
+
+NU_EE: 0.7823587563921749
+
+BETAE_UNIT: 0.005206954373158445
+LAMBDA_STAR: +1.72673E-02
+
+Z_1: 1
+MASS_1: +1.00000E+00
+DENS_1: 0.8400000000000001
+TEMP_1: +1.02787E+00
+DLNNDR_1: 1.0666942112906916
+DLNTDR_1: 1.8638028437603738
+SDLNNDR_1: -1.28648E-02
+SDLNTDR_1: -3.79148E-02
+
+Z_2: 6
+MASS_2: +6.00535E+00
+DENS_2: 0.02666666666666667
+TEMP_2: +1.02787E+00
+DLNNDR_2: -0.04617904132830018
+DLNTDR_2: 1.7302101214254504
+SDLNNDR_2: +3.38375E-02
+SDLNTDR_2: -3.79148E-02
+
+Z_3: -1
+MASS_3: +2.72444E-04
+DENS_3: +1.00000E+00
+TEMP_3: +1.00000E+00
+DLNNDR_3: 1.0180813693834534
+DLNTDR_3: 2.836241135083497
+SDLNNDR_3: +2.21778E-03
+SDLNTDR_3: -1.26820E-02
+Z_EFF_METHOD: 2
+
 # Scenario / environment parameters ===============
-collision_model: 1   
-ky: 0.3    # generally gives strongest possible mode at ion scale \in [0.25, 0.4]
-           # can depend on ETG cases (e.g 5, 6, 10) converges fast bc large gamma
-n_field: 2   # (if on edge, use 3 fields, o.w. use 2 fields)
+collision_model: 4
+
+ky: 0.3       # generally gives strongest possible mode at ion scale \in [0.25, 0.4]
+              # can depend on ETG cases (e.g 5, 6, 10) converges fast bc large gamma
+n_field: 2    # (if on edge, use 3 fields, o.w. use 2 fields)
 max_time: 500 # after this point, either mode stable or oscilattes around mode 
-             # (damped sinusoidal oscilattion on long time scale, therefore could converge later)
-             # (in the case above, could average the last 30% and get close (manual check example))
-             # where is peak in distribution of eigenvalues? freq. allows exp fit to maxima
-
-             # Damped case: take fourier of eigenvalues. Will have peak at point corresponding to period of sinusoidal osc.
-             # Fit exponential to damping
-
-             # Some cases are stable within specific ky-regimes, in that case look for other profiles
-
-             # (0.2), 0.5, 0.7, 0.9 rmin locations 
-             # Closer to center, plasma tends to be more stable
-             # Would be interesting to be able to predict which value of rmin finds instability
-
-# Tunable parameters ===============
-n_radial: 4  # \in [8, 12]
-           # -- should be solvable by refinement
-           # -- mult. factor of 1.5 from 6
-n_theta: 12 # \in [16, 32] (determined by plasma shaping) (num points along field line) (for R/A = 0.5 \in [16, 24], at edge R/A = 0.95 \in [32, or more])
-           # -- should be solvable by refinement
-           # -- mult. factor of 1.5 from 16
-n_xi: 6
-n_energy: 4
-error_tol: 1e-6 # Determines tolerance for numerical drift / integration error
-           # -- mult. factor of 10 from 1e-5
-freq_tol: 1e-5 # Determines tolerance for error b/w eigenvalues to declare convergence
-           # (e.g. 1e-3, 5e-3)
-delta_t: 1e-2 # If default timestep is too far away from optimal, may take longer
-            # Adaptive timestepping (delta_t_method=1) starts from default delta_t
-            # Vary from range [0.01, 0.04] (ky > 0.3 < 1)
-            # For large ky (e.g. 10), need 5-10x shorter delta_t
-
-            # Maybe try against delta_t_method = 0 (if time permits)
-
+  
 delta_t_method: 1 # adaptive time stepping from initial delta_t
 
 profile_model: 1

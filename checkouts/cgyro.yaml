@@ -9,7 +9,7 @@ solver_info:
 task_distribution:
   strategy: "benchmark"
   total_individuals: 243
-  description: "1 profile * 3 precision levels * (3^5 * 4 target parameter combinations) = 2916 tasks"
+  description: "12 profiles * 3 precision levels * (3^5 * 4 target parameter combinations) ~ 35000 tasks"
 
 precision_levels:
   low:
@@ -20,9 +20,9 @@ precision_levels:
     comparison_tolerance: 1e-5
 
 profiles:
-  num_profiles: 4
-  # Available profiles: p1 (ion scale), p2 (microtearing scale), p3 (electron scale), p4 (trapped electron scale), p5, p6 (ETG regimes)
-  active_profiles: ["p1", "p2", "p3", "p4", "p5", "p6"]
+  num_profiles: 12
+  # The 12 profiles each corresponds to a different combination of (shot + rmin + ky)
+  active_profiles: ["p1", "p2", "p3", "p4", "p5", "p6", "p7", "p8", "p9", "p10", "p11", "p12"]
 
 # Parameter configurations for each target parameter
 target_parameters:

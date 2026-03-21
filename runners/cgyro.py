@@ -65,13 +65,17 @@ def main(cfg):
         )
 
         simResPath = os.path.join(os.path.dirname(os.path.dirname(script_dir)), "sim_res")
-        s3Path = os.path.join(os.path.dirname(script_dir), "costsci-tools-cgyro")
-        # Get shot dir
-        s3Path_next = os.listdir(s3Path)[0]
-        s3Path = os.path.join(s3Path, s3Path_next)
-        # Get rho dir
-        s3Path_next = os.listdir(s3Path)[0]
-        s3Path = os.path.join(s3Path, s3Path_next)
+        try:
+            s3Path = os.path.join(os.path.dirname(script_dir), "costsci-tools-cgyro")
+            # Get shot dir
+            s3Path_next = os.listdir(s3Path)[0]
+            s3Path = os.path.join(s3Path, s3Path_next)
+            # Get rho dir
+            s3Path_next = os.listdir(s3Path)[0]
+            s3Path = os.path.join(s3Path, s3Path_next)
+        except:
+            print(f'S3 file upload path not found, defaulting to simulation results path')
+            s3Path = simResPath
 
         saveData(savePath, simResPath, s3Path)
         # Python dictionary representing the data
