@@ -187,7 +187,7 @@ def main():
     gacode_dir = solvers_dir / "gacode"
 
     # Setup CGYRO submodule
-    # gacode_dir = setup_gacode_submodule()
+    gacode_dir = setup_gacode_submodule()
 
     # Compile binaries
     successfully_compiled = compile_cgyro_binary(gacode_dir)
