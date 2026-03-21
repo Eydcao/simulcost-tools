@@ -61,7 +61,7 @@ def check_dependencies():
     
     # Check OpenBLAS
     openblas_installed = run_command("apt list --installed | grep libopenblas-dev")
-    if len(openblas_installed.stdout.split('\n') > 1):
+    if len(openblas_installed.stdout.split('\n')) > 1:
         print("✅ OpenBLAS found")
     else:
         print("❌ OpenBLAS not found")
@@ -69,7 +69,7 @@ def check_dependencies():
     
     # Check FFTw3
     fftw3_installed = run_command("apt list --installed | grep libfftw3-dev")
-    if len(fftw3_installed.stdout.split('\n') > 1):
+    if len(fftw3_installed.stdout.split('\n')) > 1:
         print("✅ FFTw3 found")
     else:
         print("❌ FFTw3 not found")
