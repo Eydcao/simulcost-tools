@@ -92,7 +92,27 @@ ky: 2.5       # generally gives strongest possible mode at ion scale \in [0.25, 
               # can depend on ETG cases (e.g 5, 6, 10) converges fast bc large gamma
 n_field: 2    # (if on edge, use 3 fields, o.w. use 2 fields)
 max_time: 500 # after this point, either mode stable or oscilattes around mode 
-  
+
+# Tunable parameters ===============
+n_radial: 4  # \in [8, 12]
+           # -- should be solvable by refinement
+           # -- mult. factor of 1.5 from 6
+n_theta: 12 # \in [16, 32] (determined by plasma shaping) (num points along field line) (for R/A = 0.5 \in [16, 24], at edge R/A = 0.95 \in [32, or more])
+           # -- should be solvable by refinement
+           # -- mult. factor of 1.5 from 16
+n_xi: 6
+n_energy: 4
+error_tol: 1e-6 # Determines tolerance for numerical drift / integration error
+           # -- mult. factor of 10 from 1e-5
+freq_tol: 1e-5 # Determines tolerance for error b/w eigenvalues to declare convergence
+           # (e.g. 1e-3, 5e-3)
+delta_t: 1e-2 # If default timestep is too far away from optimal, may take longer
+            # Adaptive timestepping (delta_t_method=1) starts from default delta_t
+            # Vary from range [0.01, 0.04] (ky > 0.3 < 1)
+            # For large ky (e.g. 10), need 5-10x shorter delta_t
+
+            # Maybe try against delta_t_method = 0 (if time permits)
+             
 delta_t_method: 1 # adaptive time stepping from initial delta_t
 
 profile_model: 12

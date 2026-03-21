@@ -93,10 +93,7 @@ def runCgyro(profile, n_radial, n_theta, error_tol, freq_tol, delta_t, n_xi, n_e
       cmd = f"{sys.executable} {runner_path} --config-name={profile} n_radial={n_radial} n_theta={n_theta} error_tol={error_tol} freq_tol={freq_tol} delta_t={delta_t} n_xi={n_xi} n_energy={n_energy} dump_dir={dump_dir}"
   else:
       cmd = f"{sys.executable} {runner_path} --config-name={profile} n_radial={n_radial} n_theta={n_theta} error_tol={error_tol} freq_tol={freq_tol} delta_t={delta_t} n_xi={n_xi} n_energy={n_energy}"
-  try:
-    subprocess.run(cmd, shell=True, check=True)
-  except Exception as e:
-    print(f'Unexpected error: {e}')
+  subprocess.run(cmd, shell=True, check=True)
 
   # Load the cost from the meta.json file
   with open(meta_file, "r") as f:
