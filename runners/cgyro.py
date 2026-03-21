@@ -163,13 +163,14 @@ def saveData(savePath, simResPath, s3Path):
             f.create_dataset("momentum", data=res['momentum'].to_numpy())
     except ValueError as e:
         print(f'Exception: {e}')
-
-    try:
-        cmd = f"cp -r {simResPath} {s3Path} && make upload file=costsci-tools-cgyro"
-        subprocess.run(cmd, shell=True, check=True, env=env, cwd=os.path.dirname(script_dir))
-        print(f'Successfully uploaded data to S3 at: {s3Path}')
-    except:
-        print('S3 upload failed.')
+    
+    if s3Path != simResPath:
+        try:
+            cmd = f"cp -r {simResPath} {s3Path} && make upload file=costsci-tools-cgyro"
+            subprocess.run(cmd, shell=True, check=True, env=env, cwd=os.path.dirname(script_dir))
+            print(f'Successfully uploaded data to S3 at: {s3Path}')
+        except:
+            print('S3 upload failed.')
 
 def updateInputCgyro(cfg, input_path):
     NON_CGYRO_CONFIG_KEYS = {

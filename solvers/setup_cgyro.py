@@ -9,7 +9,6 @@ Prerequisites:
 - GNU Fortran compiler (gfortran)
 - OpenMPI (openmpi-bin libopenmpi-dev)
 - OpenBLAS (libopenblas-dev)
-- MPICH (mpich libmpich-dev)
 - FFTw3 (libfftw3-dev)
 
 Usage:
@@ -61,12 +60,21 @@ def check_dependencies():
         return False
     
     # Check OpenBLAS
-
-    # apt list --installed | grep openblas
-    # Check MPICH
+    openblas_installed = run_command("apt list --installed | grep libopenblas-dev")
+    if len(openblas_installed.split('\n') > 1):
+        print("✅ OpenBLAS found")
+    else:
+        print("❌ OpenBLAS not found")
+        print("Please install: sudo apt update && sudo apt install libopenblas-dev")
     
     # Check FFTw3
-
+    fftw3_installed = run_command("apt list --installed | grep libfftw3-dev")
+    if len(fftw3_installed.split('\n') > 1):
+        print("✅ FFTw3 found")
+    else:
+        print("❌ FFTw3 not found")
+        print("Please install: sudo apt update && sudo apt install libfftw3-dev")
+    
     # Check git
     try:
         run_command("git --version")
