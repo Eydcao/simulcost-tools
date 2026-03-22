@@ -36,4 +36,3 @@ useless/*
 .ssh
 build/
 !requirements.txt
-!Makefile
