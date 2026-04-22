@@ -56,7 +56,7 @@ Where:
 
 ## Convergence criteria
 
-The simulated results are considered converged if the eigenvalues for a given simulation meet the convergence tolerance threshold defined by $freq_tol$. Results between simulations considered correct if their respective converged eigenvalues meet the precision-dependent tolerance requirements [I DO NOT UNDERSTAND THIS LAST SENTENCE].
+Simluations are terminated when the maximum simulation time is reached, or when the difference between eigenvalues across timesteps is below the tolerance threshold given by $freq_{tol}$. For a simulation with some proposed parameters, the results are considered correct when there is sufficiently small error between its returned eigenvalues and those of a reference solution.
 
 ## Tuneable Parameters and Dummy Strategy
 
@@ -84,7 +84,7 @@ The simulated results are considered converged if the eigenvalues for a given si
 
 6. **delta_t**: Iterative+0-shot
 
-When using the adaptive method, the value of DELTA_T is the size of the (large) implicit timestep. Then, the value of the explicit timestep is decreased to match the error tolerance, ERROR_TOL*
+When using the adaptive method, the value of $delta_t$ is the size of the initial, or implicit, timestep. Then, the value of the explicit timestep is decreased adaptively to match the error tolerance, $error_{tol}$.
 
 ### Dummy Strategy
 
@@ -139,7 +139,7 @@ Extensive documentation on the remaining input parameters used in CGYRO is avail
 
 In general the simulation output data contains the following, among other information:
 
-* **Eigenvalues (**: Temporal evolution of the mode eigenvalue, this is used to determine convergence of linear simulations
+* **Eigenvalues**: Temporal evolution of the mode eigenvalue, this is used to determine convergence of linear simulations
 Eigenvalues have a real and an imaginary part, which are called real frequency (omega) and growth rate (gamma). The sign of the real frequency often determines the nature of the mode, while the growth rate determines its strength.
 * **Flux Data**: Flux of particles, momentum, and heat out of the plasma. These quantities are useful in non linear simulations
 
