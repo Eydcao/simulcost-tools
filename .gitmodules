@@ -1,7 +1,7 @@
 [submodule "solvers/gacode"]
 	path = solvers/gacode
 	url = https://github.com/gafusion/gacode.git
-	
+
 [submodule "solvers/epoch"]
 	path = solvers/epoch
 	url = https://github.com/Warwick-Plasma/epoch.git
