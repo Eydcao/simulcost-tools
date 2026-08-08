@@ -16,6 +16,7 @@ profiles:
 # Target parameter configurations
 target_parameters:
   N:
+    search_type: "iterative+0-shot"
     initial_value: 32
     multiplication_factor: 2
     max_iteration_num: 4  # Limits to N: 32, 64, 128, 256
@@ -24,6 +25,7 @@ target_parameters:
       cg_atol: [1e0, 1e-1, 1e-2, 1e-3, 1e-4]
 
   dt:
+    search_type: "iterative+0-shot"
     initial_value: 40.0
     multiplication_factor: 0.5
     max_iteration_num: 4  # Limits to dt: 40,20,10,5
@@ -32,6 +34,7 @@ target_parameters:
       cg_atol: [1e0, 1e-1, 1e-2, 1e-3, 1e-4]
 
   cg_atol:
+    search_type: "0-shot"
     search_range: [1e-4, 1e-0]  # Search from coarse (1e0) to fine (1e-4)
     search_range_slice_num: 5
     non_target_parameters:
