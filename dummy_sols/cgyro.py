@@ -462,9 +462,12 @@ def find_convergent_error_tol(
 
     return bool(converged), best_error_tol, cost_history, param_history
 
-# freq_tol should be solvable by refinement, however convergence is found within each run, rather than between multiple
-# In this case, we take the lowest error tolerance possible to achieve convergence, and no result comparison is necessary
-def find_convergent_freq_tol( 
+# freq_tol is the tolerance CGYRO itself uses to declare the eigenvalue converged, so a run's
+# own convergence flag is satisfied trivially by a loose tolerance and cannot accept a value on
+# its own. Instead sweep from the loosest (cheapest) tolerance toward the tightest and compare
+# successive runs, exactly as for the grid parameters, so the reported value is the first one
+# refinement no longer changes.
+def find_convergent_freq_tol(
     profile,
     n_radial,
     n_theta,
@@ -473,10 +476,11 @@ def find_convergent_freq_tol(
     delta_t,
     n_xi,
     n_energy,
+    comparison_tolerance,
     multiplication_factor,
     max_iteration_num,
 ):
-    """Iteratively increase freq_tol until convergence is achieved with fixed parameters."""
+    """Iteratively tighten freq_tol until convergence is achieved with fixed parameters."""
     freq_tol_history = []
     cost_history = []
     param_history = []
@@ -506,17 +510,41 @@ def find_convergent_freq_tol(
             }
         )
 
-        is_converged = (check_convergence_cgyro(profile, n_radial, n_theta, error_tol, current_freq_tol, delta_t, n_xi, n_energy) != None)
-        
-        if is_converged:
-            print(f"Convergence achieved at freq_tol {current_freq_tol}")
-            best_freq_tol = freq_tol_history[-1]  # The finer grid that converged
-            converged = True
-            break
-        else:
-            print(f"No convergence at freq_tol {current_freq_tol}")
+        # If we have previous results to compare with
+        if len(freq_tol_history) > 1:
+            prev_freq_tol = freq_tol_history[-2]
 
-        # Prepare next n_space using multiplication factor
+            # Compare with previous results. compare_res_cgyro checks each run's own convergence
+            # first, so a run that timed out instead of converging can never be accepted here.
+            is_converged = compare_res_cgyro(
+                profile,
+                n_radial,
+                n_theta,
+                error_tol,
+                prev_freq_tol,
+                delta_t,
+                n_xi,
+                n_energy,
+                profile,
+                n_radial,
+                n_theta,
+                error_tol,
+                current_freq_tol,
+                delta_t,
+                n_xi,
+                n_energy,
+                comparison_tolerance
+            )
+
+            if is_converged:
+                print(f"Convergence achieved between freq_tol {prev_freq_tol} and {current_freq_tol}")
+                best_freq_tol = freq_tol_history[-1]  # The tighter tolerance that converged
+                converged = True
+                break
+            else:
+                print(f"No convergence between freq_tol {prev_freq_tol} and {current_freq_tol}")
+
+        # Prepare next freq_tol using multiplication factor
         next_freq_tol = float(current_freq_tol * multiplication_factor)
         current_freq_tol = next_freq_tol
 
@@ -526,7 +554,7 @@ def find_convergent_freq_tol(
         print("\nMaximum iterations reached without convergence")
         if len(freq_tol_history) > 1:
             best_freq_tol = freq_tol_history[-1]
-            print(f"Finest tested freq_tol: {best_freq_tol}")
+            print(f"Tightest tested freq_tol: {best_freq_tol}")
         else:
             best_freq_tol = None
 
@@ -534,9 +562,11 @@ def find_convergent_freq_tol(
 
     return bool(converged), best_freq_tol, cost_history, param_history
 
-# delta_t should be solvable by refinement, however convergence is found within each run, rather than between multiple
-# In this case, we take the lowest error tolerance possible to achieve convergence, and no result comparison is necessary
-def find_convergent_delta_t( 
+# delta_t is solvable by refinement, but a single run's own convergence flag says nothing about
+# whether the timestep was small enough to get the right eigenvalue: a large, cheap timestep still
+# reports "converged". So sweep from the largest (cheapest) timestep down and compare successive
+# runs, exactly as for the grid parameters.
+def find_convergent_delta_t(
     profile,
     n_radial,
     n_theta,
@@ -545,10 +575,11 @@ def find_convergent_delta_t(
     delta_t,
     n_xi,
     n_energy,
+    comparison_tolerance,
     multiplication_factor,
     max_iteration_num,
 ):
-    """Iteratively increase freq_tol until convergence is achieved with fixed parameters."""
+    """Iteratively decrease delta_t until convergence is achieved with fixed parameters."""
     delta_t_history = []
     cost_history = []
     param_history = []
@@ -578,17 +609,41 @@ def find_convergent_delta_t(
             }
         )
 
-        is_converged = (check_convergence_cgyro(profile, n_radial, n_theta, error_tol, freq_tol, current_delta_t, n_xi, n_energy) != None)
-        
-        if is_converged:
-            print(f"Convergence achieved at delta_t {current_delta_t}")
-            best_delta_t = delta_t_history[-1]  # The finer grid that converged
-            converged = True
-            break
-        else:
-            print(f"No convergence at delta_t {current_delta_t}")
+        # If we have previous results to compare with
+        if len(delta_t_history) > 1:
+            prev_delta_t = delta_t_history[-2]
 
-        # Prepare next n_space using multiplication factor
+            # Compare with previous results. compare_res_cgyro checks each run's own convergence
+            # first, so a run that timed out instead of converging can never be accepted here.
+            is_converged = compare_res_cgyro(
+                profile,
+                n_radial,
+                n_theta,
+                error_tol,
+                freq_tol,
+                prev_delta_t,
+                n_xi,
+                n_energy,
+                profile,
+                n_radial,
+                n_theta,
+                error_tol,
+                freq_tol,
+                current_delta_t,
+                n_xi,
+                n_energy,
+                comparison_tolerance
+            )
+
+            if is_converged:
+                print(f"Convergence achieved between delta_t {prev_delta_t} and {current_delta_t}")
+                best_delta_t = delta_t_history[-1]  # The smaller timestep that converged
+                converged = True
+                break
+            else:
+                print(f"No convergence between delta_t {prev_delta_t} and {current_delta_t}")
+
+        # Prepare next delta_t using multiplication factor
         next_delta_t = float(current_delta_t * multiplication_factor)
         current_delta_t = next_delta_t
 
@@ -598,7 +653,7 @@ def find_convergent_delta_t(
         print("\nMaximum iterations reached without convergence")
         if len(delta_t_history) > 1:
             best_delta_t = delta_t_history[-1]
-            print(f"Finest tested delta_t: {best_delta_t}")
+            print(f"Smallest tested delta_t: {best_delta_t}")
         else:
             best_delta_t = None
 
@@ -655,6 +710,8 @@ if __name__ == "__main__":
             error_tol=args.error_tol,
             freq_tol=args.freq_tol,
             delta_t=args.delta_t,
+            n_xi=args.n_xi,
+            n_energy=args.n_energy,
             comparison_tolerance=args.comparison_tolerance,
             multiplication_factor=args.multiplication_factor,
             max_iteration_num=args.max_iteration_num,
@@ -674,6 +731,8 @@ if __name__ == "__main__":
             error_tol=args.error_tol,
             freq_tol=args.freq_tol,
             delta_t=args.delta_t,
+            n_xi=args.n_xi,
+            n_energy=args.n_energy,
             comparison_tolerance=args.comparison_tolerance,
             multiplication_factor=args.multiplication_factor,
             max_iteration_num=args.max_iteration_num,
@@ -693,6 +752,8 @@ if __name__ == "__main__":
             error_tol=args.error_tol,
             freq_tol=args.freq_tol,
             delta_t=args.delta_t,
+            n_xi=args.n_xi,
+            n_energy=args.n_energy,
             comparison_tolerance=args.comparison_tolerance,
             multiplication_factor=args.multiplication_factor,
             max_iteration_num=args.max_iteration_num,
@@ -712,6 +773,8 @@ if __name__ == "__main__":
             error_tol=args.error_tol,
             freq_tol=args.freq_tol,
             delta_t=args.delta_t,
+            n_xi=args.n_xi,
+            n_energy=args.n_energy,
             comparison_tolerance=args.comparison_tolerance,
             multiplication_factor=args.multiplication_factor,
             max_iteration_num=args.max_iteration_num,
@@ -731,6 +794,8 @@ if __name__ == "__main__":
             error_tol=args.error_tol,
             freq_tol=args.freq_tol,
             delta_t=args.delta_t,
+            n_xi=args.n_xi,
+            n_energy=args.n_energy,
             multiplication_factor=args.multiplication_factor,
             max_iteration_num=args.max_iteration_num,
         )
@@ -748,6 +813,9 @@ if __name__ == "__main__":
             error_tol=args.error_tol,
             freq_tol=args.freq_tol,
             delta_t=args.delta_t,
+            n_xi=args.n_xi,
+            n_energy=args.n_energy,
+            comparison_tolerance=args.comparison_tolerance,
             multiplication_factor=args.multiplication_factor,
             max_iteration_num=args.max_iteration_num,
         )
@@ -765,6 +833,9 @@ if __name__ == "__main__":
             error_tol=args.error_tol,
             freq_tol=args.freq_tol,
             delta_t=args.delta_t,
+            n_xi=args.n_xi,
+            n_energy=args.n_energy,
+            comparison_tolerance=args.comparison_tolerance,
             multiplication_factor=args.multiplication_factor,
             max_iteration_num=args.max_iteration_num,
         )

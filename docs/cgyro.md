@@ -110,12 +110,12 @@ When using the adaptive method, the value of $delta_t$ is the size of the initia
 
 5. **freq_tol**: Iterative+0-shot
 
-* Start with a value of 1e-5, increase by 1000% each iteration until convergence
+* Start with a value of 1e-3, decrease by a factor of 10 each iteration until convergence
 * **Non-target Parameters**: n_radial=8, n_theta=24, n_xi=16, n_energy=8, error_tol=1e-4, delta_t=1e-2
 
 6. **delta_t**: Iterative+0-shot
 
-* Start with a value of 1e-2, increase by 200% each iteration until convergence
+* Start with a value of 4e-2, decrease by a factor of 2 each iteration until convergence
 * **Non-target Parameters**: n_radial=8, n_theta=24, n_xi=16, n_energy=8, error_tol=1e-4, freq_tol=1e-3
 
 ## Summarized parameter table for developer only (Not LLM)

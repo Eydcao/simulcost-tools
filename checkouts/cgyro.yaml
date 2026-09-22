@@ -8,21 +8,21 @@ solver_info:
 
 task_distribution:
   strategy: "benchmark"
-  total_individuals: 243
-  description: "12 profiles * 3 precision levels * (3^5 * 4 target parameter combinations) ~ 35000 tasks"
+  total_individuals: 198
+  description: "11 profiles * 3 precision levels * 6 target parameter combinations = 198 tasks"
 
 precision_levels:
   low:
-    comparison_tolerance: 1e-3
+    comparison_tolerance: 5e-3
   medium:
-    comparison_tolerance: 1e-4
+    comparison_tolerance: 1e-3
   high:
-    comparison_tolerance: 1e-5
+    comparison_tolerance: 5e-4
 
 profiles:
-  num_profiles: 12
+  num_profiles: 11
   # The 12 profiles each corresponds to a different combination of (shot + rmin + ky)
-  active_profiles: ["p1", "p2", "p3", "p4", "p5", "p6", "p7", "p8", "p9", "p10", "p11", "p12"]
+  active_profiles: ["p1", "p2", "p3", "p4", "p5", "p6", "p8", "p9", "p10", "p11", "p12"]
 
 # Parameter configurations for each target parameter
 target_parameters:
@@ -35,7 +35,7 @@ target_parameters:
     non_target_parameters:
       n_theta: 24
       n_xi: 16
-      n_energy: 8
+      n_energy: 16
       error_tol: 1e-4
       freq_tol: 1e-3
       delta_t: 1e-2
@@ -43,13 +43,13 @@ target_parameters:
   n_theta:
     description: "Controls number of theta locations"
     search_type: "iterative+0-shot"
-    initial_value: 6
+    initial_value: 12
     multiplication_factor: 2
     max_iteration_num: 3
     non_target_parameters:
       n_radial: 8
       n_xi: 16
-      n_energy: 8
+      n_energy: 16
       error_tol: 1e-4
       freq_tol: 1e-3
       delta_t: 1e-2
@@ -63,7 +63,7 @@ target_parameters:
     non_target_parameters:
       n_radial: 8
       n_theta: 24
-      n_energy: 8
+      n_energy: 16
       error_tol: 1e-4
       freq_tol: 1e-3
       delta_t: 1e-2
@@ -71,7 +71,7 @@ target_parameters:
   n_energy:
     description: "Controls number of energy meshpoints"
     search_type: "iterative+0-shot"
-    initial_value: 4
+    initial_value: 8
     multiplication_factor: 2
     max_iteration_num: 3
     non_target_parameters:
@@ -85,28 +85,30 @@ target_parameters:
   freq_tol:
     description: "Controls error tolerance for eigenvalue convergence"
     search_type: "iterative+0-shot"
-    initial_value: 1e-5
-    multiplication_factor: 10
+    # Searched from the loosest (cheapest) tolerance downwards: 1e-3 -> 1e-4 -> 1e-5
+    initial_value: 1e-3
+    multiplication_factor: 0.1
     max_iteration_num: 3
     non_target_parameters:
       n_radial: 8
       n_theta: 24
       n_xi: 16
-      n_energy: 8
+      n_energy: 16
       error_tol: 1e-4
       delta_t: 1e-2
   
   delta_t:
     description: "Controls initial timestep size for adaptive timestepping procedure"
     search_type: "iterative+0-shot"
-    initial_value: 1e-2
-    multiplication_factor: 2
+    # Searched from the largest (cheapest) timestep downwards: 4e-2 -> 2e-2 -> 1e-2
+    initial_value: 4e-2
+    multiplication_factor: 0.5
     max_iteration_num: 3
     non_target_parameters:
       n_radial: 8
       n_theta: 24
       n_xi: 16
-      n_energy: 8
+      n_energy: 16
       error_tol: 1e-4
       freq_tol: 1e-3
 

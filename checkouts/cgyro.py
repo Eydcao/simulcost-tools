@@ -465,6 +465,7 @@ def main():
                             delta_t=task_params["delta_t"],
                             n_xi=task_params["n_xi"],
                             n_energy=task_params["n_energy"],
+                            comparison_tolerance=precision_vals["comparison_tolerance"],
                             multiplication_factor=target_config["multiplication_factor"],
                             max_iteration_num=target_config["max_iteration_num"],
                         )
@@ -482,6 +483,7 @@ def main():
                             delta_t=target_config["initial_value"],
                             n_xi=task_params["n_xi"],
                             n_energy=task_params["n_energy"],
+                            comparison_tolerance=precision_vals["comparison_tolerance"],
                             multiplication_factor=target_config["multiplication_factor"],
                             max_iteration_num=target_config["max_iteration_num"],
                         )
