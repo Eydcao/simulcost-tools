@@ -32,3 +32,7 @@ useless/*
 **/Makefile*
 **/*.backup
 **/output*/*
+.env
+.ssh
+build/
+!requirements.txt
