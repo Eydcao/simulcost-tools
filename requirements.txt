@@ -1,0 +1,10 @@
+matplotlib
+numpy
+h5py
+pyrokinetics
+scipy
+dotenv
+pyyaml
+hydra-core
+boto3
+s5cmd
